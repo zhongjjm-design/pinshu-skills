@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "course_id": "example-course",
+  "lesson_no": 1,
+  "reviewer_model": "exact-model-id",
+  "production_profile": "fast",
+  "review_round": 1,
+  "review_scope": "full | sampled | targeted_recheck",
+  "decision": "pass",
+  "recommended_state": "SEMANTIC_QA_PASS",
+  "source_identity": {
+    "passed": true,
+    "notes": []
+  },
+  "coverage": {
+    "passed": true,
+    "opening_checked": true,
+    "middle_checked": true,
+    "ending_checked": true,
+    "longest_case_checked": true,
+    "high_risk_anchors_checked": true
+  },
+  "issues": [
+    {
+      "severity": "high",
+      "type": "omission",
+      "source_block": "S012",
+      "source_quote": "Quoted source evidence",
+      "draft_location": "Section 2 of the faithful edit",
+      "impact": "A critical constraint was omitted.",
+      "required_fix": "Restore the constraint without weakening the original claim."
+    }
+  ],
+  "notes": [
+    {
+      "type": "wording",
+      "location": "Section 3 of the structured lecture",
+      "message": "This could be more concise, but it does not block acceptance or trigger rework."
+    }
+  ],
+  "requires_strong_model": false
+}

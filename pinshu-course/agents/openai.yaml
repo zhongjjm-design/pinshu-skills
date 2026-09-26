@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinshu Course"
+  short_description: "Orchestrate course assets, study, and cross-lesson QA"
+  default_prompt: "Use $pinshu-course to manage this course series: use $pinshu-transcript to create faithful edited transcripts, $pinshu-distill to create structured lectures and formal cross-topic studies, and $pinshu-study to create active recall, guided practice, and learning records; keep the course map, pending synthesis clues, progress, and QA in sync."

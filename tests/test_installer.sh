@@ -1,0 +1,461 @@
+#!/usr/bin/env bash
+
+set -u
+set -o pipefail
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+REPO_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd -P)
+INSTALLER="$REPO_ROOT/install.sh"
+TEST_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/pinshu-installer-tests.XXXXXX")
+REAL_GIT=$(command -v git)
+NO_NETWORK_BIN="$TEST_ROOT/no-network-bin"
+PASS_COUNT=0
+FAIL_COUNT=0
+
+EXPECTED_SKILLS=(
+  pinshu-course-capture
+  pinshu-course
+  pinshu-distill
+  pinshu-md2pdf
+  pinshu-study
+  pinshu-transcript
+)
+
+mkdir -p "$NO_NETWORK_BIN"
+cat >"$NO_NETWORK_BIN/git" <<'GIT_WRAPPER'
+#!/usr/bin/env bash
+set -u
+for argument in "$@"; do
+  case "$argument" in
+    http://*|https://*|git://*|ssh://*|git@*)
+      printf 'Network Git access is forbidden in installer tests.\n' >&2
+      exit 96
+      ;;
+  esac
+done
+exec "$PINSHU_REAL_GIT" "$@"
+GIT_WRAPPER
+chmod +x "$NO_NETWORK_BIN/git"
+
+cleanup() {
+  chmod -R u+w "$TEST_ROOT" 2>/dev/null || true
+  rm -rf -- "$TEST_ROOT"
+}
+trap cleanup EXIT INT TERM
+
+fail() {
+  printf 'ASSERTION FAILED: %s\n' "$*" >&2
+  return 1
+}
+
+assert_file() {
+  [ -f "$1" ] || fail "expected regular file: $1"
+}
+
+assert_dir() {
+  [ -d "$1" ] && [ ! -L "$1" ] || fail "expected real directory: $1"
+}
+
+assert_absent() {
+  [ ! -e "$1" ] && [ ! -L "$1" ] || fail "expected path to be absent: $1"
+}
+
+assert_contains() {
+  local file=$1
+  local text=$2
+  grep -Fq -- "$text" "$file" || fail "expected $file to contain: $text"
+}
+
+new_case() {
+  local name=$1
+  CASE_ROOT="$TEST_ROOT/$name"
+  HOME_DIR="$CASE_ROOT/home"
+  FIXTURE_SOURCE="$CASE_ROOT/source"
+  FIXTURE_REMOTE="$CASE_ROOT/remote.git"
+  LOG_FILE="$CASE_ROOT/installer.log"
+  mkdir -p "$HOME_DIR" "$FIXTURE_SOURCE"
+  HOME_DIR=$(CDPATH= cd -- "$HOME_DIR" && pwd -P)
+}
+
+write_fixture_packages() {
+  local version=$1
+  local roster=${2:-valid}
+  local skill
+
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    if [ "$roster" = "invalid" ] && [ "$skill" = "pinshu-study" ]; then
+      continue
+    fi
+    mkdir -p "$FIXTURE_SOURCE/$skill/assets" "$FIXTURE_SOURCE/$skill/__pycache__"
+    printf -- '---\nname: %s\n---\n' "$skill" >"$FIXTURE_SOURCE/$skill/SKILL.md"
+    printf '%s\n' "$version" >"$FIXTURE_SOURCE/$skill/payload.txt"
+    printf 'complete package content\n' >"$FIXTURE_SOURCE/$skill/assets/data.txt"
+    printf 'hidden package content\n' >"$FIXTURE_SOURCE/$skill/.hidden-config"
+    printf 'excluded metadata\n' >"$FIXTURE_SOURCE/$skill/.DS_Store"
+    printf 'excluded bytecode\n' >"$FIXTURE_SOURCE/$skill/__pycache__/cache.pyc"
+    printf 'excluded bytecode\n' >"$FIXTURE_SOURCE/$skill/compiled.pyo"
+    if [ "$version" = "v1" ]; then
+      printf 'removed by upgrade\n' >"$FIXTURE_SOURCE/$skill/obsolete.txt"
+    fi
+  done
+
+  if [ "$roster" = "invalid" ]; then
+    mkdir -p "$FIXTURE_SOURCE/pinshu-surprise"
+    printf -- '---\nname: pinshu-surprise\n---\n' >"$FIXTURE_SOURCE/pinshu-surprise/SKILL.md"
+  fi
+}
+
+make_remote() {
+  local version=$1
+  local roster=${2:-valid}
+
+  write_fixture_packages "$version" "$roster"
+  git -C "$FIXTURE_SOURCE" init -q -b main
+  git -C "$FIXTURE_SOURCE" config user.name 'Installer Test'
+  git -C "$FIXTURE_SOURCE" config user.email 'installer-test@example.invalid'
+  git -C "$FIXTURE_SOURCE" add .
+  git -C "$FIXTURE_SOURCE" add -f -- \
+    'pinshu-*/.DS_Store' \
+    'pinshu-*/__pycache__/cache.pyc' \
+    'pinshu-*/compiled.pyo'
+  git -C "$FIXTURE_SOURCE" commit -q -m "fixture $version"
+  git clone -q --bare "$FIXTURE_SOURCE" "$FIXTURE_REMOTE"
+}
+
+update_remote() {
+  local version=$1
+  local skill
+
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    printf '%s\n' "$version" >"$FIXTURE_SOURCE/$skill/payload.txt"
+    rm -f -- "$FIXTURE_SOURCE/$skill/obsolete.txt"
+  done
+  git -C "$FIXTURE_SOURCE" add -A
+  git -C "$FIXTURE_SOURCE" commit -q -m "fixture $version"
+  git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
+}
+
+installer_env() {
+  env \
+    HOME="$HOME_DIR" \
+    PATH="$NO_NETWORK_BIN:$PATH" \
+    PINSHU_REAL_GIT="$REAL_GIT" \
+    PINSHU_REPO="file://$FIXTURE_REMOTE" \
+    PINSHU_INSTALL_DIR="$HOME_DIR/.pinshu-skills" \
+    PINSHU_SKILLS_DIR="$HOME_DIR/.agents/skills" \
+    "$@"
+}
+
+run_installer_success() {
+  if ! installer_env bash "$INSTALLER" >"$LOG_FILE" 2>&1; then
+    printf '%s\n' 'Installer output:' >&2
+    sed 's/^/  /' "$LOG_FILE" >&2
+    fail 'installer unexpectedly failed'
+  fi
+}
+
+run_installer_failure() {
+  if installer_env bash "$INSTALLER" >"$LOG_FILE" 2>&1; then
+    printf '%s\n' 'Installer output:' >&2
+    sed 's/^/  /' "$LOG_FILE" >&2
+    fail 'installer unexpectedly succeeded'
+  fi
+}
+
+assert_active_version() {
+  local version=$1
+  local skill
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    assert_dir "$HOME_DIR/.agents/skills/$skill" || return 1
+    assert_file "$HOME_DIR/.agents/skills/$skill/SKILL.md" || return 1
+    assert_contains "$HOME_DIR/.agents/skills/$skill/payload.txt" "$version" || return 1
+  done
+}
+
+assert_exact_active_roster() {
+  local count=0
+  local path
+  shopt -s nullglob
+  for path in "$HOME_DIR/.agents/skills"/pinshu-*; do
+    count=$((count + 1))
+  done
+  shopt -u nullglob
+  [ "$count" -eq "${#EXPECTED_SKILLS[@]}" ] || fail "expected six active Pinshu packages, found $count"
+}
+
+test_clean_install() {
+  local skill
+  local git_artifact
+
+  new_case clean-install
+  make_remote v1 valid
+  run_installer_success
+  assert_active_version v1
+  assert_exact_active_roster
+
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    assert_file "$HOME_DIR/.agents/skills/$skill/assets/data.txt"
+    assert_file "$HOME_DIR/.agents/skills/$skill/.hidden-config"
+    assert_absent "$HOME_DIR/.agents/skills/$skill/.DS_Store"
+    assert_absent "$HOME_DIR/.agents/skills/$skill/__pycache__"
+    assert_absent "$HOME_DIR/.agents/skills/$skill/compiled.pyo"
+  done
+
+  git_artifact=$(find "$HOME_DIR/.agents/skills" -name .git -print -quit)
+  [ -z "$git_artifact" ] || fail "active Skill contains .git content: $git_artifact"
+  assert_dir "$HOME_DIR/.pinshu-skills/.git"
+  [ -L "$HOME_DIR/.claude/skills" ] || fail 'expected Claude skills link'
+  [ "$(readlink "$HOME_DIR/.claude/skills")" = "$HOME_DIR/.agents/skills" ] || fail 'Claude skills link points elsewhere'
+}
+
+test_symlink_destination_refusal() {
+  local skill
+
+  new_case symlink-refusal
+  make_remote v1 valid
+  mkdir -p "$HOME_DIR/.agents/skills" "$CASE_ROOT/victim"
+  printf 'must survive\n' >"$CASE_ROOT/victim/sentinel"
+  ln -s "$CASE_ROOT/victim" "$HOME_DIR/.agents/skills/pinshu-study"
+
+  run_installer_failure
+  assert_file "$CASE_ROOT/victim/sentinel"
+  assert_absent "$CASE_ROOT/victim/SKILL.md"
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    if [ "$skill" != "pinshu-study" ]; then
+      assert_absent "$HOME_DIR/.agents/skills/$skill"
+    fi
+  done
+  assert_absent "$HOME_DIR/.pinshu-skills"
+}
+
+test_acquisition_failure_preserves_legacy() {
+  new_case acquisition-failure
+  mkdir -p "$HOME_DIR/.agents/skills/transcript-cleaner"
+  printf 'legacy stays active\n' >"$HOME_DIR/.agents/skills/transcript-cleaner/sentinel"
+  FIXTURE_REMOTE="$CASE_ROOT/does-not-exist.git"
+
+  run_installer_failure
+  assert_file "$HOME_DIR/.agents/skills/transcript-cleaner/sentinel"
+  assert_absent "$HOME_DIR/.claude/skills"
+  assert_absent "$HOME_DIR/.pinshu-skills"
+}
+
+test_existing_directory_backup_and_replacement() {
+  local backup_copy
+  local legacy_backup
+
+  new_case backup-replacement
+  make_remote v1 valid
+  mkdir -p \
+    "$HOME_DIR/.agents/skills/pinshu-study" \
+    "$HOME_DIR/.agents/skills/transcript-cleaner"
+  printf 'old active data\n' >"$HOME_DIR/.agents/skills/pinshu-study/old-sentinel"
+  printf 'legacy data\n' >"$HOME_DIR/.agents/skills/transcript-cleaner/legacy-sentinel"
+
+  run_installer_success
+  assert_active_version v1
+  assert_absent "$HOME_DIR/.agents/skills/pinshu-study/old-sentinel"
+  backup_copy=$(find "$HOME_DIR" -type f -name old-sentinel -print -quit)
+  [ -n "$backup_copy" ] || fail 'existing Skill directory was not preserved in a backup'
+  assert_file "$backup_copy"
+  assert_absent "$HOME_DIR/.agents/skills/transcript-cleaner"
+  legacy_backup=$(find "$HOME_DIR" -type f -name legacy-sentinel -print -quit)
+  [ -n "$legacy_backup" ] || fail 'legacy Skill directory was not preserved in a backup'
+  assert_file "$legacy_backup"
+}
+
+test_repeated_upgrade() {
+  local repository_backup
+  local v1_backup
+
+  new_case repeated-upgrade
+  make_remote v1 valid
+  run_installer_success
+  update_remote v2
+  run_installer_success
+
+  assert_active_version v2
+  assert_absent "$HOME_DIR/.agents/skills/pinshu-study/obsolete.txt"
+  assert_dir "$HOME_DIR/.pinshu-skills/.git"
+  assert_contains "$HOME_DIR/.pinshu-skills/pinshu-study/payload.txt" v2
+  v1_backup=$(find "$HOME_DIR" -type f -path '*/pinshu-study/payload.txt' -exec grep -l '^v1$' {} \; | head -n 1)
+  [ -n "$v1_backup" ] || fail 'upgrade did not preserve the prior active Skill backup'
+  repository_backup=$(find "$HOME_DIR/.pinshu-install-backups" -type f -path '*/previous-clone/pinshu-study/payload.txt' -exec grep -l '^v1$' {} \; | head -n 1)
+  [ -n "$repository_backup" ] || fail 'upgrade did not preserve the prior repository clone backup'
+}
+
+test_conflicting_claude_path_is_untouched() {
+  new_case claude-conflict
+  make_remote v1 valid
+  mkdir -p "$HOME_DIR/.claude/skills"
+  printf 'keep this path\n' >"$HOME_DIR/.claude/skills/sentinel"
+
+  run_installer_success
+  assert_active_version v1
+  assert_dir "$HOME_DIR/.claude/skills"
+  assert_file "$HOME_DIR/.claude/skills/sentinel"
+}
+
+test_invalid_roster_causes_no_active_mutation() {
+  local skill
+
+  new_case invalid-roster
+  make_remote v1 invalid
+  mkdir -p "$HOME_DIR/.agents/skills/transcript-cleaner"
+  printf 'legacy active\n' >"$HOME_DIR/.agents/skills/transcript-cleaner/sentinel"
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    mkdir -p "$HOME_DIR/.agents/skills/$skill"
+    printf 'old active\n' >"$HOME_DIR/.agents/skills/$skill/old-sentinel"
+  done
+
+  run_installer_failure
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    assert_file "$HOME_DIR/.agents/skills/$skill/old-sentinel"
+    assert_absent "$HOME_DIR/.agents/skills/$skill/payload.txt"
+  done
+  assert_file "$HOME_DIR/.agents/skills/transcript-cleaner/sentinel"
+  assert_absent "$HOME_DIR/.agents/skills/pinshu-surprise"
+  assert_absent "$HOME_DIR/.pinshu-skills"
+}
+
+test_mid_transaction_failure_rolls_back() {
+  local skill
+  local real_mv
+  local wrapper_dir
+
+  new_case rollback
+  make_remote v1 valid
+  run_installer_success
+  mkdir -p "$HOME_DIR/.agents/skills/transcript-cleaner"
+  printf 'legacy active\n' >"$HOME_DIR/.agents/skills/transcript-cleaner/sentinel"
+  update_remote v2
+
+  wrapper_dir="$CASE_ROOT/wrapper-bin"
+  mkdir -p "$wrapper_dir"
+  real_mv=$(command -v mv)
+  cat >"$wrapper_dir/mv" <<'WRAPPER'
+#!/usr/bin/env bash
+set -u
+last_arg=${!#}
+if [ "$last_arg" = "$PINSHU_SKILLS_DIR/pinshu-study" ] && [ ! -e "$MV_FAIL_STATE" ]; then
+  : >"$MV_FAIL_STATE"
+  exit 97
+fi
+exec "$PINSHU_REAL_MV" "$@"
+WRAPPER
+  chmod +x "$wrapper_dir/mv"
+
+  if installer_env \
+    PATH="$wrapper_dir:$NO_NETWORK_BIN:$PATH" \
+    PINSHU_REAL_MV="$real_mv" \
+    MV_FAIL_STATE="$CASE_ROOT/mv-failed-once" \
+    bash "$INSTALLER" >"$LOG_FILE" 2>&1; then
+    fail 'installer unexpectedly succeeded after injected move failure'
+  fi
+
+  assert_file "$CASE_ROOT/mv-failed-once"
+  assert_active_version v1
+  assert_file "$HOME_DIR/.agents/skills/transcript-cleaner/sentinel"
+  assert_contains "$HOME_DIR/.pinshu-skills/pinshu-study/payload.txt" v1
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    assert_file "$HOME_DIR/.agents/skills/$skill/obsolete.txt"
+  done
+}
+
+test_symlink_install_dir_refusal() {
+  new_case install-dir-symlink
+  make_remote v1 valid
+  mkdir -p "$CASE_ROOT/install-victim"
+  printf 'must survive\n' >"$CASE_ROOT/install-victim/sentinel"
+  ln -s "$CASE_ROOT/install-victim" "$HOME_DIR/.pinshu-skills"
+
+  run_installer_failure
+  assert_file "$CASE_ROOT/install-victim/sentinel"
+  assert_absent "$CASE_ROOT/install-victim/pinshu-study"
+  assert_absent "$HOME_DIR/.agents/skills/pinshu-study"
+}
+
+test_special_file_destination_refusal() {
+  new_case special-file-destination
+  make_remote v1 valid
+  mkdir -p "$HOME_DIR/.agents/skills"
+  printf 'must remain a file\n' >"$HOME_DIR/.agents/skills/pinshu-study"
+
+  run_installer_failure
+  assert_file "$HOME_DIR/.agents/skills/pinshu-study"
+  assert_contains "$HOME_DIR/.agents/skills/pinshu-study" 'must remain a file'
+  assert_absent "$HOME_DIR/.agents/skills/pinshu-course"
+  assert_absent "$HOME_DIR/.pinshu-skills"
+}
+
+test_escaping_destination_refusal() {
+  local escaping_path
+
+  new_case escaping-destination
+  make_remote v1 valid
+  escaping_path="$HOME_DIR/.agents/../escaped-skills"
+
+  if installer_env PINSHU_SKILLS_DIR="$escaping_path" bash "$INSTALLER" >"$LOG_FILE" 2>&1; then
+    fail 'installer unexpectedly accepted an escaping destination path'
+  fi
+  assert_absent "$HOME_DIR/escaped-skills"
+  assert_absent "$HOME_DIR/.pinshu-skills"
+}
+
+test_existing_lock_refusal() {
+  new_case existing-lock
+  make_remote v1 valid
+  mkdir -p "$HOME_DIR/.pinshu-installer.lock"
+
+  run_installer_failure
+  assert_dir "$HOME_DIR/.pinshu-installer.lock"
+  assert_absent "$HOME_DIR/.agents/skills/pinshu-study"
+  assert_absent "$HOME_DIR/.pinshu-skills"
+}
+
+test_symlink_backup_container_refusal() {
+  new_case backup-container-symlink
+  make_remote v1 valid
+  mkdir -p "$HOME_DIR/.agents/skills" "$CASE_ROOT/backup-victim"
+  printf 'must survive\n' >"$CASE_ROOT/backup-victim/sentinel"
+  ln -s "$CASE_ROOT/backup-victim" "$HOME_DIR/.agents/skills/.pinshu-backups"
+
+  run_installer_failure
+  assert_file "$CASE_ROOT/backup-victim/sentinel"
+  assert_absent "$CASE_ROOT/backup-victim/active"
+  assert_absent "$HOME_DIR/.agents/skills/pinshu-study"
+  assert_absent "$HOME_DIR/.pinshu-skills"
+}
+
+run_test() {
+  local name=$1
+  local function_name=$2
+  local status
+
+  (set -e; "$function_name")
+  status=$?
+  if [ "$status" -eq 0 ]; then
+    PASS_COUNT=$((PASS_COUNT + 1))
+    printf 'ok - %s\n' "$name"
+  else
+    FAIL_COUNT=$((FAIL_COUNT + 1))
+    printf 'not ok - %s\n' "$name"
+  fi
+}
+
+run_test 'clean install copies the complete allowed packages' test_clean_install
+run_test 'symlink destination is refused and victim survives' test_symlink_destination_refusal
+run_test 'acquisition failure leaves legacy Skill active' test_acquisition_failure_preserves_legacy
+run_test 'existing real directory is backed up and replaced' test_existing_directory_backup_and_replacement
+run_test 'repeated upgrade replaces stale content and preserves backup' test_repeated_upgrade
+run_test 'conflicting Claude path is left untouched' test_conflicting_claude_path_is_untouched
+run_test 'invalid repository roster causes no active mutation' test_invalid_roster_causes_no_active_mutation
+run_test 'mid-transaction failure restores all prior active paths' test_mid_transaction_failure_rolls_back
+run_test 'symlink install directory is refused' test_symlink_install_dir_refusal
+run_test 'special-file destination is refused' test_special_file_destination_refusal
+run_test 'escaping destination path is refused' test_escaping_destination_refusal
+run_test 'existing installer lock prevents a second run' test_existing_lock_refusal
+run_test 'symlink backup container is refused' test_symlink_backup_container_refusal
+
+printf '%s passed; %s failed\n' "$PASS_COUNT" "$FAIL_COUNT"
+[ "$FAIL_COUNT" -eq 0 ]

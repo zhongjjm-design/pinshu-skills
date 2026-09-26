@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinshu PDF"
+  short_description: "Convert Markdown into a verified professional PDF"
+  default_prompt: "Use $pinshu-md2pdf to convert this Markdown document into a professional PDF, then verify its page count, body text, and fonts."

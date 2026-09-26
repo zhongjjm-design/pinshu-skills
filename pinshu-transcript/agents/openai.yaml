@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinshu Transcript"
+  short_description: "Faithfully edit transcripts and retain reproducible details"
+  default_prompt: "Use $pinshu-transcript to faithfully edit the provided transcript: correct STT errors and speech noise; preserve the speaker's identity, views, examples, numbers, constraints, procedures, prompts, code, and uncertainty; do not turn the main text into a summary."

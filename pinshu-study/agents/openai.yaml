@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinshu Study Coach"
+  short_description: "Guide study, review, diagnose errors, and save learning records"
+  default_prompt: "Use $pinshu-study. First determine whether I have studied the current material. If I have not, guide me instead of testing me. After I have studied it, ask one question at a time, follow up based on my answer, diagnose the cause of any error, return me to the lesson notes, and save the learning process in Markdown."

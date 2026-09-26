@@ -1,0 +1,39 @@
+name: Validate Pinshu Skills
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Validate release bundle
+        run: python3 scripts/validate_release.py
+      - name: Learning-asset validator self-test
+        run: python3 pinshu-course/tests/self_test_validate_learning_assets.py
+      - name: Runtime-contract self-test
+        run: python3 pinshu-course/tests/self_test_runtime_contracts.py
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@c785b87e244131f27c9f19c1a33e2ead956ab7ce
+        with:
+          chrome-version: stable
+      - name: Install PDF inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes poppler-utils
+      - name: Markdown converter security tests
+        run: |
+          python3 -m pip install --quiet markdown2 markdown-it-py
+          command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser
+          command -v pdftotext
+          command -v pdfinfo
+          python3 -m unittest discover -s pinshu-md2pdf/tests -v
+      - name: Installer negative controls
+        run: bash tests/test_installer.sh
+      - name: Shell syntax
+        run: bash -n install.sh

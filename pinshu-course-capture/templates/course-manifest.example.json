@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "course_id": "example-course",
+  "course_title": "Example Course",
+  "lecturer": "Lecturer Name",
+  "course_root": "/absolute/path/to/course",
+  "runtime_dir": "/absolute/path/to/runtime",
+  "source_adapter": "baidu-transcript",
+  "output_language": "match-user",
+  "course_purpose": ["systematic_learning"],
+  "purpose_decision_basis": "The course is intended for systematic study and long-term review.",
+  "assurance_mode": "standard",
+  "assurance_decision_basis": "This is a terminology-dense professional course with complete sources, so standard evidence is appropriate.",
+  "production_profile": "standard",
+  "adapters": {"domain": ["generic"], "content": ["talk"]},
+  "optional_extensions": {"active_recall": true, "learning_training": true, "horizontal_topics": false},
+  "external_use": {"enabled": false, "intended_uses": []},
+  "intake_confirmation": {"confirmed": false, "confirmed_by": "", "confirmed_at": ""},
+  "budgets": {
+    "max_tokens_per_lesson": 500000,
+    "max_wall_minutes_per_lesson": 45,
+    "max_agent_calls_per_lesson": 3,
+    "max_reworks_per_lesson": 1,
+    "max_qa_rounds_per_lesson": 2
+  },
+  "sample_gate": {"lesson_no": 1, "approved": false},
+  "naming_template": "\u7b2c{lesson_no:02d}\u8bfe\u00b7{title}.md",
+  "path_templates": {
+    "source": "00_\u539f\u59cb\u8f6c\u5199/{filename}",
+    "official_faithful": "01_\u5fe0\u5b9e\u7cbe\u7f16\u7a3f/{filename}",
+    "official_lecture": "02_\u7ed3\u6784\u5316\u8bb2\u4e49/{filename}",
+    "course_map": "00_\u8bfe\u7a0b\u5730\u56fe.md",
+    "active_recall": "03_\u590d\u4e60\u4e0e\u8bad\u7ec3/01_\u4e3b\u52a8\u56de\u5fc6\u5361/{filename}",
+    "training_bank": "03_\u590d\u4e60\u4e0e\u8bad\u7ec3/02_\u8bad\u7ec3\u9898\u5e93/{filename}",
+    "learning_progress": "04_\u5b66\u4e60\u8bb0\u5f55/00_\u5b66\u4e60\u8fdb\u5ea6.md",
+    "learning_sessions": "04_\u5b66\u4e60\u8bb0\u5f55/01_\u8bad\u7ec3\u8bb0\u5f55",
+    "error_review": "04_\u5b66\u4e60\u8bb0\u5f55/02_\u9519\u9898\u4e0e\u590d\u6d4b.md",
+    "learning_asset_index": "99_\u751f\u4ea7\u63a7\u5236/\u5b66\u4e60\u8d44\u4ea7\u7d22\u5f15"
+  },
+  "writer_model": "unassigned",
+  "qa_model": "unassigned",
+  "strong_model": "unassigned",
+  "gold_samples": [],
+  "lessons": [
+    {"lesson_no": 1, "title": "Official Title", "source_video": "01_Official_Title.mp4", "source_path": "/My Resources/Course/01_Official_Title.mp4"},
+    {
+      "lesson_no": 2,
+      "title": "Critical Procedure",
+      "source_video": "02_Critical_Procedure.mp4",
+      "source_path": "/My Resources/Course/02_Critical_Procedure.mp4",
+      "overrides": {"assurance_mode": "strict", "force_independent_qa": true, "risk_flags": ["high_consequence_operation"]},
+      "override_reason": "The lesson contains actions with real-world consequences."
+    }
+  ]
+}

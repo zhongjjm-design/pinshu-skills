@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinshu Course Capture and Tiered Production"
+  short_description: "Tiered course capture with approval, QA, and recovery"
+  default_prompt: "Use $pinshu-course-capture to capture transcripts from a course manifest or supported source, select an assurance mode, pass the sample gate, and produce the complete course assets within budget."

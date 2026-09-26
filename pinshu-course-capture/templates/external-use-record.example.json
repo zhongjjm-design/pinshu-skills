@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "course_id": "example-course",
+  "lesson_no": 1,
+  "intended_use": "public_article",
+  "reviewer": "exact-reviewer-id",
+  "reviewed_at": "2026-01-01T00:00:00Z",
+  "artifacts_sha256": {
+    "source": "<sha256>",
+    "official_faithful": "<sha256>",
+    "official_lecture": "<sha256>",
+    "course_map": "<sha256>"
+  },
+  "checks": {
+    "facts_sources_timeliness": {"status": "pass", "evidence": []},
+    "regulated_risk": {"status": "not_applicable", "evidence": []},
+    "privacy_authorization": {"status": "pass", "evidence": []},
+    "rights_copyright": {"status": "pass", "evidence": []},
+    "attribution_citation": {"status": "pass", "evidence": []},
+    "claim_scope": {"status": "pass", "evidence": []}
+  },
+  "blockers": [],
+  "remaining_limits": [],
+  "decision": "pass"
+}

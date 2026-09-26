@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinshu Knowledge Distillation"
+  short_description: "Create structured guides and cross-course syntheses"
+  default_prompt: "Use $pinshu-distill to turn the corrected source into a well-prioritized, coherent, standalone study guide. Create a formal cross-course topic synthesis only when the required lessons are available. Do not present the result as a faithful transcript or generate learning drills."

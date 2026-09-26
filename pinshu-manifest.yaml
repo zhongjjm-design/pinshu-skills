@@ -1,0 +1,40 @@
+schema_version: 1
+family: pinshu
+brand_name: Pinshu
+maintainer: Aidan
+repository: https://github.com/zhongjjm-design/pinshu-skills
+runtime_layout: flat
+runtime_glob: ~/.agents/skills/pinshu-*
+updated: 2026-09-24
+skills:
+  - name: pinshu-transcript
+    origin: original
+    distribution: bundled
+    present_in_repository: true
+    depends_on: []
+  - name: pinshu-distill
+    origin: original
+    distribution: bundled
+    present_in_repository: true
+    depends_on: [pinshu-transcript]
+  - name: pinshu-study
+    origin: original
+    distribution: bundled
+    present_in_repository: true
+    depends_on: [pinshu-distill, pinshu-course]
+  - name: pinshu-course
+    origin: original
+    distribution: bundled
+    present_in_repository: true
+    depends_on: [pinshu-transcript, pinshu-distill, pinshu-study]
+  - name: pinshu-md2pdf
+    origin: original
+    distribution: bundled
+    present_in_repository: true
+    depends_on: []
+    supersedes: pinshu-md-to-pdf
+  - name: pinshu-course-capture
+    origin: original
+    distribution: bundled
+    present_in_repository: true
+    depends_on: [pinshu-transcript, pinshu-distill, pinshu-course]
