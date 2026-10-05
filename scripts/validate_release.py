@@ -23,6 +23,7 @@ EXPECTED_SKILLS = {
     "pinshu-study",
     "pinshu-transcript",
     "pinshu-visual-system",
+    "pinshu-film-teardown",
 }
 TEXT_SUFFIXES = {
     ".bash", ".cfg", ".css", ".csv", ".html", ".ini", ".js", ".json",
@@ -233,6 +234,17 @@ def run_executable_gates(full: bool) -> None:
         "public visual-system regression",
         [sys.executable, "-m", "unittest", "discover", "-s", "pinshu-visual-system/tests", "-v"],
     )
+    # The film-teardown self-test needs ffmpeg and numpy/soundfile/pillow; CI installs them and runs it as a hard step.
+    import importlib.util
+    film_deps = all(importlib.util.find_spec(m) for m in ("numpy", "soundfile", "PIL")) and shutil.which("ffmpeg") and shutil.which("ffprobe")
+    if film_deps:
+        run_check(
+            "film-teardown offline self-test",
+            [sys.executable, "pinshu-film-teardown/tests/self_test.py"],
+            timeout=600,
+        )
+    else:
+        warnings.append("film-teardown self-test skipped: needs ffmpeg, ffprobe, numpy, soundfile and pillow")
     if full:
         run_check("installer negative controls", ["bash", "tests/test_installer.sh"], timeout=240)
 

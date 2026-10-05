@@ -21,6 +21,7 @@ EXPECTED_SKILLS=(
   pinshu-study
   pinshu-transcript
   pinshu-visual-system
+  pinshu-film-teardown
 )
 LEGACY_SKILLS=(
   transcript-cleaner
@@ -104,7 +105,7 @@ assert_safe_slug() {
 
 is_expected_skill() {
   case "$1" in
-    pinshu-course-capture|pinshu-content-assets|pinshu-course|pinshu-distill|pinshu-md2pdf|pinshu-study|pinshu-transcript|pinshu-visual-system)
+    pinshu-course-capture|pinshu-content-assets|pinshu-course|pinshu-distill|pinshu-md2pdf|pinshu-study|pinshu-transcript|pinshu-visual-system|pinshu-film-teardown)
       return 0
       ;;
     *)
@@ -176,7 +177,7 @@ preflight_target_paths() {
   done
 }
 
-# A prior official clone may be dirty and may contain five, six, or seven
+# A prior official clone may be dirty and may contain five, six, seven, or eight
 # packages. Back it up intact. Existing correctly named Skill directories are
 # backed up intact too; a same-name directory without a matching Skill identity
 # is refused rather than silently replaced.

@@ -20,6 +20,12 @@ jobs:
         run: python3 pinshu-course/tests/self_test_runtime_contracts.py
       - name: Content-assets route self-test
         run: python3 -m unittest discover -s pinshu-content-assets/tests -v
+      - name: Film-teardown offline self-test
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes ffmpeg
+          python3 -m pip install --quiet numpy soundfile pillow
+          python3 pinshu-film-teardown/tests/self_test.py
       - name: Install Chrome
         uses: browser-actions/setup-chrome@c785b87e244131f27c9f19c1a33e2ead956ab7ce
         with:

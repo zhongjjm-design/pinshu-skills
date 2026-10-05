@@ -5,7 +5,7 @@ maintainer: Aidan
 repository: https://github.com/zhongjjm-design/pinshu-skills
 runtime_layout: flat
 runtime_glob: ~/.agents/skills/pinshu-*
-updated: 2026-10-05
+updated: 2026-10-06
 skills:
   - name: pinshu-transcript
     origin: original
@@ -51,3 +51,11 @@ skills:
     status: public-preview
     depends_on: []
     runtime_dependencies: [python3, imagemagick-7, image-capable-agent]
+  - name: pinshu-film-teardown
+    origin: original
+    distribution: bundled
+    present_in_repository: true
+    version: 0.1.0
+    status: public-preview
+    depends_on: []
+    runtime_dependencies: [python3, ffmpeg, nodejs, hyperframes-cli, baocut-cli, gemini-api-key]

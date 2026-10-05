@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinshu Film Teardown"
+  short_description: "Turn a brand film into horizontal and vertical teardown videos with covers, QC, and a review loop"
+  default_prompt: "Use $pinshu-film-teardown to turn this brand film into a teardown video: read the rules, run the environment check, and show me the script and a 30-second sample before going further."

@@ -1,0 +1,115 @@
+@font-face { font-family: "SHSerif"; src: url("assets/fonts/SourceHanSerif-VF.ttf") format("truetype"); font-weight: 200 900; }
+@font-face { font-family: "HiraginoGB"; src: url("assets/fonts/HiraginoSansGB.ttc"); font-weight: 300 700; }  /* sans-serif for comment cards (Hiragino Sans GB, like a phone comment) */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: #111; }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "SHSerif", serif; color: #fff; background: #111; }
+.num { font-family: "SHSerif", serif; font-weight: 300; }  /* Didot's "1" looks like a Roman I; numbers use Source Han Serif */
+.bgc { position: absolute; inset: 0; }
+.vw { position: absolute; inset: 0; overflow: hidden; }
+.vfull { display: block; width: 1920px; height: 1080px; }
+.vblur { display: block; width: 2160px; height: 1215px; margin: -68px 0 0 -120px; filter: blur(34px) brightness(0.7) saturate(1.1); }  /* brightness raised from 0.52 to 0.7: blurred backgrounds read as gloomy */
+/* darken the bottom for caption legibility, lightly darken the top for title legibility */
+.shade { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,.62) 0%, rgba(0,0,0,0) 26%), linear-gradient(to bottom, rgba(0,0,0,.35) 0%, rgba(0,0,0,0) 22%); }
+.scene { position: absolute; inset: 0; pointer-events: none; }
+
+.over { position: absolute; right: 110px; top: 90px; flex-direction: row; font-size: 64px; font-weight: 900; letter-spacing: 3px; text-shadow: 0 4px 20px rgba(0,0,0,.6); display: flex; align-items: center; gap: 22px; }
+.over i { display: block; width: 8px; height: 70px; background: #e8322c; }
+
+.cmt-head { position: absolute; left: 0; right: 0; top: 120px; text-align: center; font-size: 76px; font-weight: 900; }
+.cmt { position: absolute; left: 460px; top: 270px; width: 1000px; height: 560px; object-fit: contain; background: #fff; box-shadow: 0 30px 70px rgba(0,0,0,.6); }
+.likes { position: absolute; right: 470px; top: 210px; font-size: 34px; color: #ffd36b; font-weight: 700; letter-spacing: 3px; }
+
+.ask { position: absolute; left: 0; right: 0; top: 400px; text-align: center; font-size: 170px; font-weight: 900; letter-spacing: 12px; }
+
+.chap { position: absolute; left: 180px; top: 300px; }
+.cno { font-size: 190px; line-height: 1; color: #e8322c; letter-spacing: 4px; }
+.ct1 { margin-top: 20px; font-size: 104px; font-weight: 900; letter-spacing: 6px; }
+.ct2 { margin-top: 18px; font-size: 52px; font-weight: 600; color: #e9e3d6; letter-spacing: 4px; }
+
+.sn { position: absolute; right: 110px; top: 50px; text-align: right; font-size: 300px; line-height: 1; color: #fff; text-shadow: 0 6px 30px rgba(0,0,0,.55); }
+.stag { position: absolute; right: 110px; top: 380px; text-align: right; font-size: 60px; font-weight: 900; letter-spacing: 4px; text-shadow: 0 4px 20px rgba(0,0,0,.7); padding-top: 18px; border-top: 6px solid #e8322c; }
+
+.chead { position: absolute; right: 110px; top: 80px; flex-direction: row; font-size: 58px; font-weight: 900; letter-spacing: 3px; text-shadow: 0 4px 20px rgba(0,0,0,.6); display: flex; align-items: center; gap: 22px; }
+.chead i { display: block; width: 8px; height: 64px; background: #e8322c; }
+.chips { position: absolute; right: 110px; top: 180px; display: flex; gap: 22px; }
+.chip { display: block; font-size: 44px; font-weight: 800; padding: 12px 30px; background: #e8322c; letter-spacing: 3px; }
+
+.pwall { position: absolute; left: 150px; top: 150px; width: 1620px; display: grid; grid-template-columns: repeat(4, 390px); gap: 20px; }
+.pst { display: block; width: 390px; height: 176px; object-fit: cover; box-shadow: 0 10px 26px rgba(0,0,0,.5); }
+.phead { position: absolute; left: 0; right: 0; top: 60px; text-align: center; font-size: 52px; font-weight: 900; letter-spacing: 4px; }
+
+.endc { position: absolute; left: 180px; top: 230px; right: 180px; }
+.ek { font-size: 38px; letter-spacing: 10px; color: #ffd9c9; }
+.et { margin-top: 24px; font-size: 92px; font-weight: 900; line-height: 1.25; }
+.ea { margin-top: 40px; font-size: 38px; letter-spacing: 4px; color: #ffe9df; }
+.er { position: absolute; right: 0; top: 330px; display: flex; flex-direction: column; align-items: center; gap: 14px; font-size: 30px; color: #ffe9df; letter-spacing: 3px; }
+.er img { display: block; width: 210px; height: 210px; }
+
+.cap { position: absolute; left: 120px; right: 120px; top: 942px; display: flex; justify-content: center; pointer-events: none; }
+.cap span { display: block; font-size: 62px; font-weight: 700; line-height: 1.35; letter-spacing: 2px; text-align: center; color: #fff;
+  /* thin black outline plus soft shadow, no solid band: online explainers use outlined captions, not a full-width black strip */
+  text-shadow: -2px -2px 0 rgba(0,0,0,.8), 2px -2px 0 rgba(0,0,0,.8), -2px 2px 0 rgba(0,0,0,.8), 2px 2px 0 rgba(0,0,0,.8), 0 0 3px #000, 0 3px 8px rgba(0,0,0,.85), 0 0 18px rgba(0,0,0,.45); }
+
+.subband { position: absolute; left: 0; right: 0; top: 878px; bottom: 0; pointer-events: none;
+  backdrop-filter: blur(18px) brightness(0.85); -webkit-backdrop-filter: blur(18px) brightness(0.85);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%); mask-image: linear-gradient(to bottom, transparent 0%, #000 14%); }
+/* narrow, light frosted strip. It cannot be removed entirely: the original film's burned-in subtitles sit near the bottom
+   (still visible after the 1.12x scale), roughly 930-965 px in the output; this ~200 px strip blurs them without darkening the picture */
+.cshade { position: absolute; right: 0; top: 0; width: 1400px; height: 460px; background: radial-gradient(ellipse at 100% 0%, rgba(0,0,0,.62) 0%, rgba(0,0,0,.35) 45%, rgba(0,0,0,0) 75%); }
+.flip { position: absolute; inset: 0; overflow: hidden; }
+.fp { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; opacity: 0; }
+
+.tshade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.55) 45%, rgba(0,0,0,.15) 100%); }
+.ttl { position: absolute; left: 160px; top: 250px; }
+.ttl-k { display: inline-block; font-size: 40px; font-weight: 800; letter-spacing: 6px; padding: 10px 26px; background: #e8322c; margin-bottom: 40px; }
+.ttl-t { font-size: 138px; font-weight: 900; line-height: 1.22; letter-spacing: 6px; text-shadow: 0 8px 40px rgba(0,0,0,.6); }
+.ttl-a { margin-top: 48px; font-size: 36px; letter-spacing: 8px; color: #f3d9cf; }
+.vtitle { filter: blur(10px) brightness(0.6) saturate(1.15); }
+.sn, .over { text-shadow: 0 0 36px rgba(0,0,0,.75), 0 6px 24px rgba(0,0,0,.6); }
+.fpc { position: absolute; left: 269px; top: 40px; width: 1382px; height: 778px; box-shadow: 0 18px 60px rgba(0,0,0,.6); opacity: 1; }  /* single poster as a card, its caption line above the caption band */
+
+/* white on red: soften compressed edges with a faint dark shadow */
+.chip, .ttl-k, .endc { text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+
+/* comment quote card: the narration paraphrases, the card shows the evidence */
+.qcard { position: absolute; left: 110px; top: 110px; width: 860px; padding: 30px 40px 34px; background: rgba(255,255,255,.96); border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.45); font-family: "HiraginoGB", sans-serif; opacity: 0; }
+.qmeta { display: flex; align-items: center; gap: 14px; font-size: 26px; color: #8a8a8a; letter-spacing: 1px; }
+.qav { display: block; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #cfd8dc, #9fb0b7); }
+.qtxt { margin-top: 16px; font-size: 40px; line-height: 1.55; color: #262626; }
+.qtxt b { color: #e8322c; font-weight: 700; }
+
+/* graphic cards parodying a typical anniversary film (deep red, gold type, rays) */
+.gfx { position: absolute; inset: 0; overflow: hidden; opacity: 0;
+  background: radial-gradient(ellipse at 50% 42%, #93201a 0%, #52100c 52%, #1e0403 100%); }
+.grays { position: absolute; left: 50%; top: 42%; width: 3200px; height: 3200px; margin: -1600px 0 0 -1600px;
+  background: repeating-conic-gradient(from 0deg, rgba(255,214,140,.10) 0deg 5deg, rgba(0,0,0,0) 5deg 15deg); }
+.gtag { position: absolute; left: 110px; top: 84px; padding: 8px 20px; border: 2px solid rgba(255,230,190,.7); color: #ffe6be; font-size: 30px; letter-spacing: 6px; }
+.gc { position: absolute; left: 0; right: 0; top: 300px; text-align: center; }
+.gsub { font-size: 60px; font-weight: 700; letter-spacing: 16px; color: #ffe6be; }
+.gold { background: linear-gradient(180deg, #fff6cf 0%, #f5cd6a 48%, #b9852a 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+  font-weight: 900; filter: drop-shadow(0 6px 18px rgba(0,0,0,.45)); }
+.gbig { display: inline-block; margin-top: 18px; font-size: 170px; letter-spacing: 14px; }
+.gchart { position: relative; margin: 18px auto 0; width: 760px; height: 250px; display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 4px solid rgba(255,230,190,.6); }
+.gchart i { display: block; width: 110px; background: linear-gradient(180deg, #ffe3a0, #c48f33); transform-origin: 50% 100%; }
+.gnum { display: inline-block; margin-top: 6px; font-size: 130px; }
+.gcg { top: 220px; }
+.gdot { position: absolute; top: -40px; width: 22px; height: 22px; border-radius: 50%; background: #f5cd6a; opacity: .9; }
+.gsun { position: absolute; left: 50%; top: 115%; width: 1800px; height: 1800px; margin-left: -900px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,196,90,.85) 0%, rgba(255,120,40,.35) 35%, rgba(0,0,0,0) 65%); }
+.gpile { position: absolute; inset: 0; }
+.gp { position: absolute; font-size: 90px; opacity: .55; }
+.gp0 { left: 170px; top: 230px; } .gp1 { right: 190px; top: 200px; } .gp2 { left: 260px; top: 600px; } .gp3 { right: 250px; top: 620px; } .gp4 { left: 820px; top: 130px; }
+.gstamp { position: absolute; left: 0; right: 0; top: 380px; margin: 0 auto; width: max-content; rotate: -5deg; padding: 26px 60px; background: #e8322c; color: #fff;
+  font-size: 110px; font-weight: 900; letter-spacing: 8px; border: 6px solid #fff; box-shadow: 0 20px 50px rgba(0,0,0,.5); white-space: nowrap; }
+
+/* story recap: told numbers in a row lighting up one by one, a red ruler below (dark background, distinct from the red-gold parody cards) */
+.gk-recap { background: radial-gradient(ellipse at 50% 45%, #232020 0%, #0d0c0c 72%); }
+.rc { position: absolute; left: 160px; right: 160px; top: 300px; display: flex; justify-content: space-between; }
+.rci { width: 260px; text-align: center; opacity: .18; }
+.rcn { font-size: 170px; line-height: 1; color: #fff; }
+.rct { margin-top: 24px; font-size: 50px; font-weight: 700; color: #e9e3d6; letter-spacing: 2px; }
+.rcl { position: absolute; left: 160px; right: 160px; top: 710px; height: 4px; background: #e8322c; transform-origin: 0 50%; transform: scaleX(0); }
+.rcl i { position: absolute; top: -12px; width: 4px; height: 28px; background: #e8322c; margin-left: -2px; }
+.fpf { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; object-fit: cover; }  /* full-screen image (a small card on black reads as cheap) */

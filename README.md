@@ -1,10 +1,10 @@
 # Pinshu Skills
 
-Aidan (Pinshu) maintains this suite of eight skills for faithful transcript editing, course production, learning, and reusable content assets. It works with Claude Code and other compatible agents.
+Aidan (Pinshu) maintains this suite of nine skills for faithful transcript editing, course production, learning, reusable content assets, visuals, and brand-film teardown videos. It works with Claude Code and other compatible agents.
 
 ## Quick install
 
-On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. The same command installs all eight skills on a fresh computer or upgrades an older Pinshu installation. Before replacing an existing, correctly named Pinshu Skill, the installer moves the complete old directory and any previous repository clone to recoverable backups; unrelated or unsafe paths are refused. Inspect the installer before executing a remote script on your computer.
+On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. The same command installs all nine skills on a fresh computer or upgrades an older Pinshu installation. Before replacing an existing, correctly named Pinshu Skill, the installer moves the complete old directory and any previous repository clone to recoverable backups; unrelated or unsafe paths are refused. Inspect the installer before executing a remote script on your computer.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/install.sh | bash
@@ -37,6 +37,16 @@ Tell your Agent:
 > Use pinshu-visual-system to illustrate this article for WeChat. Read the source, recommend a coherent style, generate and inspect one first image, then prepare the reviewed platform-sized candidate. Use no fixed character.
 
 This is a usable initial sharing edition, with candidates and limitations clearly marked. We will keep improving it through the repository. It makes no claim of fully stable automatic batch generation. An existing private/local visual-system installation is protected from replacement by the installer.
+
+## Brand-film teardown videos
+
+[`pinshu-film-teardown`](pinshu-film-teardown/SKILL.md) is a public preview (0.1.0) that makes a peer-to-peer breakdown video (about four minutes) of a brand film, in a horizontal edition for WeChat Channels and a vertical edition for Douyin, with covers. A film is a project folder (footage, voice), a `spec.py` describing what the film says, and the skill's scripts. Captions, cuts and labels are anchored to the moment each word is actually spoken; the narration is synthesized in one pass and cut only at measured silences; the music is fitted so its own ending chord lands on the end card; an independent critic reviews every cut before it ships.
+
+It is tested on macOS (on Linux, also install a CJK font such as Noto Sans CJK SC). It needs FFmpeg, Node.js and the HyperFrames CLI, a Python with numpy, soundfile, pillow and librosa, the BaoCut transcription CLI, and your own Gemini API key for the voice (optional: Demucs for vocal separation). Tell your Agent:
+
+> Use pinshu-film-teardown to turn this brand film into a teardown video. Read its rules first, run the environment check, and show me the script and a 30-second preview before producing the whole film.
+
+The skill ships no fonts, music, footage or keys. `scripts/new_project.py` copies the sound effects bundled with HyperFrames (Pixabay Content License) and, on macOS, the Hiragino Sans GB system font into the project and downloads Source Han Serif (SIL OFL) from Adobe's repository. `tests/self_test.py` runs the pipeline offline on synthetic material. It has been proven on one film so far; expect updates as more brands go through it.
 
 ## Core course-asset pipeline
 
@@ -90,6 +100,7 @@ For batches larger than three lessons, deliver one representative lesson first. 
 | Skill | Purpose |
 |---|---|
 | `pinshu-visual-system` | Plan, generate with an image-capable agent, visually inspect and export source-faithful content visuals |
+| `pinshu-film-teardown` | Turn a brand film (TVC, anniversary film, ad) into a teardown explainer video: real footage, AI narration, speaker bites, code-built motion and music, horizontal and vertical editions, covers, QC and an independent review loop |
 | `pinshu-transcript` | Turn raw transcripts into faithful edited transcripts while preserving substantive meaning and source boundaries |
 | `pinshu-distill` | Produce clear, self-contained structured study guides and approved cross-cutting topics from faithful transcripts |
 | `pinshu-content-assets` | Organize corrected course, livestream, or interview material into a source-traceable content master for later writing; never auto-write the article |
