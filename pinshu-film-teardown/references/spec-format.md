@@ -53,6 +53,7 @@ Flags on a shot: `"card": True` marks the original film's own title card (not en
 | `END_BG` | End-card background color, default `#b3161b` |
 | `VERTICAL` | Top band of the vertical edition: `{"kicker": ..., "title": [two lines]}`; an empty `title` hides the title band |
 | `COVER` | Cover: which frame of the original film, the face position (forehead to chin), the hook line, font size, and the horizontal and vertical crops (see the top of `make_cover.py`) |
+| `FRAME` | Original-film framing: `{"zoom": (1.12, 1.19), "origin": "0% 0%", "subband_top": 878}`. `zoom` is the scale at the start and end of each original-film shot (a slow push); `origin` is the corner the scaling grows from (`"0% 0%"` keeps the top-left fixed and crops the right and bottom, which pushes a logo out of frame); `subband_top` is the top edge, in pixels, of the frosted strip over the film's burned-in subtitles, or `None` when the film has none. The defaults are the pilot film's values; **measure every new film from a few frames before filling this in** |
 | `BITES_DIR` / `OUT_VOICE_SUBDIR` | Compatibility settings for older projects; new projects leave them unset |
 
 ## sections.json

@@ -119,6 +119,24 @@ VERTICAL = {{"kicker": "k", "title": ["l1", "l2"]}}
     check("before" in r.stdout and "could not verify" in r.stdout, "pause added at SPLITS and the unverifiable mid-sentence pause left alone")
     check(re.search(r"[\u4e00-\u9fff]", open(f"{C.ASSETS}/wide.js").read()) is None, "engine template stays ASCII")
 
+    # Rejection tests: a spec that drops narration, or cues a word the scene never says, must stop the build
+    good = spec
+    dropped = good.replace(f'    ("full", {S2!r}, {{"src": 40.0, "clips": [40.0, {{"src": 50.0, "at": {S2[6:9]!r}, "card": True}}]}}),\n', "")
+    check(dropped != good, "rejection test removes the last narrated scene")
+    open(f"{P}/spec.py", "w").write(dropped)
+    r = run([os.path.join(SCRIPTS, "build.py")], env, expect_ok=False)
+    check(r.returncode != 0 and "not fully covered" in (r.stdout + r.stderr), "build.py refuses a scene list that leaves narration out")
+    open(f"{P}/spec.py", "w").write(good.replace(f'"at": {A[7:10]!r}', '"at": "' + cjk(99, 3) + '"'))
+    r = run([os.path.join(SCRIPTS, "build.py")], env, expect_ok=False)
+    check(r.returncode != 0 and "cue word" in (r.stdout + r.stderr), "build.py names a cue word that the scene never says")
+    open(f"{P}/spec.py", "w").write(good + 'FRAME = {"zoom": (1.0, 1.05), "origin": "50% 50%", "subband_top": None}\n')
+    r = run([os.path.join(SCRIPTS, "build.py")], env)
+    fh = open(f"{P}/wide/index.html").read()
+    check(r.returncode == 0 and 'class="subband' not in fh and "scale: 1.05" in fh and '"50% 50%" : "50% 50%"' in fh, "spec.FRAME sets the film's scaling and turns off the subtitle strip")
+    open(f"{P}/spec.py", "w").write(good)
+    r = run([os.path.join(SCRIPTS, "build.py")], env)
+    check('class="subband' in open(f"{P}/wide/index.html").read() and "top: 878px" in open(f"{P}/wide/index.html").read(), "default framing keeps the pilot film's subtitle strip")
+
     r = run([os.path.join(SCRIPTS, "build.py")], {**env, "CLEAN_FOR_VERTICAL": "1"})
     clean_html = open(f"{P}/wide/index.html").read()
     check(r.returncode == 0 and 'class="cap clip"' not in clean_html and 'id="er"' not in clean_html, "caption-free build has no captions and no QR")

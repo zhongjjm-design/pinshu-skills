@@ -46,10 +46,10 @@ SC.forEach((s) => {
       for (let k = 1; k < c.flip; k++) tl.fromTo("#fp" + i + "_" + k, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: 0.12, ease: "power2.out" }, c.st + k * step);
       return;
     }
-    // original film: scaled up from the top-left (keeps the broadcaster logo out); stock footage: centred push
+    // original film: scaled up by spec.FRAME (default from the top-left, keeping the broadcaster logo out); stock footage: centred push
     fadeIn("#vw" + i + "_" + ci, c.st, 0.3);
     if (c.card) tl.set("#v" + i + "_" + ci, { scale: 1 }, c.st);  // the original film's own title card: no scale, no push, centred as shot (scaling from top-left pushed it off centre)
-    else tl.fromTo("#v" + i + "_" + ci, { scale: 1.12 }, { scale: 1.19, duration: c.dd, ease: "none", transformOrigin: c.stock ? "50% 50%" : "0% 0%" }, c.st);
+    else tl.fromTo("#v" + i + "_" + ci, { scale: __Z0__ }, { scale: __Z1__, duration: c.dd, ease: "none", transformOrigin: c.stock ? "50% 50%" : "__ORIGIN__" }, c.st);
     if (c.quote) {  // comment quote card
       tl.fromTo("#qc" + i + "_" + ci, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45, ease: E }, c.st + 0.25);
       tl.to("#qc" + i + "_" + ci, { opacity: 0, duration: 0.25, ease: "power1.in" }, c.st + c.dd - 0.25);
@@ -60,7 +60,7 @@ SC.forEach((s) => {
     const st = (s.k === "chapter" && p === "v") ? t + 2.9 : t;
     const dd = (s.k === "chapter" && p === "b") ? 3.2 : (s.k === "chapter" ? d - 2.9 : d);
     fadeIn("#" + p + "w" + i, st, 0.4);
-    if (p === "v") tl.fromTo("#" + p + i, { scale: 1.12 }, { scale: 1.19, duration: dd, ease: "none", transformOrigin: "0% 0%" }, st);
+    if (p === "v") tl.fromTo("#" + p + i, { scale: __Z0__ }, { scale: __Z1__, duration: dd, ease: "none", transformOrigin: "__ORIGIN__" }, st);
     else tl.fromTo("#" + p + i, { scale: 1.0 }, { scale: 1.05, duration: dd, ease: "none" }, st);
   });
   if (s.k === "full" && has("#o" + i)) tl.fromTo("#o" + i, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.6, ease: E }, v + 0.6);
@@ -102,7 +102,7 @@ SC.forEach((s) => {
 });
 // opening title page
 tl.set("#tvw", { opacity: 1 }, 0);  // the first frame already shows the full title, no fade from black
-tl.fromTo("#tv", { scale: 1.12 }, { scale: 1.2, duration: 3.4, ease: "none", transformOrigin: "0% 0%" }, 0);
+tl.fromTo("#tv", { scale: __Z0__ }, { scale: __ZT__, duration: 3.4, ease: "none", transformOrigin: "__ORIGIN__" }, 0);
 tl.set(["#tk", "#tt1", "#tt2", "#ta"], { opacity: 1 }, 0);
 tl.fromTo(".ttl", { scale: 1 }, { scale: 1.03, duration: 3.0, ease: "none", transformOrigin: "0% 50%" }, 0);
 ["#ta", "#tt2", "#tt1", "#tk"].forEach((x, k) => tl.to(x, { opacity: 0, duration: 0.3, ease: "power1.in" }, 2.9 + k * 0.06));  // staggered exit, done before 3.38 s

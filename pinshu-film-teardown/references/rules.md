@@ -45,7 +45,7 @@ New feedback goes into `pitfalls.md` first; once it is confirmed as a rule, upda
 ## 4. Captions
 
 - Horizontal captions are size 62, white text with a thin black outline and a soft drop shadow, with **no full-width black band** (feedback: such a wide and tall black caption background is unusual and does not look standard).
-- When the original film's burned-in captions need covering, use only a narrow, light frosted bar (about 200 pixels, not darkened). With a new original film, first measure the height of its captions in the frame.
+- When the original film's burned-in captions need covering, use only a narrow, light frosted bar (about 200 pixels, not darkened). With a new original film, first measure the height of its captions in the frame and set `FRAME["subband_top"]` in `spec.py` (`None` when it has no burned-in captions); the scale and the corner it grows from are set in `FRAME` too.
 - Punctuation follows the Netflix Simplified Chinese style guide: full-width commas, full stops, semicolons, and colons are replaced by spaces; the enumeration comma (the Chinese list separator) is kept only in lists; quotation marks are used only for the speakers' own words.
 - Caption timing is anchored to real pronunciation. Each block lasts at least 0.6 seconds, blocks never overlap, and blocks shorter than 5 characters merge into the next block.
 

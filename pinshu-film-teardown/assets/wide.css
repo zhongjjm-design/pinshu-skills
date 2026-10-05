@@ -51,7 +51,7 @@ html, body { width: 1920px; height: 1080px; overflow: hidden; background: #111; 
   /* thin black outline plus soft shadow, no solid band: online explainers use outlined captions, not a full-width black strip */
   text-shadow: -2px -2px 0 rgba(0,0,0,.8), 2px -2px 0 rgba(0,0,0,.8), -2px 2px 0 rgba(0,0,0,.8), 2px 2px 0 rgba(0,0,0,.8), 0 0 3px #000, 0 3px 8px rgba(0,0,0,.85), 0 0 18px rgba(0,0,0,.45); }
 
-.subband { position: absolute; left: 0; right: 0; top: 878px; bottom: 0; pointer-events: none;
+.subband { position: absolute; left: 0; right: 0; top: __SUBBAND_TOP__px; bottom: 0; pointer-events: none;
   backdrop-filter: blur(18px) brightness(0.85); -webkit-backdrop-filter: blur(18px) brightness(0.85);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%); mask-image: linear-gradient(to bottom, transparent 0%, #000 14%); }
 /* narrow, light frosted strip. It cannot be removed entirely: the original film's burned-in subtitles sit near the bottom

@@ -38,10 +38,10 @@ Turn a brand film into a commentary video in the style of "a peer breaking down 
 | Step | What to do | Command | Stop |
 |---|---|---|---|
 | 1 Create the project | Create the folders; gather the original film, sound effects, fonts, and the config template | `new_project.py <project dir> --film <film>.mp4` | |
-| 2 Screen the original | Make a contact sheet of the original film at one frame per second and list everyone who appears; note which seconds each story and each person occupies | ffmpeg frame extraction | |
+| 2 Screen the original | Make a contact sheet of the original film at one frame per second and list everyone who appears; note which seconds each story, each person and each speaker bite occupies; measure where the film's own burned-in subtitles sit and which corner holds a logo, and put that in `spec.py` as `FRAME` | ffmpeg frame extraction | |
 | 3 Write the script | Peer-breakdown voice; list the facts; spawn a separate subagent to critique it with the script review; write `sections.json` | `references/review-prompts.md` | **(1) The user approves the script** |
-| 4 Narration | Synthesize the whole script in one pass (with a warm-up sentence); slow down rushed words locally; cut the speakers' original voice clips | `gen_voice.py`, `patch_voice.py`, `prep_bites.py` | The user listens to the full narration |
-| 5 Write the config | Scenes, shots, labels, pauses, end card, and cover all go into `spec.py` | `references/spec-format.md` | |
+| 4 Narration | Synthesize the whole script in one pass (with a warm-up sentence); slow down rushed words locally; for speaker bites, **first put the exact words and their start and end seconds (from step 2) into `spec.py` as `BITE_TEXT` and `BITE_CUTS`, then cut them** | `gen_voice.py`, `patch_voice.py`, `prep_bites.py` | The user listens to the full narration |
+| 5 Write the config | The remaining scenes, shots, labels, pauses, end card, and cover go into `spec.py`; scene texts joined in order must reproduce `sections.json` exactly (`build.py` stops if even one character is left out) | `references/spec-format.md` | |
 | 6 Build | Anchor captions and cuts to real pronunciation; clear every warning about the original film's edit points | `build.py` | **(2) Render the first 30 seconds for the user** |
 | 7 Music | Pick a piano piece from a music library and edit it so its closing cadence lands on the end card | `fit_music.py` | |
 | 8 Render, mix, QC | Low-memory rendering, mixing, and the QC checks | `render.py`, `mix.py`, `qc.py` | QC PASS |
@@ -58,7 +58,7 @@ python3 $S/doctor.py .                                   # check the environment
 python3 $S/new_project.py <project dir> --film <film>.mp4  # create a project
 python3 $S/gen_voice.py sections.json --warm "<warm-up sentence>"  # full narration -> voice/gemini_Charon/
 python3 $S/patch_voice.py                                # optional: slow down locally per spec.PATCH
-python3 $S/prep_bites.py                                 # cut speaker bites per spec.BITE_CUTS
+python3 $S/prep_bites.py                                 # fill BITE_TEXT and BITE_CUTS in spec.py first, then cut the bites
 python3 $S/build.py                                      # generate wide/index.html and timeline.json
 python3 $S/fit_music.py                                  # fit the music -> wide/assets/bgm/<track>_fit.wav
 python3 $S/render.py wide wide/renders/raw.mp4           # render (no music)

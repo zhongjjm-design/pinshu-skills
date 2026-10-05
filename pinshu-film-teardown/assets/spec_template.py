@@ -54,6 +54,10 @@ GFX = {}
 # ending chords (dominant, tonic) in seconds. Find them by listening plus librosa beat/chroma analysis.
 BGM = {"file": "<track>.mp3", "loop": (41.38, 19.55), "cadence": (208.42, 210.07)}
 
+# Original-film framing. Measure the film first (grab frames): where its burned-in subtitles sit after scaling, and
+# which corner holds a logo you want pushed out of frame. subband_top None = the film has no subtitles to blur.
+FRAME = {"zoom": (1.12, 1.19), "origin": "0% 0%", "subband_top": 878}
+
 # Vertical edition title band; an empty title list hides it
 VERTICAL = {"kicker": "<label>", "title": ["<line 1>", "<line 2>"]}
 

@@ -194,11 +194,22 @@ si = 0; LOC = {}
 for i, (k, txt, p) in enumerate(S):
     if not txt: continue
     while True:
+        if si >= len(secs):
+            raise SystemExit(f'Scene {i} ({k}): its text "{txt[:20]}" comes after the end of sections.json. Scene texts joined in order '
+                             f'must reproduce sections.json exactly; remove the extra text or add it to sections.json and re-record.')
         sc = secs[si]; at = sc["text"].find(txt, sc["pos"])
         if at == sc["pos"]: break
-        assert at == -1 and sc["pos"] == len(sc["text"]), (i, "scene text does not match the section text", txt[:20], sc["text"][sc["pos"]:sc["pos"] + 20])
+        if not (at == -1 and sc["pos"] == len(sc["text"])):
+            raise SystemExit(f'Scene {i} ({k}) does not continue section {sc["j"]}: the section goes on with "{sc["text"][sc["pos"]:sc["pos"] + 20]}" '
+                             f'but the scene starts with "{txt[:20]}". Scene texts joined in order must reproduce sections.json exactly, '
+                             f'punctuation included; fix the scene text in spec.S.')
         si += 1
     LOC[i] = (si, at); sc["pos"] = at + len(txt)
+for sc in secs:  # every character of the narration must belong to a scene, or captions and pictures silently go missing
+    if sc["pos"] != len(sc["text"]):
+        raise SystemExit(f'Section {sc["j"]} is not fully covered by the scene list: {len(sc["text"]) - sc["pos"]} characters from '
+                         f'"{sc["text"][sc["pos"]:sc["pos"] + 20]}" on belong to no scene. Add them to a scene in spec.S (in order), '
+                         f'or remove them from sections.json and re-record.')
 BT = {}; BITE_LOG = []
 for bn, btxt in BITE_TEXT.items():
     # A speaker bite may be at most 1 dB louder than the narration (review: bites ran 2.2-2.9 dB hot); one fixed gain
@@ -217,7 +228,11 @@ def absT(s, k):  # absolute start of the k-th character (punctuation-free count)
     sc = secs[s["sec"]]; return SECPOS[s["sec"]] + sc["Tn"][sidx(sc["text"], s["off"]) + k][0]
 
 
-def at_time(s, phrase): return round(absT(s, sidx(s["txt"], s["txt"].index(phrase))), 2)
+def at_time(s, phrase):
+    if phrase not in s["txt"]:
+        raise SystemExit(f'Scene {s["i"]} ({s["k"]}): cue word "{phrase}" (from "at", "t2at" or a chips item) is not in this scene\'s '
+                         f'narration "{s["txt"][:30]}". Use words that are spoken in this scene, exactly as written in spec.S.')
+    return round(absT(s, sidx(s["txt"], s["txt"].index(phrase))), 2)
 
 
 t = TITLE["d"]
@@ -260,11 +275,17 @@ for s in SC:
             elif "gfx" in c: cl.append({"st": st[ci], "dd": dd, "gfx": c["gfx"], **({"t2": round(at_time(s, c["t2at"]) - 0.1, 2)} if c.get("t2at") else {})})
             elif "img" in c: cl.append({"st": st[ci], "dd": dd, "img": c["img"], **({"full": 1} if c.get("full") else {})})
             elif "f" in c:
-                fd = dur(f"{STOCK}/{c['f']}.mp4"); ms = min(c.get("ms", 0), round(fd - dd - 0.05, 2)); assert ms >= 0, (i, c, dd, fd)
+                fd = dur(f"{STOCK}/{c['f']}.mp4"); ms = min(c.get("ms", 0), round(fd - dd - 0.05, 2))
+                if ms < 0:
+                    raise SystemExit(f'Scene {i} ({k}): stock clip {c["f"]}.mp4 is {fd:.1f} s long but has to fill {dd:.1f} s here. Use a longer clip, '
+                                     f'cut to another shot earlier with "at", or split the scene.')
                 cl.append({"st": st[ci], "dd": dd, "file": f"assets/stock/{c['f']}.mp4", "ms": ms, "stock": 1})
                 if c.get("quote"): cl[-1]["quote"] = c["quote"]
             else:
-                assert c["src"] + dd <= TVC_MAX, (i, c, dd); cl.append({"st": st[ci], "dd": dd, "file": "assets/tvc.mp4", "ms": c["src"], "stock": 0, **({"card": 1} if c.get("card") else {}), **({"hideover": 1} if c.get("hideover") else {})})
+                if c["src"] + dd > TVC_MAX:
+                    raise SystemExit(f'Scene {i} ({k}): the original-film shot from {c["src"]} s has to run {dd:.1f} s, past the end of the film '
+                                     f'({TVC_MAX + 0.1:.1f} s). Start it earlier ("src") or cut to another shot with "at".')
+                cl.append({"st": st[ci], "dd": dd, "file": "assets/tvc.mp4", "ms": c["src"], "stock": 0, **({"card": 1} if c.get("card") else {}), **({"hideover": 1} if c.get("hideover") else {})})
                 if c.get("quote"): cl[-1]["quote"] = c["quote"]
         s["cl"] = cl
         imgs = [c["st"] for c in cl if c.get("img") or c.get("hideover")]
@@ -272,7 +293,9 @@ for s in SC:
         cards = [c["st"] for c in cl if c.get("img") or c.get("flip") or c.get("gfx") or c.get("hideover")]
         if cards and k == "story": s["overlayOff"] = cards[0]
 for s in SC:
-    if "src" in s and not s.get("cl"): assert s["src"] + s["d"] <= TVC_MAX, (s["i"], s["src"], s["d"])
+    if "src" in s and not s.get("cl") and s["src"] + s["d"] > TVC_MAX:
+        raise SystemExit(f'Scene {s["i"]} ({s["k"]}): the original film from {s["src"]} s has to run {s["d"]:.1f} s, past the end of the film '
+                         f'({TVC_MAX + 0.1:.1f} s). Start it earlier ("src") or add shots with "clips".')
 # Original-film cut check: a clip whose start or end lands within 0.25 s of a cut in the original film flashes the
 # neighbouring shot for a frame or two. Cuts come from scene detection, cached in wide/assets/tvc_cuts.json.
 CUTS_F = f"{PJ}/assets/tvc_cuts.json"; _sig = str(os.path.getsize(f"{PJ}/assets/tvc.mp4"))
@@ -403,6 +426,9 @@ for s in SC:
         L.append(sec(s, f'<div class="endc"><div class="ek" id="ek">{E(N["kicker"])}</div><div class="et" id="et">{N["title_html"]}</div>'
                         + (f'<div class="ea" id="ea">{E(N["author_clean"])}</div></div>' if CLEAN else
                            f'<div class="ea" id="ea">{E(N["author"])}</div><div class="er" id="er"><img src="assets/img/{N["qr"]}"><span>{E(N["qr_text"])}</span></div></div>')))
+# Original-film framing (spec.FRAME): how far the film is scaled up, from which corner, and where the frosted strip
+# over its burned-in subtitles starts. Measure every new film (references/spec-format.md); defaults fit the pilot film.
+FRAME = {"zoom": (1.12, 1.19), "origin": "0% 0%", "subband_top": 878, **getattr(SPEC, "FRAME", {})}
 SB = ""
 for s in SC:
     if s["k"] in ("full", "story", "chips"):  # caption band; skipped while an original title card (card) is on screen
@@ -411,6 +437,7 @@ for s in SC:
             if c["st"] - a0 > 0.05: SB += f'<div class="subband clip" data-start="{round(a0, 2)}" data-duration="{round(c["st"] - a0, 2)}" data-track-index="{40+s["i"]%2}"></div>'
             a0 = c["st"] + c["dd"]
     if s["k"] == "chapter": SB += f'<div class="subband clip" data-start="{round(s["t"]+2.9,2)}" data-duration="{round(s["d"]-2.9,2)}" data-track-index="{40+s["i"]%2}"></div>'
+if FRAME["subband_top"] is None: SB = ""  # the film has no burned-in subtitles to blur
 END_BG = getattr(SPEC, "END_BG", "#b3161b")
 bgl = f'<div class="bgc clip" data-start="0" data-duration="{TITLE["d"]}" data-track-index="1" style="background:#111"></div>' + "".join(
     f'<div class="bgc clip" data-start="{s["t"]}" data-duration="{s["d"]}" data-track-index="1" style="background:{END_BG if s["k"]=="end" else "#111"}"></div>' for s in SC)
@@ -435,8 +462,10 @@ for s in SC:
 for j, (f, st, du, vol) in enumerate(SFX):
     aud.append(f'<audio id="fx{j}" src="assets/sfx/{f}.mp3" data-start="{round(st, 2)}" data-duration="{du}" data-track-index="{87+j%4}" data-volume="{vol}"></audio>')
 
-css = open(f"{C.ASSETS}/wide.css").read()
-js = open(f"{C.ASSETS}/wide.js").read().replace("__SC__", json.dumps(SC, ensure_ascii=False)).replace("__NPOST__", str(getattr(SPEC, "POSTERS", {}).get("n", 16)))
+css = open(f"{C.ASSETS}/wide.css").read().replace("__SUBBAND_TOP__", str(FRAME["subband_top"] or 0))
+z0, z1 = FRAME["zoom"]
+js = (open(f"{C.ASSETS}/wide.js").read().replace("__SC__", json.dumps(SC, ensure_ascii=False)).replace("__NPOST__", str(getattr(SPEC, "POSTERS", {}).get("n", 16)))
+      .replace("__Z0__", f"{z0:g}").replace("__Z1__", f"{z1:g}").replace("__ZT__", f"{z0 + 0.08:g}").replace("__ORIGIN__", FRAME["origin"]))
 doc = f"""<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=1920, height=1080"/>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script><style>{css}</style></head><body>
 <div id="root" data-composition-id="main" data-start="0" data-duration="{TOTAL}" data-width="1920" data-height="1080">
