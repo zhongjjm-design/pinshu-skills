@@ -50,12 +50,13 @@ Turn a brand film into a commentary video in the style of "a peer breaking down 
 
 At each stop, give the user something to watch or look at directly (a film, a sample, a cover), not command-line output. Batch changes before rendering; do not re-render for a single small flaw.
 
-## Commands (run inside the project directory; `S` is this skill's scripts directory)
+## Commands (after the project is created, run inside the project directory; `S` is this skill's scripts directory)
 
 ```bash
 S=~/.agents/skills/pinshu-film-teardown/scripts           # adjust if the skill is installed elsewhere
-python3 $S/doctor.py .                                   # check the environment and project files
+python3 $S/doctor.py                                     # first check this computer's environment (no project yet)
 python3 $S/new_project.py <project dir> --film <film>.mp4  # create a project
+cd <project dir> && python3 $S/doctor.py .               # then check the project's files
 python3 $S/gen_voice.py sections.json --warm "<warm-up sentence>"  # full narration -> voice/gemini_Charon/
 python3 $S/patch_voice.py                                # optional: slow down locally per spec.PATCH
 python3 $S/prep_bites.py                                 # fill BITE_TEXT and BITE_CUTS in spec.py first, then cut the bites
