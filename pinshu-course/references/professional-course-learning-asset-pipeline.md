@@ -2,15 +2,17 @@
 
 ## Objective
 
-Use this pipeline for traditional Chinese medicine, divination systems, academic study, or other course series whose primary goals are learning, review, training, and connecting knowledge across lessons. The user does not need to remember Skill names; the controller routes from natural-language intent.
+Use this pipeline when the user's course purpose is systematic study, professional foundations, certification, exam preparation, or another enabled learning goal. A discipline name alone does not establish purpose. The user need not remember Skill names; the controller routes from natural-language intent. In every course, the four core results remain immutable raw transcript, faithful edit, structured notes, and one shared-map entry.
 
 ## Composition
 
 ```text
+pinshu-course-capture: immutable raw transcript and per-lesson production
 pinshu-transcript: raw transcript → faithfully edited transcript
-pinshu-distill: faithfully edited transcript → structured lecture; module materials → formal cross-lesson topic
-pinshu-study: lecture → active-recall cards; guided study, training, error analysis, and personal records
-pinshu-course: course identity, progress, checkpoints, knowledge clues pending consolidation, and formal promotion
+pinshu-distill: faithfully edited transcript → structured notes; module → formal cross-topic work
+pinshu-course: identity, map, state, checkpoints, clues, and promotion
+pinshu-study: enabled recall cards and question bank; records after real learning
+pinshu-content-assets: on request, a readable content sourcebook per accepted lesson and a cross-lesson sourcebook; pending review
 ```
 
 ## Frontstage and Backstage
@@ -38,7 +40,7 @@ The backstage must remain auditable without occupying the primary learning inter
 1. Original material is available;
 2. The faithfully edited transcript passes source and semantic QA;
 3. The structured lecture highlights priorities, has coherent organization, and supports independent learning;
-4. Candidate active-recall cards use the resolved output language and one primary objective per card;
+4. Enabled active-recall cards and a complementary training bank use the learner's language; atomic cards test one independently scorable objective, integrative cards are separately marked;
 5. The course map is updated;
 6. Register only knowledge clues with explicit cross-lesson value.
 
@@ -46,7 +48,7 @@ Do not generate a complete mock exam or formal cross-lesson topic for every less
 
 ## Per Module
 
-- Merge per-lesson candidate cards into a formal deck;
+- Deduplicate per-lesson cards and create module-level integrative cards when needed;
 - Map to the user’s existing question bank first;
 - Generate module-level guided study and mixed practice;
 - Merge and deduplicate pending clues while preserving meaningful differences;
@@ -70,7 +72,7 @@ Do not register ordinary single-lesson details. Learner-visible course-map summa
 
 ## Learning Triggers
 
-Do not start training merely because the user submits a course, discusses organization, or opens a lecture. Invoke `pinshu-study` when the user asks to start learning, be guided through the material, be quizzed, review, or practice missed questions.
+Generating enabled cards and questions is not a training session. Begin actual practice when the user asks to learn, be guided, be quizzed, review, or practice missed questions. Only after real learning create personal records. When purpose is ambiguous, recommend and ask rather than quietly disabling learning.
 
 States:
 
@@ -85,15 +87,10 @@ Markdown is the source of truth for lectures, cards, question banks, answers, an
 
 ## Concurrency and Formal Promotion
 
-The formal course library has one writer. Subagents write only to exclusive temporary directories. The main agent promotes serially after programmatic counts, source-path validation, content QA, and frontstage reading checks. Generator self-assessment is rework evidence only; keep candidate, generated, self-checked, independently reviewed, reworked, reverified, and accepted states separate. At module close, `pinshu-course` owns cross-lesson card aggregation and deduplication; `pinshu-study` owns only card production and learning use.
+The formal course library has one writer. Subagents write only to exclusive temporary directories. The sole committer promotes serially after structural checks and writer semantic review. Independent QA is risk-triggered or adaptively sampled; ordinary clean lessons do not require a second writer or independent review. Generator self-assessment and a script PASS do not prove semantic acceptance or target-interface rendering. At module close, `pinshu-course` owns cross-lesson card aggregation and deduplication; `pinshu-study` owns only card production and learning use.
 
 ## Scale-Up Gate
 
-Before batch production of an entire course, validate at least:
-
-1. One representative mixed-content lesson;
-2. One clinical case or divination-chart lesson;
-3. One highly visual or hands-on lesson;
-4. Independent QA of the faithful transcript, lecture, active-recall cards, and course map.
+Before batch production, validate representative layout, faithful edit, structured notes, map entry, and enabled learning assets. Clinical or case reasoning, strongly visual or hands-on lessons, critical numbers, and consequential claims trigger independent QA; ordinary lessons use adaptive sampling.
 
 A real “guided study → recall → follow-up questions → source review → record” cycle validates the learning runtime experience. It is not prerequisite approval for generating per-lesson active-recall cards, updating the course map, or starting course batch processing. Without real answers, state must remain `not started`; never fabricate learning progress. Complete formal cross-lesson consolidation and mixed practice at module close. Historical pilot lessons are validation evidence only, not gates on current production.

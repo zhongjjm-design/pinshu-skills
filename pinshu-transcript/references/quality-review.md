@@ -33,15 +33,15 @@ For long material, validate in chunks, but merge and deduplicate all findings at
 
 ### Layout
 
-- [ ] The filename and H1 contain searchable substantive topics rather than using “transcript,” “cleaned draft,” or a date as the title
-- [ ] The filename and H1 have matching meaning; date, status, and document type remain metadata or secondary labels
+- [ ] The filename and H1 (when the project uses one) identify the lesson's central question or judgment and distinguishing case, method, or result; they do not substitute a document-type label or date for content
+- [ ] The filename and H1 (when present) have matching meaning; date, status, and an already-known document type remain in metadata or the directory
 - [ ] Timestamps follow the user's requirement
 - [ ] Subheadings are clear and consistent with the rest of the series
 - [ ] No ellipsis or placeholder substitutes for content
 - [ ] Main text, summaries, checklists, and notes are clearly separated
 - [ ] There are no paragraphs beginning with punctuation, comma-ending fragments, or isolated body fragments of 12 characters or fewer
 - [ ] There are no five consecutive short paragraphs forming subtitle-style fragments and no ASCII-space simulation of Chinese letter spacing
-- [ ] The opening, the longest middle section, and the final three screenfuls have been checked in the actual reading view
+- [ ] The opening, a substantial middle section, and the ending have been checked in the actual reading view
 
 ### Review of Removed Blocks
 

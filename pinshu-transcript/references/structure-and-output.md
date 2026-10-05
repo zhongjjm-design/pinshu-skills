@@ -6,14 +6,13 @@
 
 Read all material before naming the file. The title must let a future reader determine what the file covers and why it is worth retrieving without opening it.
 
-- Use the same semantic core in the filename and H1. Prefer `speaker/course + 2-4 high-value topics`.
-- For a long multi-topic lesson, use `Speaker - Topic One, Topic Two, and Topic Three.md`.
-- For a single-topic lesson, use `Speaker - Central Judgment or Method.md`.
-- Put the date, lesson number, source, and labels such as “raw recording transcript” in frontmatter, source notes, directory hierarchy, or the end of the filename. They must not replace the substantive topic.
-- Give raw transcripts semantic topic names too, with the file type at the end, for example: `Instructor-Huang-Agent-Era-Judgment-and-Content-Production-Raw-Recording-Transcript.txt`.
-- Do not use titles such as `2026-07-18-transcript.md`, `batch-one-raw-transcript.txt`, `course-cleaned-draft.md`, or `ongoing-master-draft.md`; they do not support content retrieval.
+- In a series, use the necessary lesson number followed by the central question or judgment and the most distinctive case, method, or result. Do not cram the entire table of contents into the title.
+- When the directory already identifies the document type, keep labels such as “transcript,” “edited draft,” and “study guide” out of both filename and H1. Course, speaker, date, source, version, and status belong in frontmatter or directories when already clear from context; retain an identifier only when needed outside that directory.
+- Each title phrase must add content information. A standalone work may use `Speaker - Central Judgment or Method.md` when the speaker's name is needed for recognition.
+- A raw source can retain its own provenance or type label where necessary; do not rename or alter immutable raw material merely to meet a display-title convention.
+- Avoid generic placeholders such as `Lesson-4-Edited-Transcript.md` and `2026-07-18-transcript.md`.
 
-After creating the title, ask: if a future search uses topic terms such as “agent era,” “Codex workflow,” or “human-AI integrated content production,” will this file appear? If not, revise the title.
+Test it twice: with the directory hidden, can a reader identify the lesson and why to open it? In the directory, does the title redundantly repeat information the folder already supplies? Revise until both pass.
 
 - Divide the material by the original speaking logic; never disrupt sequence for neater headings.
 - Give each topic a subheading of 7-16 Chinese characters. Prefer action-oriented headings for hands-on sections.
@@ -27,9 +26,12 @@ After creating the title, ask: if a future search uses topic terms such as “ag
 By default, deliver only the source note and the complete, faithfully edited main text. Add a corresponding checklist when the user explicitly requests a hands-on recap. Add derivative sections such as a reading guide, quotable lines, or social-media copy only when the user explicitly requests them. Send methods, case libraries, and systematic study notes to `pinshu-distill`; never mix them into this draft by default. Follow the user's existing series conventions when provided.
 
 ```markdown
-# [Speaker / Course]: [Central Judgment, Method, and High-Value Topics]
+---
+source: [source reference]
+speaker: [instructor / presenter]
+---
 
-(Source: course name; instructor / presenter: name)
+# [Necessary lesson number]: [Central judgment and distinctive method or case]
 
 ---
 
@@ -48,5 +50,7 @@ By default, deliver only the source note and the complete, faithfully edited mai
 #### Parameters, Code, and Files
 #### Errors and Corrections
 ```
+
+The sample is for a new course without an established layout. An existing course convention may omit H1 and the visible source note or use the official timetable title; follow the project's existing frontmatter, naming, and heading rules instead of creating a second layout.
 
 A reading guide, key ideas, quotable lines, social-media copy, and further reflections are not part of the default template. Generate them in separate sections after the main text only when the user explicitly requests them. Continue to use `pinshu-distill` for systematic knowledge distillation.

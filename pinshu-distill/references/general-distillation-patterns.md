@@ -25,9 +25,13 @@ Do not treat marketing language as product fact. Preserve concrete prices, cases
 
 Reorganize around the central claims while preserving evidence, stories, data, rebuttals, and limits. Every quoted line must be traceable to the source. Keep editorial extensions separate from the speaker's views.
 
+Here, traceable quotations are a source-identity requirement, not a required publication field. If the user requests reusable publication assets, hand off an accepted source to `pinshu-content-assets` when available; keep that workflow separate from the knowledge draft.
+
 ## Interview or dialogue
 
 Combine related exchanges by insight theme while preserving speaker identity, disagreements, new information produced by follow-up questions, key facts, and qualifications. Do not average competing views into an ownerless conclusion.
+
+The interview knowledge draft explains the structure of the views. The optional publication layer handles candidate selection, source anchors, risk, and handoff. They may share an accepted source but are saved and checked separately.
 
 ## Panel discussion
 
@@ -43,4 +47,4 @@ You may process the source in chunks, but first establish the overall structure 
 
 ## Saving
 
-Follow the current project's approved destination. Unless the user asks, do not save to three locations or place one-off project output in this skill's `references` directory.
+Follow the current project's approved destination. Unless the user asks, do not save to three locations or place one-off project output in this skill's `references` directory. Store publication source assets and platform-ready copy outside the knowledge draft, under the separately configured publishing workflow.

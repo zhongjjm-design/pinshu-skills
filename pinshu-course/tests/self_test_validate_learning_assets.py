@@ -1,89 +1,90 @@
 #!/usr/bin/env python3
-"""Executable regression tests for validate-learning-assets.py."""
+"""Exercise public learning-asset validation with actual Markdown and JSON pairs."""
 from __future__ import annotations
 
-import importlib.util
 import json
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
-COURSE_ROOT = HERE.parent
-VALIDATOR = COURSE_ROOT / "scripts" / "validate-learning-assets.py"
-FIXTURES = HERE / "fixtures" / "learning-assets.json"
+VALIDATOR = Path(__file__).resolve().parents[1] / "scripts" / "validate-learning-assets.py"
 
 
-def run(kind: str, path: Path, expected: int) -> subprocess.CompletedProcess[str]:
-    result = subprocess.run(
-        [sys.executable, str(VALIDATOR), "--kind", kind, str(path)],
-        text=True,
-        capture_output=True,
-    )
-    if result.returncode != expected:
-        raise AssertionError(
-            f"unexpected exit for {kind} {path.name}: {result.returncode}\n"
-            f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}"
-        )
-    return result
-
-
-def load_validator_module():
-    spec = importlib.util.spec_from_file_location("learning_asset_validator", VALIDATOR)
-    if spec is None or spec.loader is None:
-        raise AssertionError("cannot load validator module")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+def check(kind: str, path: Path, success: bool, message: str = "") -> None:
+    result = subprocess.run([sys.executable, str(VALIDATOR), "--kind", kind, str(path)], capture_output=True, text=True)
+    assert (result.returncode == 0) == success, (result.stdout, result.stderr)
+    if message:
+        assert message in result.stdout, result.stdout
 
 
 def main() -> int:
-    FIXTURES.read_bytes().decode("ascii")
-    VALIDATOR.read_bytes().decode("ascii")
-    fixtures = json.loads(FIXTURES.read_text(encoding="utf-8"))
-    validator = load_validator_module()
-    assert validator.normalize_evidence_state("current-lesson candidate") == "current-lesson candidate"
-    assert validator.normalize_evidence_state("\u672c\u8bfe\u5019\u9009") == "current-lesson candidate"
+    with tempfile.TemporaryDirectory() as temporary:
+        root = Path(temporary)
+        for name in ("faithful.md", "lecture.md", "second.md"):
+            (root / name).write_text("# Actual source\n\nEvidence.\n", encoding="utf-8")
+        cards = root / "cards.md"
+        index = root / "cards.json"
+        cards.write_text("""---
+card_count_total: 1
+source_lecture: lecture.md
+source_transcript: faithful.md
+metadata_index: cards.json
+---
+# Lesson: causal reasoning
 
-    with tempfile.TemporaryDirectory() as temp_dir:
-        root = Path(temp_dir)
-        transcript = root / "transcript.md"
-        lecture = root / "lecture.md"
-        second_source = root / "second-source.md"
-        for path in (transcript, lecture, second_source):
-            path.write_text("# Source\n\nEvidence.\n", encoding="utf-8")
-        values = {
-            "lecture": str(lecture),
-            "transcript": str(transcript),
-            "second_source": str(second_source),
-        }
+### Card 1 · Identify the premise
+**Question**: What must be true first?
+> [!question]- Answer
+> Check the necessary premise.
+> Source: lesson notes, section one.
+""", encoding="utf-8")
+        index.write_text(json.dumps({"schema_version": 1, "asset_type": "active_recall_cards", "source_document": "cards.md", "items": [{"card_id": "L01-01", "position": 1, "card_kind": "atomic"}]}), encoding="utf-8")
+        check("cards", cards, True)
+        questions = root / "questions.md"
+        qi = root / "questions.json"
+        questions.write_text("""---
+question_count_total: 1
+source_lecture: lecture.md
+metadata_index: questions.json
+---
+# Lesson: practice
 
-        passing = (
-            ("cards", "english_cards"),
-            ("cards", "chinese_cards"),
-            ("clues", "english_clues"),
-            ("clues", "chinese_clues"),
-        )
-        for kind, fixture_name in passing:
-            path = root / f"{fixture_name}.md"
-            path.write_text(fixtures[fixture_name].format(**values), encoding="utf-8")
-            output = run(kind, path, 0)
-            assert output.stdout.startswith("PASS ")
-
-        failing = (
-            ("malformed_state_clues", "invalid evidence state"),
-            ("mixed_state_clues", "invalid evidence state"),
-            ("mixed_label_clues", "mixes documented label sets"),
-            ("mixed_locale_state_clues", "mixes documented label sets"),
-        )
-        for fixture_name, expected_message in failing:
-            path = root / f"{fixture_name}.md"
-            path.write_text(fixtures[fixture_name].format(**values), encoding="utf-8")
-            output = run("clues", path, 1)
-            assert expected_message in output.stdout
-
-    print("validate_learning_assets self-test: PASS (4 valid, 4 rejected)")
+### Question 1 · Transfer
+**Question**: How would the rule change in another setting?
+> [!question]- Reference answer
+> State the limiting condition.
+""", encoding="utf-8")
+        qi.write_text(json.dumps({"schema_version": 1, "asset_type": "training_questions", "source_document": "questions.md", "items": [{"q_id": "Q01-01", "position": 1}]}), encoding="utf-8")
+        check("questions", questions, True)
+        chinese = root / "zh-cards.md"
+        chinese.write_text(cards.read_text().replace("cards.json", "zh-cards.json").replace("Card 1 · Identify the premise", "\u53611·\u95ee\u9898").replace("**Question**: What must be true first?", "**\u95ee\u9898**\uff1a\u5148\u51b3\u6761\u4ef6\u662f\u4ec0\u4e48\uff1f").replace("- Answer", "- \u7b54\u6848"), encoding="utf-8")
+        (root / "zh-cards.json").write_text(json.dumps({"asset_type": "active_recall_cards", "source_document": "zh-cards.md", "items": [{"card_id": "L01-01", "position": 1}]}), encoding="utf-8")
+        check("cards", chinese, True)
+        clues = root / "clues.md"
+        clues.write_text("""---
+document_type: clues
+---
+# Open questions
+### Clue 1
+Knowledge object: A concept
+Current-lesson contribution: New distinction
+Cross-lesson rationale: Compare next lesson
+Later trigger: On reading lesson two
+Evidence state: verified across lessons
+Current-lesson source: faithful.md
+Second source: second.md
+""", encoding="utf-8")
+        check("clues", clues, True)
+        clues.write_text(clues.read_text().replace("Second source: second.md", ""), encoding="utf-8")
+        check("clues", clues, False, "no second source")
+        index.write_text(index.read_text().replace('"position": 1', '"position": 2'), encoding="utf-8")
+        check("cards", cards, False, "positions must follow")
+        index.write_text(index.read_text().replace('"position": 2', '"position": 1').replace("active_recall_cards", "training_questions"), encoding="utf-8")
+        check("cards", cards, False, "asset_type must be active_recall_cards")
+        cards.write_text(cards.read_text().replace("### Card 1", "<!-- card_id: hidden -->\n### Card 1"), encoding="utf-8")
+        check("cards", cards, False, "user-facing body contains HTML")
+    print("learning_assets self-test: PASS (4 valid, 4 invalid cases)")
     return 0
 
 

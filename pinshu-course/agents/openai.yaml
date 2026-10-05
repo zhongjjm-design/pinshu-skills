@@ -1,4 +1,4 @@
 interface:
   display_name: "Pinshu Course"
-  short_description: "Orchestrate course assets, study, and cross-lesson QA"
-  default_prompt: "Use $pinshu-course to manage this course series: use $pinshu-transcript to create faithful edited transcripts, $pinshu-distill to create structured lectures and formal cross-topic studies, and $pinshu-study to create active recall, guided practice, and learning records; keep the course map, pending synthesis clues, progress, and QA in sync."
+  short_description: "Orchestrate core course results and optional extensions"
+  default_prompt: "Use $pinshu-course to confirm course identity, purpose, write root, and current lesson. Preserve the immutable raw transcript, create a faithful edit and structured notes, and update one course-map entry. Enable $pinshu-study review materials for a learning-purpose course; create records only after real study. If content reuse is requested, use $pinshu-content-assets to create one pending-review sourcebook per lesson and a course-level sourcebook; do not auto-write an article. Trigger independent QA for risk or adaptive sampling, not every ordinary lesson."

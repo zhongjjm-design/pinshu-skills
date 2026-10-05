@@ -39,7 +39,7 @@ A lesson may combine several types. Choose one primary structure from the main l
 
 ### Source anchors
 
-Frontmatter must use a parseable `source_transcript` value: either a plain absolute path or a valid relative path from the current file. Never mix explanatory prose into the path field.
+Frontmatter must use a parseable `source_transcript` value: a valid relative path from the current file or a plain absolute path when the current project requires one. Public examples should use relative paths, never a publisher's private machine path. Never mix explanatory prose into the path field.
 
 Anchor each major module to the corresponding source section. For numbers, safety guidance, mnemonics, cases, and distinctive claims, also retain wording that can be searched in the source. Case fields must identify the person. Cross-lesson additions must cite the actual second source. Avoid assigning paragraph numbers to every legacy draft when routine editing would make them unstable and create unnecessary maintenance.
 
@@ -71,7 +71,7 @@ When a formula, method, or process has both a prototype and classroom adaptation
 4. Preserve conditions, cases, and limits added in later lessons.
 5. Retain provenance for different editions and schools of thought.
 6. Link methods, cases, cards, and training entry points.
-7. Produce a reader-ready topic entry, not a dump of candidate fields.
+7. Produce a reader-ready topic entry, not a dump of candidate fields. Link to cards or training only where those optional resources actually exist; creating them belongs to `pinshu-study`.
 
 ### Minimum content
 

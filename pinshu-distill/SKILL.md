@@ -12,10 +12,11 @@ description: "Use when users want to reorganize faithful transcripts, courses, i
 - Maintainer: Aidan (Pinshu)
 - Optional upstream skills: `pinshu-data-cleaning` (not bundled), `pinshu-transcript`
 - Downstream learning skill: `pinshu-study`
+- Optional downstream publishing skill: `pinshu-content-assets` (not bundled; use only when separately installed and requested)
 - Series orchestration skill: `pinshu-course`
 - Distribution status: `bundled`
 
-Reorganize stable source material into knowledge that stands alone and can be reused. For courses, default to a structured study guide. Create a formal cross-course topic synthesis only after the required lessons are available. `pinshu-study` owns active-recall cards, tutoring, drills, and personal learning records.
+Reorganize stable source material into knowledge that stands alone and can be reused. The structured study guide is one of the course pipeline's four core per-lesson results; create a formal cross-course topic synthesis only after the required lessons are available. `pinshu-study` owns optional active-recall cards, tutoring, drills, and personal learning records; they are not required per-lesson results.
 
 ## Scope
 
@@ -31,6 +32,7 @@ Route elsewhere for:
 - an edited transcript that preserves the speaker's wording and sequence -> `pinshu-transcript`;
 - review cards, quizzes, tutoring, or error-based drills -> `pinshu-study`;
 - progress, checkpoints, and pending synthesis leads across a course series -> `pinshu-course`.
+- publication candidates, theme aggregation, external verification, and content-production handoff -> `pinshu-content-assets` when separately available.
 
 If the user says only "organize this" and the desired result is unclear, ask whether they want a faithful transcript or structured knowledge. If the target is clear, proceed without asking.
 
@@ -46,7 +48,9 @@ Before drafting, confirm that:
 
 If the source still contains transcript-level errors, return it to `pinshu-transcript`. For heterogeneous corruption, missing pages, ordering errors, or uncertain provenance, use `pinshu-data-cleaning` only if it is installed; it is not provided by this repository. Otherwise request pre-cleaned Markdown or a transcript, or continue only with a clearly identified clean-text subset. Do not silently omit unsupported material or infer content while distilling it.
 
-For course production, learner-facing prose follows the manifest's `output_language` or the user's explicit preference; an omitted field means `match-user`, with source language as fallback. Stable IDs, frontmatter keys, enum values, and program fields remain English. When course-capture state or a manifest exists, save only to its rendered path keys. Without one, preserve the existing confirmed project paths; for a new course, confirm an explicit path map before writing.
+For course production, learner-facing prose follows the manifest's `output_language` when a manifest exists, or the user's explicit preference; an omitted field means `match-user`, with source language as fallback. When course-capture state or a manifest exists, save to its rendered path keys. Neither is required for standalone use: otherwise preserve existing confirmed project paths or confirm a new course's destination before writing. Keep established IDs and program fields intact.
+
+If the work package names a domain or content adapter, read only its source authorities, evidence priority, risk triggers, boundaries, and content anchors needed for this lesson. An adapter cannot replace the general guide workflow, relax quality requirements, or add default deliverables.
 
 ## First decision: choose the requested result
 
@@ -65,6 +69,8 @@ Read the cross-course section in `references/structured-study-guide-rules.md`. A
 ### Route C: other knowledge distillation
 
 For talks, interviews, sales livestreams, methods, and competitor analysis, read `references/general-distillation-patterns.md`.
+
+After a single-source knowledge draft passes its own review, the user may separately request publication assets. Hand off its accepted source and identity/verification labels to `pinshu-content-assets` if installed. Keep knowledge drafts and publication assets separate; quotable lines, promotional angles, audience hooks, and platform copy are not mandatory study-guide appendices.
 
 ## Core result for a structured study guide
 
@@ -110,7 +116,10 @@ Distinguish at least:
 1. explicit statements by the author or instructor;
 2. editorial restructuring based on the source;
 3. external authoritative additions;
-4. unverified, disputed, or simulated material.
+4. extensions based on the user's real practice;
+5. explicitly identified simulated material.
+
+Treat `needs confirmation`, `partially supported`, `disputed`, and `unverifiable` as **verification states**, not speaking identities. Preserve these two separate axes in any handoff to `pinshu-content-assets`.
 
 A spoken course is not automatically factual. Layer verification for income claims, medical guidance, medication, law, platform rules, and guaranteed outcomes. Preserve the instructor's view without rewriting it out of existence or elevating it into consensus. Place source identity and real-world limits beside each high-risk claim, table, or map; a single disclaimer at the end is insufficient.
 
@@ -126,7 +135,8 @@ A spoken course is not automatically factual. Layer verification for income clai
 
 ## Layout
 
-- Use exactly one H1.
+- Use exactly one H1 unless a confirmed course-library convention explicitly omits it.
+- Read the whole source before naming the file. Use the necessary lesson number plus its central question or judgment and one distinctive method, case, or outcome. The filename and H1 should tell a reader what this lesson teaches and why it merits opening. If the directory identifies the type, do not repeat “structured study guide,” “study guide,” or “edited draft” in either title; put type in the directory or frontmatter. Avoid stuffing the table of contents into a title or using `Lesson-3-Study-Guide.md` as a placeholder. Honor an established official course-title convention where required.
 - Let heading levels express knowledge relationships, not timestamps.
 - Give each paragraph one complete idea; avoid subtitle fragments and walls of text.
 - Use bold for core judgments, definitions, and important distinctions, not as continuous highlighting.
@@ -135,9 +145,9 @@ A spoken course is not automatically factual. Layer verification for income clai
 
 ## Quality assurance
 
-Run mechanical checks for frontmatter, one H1, heading spacing, links, images, tables, placeholders, and terminology.
+Run mechanical checks for frontmatter, the project-required H1 convention, heading spacing, links, images, tables, placeholders, and terminology.
 
-Use an independent semantic review to check whether the draft:
+Every guide requires a model semantic decision to check whether the draft:
 
 - omitted any distinct unit of knowledge;
 - introduced reasoning absent from the source;
@@ -147,11 +157,12 @@ Use an independent semantic review to check whether the draft:
 - merged different objects incorrectly;
 - can genuinely be learned without the source.
 
-The writer cannot be the only reviewer. A script reporting `PASS` does not prove that learning material is sound.
+An ordinary clean lesson may use the drafting model's semantic self-check. A risk-triggered or adaptively sampled lesson requires independent QA in a different context; there the writer cannot be the only reviewer. A script reporting `PASS` proves deterministic checks only and does not prove that the learning material is sound.
 
 ## Save and stop
 
 - Follow the current project's path rules and any explicit user destination; do not save to three locations by default.
 - Keep final guides, formal topic syntheses, and internal candidates separate.
 - Hand requests for cards or drills to `pinshu-study`.
+- On explicit request for publication assets, pass accepted sources and separate identity/verification labels to `pinshu-content-assets` if installed; otherwise identify the missing optional handoff rather than claiming publication delivery.
 - Stop when the requested result is complete. Do not generate promotional posts, social copy, or unrelated derivatives by default.

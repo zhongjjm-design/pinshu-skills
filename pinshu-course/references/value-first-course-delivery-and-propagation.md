@@ -23,8 +23,7 @@ Lesson core (no more than 3 points)
 → faithfully edited transcript
 → systemized methods and complete cases
 → execution checklist, tools, and critical numbers
-→ dissemination asset cards
-→ social-post topics or candidate copy
+→ readable content sourcebook (only when content reuse is explicitly enabled)
 → editorial verification and boundary notes (appendix)
 ```
 
@@ -39,25 +38,9 @@ The opening exists only to help the reader grasp the main line quickly:
 
 **Completeness does not require a long opening.** The faithful transcript must still preserve the entire argument, cases, numbers, and limitations. Compress redundant navigation and editorial metadata, not course content.
 
-## 3. Dissemination Asset Cards Are Required
+## 3. Content Reuse Is Conditional and Separate
 
-Every lesson must contain at least:
-
-### 1. Three to Eight Direct Quotations
-
-They must come from the instructor’s actual words. Correct only punctuation, slips of the tongue, and confirmed STT errors. Never present editorial extraction as a quotation.
-
-### 2. One to Three Disseminable Viewpoints
-
-For each, specify the viewpoint, course basis, application, and boundary against blind copying.
-
-### 3. One to Three User Connection Points
-
-Connect proactively to the user’s current business, content themes, projects, and real experience. If no real context exists, write “real scenario required” rather than inventing first-person experience.
-
-### 4. Zero or One Candidate Social Post
-
-Generate one only when a real scenario, single tension, standalone narrative, and user style align. If the material is not mature enough, still provide a topic, applicable scenario, and missing information rather than omitting the entire dissemination layer.
+Do not insert a content sourcebook into the faithful edit or lecture. When content reuse is confirmed, `pinshu-content-assets` turns the accepted pair into one readable sourcebook per lesson, and a complete course into a separate cross-lesson sourcebook. Preserve the whole argument and every worthwhile judgment, method, case, figure, and memorable expression; no number or quota of quotes or topics is required. A direct quote must match a reliable source exactly, including punctuation and cut points, and known STT mistakes must appear only in backstage correction records. Mark an edited quotation or paraphrase honestly. An editorial angle is not a speaker quote; the user's lived experience must not be invented. If a method lacks steps or a case lacks an outcome, record the precise gap next to it. Keep sourcebooks pending review until the owner accepts them. A social post or article is a separate writing task, not the default output of this route.
 
 ## 4. Failure Signals for Distorted Priority
 
@@ -67,11 +50,11 @@ Rework if any of the following occurs:
 - Large sections explain wording or minor risks that do not affect core understanding;
 - A complete transcript exists, but there are no three-or-fewer scannable lesson-core points;
 - The opening core exceeds three points, or each point expands cases already covered in the body and creates duplicate reading;
-- Methods and cases exist, but direct quotations, disseminable viewpoints, or user connection points are missing;
+- Dissemination was explicitly enabled and qualified material exists, but its separate asset layer is missing;
 - Social copy becomes “Today I listened to Teacher X’s course”;
 - The file is long, but the reader still cannot tell what the lesson is useful for.
 
-Rework in this order: reduce the opening to three core points, complete dissemination assets, reposition risk notes, then verify body completeness. Never create brevity by deleting cases.
+Rework in this order: reduce the opening to three core points, verify body completeness, position risk notes where they matter, then inspect any enabled dissemination layer separately. Never create brevity by deleting cases.
 
 ## 5. Separate Content Completion from Durable Write Completion
 
@@ -92,7 +75,7 @@ If the user says “I cannot see the file” or “it is not on disk,” resolve
 - [ ] The faithful transcript preserves first person, process, numbers, and cases;
 - [ ] The structured lecture can be learned independently of the original video;
 - [ ] Execution actions, tools, and numbers are complete;
-- [ ] Direct quotations, disseminable viewpoints, and user connection points are present;
+- [ ] If dissemination is enabled, qualified candidates are traceable in the independent layer (or absence is recorded); no quota was forced;
 - [ ] The social layer does not invent user experience;
 - [ ] Verification and boundary notes appear at the end unless a risk requires a local warning;
 - [ ] Approved writes execute immediately without repeated gating;

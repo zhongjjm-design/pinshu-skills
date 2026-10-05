@@ -17,7 +17,7 @@ Locate video -> inspect transcript entry points -> obtain source text -> verify 
 3. If the web player has none, check the official desktop player or an official export function.
 4. Consider local ASR only when the user has download permission.
 5. AI summaries, mind maps, slides, and comments cannot serve as source transcripts.
-6. Record one capability result for each discovery attempt: `LOCATED`, `NATIVE_TRANSCRIPT_FOUND`, `BLOCKED_DESKTOP_EXTRACTION`, `NO_NATIVE_TRANSCRIPT`, or `BLOCKED`.
+6. Record one discovery outcome per attempt: `LOCATED`, `NATIVE_TRANSCRIPT_FOUND`, `BLOCKED_DESKTOP_EXTRACTION`, `NO_NATIVE_TRANSCRIPT`, or `BLOCKED`. These are discovery results or blocker reasons; the course state machine uses `BLOCKED` for a blocked lesson.
 
 ## Handoff requirements
 

@@ -5,9 +5,15 @@
   "reviewer_model": "exact-model-id",
   "production_profile": "fast",
   "review_round": 1,
-  "review_scope": "full | sampled | targeted_recheck",
+  "review_scope": "full",
   "decision": "pass",
   "recommended_state": "SEMANTIC_QA_PASS",
+  "input_sha256": {
+    "source": "<actual SHA-256 of reviewed source>",
+    "faithful": "<actual SHA-256 of reviewed faithful edit>",
+    "lecture": "<actual SHA-256 of reviewed lecture>",
+    "uncertainties": "<actual SHA-256 of reviewed uncertainty ledger>"
+  },
   "source_identity": {
     "passed": true,
     "notes": []
@@ -20,17 +26,7 @@
     "longest_case_checked": true,
     "high_risk_anchors_checked": true
   },
-  "issues": [
-    {
-      "severity": "high",
-      "type": "omission",
-      "source_block": "S012",
-      "source_quote": "Quoted source evidence",
-      "draft_location": "Section 2 of the faithful edit",
-      "impact": "A critical constraint was omitted.",
-      "required_fix": "Restore the constraint without weakening the original claim."
-    }
-  ],
+  "issues": [],
   "notes": [
     {
       "type": "wording",

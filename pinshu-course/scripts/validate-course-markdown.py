@@ -3,7 +3,7 @@
 
 Checks UTF-8 readability, NUL bytes, unique H1, blank lines after H1/H2/H3/H4,
 relative image targets, and caller-supplied required/forbidden terms. Optional
-long-course profiles add paragraph, emphasis, propagation, and source-noise gates.
+long-course profiles add paragraph, emphasis, learning-document, and source-noise gates.
 Exit 0 only when every file passes.
 """
 
@@ -19,19 +19,23 @@ IMAGE_RE = re.compile(r"!\[[^\]]*\]\(([^)]+)\)")
 WIKI_IMAGE_RE = re.compile(r"!?\[\[([^\]|#]+\.(?:png|jpe?g|gif|webp|svg))(?:[|#][^\]]*)?\]\]", re.IGNORECASE)
 ORDERED_LIST_RE = re.compile(r"^\d+[.)]\s+")
 BOLD_RE = re.compile(r"\*\*.+?\*\*")
-LEADING_PUNCT_RE = re.compile(
-    r"^[\uff0c\u3002\uff01\uff1f\uff1b\uff1a\u3001,.!?;:\uff09\u3011\u300b\u201d\u2019]"
-)
-BAD_CJK_SPACING_RE = re.compile(
-    r"(?<=[\u3400-\u9fff\uff0c\u3002\uff01\uff1f\uff1b\uff1a\u3001])[ \t]{2,}"
-    r"(?=[\u3400-\u9fff])"
-)
+LEADING_PUNCT_RE = re.compile(r"^[\uff0c\u3002\uff01\uff1f\uff1b\uff1a\u3001,.!?;:\uff09\u3011\u300b”’]")
+BAD_CJK_SPACING_RE = re.compile(r"(?<=[\u3400-\u9fff\uff0c\u3002\uff01\uff1f\uff1b\uff1a\u3001])[ \t]{2,}(?=[\u3400-\u9fff])")
 FRAGMENT_END_RE = re.compile(r"[\uff0c\u3001\uff1b,;]$")
-ORPHAN_CUE_RE = re.compile(
-    r"^(?:\u597d[\uff0c,]|\u8c22\u8c22|\u968f\u540e|\u7136\u540e|\u6240\u4ee5|"
-    r"\u90a3\u4e48|\u53bb\u5173\u6ce8|\u4e5f\u5c31\u662f|\u8fd9\u4e2a(?:\u662f|\u5c31))"
-)
+ORPHAN_CUE_RE = re.compile(r"^(?:\u597d[\uff0c,]|\u8c22\u8c22|\u968f\u540e|\u7136\u540e|\u6240\u4ee5|\u90a3\u4e48|\u53bb\u5173\u6ce8|\u4e5f\u5c31\u662f|\u8fd9\u4e2a(?:\u662f|\u5c31))")
 SENTENCE_END_RE = re.compile(r"[\u3002\uff01\uff1f!?]")
+TYPE_DIR_MARKERS = ("\u539f\u59cb\u8f6c\u5199", "\u5fe0\u5b9e\u7cbe\u7f16\u7a3f", "\u6821\u5bf9\u7cbe\u7f16\u7a3f", "\u7ed3\u6784\u5316\u8bb2\u4e49")
+REDUNDANT_TITLE_TYPE_LABELS = (
+    "\u9010\u5b57\u7a3f",
+    "\u5fe0\u5b9e\u7cbe\u7f16\u7a3f",
+    "\u6821\u5bf9\u7cbe\u7f16\u7a3f",
+    "\u7ed3\u6784\u5316\u8bb2\u4e49",
+    "\u6e05\u6d17\u7a3f",
+    "\u6574\u7406\u7a3f",
+    "\u9605\u8bfb\u7248",
+    "\u5b8c\u6574\u7248",
+    "\u603b\u7a3f",
+)
 
 
 def strip_code_for_image_scan(text: str) -> str:
@@ -64,29 +68,19 @@ def strip_code_for_image_scan(text: str) -> str:
     return "\n".join(output)
 
 
-COMMON_REQUIRED = [
-    "\u672c\u8bfe\u6838\u5fc3",
-    "\u91d1\u53e5\u6458\u5f55",
-    "\u53ef\u4f20\u64ad\u89c2\u70b9",
-    "\u7528\u6237\u8fde\u63a5\u70b9",
-    "\u670b\u53cb\u5708\u6587\u6848\u5efa\u8bae",
-]
-FAITHFUL_FILLERS = [
-    "\u5462",
-    "\u90a3\u4e2a",
-    "\u5c31\u662f\u8bf4",
-    "\u7136\u540e\u5462",
-    "\u5927\u5bb6\u597d",
-    "hello",
-    "\u597d\u5427",
-]
-NOTES_BOUNDARY_REQUIRED = "\u4e8b\u5b9e\u6838\u9a8c\u4e0e\u8fb9\u754c\u8bf4\u660e"
-PROFILE_FORBIDDEN_DASHES = ("\u2014\u2014", "\u2014")
-FACT_BOUNDARY_TYPES = ("A \u00b7", "C \u00b7", "D \u00b7", "E \u00b7")
-TAKEAWAY_SECTION_RE = re.compile(
-    r"^## \u672c\u8bfe\u8981\u70b9\u901f\u89c8\s*$\n(.*?)(?=^## |^---\s*$|\Z)",
-    flags=re.MULTILINE | re.DOTALL,
-)
+def strip_nonvisible_contract_content(text: str) -> str:
+    """Remove metadata and code that must not satisfy visible-document contracts."""
+    text = re.sub(r"\A---\s*\n.*?\n---\s*\n", "", text, flags=re.DOTALL)
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
+    text = re.sub(r"(?m)^\s*>.*$", "", text)
+    text = strip_code_for_image_scan(text)
+    return re.sub(r"(?m)^(?: {4}|\t).*$", "", text)
+
+
+# Propagation assets are validated independently by pinshu-content-assets.
+# Course notes retain only their learning-document contract.
+COMMON_REQUIRED = ["\u672c\u8bfe\u6838\u5fc3"]
+FAITHFUL_FILLERS = ["\u5462", "\u90a3\u4e2a", "\u5c31\u662f\u8bf4", "\u7136\u540e\u5462", "\u5927\u5bb6\u597d", "hello", "\u597d\u5427"]
 
 
 def validate(path: Path, required: list[str], forbidden: list[str], profile: str | None) -> list[str]:
@@ -96,6 +90,8 @@ def validate(path: Path, required: list[str], forbidden: list[str], profile: str
         text = raw.decode("utf-8")
     except Exception as exc:
         return [f"cannot read as UTF-8: {exc}"]
+
+    scan_text = strip_nonvisible_contract_content(text)
 
     if b"\x00" in raw:
         errors.append("contains NUL bytes")
@@ -238,28 +234,53 @@ def validate(path: Path, required: list[str], forbidden: list[str], profile: str
     if len(h1_lines) != 1:
         errors.append(f"expected exactly one H1, found {len(h1_lines)} at {h1_lines}")
 
+    type_context = next(
+        (
+            marker
+            for parent in path.parents
+            for marker in TYPE_DIR_MARKERS
+            if marker in parent.name
+        ),
+        None,
+    )
+    if type_context:
+        h1_text = ""
+        if len(h1_lines) == 1:
+            h1_text = lines[h1_lines[0] - 1].lstrip("#").strip()
+        for label in REDUNDANT_TITLE_TYPE_LABELS:
+            if label in path.stem:
+                errors.append(
+                    f"filename repeats document type already expressed by parent directory "
+                    f"({type_context}): {label}"
+                )
+            if h1_text and label in h1_text:
+                errors.append(
+                    f"H1 repeats document type already expressed by parent directory "
+                    f"({type_context}): {label}"
+                )
+
     for term in required:
-        if term not in text:
+        if term not in scan_text:
             errors.append(f"required term missing: {term}")
     for term in forbidden:
-        count = text.count(term)
+        count = scan_text.count(term)
         if count:
             errors.append(f"forbidden term remains: {term} x{count}")
 
     if profile:
         profile_required = list(COMMON_REQUIRED)
         if profile == "long-course-notes":
-            profile_required.append(NOTES_BOUNDARY_REQUIRED)
+            profile_required.append("\u4e8b\u5b9e\u6838\u9a8c\u4e0e\u8fb9\u754c\u8bf4\u660e")
         for term in profile_required:
-            if term not in text:
+            if term not in scan_text:
                 errors.append(f"profile required term missing: {term}")
 
-        for dash in PROFILE_FORBIDDEN_DASHES:
-            count = text.count(dash)
+        for dash in ("——", "—"):
+            count = scan_text.count(dash)
             if count:
                 errors.append(f"profile forbidden dash remains: {dash} x{count}")
 
-        bold_count = len(BOLD_RE.findall(text))
+        bold_count = len(BOLD_RE.findall(scan_text))
         if len(raw) >= 7000 and bold_count < 5:
             errors.append(f"long-course scan layer too weak: bold spans {bold_count}, expected at least 5")
         if bold_count > 10:
@@ -309,16 +330,20 @@ def validate(path: Path, required: list[str], forbidden: list[str], profile: str
                     f"under Obsidian Nord: {h2_lines[:12]}"
                 )
             for filler in FAITHFUL_FILLERS:
-                count = text.count(filler)
+                count = scan_text.count(filler)
                 if count:
                     errors.append(f"faithful filler requires review: {filler} x{count}")
 
         if profile == "long-course-notes":
-            for fact_type in FACT_BOUNDARY_TYPES:
-                if fact_type not in text:
+            for fact_type in ("A ·", "C ·", "D ·", "E ·"):
+                if fact_type not in scan_text:
                     errors.append(f"fact boundary type missing: {fact_type}")
 
-            match = TAKEAWAY_SECTION_RE.search(text)
+            match = re.search(
+                r"^## \u672c\u8bfe\u8981\u70b9\u901f\u89c8\s*$\n(.*?)(?=^## |^---\s*$|\Z)",
+                scan_text,
+                flags=re.MULTILINE | re.DOTALL,
+            )
             if match:
                 items = re.split(r"\n(?=\d+[.)]\s+)", match.group(1).strip())
                 bad_takeaways: list[tuple[int, int]] = []

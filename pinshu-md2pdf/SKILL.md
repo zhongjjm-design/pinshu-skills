@@ -18,11 +18,11 @@ Convert Markdown into a delivery-ready PDF while preserving the source file. Sel
 
 ## Choose a theme
 
-Use exactly one theme. If the user does not specify one, choose by purpose; use `default` when the purpose remains unclear.
+Use exactly one theme. If the user does not specify one, choose by purpose; use `default` when the purpose remains unclear. This public edition's `business` theme uses a dark cover and accent colors **without a bundled identity**. The private original may add a Chief Brand Officer logo and footer; do not assume either edition automatically represents the user's brand. For a branded deliverable, confirm the intended identity and check the rendered cover before delivery.
 
 | Theme | Best for |
 |---|---|
-| `business` | Unbranded brand reports, proposals, and white papers |
+| `business` | Brand reports, proposals, and white papers (unbranded in this edition) |
 | `manual-blue` | Technical documentation, tool manuals, and process specifications |
 | `manual` | Operating guides and internal SOPs |
 | `manual-orange` | Training materials and content-production manuals |
@@ -51,11 +51,11 @@ If a dependency is missing, identify it and provide the installation command. In
 
 ```bash
 python3 "<skill-dir>/scripts/convert.py" "<input.md>" \
-  --theme default \
+  --theme <selected-theme> \
   -o "<output.pdf>"
 ```
 
-Use `--theme manual-blue` for technical manuals. Add `--title`, `--subtitle`, `--author`, or `--no-toc` as needed. Use `--engine weasyprint` only when the user explicitly selects the fallback engine.
+Replace `<selected-theme>` with the **one theme chosen from the table** (for example, `manual-blue` for a technical manual); it is not a literal command argument. Add `--title`, `--subtitle`, `--author`, or `--no-toc` as needed. Use `--engine weasyprint` only when that fallback engine is explicitly selected.
 
 🔴 **CHECKPOINT · Existing output**
 

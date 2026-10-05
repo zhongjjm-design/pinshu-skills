@@ -5,7 +5,7 @@ maintainer: Aidan
 repository: https://github.com/zhongjjm-design/pinshu-skills
 runtime_layout: flat
 runtime_glob: ~/.agents/skills/pinshu-*
-updated: 2026-09-24
+updated: 2026-10-05
 skills:
   - name: pinshu-transcript
     origin: original
@@ -34,6 +34,11 @@ skills:
     depends_on: []
     supersedes: pinshu-md-to-pdf
   - name: pinshu-course-capture
+    origin: original
+    distribution: bundled
+    present_in_repository: true
+    depends_on: [pinshu-transcript, pinshu-distill, pinshu-course]
+  - name: pinshu-content-assets
     origin: original
     distribution: bundled
     present_in_repository: true

@@ -12,7 +12,7 @@ python3 scripts/course_pipeline.py init \
 
 If the state file already exists, do not overwrite it. Resume with `next` or `summary`. The main conversation keeps only a short task list; full source text, artifacts, and state are always read from files.
 
-The manifest may set `output_language` to `match-user`, `match-source`, or a short BCP-47 tag. If an older manifest omits it, initialization records `match-user`; when the user's language cannot be determined, use the source language. Agreement and summary output expose the active policy. Learner-facing prose follows it, while IDs, frontmatter keys, enum values, and other program fields remain English.
+The manifest may set `output_language` to `match-user`, `match-source`, or a short BCP-47 tag. If an older manifest omits it, initialization records `match-user`; the writing worker must determine the user's language from the conversation and use the source language if it cannot. The CLI reports the stored policy, not a detected language. Learner-facing prose follows that policy, while IDs, frontmatter keys, enum values, and other program fields remain English.
 
 ## 2. Capture each source transcript
 
@@ -122,3 +122,7 @@ Define the naming template and path templates once in the manifest. Run `paths` 
 ### 9.2 Renames and rework must not leave duplicate official files
 
 After the new file is promoted successfully, move the old name or version to the system trash rather than deleting it permanently. Before delivery, reconcile programmatically: no unregistered leftovers, every state-machine path exists, frontmatter links resolve, and official text matches the accepted workshop text.
+
+## 10. Optional content sourcebook after accepted core assets
+
+When the user confirmed `content_asset` as a course purpose, load `pinshu-content-assets` only after the lesson's faithful edit and structured guide are accepted. Have the agent read both in full, reconcile corrected terminology and raw quotations, then write one readable lesson sourcebook. For a full course, organize a separate course-level sourcebook linking back to the lessons. Obtain the destination from the current manifest's `content_master_lesson` and `content_master_course` path templates, an existing course's approved paths, or an explicit user-approved path map. Do not invent or translate a parallel archive. Mark new sourcebooks **pending user review**; their existence and the core lesson's `ACCEPTED` status do not make them approved writing inputs. Do not generate an article unless separately requested. This is an agent handoff, not a claim that `course_pipeline.py` generates or approves content sourcebooks automatically.

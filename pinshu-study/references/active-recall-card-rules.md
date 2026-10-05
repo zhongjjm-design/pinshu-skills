@@ -2,9 +2,9 @@
 
 Active-recall cards prompt the learner to retrieve knowledge from memory after closing the lesson notes. They are not fragments cut from the notes or shorter summaries.
 
-## Learner-facing and internal content
+## Reading body, frontmatter, and separate index
 
-The learner-facing body shows only a question, a collapsible answer, any necessary explanation, and a source citation in the resolved output language. Put the English ID, cognitive operation, attributes, source path, and status in hidden comments or a separate internal index. Do not occupy the reading interface with body sections such as "Attributes," "Type," or "Status."
+Each card has a heading, a question line, and an Obsidian-style `> [!question]- Answer` collapsible callout with the answer, explanation, and source in the learner's language. Do not put `%%`, HTML, per-item IDs, classifications, or pipeline fields in the body. Frontmatter holds only a few file-level properties: `document_type`, `card_count_total`, `source_lecture`, `source_transcript`, and `metadata_index`. Put each card's ID, sequence, atomic/integrative classification, cognitive operation, and core/optional status in a separate JSON index under the course's production-control area. Its `asset_type` is `active_recall_cards`, its array is `items`, and each entry has a unique `card_id` and sequential `position`. A training bank has a separate `training_questions` index using `q_id`, not card fields.
 
 Every card file must contain a parseable `source_lecture`. Cards containing mnemonics, numbers, safety guidance, instructor opinions, cases, or unresolved material must also retain `source_transcript`. A path must be either a plain absolute path or a valid relative path resolved from the current file.
 
@@ -57,17 +57,14 @@ Write learner-visible citations naturally in the resolved output language. Prese
 
 ## Count metadata
 
-A real card unit exists only when all four elements are present: card title, unique ID, question, and answer. Use this frontmatter consistently:
+A real card unit exists only when all four elements are present: card title, unique index ID, question, and answer. File-level frontmatter holds only the total and index pointer:
 
 ```yaml
 card_count_total: 23
-core_card_count: 21
-optional_card_count: 2
-atomic_card_count: 18
-integrative_card_count: 5
+metadata_index: ../../99_Production_Control/Learning_Asset_Index/lesson-03.index.json
 ```
 
-Write `0` when a category has no cards. The total must equal both core plus optional and atomic plus integrative. Generate counts by parsing the actual file; never enter them manually without verification.
+Compute category totals from the index, not redundant frontmatter lists. The file total must match its body headings, questions, answers, and index items. Check index uniqueness and order programmatically, not by assertion alone.
 
 ## Learning presentation
 
@@ -77,13 +74,13 @@ Display only one card at a time during an actual review. Show the question first
 
 Before promotion, check all of the following together:
 
-1. The counts of card titles, unique IDs, questions, and answers match.
-2. Every frontmatter count matches the actual cards.
+1. The counts of card titles, indexed unique IDs, questions, and answers match.
+2. The file-level frontmatter total matches the actual cards and separate index.
 3. Each atomic card contains only one independently scorable target.
 4. Every integrative card is explicitly identified and does not masquerade as an atomic card.
-5. The learner-facing body contains no internal attributes, English type codes, or pipeline status fields.
+5. The learner-facing body contains no HTML, hidden comments, IDs, internal attributes, English type codes, or pipeline status fields.
 6. Source paths resolve, and every high-risk card traces directly to the faithful transcript.
 7. No unresolved item has been converted into a definitive answer.
 8. High-risk content cannot become real-world advice when a card is viewed outside its original context.
 
-A generator's self-evaluation is only a diagnostic clue. It does not replace independent QA or a real learning test.
+A generator's self-evaluation is only a diagnostic clue. Risk-triggered or sampled independent QA and actual rendering/learning checks provide different evidence; do not claim them from a structural PASS.

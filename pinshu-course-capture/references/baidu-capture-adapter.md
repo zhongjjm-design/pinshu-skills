@@ -78,7 +78,7 @@ Preserve the Baidu transcript body exactly. Do not clean it, correct STT, or rem
 ## Blockers and retry
 
 - Not signed in or CAPTCHA: `BLOCKED`; ask the user to restore access.
-- Transcript tab absent: navigate once more, check encoding, and start playback to trigger loading. If it is still absent, record that the platform did not generate a transcript.
+- Transcript tab absent: navigate once more, check encoding, and start playback to trigger loading. If it is still absent, record that no native transcript was accessible in this player attempt; do not infer a platform-wide absence. Consider authorized local transcription or block the lesson.
 - Empty or apparently truncated transcript: retry for a bounded interval; if still defective, block that lesson.
 - A blocked lesson must never be skipped silently, but it need not stop unrelated lessons.
 - Mark `SKIPPED` only when the user or a reliable course source confirms that the lesson requires no processing.

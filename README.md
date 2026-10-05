@@ -1,8 +1,10 @@
 # Pinshu Skills
 
-Aidan (Pinshu) maintains this suite of skills for professional course production and transcript editing. It works with Claude Code and other compatible agents.
+Aidan (Pinshu) maintains this suite of seven skills for faithful transcript editing, course production, learning, and reusable content assets. It works with Claude Code and other compatible agents.
 
 ## Quick install
+
+On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. The installer copies all seven skills into `~/.agents/skills`, preserves backups during verified upgrades, and refuses to replace an unrelated existing Skill directory. Inspect the installer before executing a remote script on your computer.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/install.sh | bash
@@ -20,17 +22,24 @@ Use pinshu-course-capture to process this course. First assess the course conten
 
 Before production starts, the workflow confirms the course purpose, any external-use requirements, the assurance level, the final assets, and the sample gate. This prevents every course from being forced through the same process.
 
+If you already have a faithful edited transcript and a structured study guide, start the reusable-content workflow directly:
+
+```text
+Use pinshu-content-assets to turn this lesson into one readable, source-traceable content master. Preserve the speaker's main argument and every useful method, case, figure, and expression. Mark missing evidence and quotations accurately. Do not write an article; leave the master pending my review.
+```
+
 ## Core course-asset pipeline
 
 ```text
 pinshu-course-capture → source capture and production orchestration
 pinshu-transcript     → faithful edited transcript
 pinshu-distill        → structured study guide
+pinshu-content-assets → reusable content master from the approved edited transcript and guide
 pinshu-study          → active recall, guided study, follow-up questions, and learning records
 pinshu-course         → series orchestration, checkpoints, cross-lesson leads, independent QA, and promotion
 ```
 
-The faithful edited transcript is the source of truth for every downstream learning asset. A structured study guide may reorganize the material, but it never replaces the faithful transcript. Markdown remains the canonical source for learning activities; a web interface is optional.
+The faithful edited transcript is the source of truth for downstream learning and content assets. A structured study guide may reorganize the material, but it never replaces the faithful transcript. `pinshu-content-assets` makes the main argument, methods, cases, figures, quotable expressions, and source boundaries usable without replaying the entire lesson. It does not automatically write an article. Markdown remains the canonical source for learning activities; a web interface is optional.
 
 ## Default deliverables for professional-learning courses
 
@@ -38,8 +47,9 @@ Each processed lesson produces:
 
 1. A faithful edited transcript;
 2. A structured study guide;
-3. Candidate active-recall cards;
-4. Status, links, and a concise knowledge summary in the course map.
+3. Status, links, and a concise knowledge summary in the course map.
+
+When content reuse is selected, produce a readable content master for each lesson. For a complete course, also produce a course-level master connecting recurring questions, methods, cases, and disagreements back to the individual lessons. Keep every new master pending until the owner reviews it; do not present a script-level PASS as editorial approval. When learning or exam preparation is selected, produce candidate active-recall cards.
 
 Learning activities are not pre-generated as a static exam bank. `pinshu-study` starts guided study, recall, follow-up questions, error diagnosis, source review, retries, and learning records only after the user explicitly asks to study, practice, review, or retest. It never invents mastery without a real response, but the absence of a response does not block production of candidate recall cards.
 
@@ -51,7 +61,7 @@ Repository instructions remain in English. Learner-facing output follows `output
 
 When a course-capture manifest or state file exists, every Skill uses its path templates through `course_pipeline.py paths`; no Skill translates or invents a parallel directory tree. For a new course without a manifest, create and confirm the manifest or an explicit path map before writing.
 
-`pinshu-data-cleaning` is an optional upstream capability and is not included in this six-package repository or installed by its installer. If it is unavailable, provide pre-cleaned Markdown or a transcript, or use only the clean-text inputs supported by the selected Skill. The workflow must not silently skip heterogeneous-source cleaning.
+`pinshu-data-cleaning` is an optional upstream capability and is not included in this seven-package repository or installed by its installer. If it is unavailable, provide pre-cleaned Markdown or a transcript, or use only the clean-text inputs supported by the selected Skill. The workflow must not silently skip heterogeneous-source cleaning.
 
 ## Set the purpose before choosing assurance depth
 
@@ -71,6 +81,7 @@ For batches larger than three lessons, deliver one representative lesson first. 
 |---|---|
 | `pinshu-transcript` | Turn raw transcripts into faithful edited transcripts while preserving substantive meaning and source boundaries |
 | `pinshu-distill` | Produce clear, self-contained structured study guides and approved cross-cutting topics from faithful transcripts |
+| `pinshu-content-assets` | Organize corrected course, livestream, or interview material into a source-traceable content master for later writing; never auto-write the article |
 | `pinshu-study` | Run stage-appropriate guided study, active recall, follow-up questions, error diagnosis, source review, and retesting, then save Markdown learning records |
 | `pinshu-course` | Orchestrate multi-lesson courses, manage progress and checkpoints, track cross-lesson leads, run independent QA, and promote accepted assets |
 | `pinshu-md2pdf` | Convert Markdown into a professionally typeset PDF |

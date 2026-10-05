@@ -16,6 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_SKILLS = {
     "pinshu-course-capture",
+    "pinshu-content-assets",
     "pinshu-course",
     "pinshu-distill",
     "pinshu-md2pdf",
@@ -38,6 +39,12 @@ PERSONAL_PATH_RES = (
 )
 EMAIL_RE = re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b")
 PRIVATE_KEY_RE = re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----")
+SECRET_RES = (
+    re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,})\b"),
+    re.compile(r"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}\b"),
+    re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
+)
+SENSITIVE_FILENAMES = {".env", ".netrc", ".npmrc", ".pypirc", "auth.json", "cookies.json", "credentials.json"}
 errors: list[str] = []
 warnings: list[str] = []
 checked_files = 0
@@ -115,6 +122,8 @@ def scan_tree() -> None:
         if not path.is_file():
             continue
         checked_files += 1
+        if path.name.lower() in SENSITIVE_FILENAMES or path.suffix.lower() in {".key", ".pem", ".p12", ".pfx"}:
+            fail(f"sensitive filename is not allowed: {rel}")
         if path.name == ".DS_Store" or path.suffix.lower() in {".pyc", ".pyo"}:
             fail(f"generated file is not allowed: {rel}")
         if not text_kind(path):
@@ -130,6 +139,8 @@ def scan_tree() -> None:
             fail(f"personal absolute path in text: {rel}")
         if PRIVATE_KEY_RE.search(text):
             fail(f"private-key material in text: {rel}")
+        if any(pattern.search(text) for pattern in SECRET_RES):
+            fail(f"credential-like token in text: {rel}")
         for match in EMAIL_RE.finditer(text):
             if not match.group(0).lower().endswith(".invalid"):
                 fail(f"email address in public text: {rel}")
@@ -199,6 +210,10 @@ def run_executable_gates(full: bool) -> None:
     run_check(
         "course-capture self-test",
         [sys.executable, "pinshu-course-capture/scripts/self_test.py"],
+    )
+    run_check(
+        "content-assets route self-test",
+        [sys.executable, "-m", "unittest", "discover", "-s", "pinshu-content-assets/tests", "-v"],
     )
     run_check(
         "learning-asset validator self-test",

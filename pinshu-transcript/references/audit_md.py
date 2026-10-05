@@ -27,9 +27,33 @@ def load_dict_patterns(dict_path):
     return pats
 
 
+def mask_fenced_code(lines, start):
+    """Mask closed top-level fences; preserve line numbers and flag unclosed fences."""
+    masked, errors = list(lines), []
+    i = start
+    while i < len(lines):
+        opener = re.match(r'^ {0,3}(`{3,}|~{3,})(.*)$', lines[i])
+        if not opener or (opener[1][0] == '`' and '`' in opener[2]):
+            i += 1
+            continue
+        fence = opener[1]
+        closer = re.compile(r'^ {0,3}' + re.escape(fence[0]) +
+                            r'{' + str(len(fence)) + r',}[ \t]*$')
+        j = i + 1
+        while j < len(lines) and not closer.match(lines[j]):
+            j += 1
+        if j == len(lines):
+            errors.append(f'Unclosed code fence (line {i+1})')
+            break
+        masked[i:j+1] = [''] * (j + 1 - i)
+        i = j + 1
+    return masked, errors
+
+
 def audit(F, dict_patterns, require_no_h1=True, raw=False):
     errs, warns = [], []
     s = open(F, encoding='utf-8').read()
+    source_s = s  # Glossary residue still includes original code literals.
     lines = s.split('\n')
     if lines[0] != '---':
         errs.append('Missing frontmatter (the file must begin with ---)')
@@ -47,6 +71,9 @@ def audit(F, dict_patterns, require_no_h1=True, raw=False):
             if end + 1 < len(lines) and lines[end + 1].strip() == '---':
                 errs.append('Separator --- immediately follows the frontmatter closing line')
     body_start = end + 1
+    lines, fence_errors = mask_fenced_code(lines, body_start)
+    errs.extend(fence_errors)
+    s = '\n'.join(lines)
     body = lines[body_start:] if end >= 0 else lines
 
     def is_q(l): return l.startswith('>')
@@ -79,7 +106,7 @@ def audit(F, dict_patterns, require_no_h1=True, raw=False):
     # Punctuation and whitespace.
     if re.search('——', s):
         errs.append('Contains an em dash sequence: ——')
-    for pat, label in ([(r'——', 'em dash')] if not raw else []) + [
+    for pat, label in [
         (r'\uff0c\uff0c|\u3002\u3002|\uff1b\uff1b|\uff1a\uff0c', 'punctuation error'),
         (r'[ \t]+$', 'trailing whitespace'),
         (r'\S  +\S', 'consecutive spaces within a line'),
@@ -89,7 +116,7 @@ def audit(F, dict_patterns, require_no_h1=True, raw=False):
 
     # Residual glossary forms.
     for p in dict_patterns:
-        if p and p in s:
+        if p and p in source_s:
             warns.append(f'Residual glossary form: {p}')
 
     # Consistent table column counts.

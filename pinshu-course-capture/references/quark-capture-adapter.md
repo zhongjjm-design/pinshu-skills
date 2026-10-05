@@ -1,13 +1,13 @@
 # Quark Cloud Drive Video Transcript Capture Adapter
 
-This adapter only locates a Quark Cloud Drive video and obtains its source transcript from the Quark player. It does not clean, summarize, or generate paired outputs.
+This is a discovery and conditional capture procedure, **not a production-approved adapter**. Quark has not passed an end-to-end desktop transcript extraction and source-integrity test. It does not clean, summarize, or generate paired outputs. Do not route Quark lessons into the default production pipeline merely because this procedure exists.
 
-## Verified product behavior
+## Observed behavior (not end-to-end validation)
 
 - The Quark web interface is suitable for locating shared directories and video files.
 - A web file list or preview is not the transcript panel.
-- The verified panel containing Playlist, AI Summary, and Transcript appears in the Quark desktop player.
-- Quark capture therefore uses web discovery plus desktop-player extraction. Do not reuse Baidu web selectors.
+- A panel containing Playlist, AI Summary, and Transcript has been observed in the Quark desktop player; this does not establish a working automated extraction path.
+- A prospective Quark capture path requires web discovery plus desktop-player extraction. Do not reuse Baidu web selectors.
 
 ## Prerequisites
 
@@ -24,8 +24,8 @@ This adapter only locates a Quark Cloud Drive video and obtains its source trans
 5. Prefer the desktop player's copy or export function. If text is available only through the interface, use controlled desktop text extraction. Never infer the active window from screen coordinates.
 6. Extract from the lecturer's opening text and exclude player controls, buttons, timeline, playlist, and recommendations.
 7. Save the platform, video filename, complete path, extraction method, first sentence, last sentence, and text length.
-8. If the web interface locates the file and the transcript visibly exists in the desktop player but automation cannot read it, mark `BLOCKED_DESKTOP_EXTRACTION`. Record that the file was located, transcript existence was confirmed, and desktop extraction is not connected. Do not claim there is no transcript.
-9. Only when no verifiable full transcript exists—just a summary, mind map, or slides—record that the platform does not provide a source transcript. Never substitute a summary.
+8. If the web interface locates the file and the transcript visibly exists in the desktop player but automation cannot read it, mark the lesson `BLOCKED` with reason code `BLOCKED_DESKTOP_EXTRACTION`. Record what was actually observed: location, whether full transcript text was visible, and the broken extraction link. Do not claim there is no transcript or that full text was confirmed when only a tab was seen.
+9. If only a summary, mind map, or slides can be verified, record that **no full source transcript was obtained in this attempt**. Do not infer a platform-wide absence from one view, and never substitute a summary.
 
 ## Integrity verification
 
@@ -40,6 +40,6 @@ This adapter only locates a Quark Cloud Drive video and obtains its source trans
 - Not signed in, CAPTCHA, or insufficient permission: `BLOCKED` with the exact reason.
 - Transcript still processing: wait for a bounded interval and reopen the video once; never retry without limit.
 - No Transcript tab in the web interface: check the desktop player before concluding that no transcript exists.
-- Desktop window cannot be controlled reliably: `BLOCKED_DESKTOP_EXTRACTION`; preserve web discovery evidence and video identity.
+- Desktop window cannot be controlled reliably: lesson state `BLOCKED`, reason `BLOCKED_DESKTOP_EXTRACTION`; preserve web discovery evidence and video identity.
 - AI summary only: evaluate permitted local video transcription.
-- Send the file to local ASR only when download is authorized. Otherwise preserve the blocker.
+- Send the file to local ASR only when the user explicitly authorizes a permitted download. Otherwise preserve the blocker. Local ASR is a separate fallback, not proof that the Quark adapter works.

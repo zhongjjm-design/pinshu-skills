@@ -1,6 +1,6 @@
 # Formal Course Packaging, Validation, and Intermediate-Draft Cleanup
 
-Use this workflow after a long course has completed per-lesson paired drafts, a cross-topic knowledge library, and independent QA, and must be written from a temporary workspace into the formal course library.
+Use this workflow when accepted per-lesson drafts must move from a temporary workspace into a formal course library. Cross-topic work and independent QA are included when the purpose or risk triggers them; neither is a universal precondition.
 
 ## 1. Define the Content Boundary First
 
@@ -10,9 +10,9 @@ By default, the formal package contains only durable deliverables:
 - terminology and audio-review table;
 - accepted per-lesson faithful edited transcripts;
 - accepted per-lesson systematized lectures;
-- cross-topic knowledge library.
+- cross-topic knowledge library, only when produced and accepted for this course.
 
-Do not copy source audio, machine-transcription derivatives, logs, partial batch outputs, completion markers, temporary QA reports, or rework reconciliation files into the formal library. When copying per-lesson files, filter through a stable filename allowlist, such as only `lesson-*.md`; do not copy entire directories indiscriminately.
+Preserve and verify the immutable raw transcript as one of the four core results in its designated raw-source area; it need not be duplicated inside the formal edited-draft folder. Do not copy source audio, disposable transcription derivatives, logs, partial batch outputs, completion markers, temporary QA reports, or rework reconciliation files into the edited-draft folder. Filter actual accepted files from the course map, not an invented `lesson-*.md` naming rule; do not copy entire directories indiscriminately.
 
 ## 2. Review File Operations Before the Formal Write
 

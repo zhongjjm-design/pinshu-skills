@@ -1,6 +1,6 @@
 ---
 name: pinshu-study
-description: "Use when guiding study, reviewing or quizzing course material, and preserving learning records."
+description: "Use when guiding study, reviewing or quizzing course material, or preserving real learning records."
 ---
 
 # Pinshu Study Coach
@@ -8,89 +8,83 @@ description: "Use when guiding study, reviewing or quizzing course material, and
 ## Origin and maintenance
 
 - Original work: Pinshu original (`original`)
-- Owner: Aidan (Pinshu)
-- Maintainer: Aidan (Pinshu)
+- Owner and maintainer: Aidan (Pinshu)
 - Upstream dependencies: `pinshu-distill`, `pinshu-course`
 - Distribution status: `bundled`
 
-Turn prepared course material into actual learning: guide the learner first, then use active recall, follow-up questions, error diagnosis, and retesting. Markdown preserves knowledge and learning records, the agent runs the training, and web pages serve only as a later presentation layer.
+Turn prepared course material into review and practice, then save learning evidence only after actual study. Prepare reusable active-recall cards and training questions when a course's learning purpose is enabled; guide study, recall, follow-up, error analysis, source review, and retesting when the learner actually participates. Material generated is not mastery achieved. This Skill is not part of every course's default production chain. Markdown holds content and records; the agent runs the practice; web interfaces are regenerable displays.
 
-Learner-facing output follows `output_language` from the course manifest or the user's explicit preference. An omitted field means `match-user`, with source language as the fallback. Stable IDs, frontmatter keys, enum values, and other program fields remain English. If course-capture state or a manifest exists, resolve all storage targets from its path-template keys; otherwise use the existing confirmed project path map. Never translate directory names into a parallel tree.
+## Triggers and first decision
 
-## Triggers
+Use when the user asks to learn a lesson, be guided, review, be quizzed, revisit an error, explain it to someone else, or test real understanding. Systematic learning, professional foundations, bootcamps, certifications, and exam preparation enable review/training content at course initialization; source collections, interviews, opinion courses, and content-asset courses only enable it on a request to master or assess. Determine the lesson from current course identity and map, never an old pilot. A raw transcript alone does not trigger training before the course purpose has been decided.
 
-Use this skill when the user says things such as "start studying a lesson," "guide me through this section," "I finished reading; quiz me," "let's practice for ten minutes," "review what I got wrong last time," "I want to explain this to someone else," "act as my audience and ask follow-up questions," "help me test whether I truly understand this," or "quiz me at random on the latest lessons." Determine the specific lesson from the current course map and the course identity the user has explicitly specified. Never substitute a historical pilot lesson for the current lesson. Merely mentioning a course, sending a transcript, or discussing course production does not automatically start training.
-
-## First decision: learning stage
-
-| State | Evidence | Default action |
+| Stage | Evidence | Default |
 |---|---|---|
-| Not yet studied | Has not read the lesson notes, has no mental model, or is encountering the material for the first time | Guide the learner; do not test |
-| Just studied | Explicitly says they have finished reading or just studied it | Check basic recall and understanding |
-| Previously reviewed | Has an existing record or requests integrated practice | Use comparison, derivation, counterexamples, and mixed practice |
-| Has known errors | Names missed questions, weak areas, or a retest | Ask targeted follow-ups and require a fresh answer in place |
+| Not studied | Has not read notes or is mentally blank | Guide; do not quiz |
+| Just studied | Explicitly finished reading | Basic recall and understanding |
+| Reviewed | Has records or asks for integrated practice | Compare, derive, use counterexamples and mixed questions |
+| Has errors | Requests retest or names weak points | Target omissions and require a fresh answer |
 
-When the state is uncertain, ask only: "Have you already studied this section, or should I guide you through it first?" If the user says they have not studied it, cannot answer, or their mind is blank, stop testing immediately.
+If uncertain, ask one question: “Have you studied this section already, or shall I guide you first?” If the learner has not studied, cannot answer, or goes blank, stop testing immediately.
+
+## Paths and learning entry
+
+Reuse the existing confirmed course map, directories, and numbering; never translate them into a second tree. For a genuinely new course these *example* names can be adapted to its convention:
+
+```text
+03_Review_and_Practice/
+├── 01_Active_Recall/
+└── 02_Practice_Bank/
+04_Learning_Records/
+├── 00_Progress.md
+├── 01_Practice_Sessions/
+└── 02_Errors_and_Rechecks.md
+```
+
+Review/training files appear only when the course's learning purpose is enabled. Create progress/session records only after real study; create error/retest files only after an actual wrong answer. Do not pre-create empty directories. The course map explains in the learner's language “read notes → recall → practice → see records → retest” and shows current status and next step. Directory and template labels must be generic for any learner, not named for Aidan or an agent. Learner-facing prose follows the user's request or established course language; stable machine keys stay English.
 
 ## Input priority
 
-1. Structured lesson notes;
-2. Faithfully edited transcript;
-3. Domain standards;
-4. Course map and approved cross-lesson topic files;
-5. Active-recall cards and the training question bank;
-6. Personal learning records and error log.
-
-If the available input is still raw speech-to-text (STT) or the lesson notes are unfinished, do not clean the material and train from it at the same time. Return the material to the appropriate upstream capability first.
+Structured lesson notes, then faithfully edited transcript, domain standards, course map and approved cross-topic material, cards and training bank, then personal records/error log. Recheck significant claims against raw source evidence if the faithful transcript remains uncertain. If only raw STT exists or notes are incomplete, return to the appropriate upstream Skill; do not clean and train simultaneously.
 
 ## Path 1: guided study
 
-For material not yet studied, begin with a one-screen overview of the main throughline. Cover one knowledge module at a time. Explain the problem and structure before details and examples. After the user understands, optionally check with one low-pressure question. If the user is still blank, explain it again. Save the stopping point, but never mark "heard" as "mastered." Read `references/guided-study-and-training-rules.md`.
+Start with a one-screen throughline; take one module at a time. Explain the problem and structure before details and cases. Once understanding appears, use one low-pressure check. If still blank, explain again. Save the stopping point, not fabricated mastery. Read `references/guided-study-and-training-rules.md`.
 
-## Path 2: active-recall cards
+## Path 2: active recall
 
-Cards are learner-facing study materials in the resolved output language, not a checklist of engineering fields. Distinguish atomic recall cards from integrative retelling cards. An atomic card tests one independently scorable target. An integrative card may ask for a complete model or case-reasoning chain, but it must be labeled and counted separately and must not claim to test one target per card. Write questions, answers, explanations, and visible sources in the resolved output language. Treat mnemonics, memory aids, and safety as attributes. Do not create an artificial difficulty system. Build candidate cards for each lesson first; at the end of a module, `pinshu-course` performs cross-lesson deduplication. During an actual review, display only one card at a time. Read `references/active-recall-card-rules.md`.
+Cards are learner-facing study materials, not engineering-field checklists. An atomic card assesses one independently scorable objective; an integrative card may require a whole model or case chain, but is identified and counted separately. Questions, answers, explanations, and visible sources use the learner's language. Mnemonics, memory aids, and safety are attributes, not an invented difficulty scale. Generate cards for a specified lesson only when enabled; `pinshu-course` can deduplicate across lessons and make module-wide integrative cards. During review show one question at a time and reveal its answer only after the learner responds. Read `references/active-recall-card-rules.md`.
 
-## Path 3: follow-up-question training
+## Path 3: follow-up practice
 
-After the user explicitly confirms that they have studied the material:
+Only once the learner has studied:
 
 ```text
-Ask one question
--> Wait for the complete answer
--> Identify what the answer covered and omitted
--> Ask only about an omission
--> Provide the reference answer
--> Diagnose the cause of the error
--> Return to the lesson notes or faithful transcript
--> Ask for a fresh answer
--> Save the record
+one question → complete original answer → identify coverage and omissions
+→ follow up only on omissions → reference answer → diagnose error cause
+→ return to notes or faithful transcript → fresh answer → save record
 ```
 
-Do not paste the full question bank, reveal answers in advance, or replace specific feedback with "good" or "mostly correct."
+Do not paste the full bank or reveal answers early. “Mostly correct” is not actionable feedback.
 
-## Path 4: Feynman explanation and external-sharing practice
+## Path 4: explain to another person
 
-When the user explicitly wants to "make it my own," "explain it to someone else," or "test whether I truly understand it," do not begin by writing a polished script for them. First, ask the user to give an initial explanation while consulting the material as little as possible. The agent acts only as the agreed audience, recording what was clear, what remained confusing, and what follow-up questions arose rather than rushing to explain on the user's behalf. Then locate gaps across seven dimensions: central question, core model, causal chain, examples, evidence, boundaries, and transfer. Return to the lesson notes or faithful transcript to repair those gaps, then have the user explain the material again for a different audience or setting.
+When the learner wants to make knowledge their own or test understanding, do not write a polished script on their behalf. Ask for their initial explanation without heavy reliance on notes; act as the agreed audience and capture clarity, confusion, and real questions. Diagnose the central question, model, causal chain, examples, evidence, boundaries, and transfer; revisit the source, then explain again to another audience or in another setting. Real listener feedback can be saved. Fluency alone does not prove application; “can respond” or “can transfer” requires handling questions, counterexamples, and new situations. Read `references/feynman-explanation-and-sharing-practice.md`.
 
-Follow-up questions and feedback from a real audience may be imported into the training record. Speaking fluently does not prove the learner can apply the material. Mark the learner as "can respond" or "can transfer" only after they can handle follow-up questions, counterexamples, and novel situations. Read `references/feynman-explanation-and-sharing-practice.md`.
+## Question sources and diagnosis
 
-## Question sources
+Prefer the user's genuine exam questions, printed tests, and textbook exercises, then instructor questions and representative learner errors, then approved course bank items. Generate and label a small number of AI gap-fill questions only for missing coverage, recurring errors, or transfer practice. Distinguish memory lapse, conceptual confusion, skipped reasoning, missed condition, incomplete expression, misread prompt, confused source identity, and safety/boundary errors. Feedback states what was correct, what was missing, where the reasoning diverged, what source to review, and when to answer again.
 
-Prefer the user's existing authentic exam questions, printed practice tests, and textbook exercises. Next prefer the instructor's in-class questions and representative learner errors, followed by approved course training questions. Generate a small number of AI gap-filling questions only when needed to cover a gap, address a recurring error, or train transfer, and label them as AI-generated gap-fill questions.
+## Storage and readable presentation
 
-## Error causes
+Markdown is authoritative. Store standard cards and training questions in the enabled review/training area. Preserve original answers, follow-ups, error causes, source review, fresh answers, and retests in records after genuine learning. Put each card's or question's English ID, sequence, classification, operation, and other program data in separate JSON indices under the course's existing production-control area (e.g. `99_Production_Control/Learning_Asset_Index/`), with separate `active_recall_cards`/`card_id` and `training_questions`/`q_id` types. Frontmatter contains only a few file-level properties, count, resolvable source paths, and `metadata_index` pointer—not per-item lists. No `%%`, HTML comments/tags, item IDs, or pipeline fields in the reading body. HTML/web display is regenerable and must not overwrite original answers. Read `references/markdown-learning-record-specification.md`.
 
-At minimum, distinguish memory failure, concept confusion, skipped reasoning step, omitted condition, incomplete expression, misread question, source-identity confusion, and safety or boundary error. Feedback must state what was correct, what was missing, where the reasoning diverged, what to review, and when to answer again.
-
-## Persistence
-
-Use Markdown as the authoritative source. Store standard course cards and training questions at the manifest-rendered course targets. Store the learner's original answers, follow-up questions, error diagnoses, and retest results in the neutral personal-learning-record target. Put stable English IDs and program fields in frontmatter or hidden comments, not in the main reading text. HTML and web pages are regenerable interfaces. Read `references/markdown-learning-record-specification.md`.
+Open representative files in the actual target reading interface to check properties, heading hierarchy, collapsed answers, mobile width, and code leakage; a structural PASS does not prove rendering.
 
 ## Sources and safety
 
-An instructor's spoken statement does not automatically equal a textbook, pharmacopeia, regulation, or objective fact. A mnemonic cannot replace differential assessment. A case cannot be promoted into a causal efficacy claim. For medical care, medication, toxicity, dosage, critical illness, or hands-on procedures, train only source identification, applicability conditions, stopping conditions, and professional boundaries; never turn the course content into advice for self-diagnosis, self-medication, or self-performed procedures. Label divination-practice cases as simulations. Do not use unresolved items in a faithful transcript as definitive answers. Put each high-risk boundary inside the individual card answer rather than relying only on a file-level disclaimer.
+An instructor's speech is not automatically a textbook, pharmacopeia, regulation, or objective fact. A mnemonic cannot replace differential assessment; a case is not causal evidence of efficacy. For medical care, drugs, dosage, toxicity, emergencies, or hands-on procedures, practice only source identification, applicable conditions, stopping conditions, and professional boundaries; never convert content into self-diagnosis, medication, or unsupervised procedure advice. Label simulated divination examples. Do not turn unresolved transcript items into definitive answers. Place each high-risk qualification in that card's answer, not just at the end of a file.
 
-## Acceptance and stopping criteria
+## Acceptance and stopping
 
-Verify that guided study moved the user from blankness to understanding; each atomic card tests one target; integrative cards are labeled and counted separately; actual card units agree with frontmatter totals and category counts; training truly completed the answer -> follow-up -> error diagnosis -> source review -> fresh answer cycle; Feynman practice preserved the first explanation, genuine follow-up questions, gaps, source review, and second explanation; the record preserved the original answer; and testing stopped when the user had not yet studied the material. Historical pilots may serve only as evidence that the rules were validated; they must never become prerequisites for producing or studying a new course. Stop when the learning objective has been met.
+Check that guided study actually helps a blank learner understand, cards and training questions are complementary, atomic/integrative cards are separately counted, reading bodies are clean, frontmatter is compact, and each dedicated index matches the body in type/count/order/unique IDs. Inspect representative rendered files. For actual practice, check original answer → follow-up → cause → source → fresh answer, and for explanation practice preserve both explanations and real questions. Never replace an original answer or quiz a learner who has not studied. Historical pilots are evidence, not prerequisites. An unenabled extension produces no empty card or record directories; the core course results can pass without it. Stop when the agreed learning objective is reached.

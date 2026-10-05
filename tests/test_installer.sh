@@ -14,6 +14,7 @@ FAIL_COUNT=0
 
 EXPECTED_SKILLS=(
   pinshu-course-capture
+  pinshu-content-assets
   pinshu-course
   pinshu-distill
   pinshu-md2pdf
@@ -180,7 +181,7 @@ assert_exact_active_roster() {
     count=$((count + 1))
   done
   shopt -u nullglob
-  [ "$count" -eq "${#EXPECTED_SKILLS[@]}" ] || fail "expected six active Pinshu packages, found $count"
+  [ "$count" -eq "${#EXPECTED_SKILLS[@]}" ] || fail "expected seven active Pinshu packages, found $count"
 }
 
 test_clean_install() {
@@ -240,28 +241,72 @@ test_acquisition_failure_preserves_legacy() {
   assert_absent "$HOME_DIR/.pinshu-skills"
 }
 
-test_existing_directory_backup_and_replacement() {
-  local backup_copy
-  local legacy_backup
-
-  new_case backup-replacement
+test_unowned_same_name_refusal() {
+  local skill
+  new_case unowned-same-name
   make_remote v1 valid
-  mkdir -p \
-    "$HOME_DIR/.agents/skills/pinshu-study" \
-    "$HOME_DIR/.agents/skills/transcript-cleaner"
-  printf 'old active data\n' >"$HOME_DIR/.agents/skills/pinshu-study/old-sentinel"
-  printf 'legacy data\n' >"$HOME_DIR/.agents/skills/transcript-cleaner/legacy-sentinel"
+  mkdir -p "$HOME_DIR/.agents/skills/pinshu-content-assets"
+  printf 'unowned data\n' >"$HOME_DIR/.agents/skills/pinshu-content-assets/sentinel"
+  run_installer_failure
+  assert_contains "$LOG_FILE" 'Unowned Skill destination'
+  assert_file "$HOME_DIR/.agents/skills/pinshu-content-assets/sentinel"
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    [ "$skill" = pinshu-content-assets ] || assert_absent "$HOME_DIR/.agents/skills/$skill"
+  done
+  assert_absent "$HOME_DIR/.pinshu-skills"
+}
 
+test_suspicious_legacy_path_untouched() {
+  new_case suspicious-legacy
+  make_remote v1 valid
+  mkdir -p "$HOME_DIR/.agents/skills" "$CASE_ROOT/victim"
+  printf 'legacy data\n' >"$CASE_ROOT/victim/sentinel"
+  ln -s "$CASE_ROOT/victim" "$HOME_DIR/.agents/skills/transcript-cleaner"
   run_installer_success
   assert_active_version v1
-  assert_absent "$HOME_DIR/.agents/skills/pinshu-study/old-sentinel"
-  backup_copy=$(find "$HOME_DIR" -type f -name old-sentinel -print -quit)
-  [ -n "$backup_copy" ] || fail 'existing Skill directory was not preserved in a backup'
-  assert_file "$backup_copy"
-  assert_absent "$HOME_DIR/.agents/skills/transcript-cleaner"
-  legacy_backup=$(find "$HOME_DIR" -type f -name legacy-sentinel -print -quit)
-  [ -n "$legacy_backup" ] || fail 'legacy Skill directory was not preserved in a backup'
-  assert_file "$legacy_backup"
+  [ -L "$HOME_DIR/.agents/skills/transcript-cleaner" ] || fail 'legacy symlink changed'
+  assert_file "$CASE_ROOT/victim/sentinel"
+  assert_contains "$LOG_FILE" 'legacy path has no ownership proof and was left untouched'
+}
+
+test_old_six_owned_upgrade() {
+  local skill repository_backup
+  new_case owned-old-six
+  make_remote v1 valid
+  rm -rf -- "$FIXTURE_SOURCE/pinshu-content-assets"
+  git -C "$FIXTURE_SOURCE" add -A
+  git -C "$FIXTURE_SOURCE" commit -q -m 'old six roster'
+  git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
+  git clone -q "file://$FIXTURE_REMOTE" "$HOME_DIR/.pinshu-skills"
+  mkdir -p "$HOME_DIR/.agents/skills"
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    [ "$skill" = pinshu-content-assets ] && continue
+    mkdir -p "$HOME_DIR/.agents/skills/$skill"
+    rsync -a --exclude='.DS_Store' --exclude='__pycache__/' --exclude='*.pyc' --exclude='*.pyo' --exclude='.git' \
+      "$HOME_DIR/.pinshu-skills/$skill/" "$HOME_DIR/.agents/skills/$skill/"
+  done
+  write_fixture_packages v2 valid
+  git -C "$FIXTURE_SOURCE" add -A
+  git -C "$FIXTURE_SOURCE" commit -q -m 'seven roster'
+  git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
+  run_installer_success
+  assert_active_version v2
+  repository_backup=$(find "$HOME_DIR/.pinshu-install-backups" -type f -path '*/previous-clone/pinshu-study/payload.txt' -exec grep -l '^v1$' {} \; | head -n 1)
+  [ -n "$repository_backup" ] || fail 'old six clone was not preserved'
+  assert_absent "$HOME_DIR/.agents/skills/.pinshu-backups/legacy"
+}
+
+test_altered_installed_copy_refusal() {
+  new_case altered-copy
+  make_remote v1 valid
+  run_installer_success
+  printf 'local change\n' >"$HOME_DIR/.agents/skills/pinshu-content-assets/local.txt"
+  update_remote v2
+  run_installer_failure
+  assert_contains "$LOG_FILE" 'Installed copy differs from the owned clone'
+  assert_file "$HOME_DIR/.agents/skills/pinshu-content-assets/local.txt"
+  assert_contains "$HOME_DIR/.agents/skills/pinshu-study/payload.txt" v1
+  assert_contains "$HOME_DIR/.pinshu-skills/pinshu-study/payload.txt" v1
 }
 
 test_repeated_upgrade() {
@@ -353,7 +398,11 @@ WRAPPER
     fail 'installer unexpectedly succeeded after injected move failure'
   fi
 
-  assert_file "$CASE_ROOT/mv-failed-once"
+  if [ ! -f "$CASE_ROOT/mv-failed-once" ]; then
+    printf 'Rollback fixture installer output:\n' >&2
+    sed 's/^/  /' "$LOG_FILE" >&2
+    fail 'injected move failure was not reached'
+  fi
   assert_active_version v1
   assert_file "$HOME_DIR/.agents/skills/transcript-cleaner/sentinel"
   assert_contains "$HOME_DIR/.pinshu-skills/pinshu-study/payload.txt" v1
@@ -446,7 +495,10 @@ run_test() {
 run_test 'clean install copies the complete allowed packages' test_clean_install
 run_test 'symlink destination is refused and victim survives' test_symlink_destination_refusal
 run_test 'acquisition failure leaves legacy Skill active' test_acquisition_failure_preserves_legacy
-run_test 'existing real directory is backed up and replaced' test_existing_directory_backup_and_replacement
+run_test 'unowned same-name directory is refused without mutation' test_unowned_same_name_refusal
+run_test 'suspicious legacy symlink is left untouched' test_suspicious_legacy_path_untouched
+run_test 'owned old-six installation upgrades to seven with backups' test_old_six_owned_upgrade
+run_test 'altered installed copy blocks upgrade without mutation' test_altered_installed_copy_refusal
 run_test 'repeated upgrade replaces stale content and preserves backup' test_repeated_upgrade
 run_test 'conflicting Claude path is left untouched' test_conflicting_claude_path_is_untouched
 run_test 'invalid repository roster causes no active mutation' test_invalid_roster_causes_no_active_mutation

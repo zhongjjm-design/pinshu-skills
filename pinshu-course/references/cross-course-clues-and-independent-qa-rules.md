@@ -2,7 +2,7 @@
 
 ## 1. Ownership of Cross-Lesson Clues
 
-`pinshu-study` produces and uses per-lesson cards. At module close, `pinshu-course` owns cross-lesson aggregation, deduplication, evidence review, and promotion into formal cards. A lesson-level Agent submits candidates only; it must not declare them “verified across lessons.”
+For enabled learning, `pinshu-study` produces and uses per-lesson cards. At module close, `pinshu-course` owns cross-lesson aggregation, deduplication, evidence review, and module cards. A lesson-level Agent may mark a knowledge clue “verified across lessons” only after actually reading and citing a second authoritative lesson, not merely anticipating one.
 
 ## 2. Knowledge Clues Pending Consolidation
 
@@ -24,13 +24,13 @@ Use only four canonical evidence-state values in program fields and the public E
 3. `verified across lessons`: an authoritative source from a second lesson has been read, with a resolvable source and differences recorded;
 4. `safety-governance candidate`: not yet repeated across lessons, but misuse has a high cost and warrants one shared safety node.
 
-The validator also accepts the established legacy Chinese labels and state values and normalizes them to these four internal values. A clue must use one complete documented label set; do not mix languages inside a state or combine English and legacy Chinese field labels in one clue. Learner-facing explanatory prose follows `output_language`, while these enum values remain stable program fields.
+The validator accepts documented English and Chinese headings/fields; for a learner-visible clue, use one consistent label set matching the course language. The four evidence-state meanings do not change with translation. A second source is mandatory for a verified claim.
 
 “Expected to recur,” “probably useful,” and “another lesson should have covered it” remain current-lesson candidates and cannot be promoted. Do not register an ordinary noun, single herb, or isolated case detail without substantial confusion, disagreement, safety value, or cross-lesson increment.
 
 ## 3. Source Paths
 
-Every structured lecture must have a resolvable `source_transcript`. Every card must have a `source_lecture`; mnemonics, numbers, safety claims, instructor opinions, and individual cases must also have a `source_transcript`. A path is either a plain absolute path or a valid relative path from the current file. Do not mix explanatory prose such as “located at,” “same directory,” or “see” into the field.
+Every structured lecture must have a resolvable `source_transcript`. Every card has `source_lecture` and `source_transcript` file-level pointers, plus a separate per-item JSON index. Mnemonics, numbers, safety claims, instructor opinions, and cases must also be checked against the faithful transcript at the item level. A path is a plain absolute path or valid relative path from its owning file; do not embed explanatory prose in it.
 
 Before formal promotion, resolve each path and confirm that its target exists. Writing “return to source” does not make a source retrievable.
 
@@ -47,7 +47,7 @@ A generator’s nine-question report provides rework clues, not acceptance evide
 
 When exhaustive proof is unavailable, write “no issue found in the sampled scope” and identify that scope. Generate counts programmatically from actual files rather than entering them manually.
 
-## 5. Nine-Question Pilot Report
+## 5. Nine-Question Pilot Report (for an actual pilot, not every lesson)
 
 Every pilot must answer at least:
 
@@ -63,9 +63,9 @@ Every pilot must answer at least:
 
 The report must not present a repair plan as a completed fact.
 
-## 6. Independent QA by the Main Agent
+## 6. Risk-triggered or sampled independent QA
 
-The main agent must complete at least:
+Only when a high-risk trigger or adaptive sample calls for independent QA, the independent reviewer must complete the applicable checks:
 
 1. Programmatic counts of files, headings, cards, clues, and paths;
 2. Reverse checks from the faithful transcript for the opening, main line, ending, safety content, and high-risk anchors;
@@ -73,12 +73,12 @@ The main agent must complete at least:
 4. For hands-on lessons, verification of visual dependencies and unsupervised-operation boundaries;
 5. Per-card sampling for atomicity, high-risk answers, and source retrieval;
 6. Per-clue verification of evidence state and second source;
-7. Reconciliation of every strong claim in the generator report against actual files.
+7. Reconciliation of every strong claim in any generator report against actual files.
 
 If generator and independent QA conclusions conflict, decide from the authoritative source and reproducible evidence. After independent QA fails, keep state as `rework`; complete files or a script `PASS` do not justify promotion.
 
 ## 7. Formal Promotion and Scale-Up
 
-Per-lesson state: candidate outputs → generator self-check → main-agent independent QA → targeted rework → in-place re-verification → accepted.
+Ordinary clean lessons: paired generation → mechanical check → writer semantic self-review → unique committer's promotion. Triggered or sampled lessons add independent QA → targeted rework if needed → in-place re-verification before acceptance.
 
-Run cross-lesson card deduplication and formal horizontal consolidation only at module close. Scaling an entire course additionally requires a representative mixed-content lesson, one clinical-case or divination-chart lesson, one highly visual or hands-on lesson, one formal cross-lesson consolidation, and one real learning loop.
+Run cross-lesson card deduplication and horizontal consolidation at module close when enabled. Before scaling, inspect representative lesson layout, faithful edit, notes, and map; clinical/case, high-visual/hands-on, critical-number and consequential lessons require independent QA. A real learning loop validates learning experience when enabled, not the four-result production foundation.

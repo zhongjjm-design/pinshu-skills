@@ -14,6 +14,7 @@ LOCK_DIR="$HOME_ROOT/.pinshu-installer.lock"
 
 EXPECTED_SKILLS=(
   pinshu-course-capture
+  pinshu-content-assets
   pinshu-course
   pinshu-distill
   pinshu-md2pdf
@@ -102,7 +103,7 @@ assert_safe_slug() {
 
 is_expected_skill() {
   case "$1" in
-    pinshu-course-capture|pinshu-course|pinshu-distill|pinshu-md2pdf|pinshu-study|pinshu-transcript)
+    pinshu-course-capture|pinshu-content-assets|pinshu-course|pinshu-distill|pinshu-md2pdf|pinshu-study|pinshu-transcript)
       return 0
       ;;
     *)
@@ -158,7 +159,7 @@ preflight_target_paths() {
     [ -d "$INSTALL_DIR" ] || die "PINSHU_INSTALL_DIR is not a real directory: $INSTALL_DIR"
   fi
 
-  for slug in "${EXPECTED_SKILLS[@]}" "${LEGACY_SKILLS[@]}"; do
+  for slug in "${EXPECTED_SKILLS[@]}"; do
     target="$SKILLS_DIR/$slug"
     case "$target" in
       "$SKILLS_DIR"/*) ;;
@@ -169,6 +170,61 @@ preflight_target_paths() {
       [ -d "$target" ] || die "Destination is not a real directory: $target"
     fi
   done
+}
+
+# Earlier six-package installs have no marker. Require an exact origin and an
+# unmodified clone, then compare every installed copy against its clone source.
+preflight_owned_installation() {
+  local skill origin status differences change bad_entry old_six=0
+  local installed_count=0
+
+  if ! path_exists "$INSTALL_DIR"; then
+    for skill in "${EXPECTED_SKILLS[@]}"; do
+      path_exists "$SKILLS_DIR/$skill" && die "Unowned Skill destination was refused: $SKILLS_DIR/$skill"
+    done
+    return 0
+  fi
+
+  [ -d "$INSTALL_DIR/.git" ] && [ ! -L "$INSTALL_DIR/.git" ] || die "Existing clone cannot prove ownership: $INSTALL_DIR"
+  origin=$(git -C "$INSTALL_DIR" remote get-url origin) || die "Existing clone has no origin: $INSTALL_DIR"
+  [ "$origin" = "$REPO" ] || die "Existing clone origin does not match the requested repository: $INSTALL_DIR"
+  status=$(git -C "$INSTALL_DIR" status --porcelain --untracked-files=all) || die "Existing clone cannot be inspected: $INSTALL_DIR"
+  [ -z "$status" ] || die "Existing clone has local changes; refusing upgrade: $INSTALL_DIR"
+
+  if [ ! -e "$INSTALL_DIR/pinshu-content-assets" ] && [ ! -L "$INSTALL_DIR/pinshu-content-assets" ]; then
+    old_six=1
+  fi
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    if [ "$old_six" -eq 1 ] && [ "$skill" = pinshu-content-assets ]; then
+      path_exists "$SKILLS_DIR/$skill" && die "Unowned Skill destination was refused: $SKILLS_DIR/$skill"
+      continue
+    fi
+    [ -d "$INSTALL_DIR/$skill" ] && [ ! -L "$INSTALL_DIR/$skill" ] || die "Existing clone lacks expected package: $skill"
+    [ -f "$INSTALL_DIR/$skill/SKILL.md" ] && [ ! -L "$INSTALL_DIR/$skill/SKILL.md" ] || die "Existing clone has invalid package: $skill"
+    [ -d "$SKILLS_DIR/$skill" ] && [ ! -L "$SKILLS_DIR/$skill" ] || die "Installed copy is missing or not a real directory: $skill"
+    bad_entry=$(find "$INSTALL_DIR/$skill" "$SKILLS_DIR/$skill" ! -type d ! -type f -print -quit)
+    [ -z "$bad_entry" ] || die "Existing package contains a symlink or special file: $bad_entry"
+    bad_entry=$(find "$SKILLS_DIR/$skill" \( -name .DS_Store -o -name __pycache__ -o -name '*.pyc' -o -name '*.pyo' -o -name .git \) -print -quit)
+    [ -z "$bad_entry" ] || die "Installed copy has unexpected generated content: $bad_entry"
+    differences=$(rsync -a --checksum --delete --dry-run --itemize-changes \
+      --exclude='.DS_Store' --exclude='__pycache__/' \
+      --exclude='*.pyc' --exclude='*.pyo' --exclude='.git' \
+      "$INSTALL_DIR/$skill/" "$SKILLS_DIR/$skill/") || die "Cannot compare installed copy: $skill"
+    # Git checkout timestamps need not match the earlier rsync copy. Ignore
+    # timestamp-only reports, but reject any byte, mode, type or path change.
+    while IFS= read -r change; do
+      case "$change" in
+        ''|'.f..t.... '*|'.d..t.... '*|'.f..T.... '*|'.d..T.... '*) ;;
+        *) die "Installed copy differs from the owned clone: $skill ($change)" ;;
+      esac
+    done <<< "$differences"
+    installed_count=$((installed_count + 1))
+  done
+  if [ "$old_six" -eq 1 ]; then
+    [ "$installed_count" -eq 6 ] || die "Existing six-package installation is incomplete."
+  else
+    [ "$installed_count" -eq 7 ] || die "Existing seven-package installation is incomplete."
+  fi
 }
 
 validate_repository() {
@@ -193,7 +249,7 @@ validate_repository() {
   done
   shopt -u nullglob
 
-  [ "$found_count" -eq "${#EXPECTED_SKILLS[@]}" ] || die "Repository package roster is incomplete. Expected six packages, found $found_count."
+  [ "$found_count" -eq "${#EXPECTED_SKILLS[@]}" ] || die "Repository package roster is incomplete. Expected seven packages, found $found_count."
 
   for skill in "${EXPECTED_SKILLS[@]}"; do
     [ -d "$repository/$skill" ] && [ ! -L "$repository/$skill" ] || die "Missing repository package: $skill"
@@ -400,6 +456,7 @@ validate_repository "$ACQUIRED_REPO"
 
 # Repository acquisition and validation are complete before any active path mutation.
 preflight_target_paths
+preflight_owned_installation
 mkdir -p -- "$SKILLS_DIR" "$(dirname -- "$INSTALL_DIR")"
 assert_directory_chain "$SKILLS_DIR" "PINSHU_SKILLS_DIR"
 assert_directory_chain "$(dirname -- "$INSTALL_DIR")" "PINSHU_INSTALL_DIR parent"
@@ -426,6 +483,7 @@ validate_repository "$INSTALL_STAGE"
 
 # Repeat preflight after staging to narrow the race window before the transaction.
 preflight_target_paths
+preflight_owned_installation
 RUN_ID="$(date +%Y%m%d-%H%M%S)-$$"
 SKILLS_BACKUP_ROOT="$SKILLS_DIR/.pinshu-backups/$RUN_ID"
 INSTALL_BACKUP_ROOT="$INSTALL_PARENT/.pinshu-install-backups/$RUN_ID"
@@ -435,9 +493,6 @@ INSTALL_BACKUP_ROOT="$INSTALL_PARENT/.pinshu-install-backups/$RUN_ID"
 TRANSACTION_STARTED=1
 for skill in "${EXPECTED_SKILLS[@]}"; do
   backup_target "$SKILLS_DIR/$skill" "$SKILLS_BACKUP_ROOT/active/$skill"
-done
-for skill in "${LEGACY_SKILLS[@]}"; do
-  backup_target "$SKILLS_DIR/$skill" "$SKILLS_BACKUP_ROOT/legacy/$skill"
 done
 backup_target "$INSTALL_DIR" "$INSTALL_BACKUP_ROOT/previous-clone"
 
@@ -458,6 +513,11 @@ if path_exists "$INSTALL_BACKUP_ROOT/previous-clone"; then
 fi
 
 handle_claude_link
+for skill in "${LEGACY_SKILLS[@]}"; do
+  if path_exists "$SKILLS_DIR/$skill"; then
+    printf 'Warning: legacy path has no ownership proof and was left untouched: %s\n' "$SKILLS_DIR/$skill"
+  fi
+done
 printf 'Installed Pinshu Skills:\n'
 printf '  - %s\n' "${EXPECTED_SKILLS[@]}"
 printf 'Installation complete. Restart your Agent client.\n'

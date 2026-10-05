@@ -24,7 +24,7 @@ Before editing, build an internal proofreading table. It need not appear verbati
 - spellings the user has already corrected;
 - candidate homophone errors and the contextual evidence for each.
 
-**If the course already has a terminology-correction glossary**, load it before editing. STT errors often recur within a course, including multiple incorrect versions of an instructor's name and fixed mistranscriptions of specialist terms. Write newly discovered mistranscriptions back to the glossary after editing. Keep the glossary with the course so it improves over time and can be reused across lessons.
+This skill creates and maintains the course glossary. On the first lesson, create `00_Terminology-and-Corrections.md` in the course root unless an equivalent already exists; use the established local naming convention when different. Load it before each later lesson and add newly confirmed raw-to-correct mappings afterward. Recurrent STT errors should be corrected consistently across lessons. Display only confirmed spellings in edited material; keep erroneous source forms in the immutable raw source, glossary mappings, or internal source-trace notes.
 
 Priority: explicit user correction > course terminology glossary > clearly legible on-screen text > repeated consistent usage within the same material > contextual inference. Do not expand the transcript with web research merely to correct an external fact that may have changed; flag a separate verification need instead.
 

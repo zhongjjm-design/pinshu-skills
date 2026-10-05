@@ -53,6 +53,23 @@ class ReleaseValidatorNegativeControls(unittest.TestCase):
                 any("symlink is not allowed" in item for item in self.run_scan(root))
             )
 
+    def test_rejects_credential_like_token(self):
+        with tempfile.TemporaryDirectory(prefix="pinshu-release-validator-") as tmp:
+            root = Path(tmp)
+            marker = "ghp_" + "A" * 36
+            (root / "bad.md").write_text(marker, encoding="utf-8")
+            self.assertTrue(
+                any("credential-like token" in item for item in self.run_scan(root))
+            )
+
+    def test_rejects_sensitive_filename(self):
+        with tempfile.TemporaryDirectory(prefix="pinshu-release-validator-") as tmp:
+            root = Path(tmp)
+            (root / ".env").write_text("PLACEHOLDER=safe", encoding="utf-8")
+            self.assertTrue(
+                any("sensitive filename" in item for item in self.run_scan(root))
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -120,6 +120,22 @@ def main() -> int:
         assert generated["paths"]["official_faithful"].endswith("01_\u5fe0\u5b9e\u7cbe\u7f16\u7a3f/\u7b2c01\u8bfe\u00b7Lesson 1.md")
         assert generated["paths"]["active_recall"].endswith("03_\u590d\u4e60/\u7b2c01\u8bfe\u00b7Lesson 1.md")
         assert json.loads(run(str(PIPE), "summary", "--state", str(state)).stdout)["output_language"] == "en-US"
+
+        # Public example renders English paths; legacy defaults above remain unchanged.
+        example = json.loads((HERE.parent / "templates/course-manifest.example.json").read_text(encoding="utf-8"))
+        example["course_root"] = str(root / "example-course")
+        example["runtime_dir"] = str(root / "example-runtime")
+        example["intake_confirmation"] = {"confirmed": True, "confirmed_by": "test-user", "confirmed_at": "2026-09-24T00:00:00+08:00"}
+        example["writer_model"] = "test-writer"
+        example["qa_model"] = "test-reviewer"
+        example_manifest = root / "example-manifest.json"; example_state = root / "example-state.json"
+        write_json(example_manifest, example)
+        run(str(PIPE), "init", "--manifest", str(example_manifest), "--state", str(example_state))
+        example_paths = json.loads(run(str(PIPE), "paths", "--state", str(example_state), "--lesson", "1").stdout)["paths"]
+        assert example_paths["source"].endswith("00_Source_Transcripts/Lesson-01-Official Title.md")
+        assert example_paths["course_map"].endswith("00_Course_Map.md")
+        assert example_paths["active_recall"].endswith("03_Review_and_Practice/01_Active_Recall/Lesson-01-Official Title.md")
+        assert example_paths["learning_progress"].endswith("04_Learning_Records/00_Progress.md")
         missing = transition(state, 1, "CAPTURED", expect=2)
         assert "missing artifact key source" in missing.stderr
         transition(state, 1, "CAPTURED", [f"source={raw}"])

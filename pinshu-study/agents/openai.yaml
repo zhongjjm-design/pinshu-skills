@@ -1,4 +1,4 @@
 interface:
   display_name: "Pinshu Study Coach"
-  short_description: "Guide study, review, diagnose errors, and save learning records"
-  default_prompt: "Use $pinshu-study. First determine whether I have studied the current material. If I have not, guide me instead of testing me. After I have studied it, ask one question at a time, follow up based on my answer, diagnose the cause of any error, return me to the lesson notes, and save the learning process in Markdown."
+  short_description: "Create enabled review materials; coach and record real study"
+  default_prompt: "Use $pinshu-study for this course's enabled learning goal. Prepare distinct recall cards and training questions with separate JSON indices; do not create personal records before actual study. If I have not studied, guide me instead of testing. Once I answer, ask one question at a time, diagnose omissions against the notes and faithful transcript, seek a fresh answer, and preserve the original answer in a readable Markdown record."

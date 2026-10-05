@@ -11,9 +11,11 @@ description: "Faithful transcript editing and reconstruction of hands-on course 
 - Owner: Aidan (Pinshu)
 - Maintainer: Aidan (Pinshu)
 - Optional upstream skill: `pinshu-data-cleaning` (not bundled; useful only when the input spans PDFs, images, web pages, audio/video, or multiple versions)
-- Distribution status: `bundled`; distributed with `aidan-skills` and `claude-skills`
+- Distribution status: `bundled` in this English skill collection; installable as a standalone skill
 
 Turn speech-to-text output into a complete, well-structured, readable document that remains faithful to the source. Restore the main text first, then create any derivative content at the end. Never turn “editing” into summarization.
+
+In a course pipeline, this skill edits an immutable raw transcript into the faithful draft. `pinshu-distill` produces the structured guide and `pinshu-course` maintains the series map. Those are distinct required course results, not additional outputs this skill must produce on its own.
 
 ## Core Principles
 
@@ -22,7 +24,7 @@ Turn speech-to-text output into a complete, well-structured, readable document t
 3. **Hands-on work is main-text content**: Software operations, entered instructions, code, parameters, navigation paths, AI outputs, and correction sequences are reproducible knowledge, not incidental classroom chatter.
 4. **Separate the main text from derivative content**: A reading guide, key ideas, quotable lines, or social-media copy must not be mixed into or substitute for the main text.
 5. **Do not guess through uncertainty**: When a term or on-screen text cannot be confirmed, preserve the context and mark it `[To confirm]`. Never fabricate exact instructions or code.
-6. **Prefer semantic titles**: The filename and primary heading must identify the speaker, the central judgment, and high-value topics. “Transcript,” “cleaned draft,” “edited draft,” “complete edition,” “master draft,” “batch one,” and dates may only be document attributes, not retrieval titles.
+6. **Name the lesson by its central point**: Read the whole source before naming it. Keep a lesson number only when needed; identify its central question or judgment and a distinctive case, method, or result. If the directory already identifies the document type, keep type labels out of both filename and H1. A title must distinguish this lesson from its neighbors and tell a reader why to open it. An established course timetable title takes precedence where the library requires it.
 7. **The raw source is immutable**: Permanently retain the raw transcript. Every deletion in the edited version must remain traceable to the original source. Never modify, overwrite, or delete the raw transcript file.
 
 ## Input Boundary: First Decide Whether This Is a Transcript Task
@@ -34,7 +36,7 @@ Turn speech-to-text output into a complete, well-structured, readable document t
 - Route systematic notes, methods, case libraries, and knowledge distillation to `pinshu-distill`; never substitute them for the faithful draft.
 - When a course series also requires a catalog, state gates, slide evidence, batch rework, or a cross-course knowledge base, load `pinshu-course` as well.
 
-For course production, follow the manifest's `output_language` for learner-facing prose and use manifest-rendered path keys whenever course-capture state exists. Stable IDs, frontmatter keys, enum values, and program fields remain English. Without a manifest, preserve the existing confirmed project paths; for a new course, confirm an explicit path map before writing.
+For course production with an existing manifest, follow its `output_language` for learner-facing prose and use its rendered path keys when course-capture state exists. This English edition does not require a manifest, course-capture, or an English-only learner output: without those tools, honor the user's language and the existing confirmed project paths; confirm the destination before writing a new course. Keep established program identifiers intact.
 
 ## Required Reference Loading
 
@@ -55,7 +57,7 @@ Read the complete input, including available visuals and attachments. Identify e
 
 ### 2. Build the internal proofreading table
 
-Record people, organizations, products, tools, models, abbreviations, capitalization, lesson numbers, numeric facts, user corrections, recurring STT errors, and supporting evidence. Load an existing course glossary first and write newly confirmed mappings back after editing.
+Record people, organizations, products, tools, models, abbreviations, capitalization, lesson numbers, numeric facts, user corrections, recurring STT errors, and supporting evidence. **This skill owns the course terminology and correction glossary**: on the first lesson, create `00_Terminology-and-Corrections.md` in the course root, or follow an established local name. Reuse an existing synonymous glossary instead of creating a second one. Before each later lesson, load it; after editing, write back newly confirmed raw-to-correct mappings. A downstream publication or content workflow displays the confirmed spelling, not an STT error.
 
 Apply this priority: explicit user correction > course glossary > clearly legible on-screen text > repeated consistent usage in the same material > contextual inference. Flag changing external facts for separate verification instead of expanding the transcript with web research.
 
@@ -83,9 +85,7 @@ Completion criterion: headings reveal the speaker's reasoning, while full readin
 
 Compare the draft with the raw source paragraph by paragraph. Resolve uncertainty from source materials first; then give the user one consolidated confirmation list. Apply each confirmed correction immediately throughout the main text and search until the old form is gone. Review every omitted block with: “Would deleting this cause the student to learn less?” Restore it when the answer is yes.
 
-7. **Emphasis discipline**: Use emphasis only for key phrases no longer than 16 Chinese characters. Remove emphasis from full sentences and paragraphs. Every `**` pair must close within the same paragraph. Run `references/audit_md.py` before delivery.
-
-8. **Machine audit before delivery**: Before finalizing, run `references/audit_md.py` to check structure, blank lines, punctuation, overlong paragraphs, tables, links, images, and glossary residue. A `PASS` still requires manual review of three screenfuls; never wait for the user to discover production errors.
+For formal course text, emphasize short key phrases rather than whole sentences; close each `**` pair within its paragraph. Run `references/audit_md.py` for structural checks, then review the opening, a substantive middle passage, and the ending in the actual reading view. Its `PASS` cannot establish semantic fidelity.
 
 For formal course output, run:
 
@@ -113,11 +113,11 @@ Delivery is complete only when all applicable checks in `references/quality-revi
 
 - the raw source remains unchanged and retained;
 - every case, number, judgment, inference, reversal, qualifier, repeated emphasis, instruction, code block, command, parameter, path, tool output, error, correction, and relevant visual detail has an explicit destination;
-- the opening, an important middle case, the ending, the longest middle section, and the final three screenfuls have been compared with the source and reviewed in the actual reading view;
+- the opening, an important middle case, the ending, and the longest middle section have been reconciled with the source, and the opening, middle, and ending have been read in the actual reading view;
 - every omitted block is confirmed as pure noise; substantial shortening has a paragraph-by-paragraph removed-noise list and coverage audit;
 - executable content preserves line breaks, indentation, symbols, case, and sequence;
 - main text and requested derivative sections remain visibly separate, and derivative words never inflate retention measurements;
-- all proofreading mappings have reached the main text and old forms have zero remaining matches;
+- all proofreading mappings have reached the main text and user-facing derivative pages; old forms have zero remaining display matches (they may remain in immutable raw sources, glossary mappings, and internal source-trace notes). Edited wording in a quotation is labeled an edited quotation, not passed off as verbatim speech;
 - no draft-style confirmation artifact remains after confirmation; substantive risk notices remain separate and attributed claims retain their evidence status;
 - `audit_md.py` passes when required, all local links resolve, and manual semantic, visual, and terminology review also passes.
 

@@ -8,7 +8,7 @@ description: "Capture original course transcripts and orchestrate tiered product
 ## Role and objective
 
 - Original work by Aidan (Pinshu).
-- Upstream dependencies: `pinshu-transcript`, `pinshu-distill`, and `pinshu-course`.
+- Bundled collaborators: `pinshu-transcript`, `pinshu-distill`, `pinshu-course`, and, when content reuse is selected, `pinshu-content-assets`.
 - This Skill is the **primary course-production entry point**. The user submits one task; the system captures the source transcript, produces a faithful edit and a structured lecture, and updates the course map. During intake, it determines the course purpose. Courses intended for systematic learning, certification, or exam preparation also receive review and practice materials. After real study occurs, `pinshu-study` stores the learning record. Independent QA, rework, promotion, reconciliation, and recovery run only when their conditions apply.
 - A cloud drive is only a replaceable source-capture adapter. Downstream production does not depend on one platform, a specific operator, a particular browser, or a specific model.
 
@@ -16,7 +16,7 @@ description: "Capture original course transcripts and orchestrate tiered product
 
 This Skill owns orchestration, state, handoffs, quality gates, model escalation, the single official writer, and resumable execution.
 
-Downstream responsibilities: `pinshu-transcript` produces the faithful edit; `pinshu-distill` produces the structured lecture; `pinshu-course` owns course purpose, the map, and cross-lesson assets; `pinshu-study` owns review and practice materials plus records of actual study.
+Downstream responsibilities: `pinshu-transcript` produces the faithful edit; `pinshu-distill` produces the structured lecture; `pinshu-course` owns course purpose, the map, and cross-lesson assets; `pinshu-study` owns review and practice materials plus records of actual study. For a confirmed `content_asset` purpose, `pinshu-content-assets` separately turns the accepted faithful edit and guide into a lesson-level content sourcebook, then organizes a course-level sourcebook across lessons. It must never be substituted for the faithful edit or guide and must not draft an article by default.
 
 The source transcript is immutable. No generated artifact may write back into it.
 
@@ -27,15 +27,15 @@ The orchestrator recommends settings from the course name, structure, content ri
 1. **Course purpose (multi-select):** reference/archive, systematic learning/review, training/certification/exam preparation, method transfer/real project, or content asset/internal reuse.
 2. **External use:** confirm publication, public release, paid course use, client delivery, academic use, or real-world decision support separately. Do not merge this with course purpose.
 3. **Assurance approach:** recommend lightweight, standard, or full evidence and explain why in one sentence. These modes change only evidence density, independent-QA sampling, and budgets; they never change the quality floor or the four core results.
-4. **Final assets:** always deliver the source transcript, faithful edit, structured lecture, and course map. Then list enabled review/practice materials, horizontal topics, or external-use review.
+4. **Final assets:** always deliver the source transcript, faithful edit, structured lecture, and course map. Then list enabled review/practice materials, content sourcebooks, horizontal topics, or external-use review. A content sourcebook starts as pending review; core lesson acceptance is not its editorial approval.
 
-Write the confirmed choices to `course_purpose`, both decision-basis fields, `optional_extensions`, `external_use`, `output_language`, and `intake_confirmation` in the manifest. `output_language` accepts `match-user`, `match-source`, or a short BCP-47 tag. If an old manifest omits it, the runtime uses `match-user`, falling back to the source language when the user's language is unavailable. Public instructions remain English; learner-facing prose follows this resolved policy, while stable IDs, frontmatter keys, enum values, and other program fields remain English. Do not initialize production before this agreement is confirmed. Use the `agreement` command to show the agreement, including the resolved language policy, to the user, writer, and QA reviewer.
+Write the confirmed choices to `course_purpose`, both decision-basis fields, `optional_extensions`, `external_use`, `output_language`, and `intake_confirmation` in the manifest. `output_language` accepts `match-user`, `match-source`, or a short BCP-47 tag. If an old manifest omits it, the runtime records `match-user`. The worker, not the CLI, resolves `match-user` from the conversation; if that language is unavailable, use the source language. Public instructions remain English; learner-facing prose follows the selected language, while stable IDs, frontmatter keys, enum values, and other program fields remain English. Do not initialize production before this agreement is confirmed. Use the `agreement` command to show the stored language policy to the user, writer, and QA reviewer.
 
 Startup also requires a course identity, lecturer, one canonical root directory, a lesson and source inventory, a primary writing model, an available QA route whenever a trigger applies, and a writable temporary runtime directory. Drafts must never enter the official knowledge base directly.
 
 For batches larger than three lessons, complete one real sample lesson first and have the user inspect and approve its layout, level of detail, and reading experience. Before approval, only source capture may continue. A machine PASS, agent self-assessment, or independent QA cannot replace user approval.
 
-Create the runtime manifest from `templates/course-manifest.example.json`, then read `references/production-modes-and-budgets.md`. Runtime state belongs to the course project and must not be written back into the Skill source. Every downstream Skill must obtain course paths from this manifest/state through the `paths` command. For a new course without either file, confirm an explicit path map before any write; never translate directory names into a parallel tree.
+Create the runtime manifest from `templates/course-manifest.example.json`, then read `references/production-modes-and-budgets.md`. Its English path templates are an example for a new course; existing course manifests and their established directory names take precedence. Runtime state belongs to the course project and must not be written back into the Skill source. Every downstream Skill must obtain course paths from this manifest/state through the `paths` command. For a new course without either file, confirm an explicit path map before any write; never translate directory names into a parallel tree.
 
 ## Mandatory production workflow
 
@@ -49,7 +49,8 @@ After the agreement is confirmed, read and follow `references/default-production
 6. run deterministic mechanical checks;
 7. perform a writer semantic self-check or selected independent QA;
 8. allow at most one routine targeted rework, then one strong-model adjudication if a `high` remains; and
-9. let one committer promote accepted artifacts and update the course map serially.
+9. let one committer promote accepted artifacts and update the course map serially;
+10. when the confirmed purpose includes `content_asset`, invoke `pinshu-content-assets` on those accepted materials at the manifest-rendered or explicitly approved content path, keeping the new sourcebook pending user review. This downstream step is not an automatic state-machine promotion or article-writing step.
 
 The detailed workflow specifies adapter status, exact inputs, QA selectors, evidence requirements, promotion checks, manifest-rendered paths, and command examples. It is normative, not optional background.
 
