@@ -87,6 +87,9 @@ write_fixture_packages() {
     if [ "$roster" = "invalid" ] && [ "$skill" = "pinshu-study" ]; then
       continue
     fi
+    if [ "$roster" = "legacy-five" ] && { [ "$skill" = "pinshu-study" ] || [ "$skill" = "pinshu-content-assets" ]; }; then
+      continue
+    fi
     mkdir -p "$FIXTURE_SOURCE/$skill/assets" "$FIXTURE_SOURCE/$skill/__pycache__"
     printf -- '---\nname: %s\n---\n' "$skill" >"$FIXTURE_SOURCE/$skill/SKILL.md"
     printf '%s\n' "$version" >"$FIXTURE_SOURCE/$skill/payload.txt"
@@ -248,7 +251,7 @@ test_unowned_same_name_refusal() {
   mkdir -p "$HOME_DIR/.agents/skills/pinshu-content-assets"
   printf 'unowned data\n' >"$HOME_DIR/.agents/skills/pinshu-content-assets/sentinel"
   run_installer_failure
-  assert_contains "$LOG_FILE" 'Unowned Skill destination'
+  assert_contains "$LOG_FILE" 'Existing Skill lacks a regular SKILL.md'
   assert_file "$HOME_DIR/.agents/skills/pinshu-content-assets/sentinel"
   for skill in "${EXPECTED_SKILLS[@]}"; do
     [ "$skill" = pinshu-content-assets ] || assert_absent "$HOME_DIR/.agents/skills/$skill"
@@ -296,17 +299,50 @@ test_old_six_owned_upgrade() {
   assert_absent "$HOME_DIR/.agents/skills/.pinshu-backups/legacy"
 }
 
-test_altered_installed_copy_refusal() {
+test_altered_installed_copy_preserved() {
+  local old_copy
   new_case altered-copy
   make_remote v1 valid
   run_installer_success
   printf 'local change\n' >"$HOME_DIR/.agents/skills/pinshu-content-assets/local.txt"
   update_remote v2
-  run_installer_failure
-  assert_contains "$LOG_FILE" 'Installed copy differs from the owned clone'
-  assert_file "$HOME_DIR/.agents/skills/pinshu-content-assets/local.txt"
-  assert_contains "$HOME_DIR/.agents/skills/pinshu-study/payload.txt" v1
-  assert_contains "$HOME_DIR/.pinshu-skills/pinshu-study/payload.txt" v1
+  run_installer_success
+  assert_active_version v2
+  assert_absent "$HOME_DIR/.agents/skills/pinshu-content-assets/local.txt"
+  old_copy=$(find "$HOME_DIR/.agents/skills/.pinshu-backups" -type f -path '*/pinshu-content-assets/local.txt' -print -quit)
+  [ -n "$old_copy" ] || fail 'local Skill change was not preserved in a backup'
+  assert_contains "$old_copy" 'local change'
+}
+
+test_dirty_old_five_upgrades_to_seven_with_backups() {
+  local skill old_clone old_copy
+  new_case dirty-old-five
+  make_remote v1 legacy-five
+  git clone -q "file://$FIXTURE_REMOTE" "$HOME_DIR/.pinshu-skills"
+  mkdir -p "$HOME_DIR/.agents/skills"
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    [ "$skill" = pinshu-study ] && continue
+    [ "$skill" = pinshu-content-assets ] && continue
+    mkdir -p "$HOME_DIR/.agents/skills/$skill"
+    rsync -a --exclude='.DS_Store' --exclude='__pycache__/' --exclude='*.pyc' --exclude='*.pyo' --exclude='.git' \
+      "$HOME_DIR/.pinshu-skills/$skill/" "$HOME_DIR/.agents/skills/$skill/"
+  done
+  printf 'edited clone\n' >>"$HOME_DIR/.pinshu-skills/pinshu-transcript/SKILL.md"
+  printf 'untracked clone note\n' >"$HOME_DIR/.pinshu-skills/local-note.txt"
+  printf 'edited active Skill\n' >>"$HOME_DIR/.agents/skills/pinshu-distill/SKILL.md"
+  write_fixture_packages v2 valid
+  git -C "$FIXTURE_SOURCE" add -- pinshu-course-capture pinshu-content-assets pinshu-course pinshu-distill pinshu-md2pdf pinshu-study pinshu-transcript
+  git -C "$FIXTURE_SOURCE" commit -q -m 'seven roster'
+  git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
+
+  run_installer_success
+  assert_active_version v2
+  assert_exact_active_roster
+  old_clone=$(find "$HOME_DIR/.pinshu-install-backups" -type f -name local-note.txt -print -quit)
+  [ -n "$old_clone" ] || fail 'dirty old clone was not preserved'
+  assert_contains "$old_clone" 'untracked clone note'
+  old_copy=$(find "$HOME_DIR/.agents/skills/.pinshu-backups" -type f -path '*/pinshu-distill/SKILL.md' -exec grep -l 'edited active Skill' {} \; -quit)
+  [ -n "$old_copy" ] || fail 'edited active Skill was not preserved'
 }
 
 test_repeated_upgrade() {
@@ -534,7 +570,8 @@ run_test 'acquisition failure leaves legacy Skill active' test_acquisition_failu
 run_test 'unowned same-name directory is refused without mutation' test_unowned_same_name_refusal
 run_test 'suspicious legacy symlink is left untouched' test_suspicious_legacy_path_untouched
 run_test 'owned old-six installation upgrades to seven with backups' test_old_six_owned_upgrade
-run_test 'altered installed copy blocks upgrade without mutation' test_altered_installed_copy_refusal
+run_test 'altered installed copy is backed up during upgrade' test_altered_installed_copy_preserved
+run_test 'dirty old five upgrades to seven and preserves local edits' test_dirty_old_five_upgrades_to_seven_with_backups
 run_test 'repeated upgrade replaces stale content and preserves backup' test_repeated_upgrade
 run_test 'Linux rsync timestamp-only output permits owned upgrade' test_linux_rsync_timestamp_only_upgrade
 run_test 'conflicting Claude path is left untouched' test_conflicting_claude_path_is_untouched

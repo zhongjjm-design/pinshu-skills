@@ -4,7 +4,7 @@ Aidan (Pinshu) maintains this suite of seven skills for faithful transcript edit
 
 ## Quick install
 
-On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. The installer copies all seven skills into `~/.agents/skills`, preserves backups during verified upgrades, and refuses to replace an unrelated existing Skill directory. Inspect the installer before executing a remote script on your computer.
+On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. The same command installs all seven skills on a fresh computer or upgrades an older Pinshu installation. Before replacing an existing, correctly named Pinshu Skill, the installer moves the complete old directory and any previous repository clone to recoverable backups; unrelated or unsafe paths are refused. Inspect the installer before executing a remote script on your computer.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/install.sh | bash
