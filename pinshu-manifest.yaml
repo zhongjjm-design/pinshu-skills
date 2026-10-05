@@ -43,3 +43,11 @@ skills:
     distribution: bundled
     present_in_repository: true
     depends_on: [pinshu-transcript, pinshu-distill, pinshu-course]
+  - name: pinshu-visual-system
+    origin: original
+    distribution: bundled-sanitized
+    present_in_repository: true
+    version: 0.1.0
+    status: public-preview
+    depends_on: []
+    runtime_dependencies: [python3, imagemagick-7, image-capable-agent]

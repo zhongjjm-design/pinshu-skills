@@ -1,0 +1,8 @@
+Pinshu Visual System, public preview 0.1.0
+Original methods and implementation maintained by Aidan (Pinshu), developed with Codex.
+Derived from the author's local visual-system workflow and business-graphics methods.
+No private identity assets, historical approval images or client material are bundled.
+No external Skill source code or templates are bundled.
+ImageMagick is an external runtime dependency with its own license.
+The available image-generation backend is supplied by the user's agent runtime.
+This package uses the repository's existing usage/redistribution terms; no new blanket open-source license is granted.

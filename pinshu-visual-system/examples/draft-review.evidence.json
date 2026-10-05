@@ -1,0 +1,34 @@
+{
+  "status": "public-demonstration-candidate",
+  "source": "brief.md",
+  "compiled_prompt": "draft-review.compiled-prompt.txt",
+  "image": "draft-review.png",
+  "image_sha256": "b4c759f3abe6b90aa680d80bd32ef4496d94a95edb3aa8589564f4f00dc65d70",
+  "mode": "notebook-knowledge-explainer",
+  "structure": "process",
+  "platform": "wechat-article",
+  "character": "none",
+  "generation": {
+    "channel": "Codex native image_gen tool",
+    "actual_model": null,
+    "original_geometry": "1672x941",
+    "supplementary_direction": "Use a brand-free notebook illustration with three draft-review scenes. Title: Review the draft. Do not include a mascot, real personal names or logos.",
+    "transport_prompt_record": "Compiled prompt plus summarized supplementary direction; not an exact transport-prompt transcript."
+  },
+  "output_geometry": "1600x900",
+  "mechanical_export": "PASS",
+  "publish_copy_pixel_difference_ae": 0,
+  "actual_image_review": {
+    "reviewer": "Codex",
+    "checks": {
+      "source-faithfulness": "pass",
+      "visible-text": "pass",
+      "mode-and-composition": "pass",
+      "identity-and-actions": "pass",
+      "thumbnail-and-crop": "pass"
+    },
+    "notes": "Viewed the full generated bitmap. Three ordered scenes represent comparison with a source, checking names/numbers, and thumbnail reading order. Title reads Review the draft. The 1/2/3 step markers and 123 are illustrative symbols, not factual statistics. Notebook lines, sage arrows and warm paper match the chosen grammar. No branded character or identity asset appears. The large title and three numbered anchors remain distinguishable when reduced; inspect the exported thumbnail again before publishing. The exported 180-pixel thumbnail was also viewed: title, numbered anchors and the left-to-right sequence remain visible; detailed manuscript text is intentionally abstract."
+  },
+  "human_aesthetic_acceptance": "pending",
+  "batch_stability_proven": false
+}

@@ -22,6 +22,7 @@ EXPECTED_SKILLS = {
     "pinshu-md2pdf",
     "pinshu-study",
     "pinshu-transcript",
+    "pinshu-visual-system",
 }
 TEXT_SUFFIXES = {
     ".bash", ".cfg", ".css", ".csv", ".html", ".ini", ".js", ".json",
@@ -227,6 +228,10 @@ def run_executable_gates(full: bool) -> None:
         "Markdown converter security tests",
         [sys.executable, "-m", "unittest", "discover", "-s", "pinshu-md2pdf/tests", "-v"],
         timeout=240,
+    )
+    run_check(
+        "public visual-system regression",
+        [sys.executable, "-m", "unittest", "discover", "-s", "pinshu-visual-system/tests", "-v"],
     )
     if full:
         run_check("installer negative controls", ["bash", "tests/test_installer.sh"], timeout=240)

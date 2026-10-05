@@ -20,6 +20,7 @@ EXPECTED_SKILLS=(
   pinshu-md2pdf
   pinshu-study
   pinshu-transcript
+  pinshu-visual-system
 )
 
 mkdir -p "$NO_NETWORK_BIN"
@@ -87,11 +88,12 @@ write_fixture_packages() {
     if [ "$roster" = "invalid" ] && [ "$skill" = "pinshu-study" ]; then
       continue
     fi
-    if [ "$roster" = "legacy-five" ] && { [ "$skill" = "pinshu-study" ] || [ "$skill" = "pinshu-content-assets" ]; }; then
+    if [ "$roster" = "legacy-five" ] && { [ "$skill" = "pinshu-study" ] || [ "$skill" = "pinshu-content-assets" ] || [ "$skill" = "pinshu-visual-system" ]; }; then
       continue
     fi
     mkdir -p "$FIXTURE_SOURCE/$skill/assets" "$FIXTURE_SOURCE/$skill/__pycache__"
     printf -- '---\nname: %s\n---\n' "$skill" >"$FIXTURE_SOURCE/$skill/SKILL.md"
+    if [ "$skill" = pinshu-visual-system ]; then printf 'public\n' >"$FIXTURE_SOURCE/$skill/.public-bundle"; fi
     printf '%s\n' "$version" >"$FIXTURE_SOURCE/$skill/payload.txt"
     printf 'complete package content\n' >"$FIXTURE_SOURCE/$skill/assets/data.txt"
     printf 'hidden package content\n' >"$FIXTURE_SOURCE/$skill/.hidden-config"
@@ -184,7 +186,7 @@ assert_exact_active_roster() {
     count=$((count + 1))
   done
   shopt -u nullglob
-  [ "$count" -eq "${#EXPECTED_SKILLS[@]}" ] || fail "expected seven active Pinshu packages, found $count"
+  [ "$count" -eq "${#EXPECTED_SKILLS[@]}" ] || fail "expected ${#EXPECTED_SKILLS[@]} active Pinshu packages, found $count"
 }
 
 test_clean_install() {
@@ -276,7 +278,7 @@ test_old_six_owned_upgrade() {
   local skill repository_backup
   new_case owned-old-six
   make_remote v1 valid
-  rm -rf -- "$FIXTURE_SOURCE/pinshu-content-assets"
+  rm -rf -- "$FIXTURE_SOURCE/pinshu-content-assets" "$FIXTURE_SOURCE/pinshu-visual-system"
   git -C "$FIXTURE_SOURCE" add -A
   git -C "$FIXTURE_SOURCE" commit -q -m 'old six roster'
   git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
@@ -284,13 +286,14 @@ test_old_six_owned_upgrade() {
   mkdir -p "$HOME_DIR/.agents/skills"
   for skill in "${EXPECTED_SKILLS[@]}"; do
     [ "$skill" = pinshu-content-assets ] && continue
+    [ "$skill" = pinshu-visual-system ] && continue
     mkdir -p "$HOME_DIR/.agents/skills/$skill"
     rsync -a --exclude='.DS_Store' --exclude='__pycache__/' --exclude='*.pyc' --exclude='*.pyo' --exclude='.git' \
       "$HOME_DIR/.pinshu-skills/$skill/" "$HOME_DIR/.agents/skills/$skill/"
   done
   write_fixture_packages v2 valid
   git -C "$FIXTURE_SOURCE" add -A
-  git -C "$FIXTURE_SOURCE" commit -q -m 'seven roster'
+  git -C "$FIXTURE_SOURCE" commit -q -m 'eight roster'
   git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
   run_installer_success
   assert_active_version v2
@@ -314,7 +317,7 @@ test_altered_installed_copy_preserved() {
   assert_contains "$old_copy" 'local change'
 }
 
-test_dirty_old_five_upgrades_to_seven_with_backups() {
+test_dirty_old_five_upgrades_to_eight_with_backups() {
   local skill old_clone old_copy
   new_case dirty-old-five
   make_remote v1 legacy-five
@@ -323,6 +326,7 @@ test_dirty_old_five_upgrades_to_seven_with_backups() {
   for skill in "${EXPECTED_SKILLS[@]}"; do
     [ "$skill" = pinshu-study ] && continue
     [ "$skill" = pinshu-content-assets ] && continue
+    [ "$skill" = pinshu-visual-system ] && continue
     mkdir -p "$HOME_DIR/.agents/skills/$skill"
     rsync -a --exclude='.DS_Store' --exclude='__pycache__/' --exclude='*.pyc' --exclude='*.pyo' --exclude='.git' \
       "$HOME_DIR/.pinshu-skills/$skill/" "$HOME_DIR/.agents/skills/$skill/"
@@ -331,8 +335,8 @@ test_dirty_old_five_upgrades_to_seven_with_backups() {
   printf 'untracked clone note\n' >"$HOME_DIR/.pinshu-skills/local-note.txt"
   printf 'edited active Skill\n' >>"$HOME_DIR/.agents/skills/pinshu-distill/SKILL.md"
   write_fixture_packages v2 valid
-  git -C "$FIXTURE_SOURCE" add -- pinshu-course-capture pinshu-content-assets pinshu-course pinshu-distill pinshu-md2pdf pinshu-study pinshu-transcript
-  git -C "$FIXTURE_SOURCE" commit -q -m 'seven roster'
+  git -C "$FIXTURE_SOURCE" add -- pinshu-course-capture pinshu-content-assets pinshu-course pinshu-distill pinshu-md2pdf pinshu-study pinshu-transcript pinshu-visual-system
+  git -C "$FIXTURE_SOURCE" commit -q -m 'eight roster'
   git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
 
   run_installer_success
@@ -569,9 +573,48 @@ run_test 'symlink destination is refused and victim survives' test_symlink_desti
 run_test 'acquisition failure leaves legacy Skill active' test_acquisition_failure_preserves_legacy
 run_test 'unowned same-name directory is refused without mutation' test_unowned_same_name_refusal
 run_test 'suspicious legacy symlink is left untouched' test_suspicious_legacy_path_untouched
-run_test 'owned old-six installation upgrades to seven with backups' test_old_six_owned_upgrade
+test_private_visual_system_is_not_replaced() {
+  new_case private-visual
+  make_remote v1 valid
+  mkdir -p "$HOME_DIR/.agents/skills/pinshu-visual-system/assets"
+  printf -- '---\nname: pinshu-visual-system\n---\n' >"$HOME_DIR/.agents/skills/pinshu-visual-system/SKILL.md"
+  printf 'private identity\n' >"$HOME_DIR/.agents/skills/pinshu-visual-system/assets/identity.txt"
+  run_installer_failure
+  assert_contains "$HOME_DIR/.agents/skills/pinshu-visual-system/assets/identity.txt" 'private identity'
+  assert_absent "$HOME_DIR/.pinshu-skills"
+  assert_absent "$HOME_DIR/.agents/skills/pinshu-transcript"
+}
+
+test_seven_package_installation_adds_visual_system() {
+  local skill
+  new_case seven-to-eight
+  make_remote v1 valid
+  rm -rf -- "$FIXTURE_SOURCE/pinshu-visual-system"
+  git -C "$FIXTURE_SOURCE" add -A
+  git -C "$FIXTURE_SOURCE" commit -q -m 'prior seven packages'
+  git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
+  git clone -q "file://$FIXTURE_REMOTE" "$HOME_DIR/.pinshu-skills"
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    [ "$skill" = pinshu-visual-system ] && continue
+    mkdir -p "$HOME_DIR/.agents/skills/$skill"
+    rsync -a "$HOME_DIR/.pinshu-skills/$skill/" "$HOME_DIR/.agents/skills/$skill/"
+  done
+  write_fixture_packages v2 valid
+  git -C "$FIXTURE_SOURCE" add -A
+  git -C "$FIXTURE_SOURCE" commit -q -m 'shared visual package'
+  git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
+  run_installer_success
+  assert_active_version v2
+  assert_exact_active_roster
+  assert_file "$HOME_DIR/.agents/skills/pinshu-visual-system/.public-bundle"
+}
+
+run_test 'private visual installation is refused without mutations' test_private_visual_system_is_not_replaced
+run_test 'prior seven packages upgrade to eight with backups' test_seven_package_installation_adds_visual_system
+
+run_test 'owned old-six installation upgrades to eight with backups' test_old_six_owned_upgrade
 run_test 'altered installed copy is backed up during upgrade' test_altered_installed_copy_preserved
-run_test 'dirty old five upgrades to seven and preserves local edits' test_dirty_old_five_upgrades_to_seven_with_backups
+run_test 'dirty old five upgrades to eight and preserves local edits' test_dirty_old_five_upgrades_to_eight_with_backups
 run_test 'repeated upgrade replaces stale content and preserves backup' test_repeated_upgrade
 run_test 'Linux rsync timestamp-only output permits owned upgrade' test_linux_rsync_timestamp_only_upgrade
 run_test 'conflicting Claude path is left untouched' test_conflicting_claude_path_is_untouched

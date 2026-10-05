@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinshu Visual System"
+  short_description: "Plan, generate, inspect and export coherent content visuals"
+  default_prompt: "Use pinshu-visual-system to create source-faithful visuals for my content and target platform."

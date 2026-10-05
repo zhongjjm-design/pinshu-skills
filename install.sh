@@ -20,6 +20,7 @@ EXPECTED_SKILLS=(
   pinshu-md2pdf
   pinshu-study
   pinshu-transcript
+  pinshu-visual-system
 )
 LEGACY_SKILLS=(
   transcript-cleaner
@@ -103,7 +104,7 @@ assert_safe_slug() {
 
 is_expected_skill() {
   case "$1" in
-    pinshu-course-capture|pinshu-content-assets|pinshu-course|pinshu-distill|pinshu-md2pdf|pinshu-study|pinshu-transcript)
+    pinshu-course-capture|pinshu-content-assets|pinshu-course|pinshu-distill|pinshu-md2pdf|pinshu-study|pinshu-transcript|pinshu-visual-system)
       return 0
       ;;
     *)
@@ -168,6 +169,9 @@ preflight_target_paths() {
     if path_exists "$target"; then
       [ ! -L "$target" ] || die "Destination symlink was refused: $target"
       [ -d "$target" ] || die "Destination is not a real directory: $target"
+      if [ "$slug" = "pinshu-visual-system" ] && [ ! -f "$target/.public-bundle" ]; then
+        die "Existing visual system is private or locally managed; use a separate destination instead of replacing it: $target"
+      fi
     fi
   done
 }
@@ -225,7 +229,7 @@ validate_repository() {
   done
   shopt -u nullglob
 
-  [ "$found_count" -eq "${#EXPECTED_SKILLS[@]}" ] || die "Repository package roster is incomplete. Expected seven packages, found $found_count."
+  [ "$found_count" -eq "${#EXPECTED_SKILLS[@]}" ] || die "Repository package roster is incomplete. Expected ${#EXPECTED_SKILLS[@]} packages, found $found_count."
 
   for skill in "${EXPECTED_SKILLS[@]}"; do
     [ -d "$repository/$skill" ] && [ ! -L "$repository/$skill" ] || die "Missing repository package: $skill"

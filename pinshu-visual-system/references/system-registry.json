@@ -1,0 +1,219 @@
+{
+  "version": "0.1.0",
+  "distribution": "public-preview",
+  "owner": "Aidan (Pinshu)",
+  "identity_assets_included": false,
+  "structures": [
+    "single-claim",
+    "process",
+    "comparison",
+    "hierarchy",
+    "components",
+    "true-loop",
+    "timeline"
+  ],
+  "layouts": [
+    "focus-hero",
+    "left-visual-right-space",
+    "right-visual-left-space",
+    "linear-steps",
+    "split-compare",
+    "hub-spoke",
+    "layered-steps",
+    "asymmetric-bento",
+    "presenter-board",
+    "editorial-big-type",
+    "image-window-note",
+    "cinematic-negative-space",
+    "vertical-scene-flow",
+    "vertical-editorial-crop",
+    "vertical-photo-essay",
+    "carousel-sequence",
+    "wechat-cover-pair",
+    "illustration-sequence"
+  ],
+  "modes": [
+    {
+      "id": "warm-studio-illustration",
+      "name": "Warm Studio Illustration",
+      "status": "available",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "timeline"
+      ],
+      "mode_card": "references/mode-cards/warm-studio-illustration.md",
+      "blocked_platforms": [],
+      "character_policy": "optional",
+      "max_units": 5
+    },
+    {
+      "id": "warm-paper",
+      "name": "Warm Paper Explainer",
+      "status": "available",
+      "function": "explainer",
+      "supported_structures": [
+        "single-claim",
+        "process",
+        "comparison",
+        "hierarchy",
+        "components",
+        "true-loop"
+      ],
+      "mode_card": "references/mode-cards/warm-paper.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 7
+    },
+    {
+      "id": "lively-vector",
+      "name": "Lively Vector Explainer",
+      "status": "candidate",
+      "function": "explainer",
+      "supported_structures": [
+        "process",
+        "comparison",
+        "hierarchy",
+        "components",
+        "true-loop"
+      ],
+      "mode_card": "references/mode-cards/lively-vector.md",
+      "blocked_platforms": [],
+      "character_policy": "optional",
+      "max_units": 5
+    },
+    {
+      "id": "character-presenter",
+      "name": "Character Presenter",
+      "status": "requires-character",
+      "function": "explainer",
+      "supported_structures": [
+        "single-claim",
+        "process",
+        "comparison",
+        "hierarchy",
+        "components",
+        "true-loop"
+      ],
+      "mode_card": "references/mode-cards/character-presenter.md",
+      "blocked_platforms": [],
+      "character_policy": "required",
+      "max_units": 5
+    },
+    {
+      "id": "clear-portrait-doodle-collage",
+      "name": "Clear Portrait Doodle Collage",
+      "status": "candidate",
+      "function": "portrait",
+      "supported_structures": [
+        "single-claim"
+      ],
+      "mode_card": "references/mode-cards/clear-portrait-doodle-collage.md",
+      "blocked_platforms": [],
+      "character_policy": "optional",
+      "max_units": 5
+    },
+    {
+      "id": "archive-tabletop-editorial",
+      "name": "Archive Tabletop Editorial",
+      "status": "available-scoped",
+      "function": "explainer",
+      "supported_structures": [
+        "single-claim",
+        "components",
+        "process"
+      ],
+      "mode_card": "references/mode-cards/archive-tabletop-editorial.md",
+      "blocked_platforms": [],
+      "character_policy": "optional",
+      "max_units": 7
+    },
+    {
+      "id": "airy-architectural-watercolor",
+      "name": "Airy Architectural Watercolor",
+      "status": "available-scoped",
+      "function": "atmosphere",
+      "supported_structures": [
+        "single-claim"
+      ],
+      "mode_card": "references/mode-cards/airy-architectural-watercolor.md",
+      "blocked_platforms": [],
+      "character_policy": "optional",
+      "max_units": 5
+    },
+    {
+      "id": "cinematic-ink-narrative",
+      "name": "Cinematic Ink Narrative",
+      "status": "candidate",
+      "function": "atmosphere",
+      "supported_structures": [
+        "single-claim",
+        "timeline"
+      ],
+      "mode_card": "references/mode-cards/cinematic-ink-narrative.md",
+      "blocked_platforms": [],
+      "character_policy": "optional",
+      "max_units": 5
+    },
+    {
+      "id": "handwritten-documentary-card",
+      "name": "Handwritten Documentary Card",
+      "status": "candidate-frozen",
+      "function": "documentary",
+      "supported_structures": [
+        "single-claim"
+      ],
+      "mode_card": "references/mode-cards/handwritten-documentary-card.md",
+      "blocked_platforms": [],
+      "character_policy": "optional",
+      "max_units": 5
+    },
+    {
+      "id": "hand-drawn-comparison-comic",
+      "name": "Hand-drawn Comparison Comic",
+      "status": "available-scoped",
+      "function": "explainer",
+      "supported_structures": [
+        "single-claim",
+        "comparison",
+        "process"
+      ],
+      "mode_card": "references/mode-cards/hand-drawn-comparison-comic.md",
+      "blocked_platforms": [],
+      "character_policy": "optional",
+      "max_units": 5
+    },
+    {
+      "id": "notebook-knowledge-explainer",
+      "name": "Notebook Knowledge Explainer",
+      "status": "available-scoped",
+      "function": "explainer",
+      "supported_structures": [
+        "single-claim",
+        "process",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/notebook-knowledge-explainer.md",
+      "blocked_platforms": [],
+      "character_policy": "optional",
+      "max_units": 5
+    },
+    {
+      "id": "literary-crayon-editorial",
+      "name": "Literary Crayon Editorial",
+      "status": "available-scoped",
+      "function": "thesis",
+      "supported_structures": [
+        "single-claim"
+      ],
+      "mode_card": "references/mode-cards/literary-crayon-editorial.md",
+      "blocked_platforms": [
+        "wechat-article",
+        "wechat-cover-primary",
+        "wechat-cover-square"
+      ],
+      "character_policy": "optional",
+      "max_units": 5
+    }
+  ]
+}

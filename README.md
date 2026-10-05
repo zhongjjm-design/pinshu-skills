@@ -1,10 +1,10 @@
 # Pinshu Skills
 
-Aidan (Pinshu) maintains this suite of seven skills for faithful transcript editing, course production, learning, and reusable content assets. It works with Claude Code and other compatible agents.
+Aidan (Pinshu) maintains this suite of eight skills for faithful transcript editing, course production, learning, and reusable content assets. It works with Claude Code and other compatible agents.
 
 ## Quick install
 
-On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. The same command installs all seven skills on a fresh computer or upgrades an older Pinshu installation. Before replacing an existing, correctly named Pinshu Skill, the installer moves the complete old directory and any previous repository clone to recoverable backups; unrelated or unsafe paths are refused. Inspect the installer before executing a remote script on your computer.
+On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. The same command installs all eight skills on a fresh computer or upgrades an older Pinshu installation. Before replacing an existing, correctly named Pinshu Skill, the installer moves the complete old directory and any previous repository clone to recoverable backups; unrelated or unsafe paths are refused. Inspect the installer before executing a remote script on your computer.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/install.sh | bash
@@ -27,6 +27,16 @@ If you already have a faithful edited transcript and a structured study guide, s
 ```text
 Use pinshu-content-assets to turn this lesson into one readable, source-traceable content master. Preserve the speaker's main argument and every useful method, case, figure, and expression. Mark missing evidence and quotations accurately. Do not write an article; leave the master pending my review.
 ```
+
+## Visual assets for colleagues
+
+The new [Pinshu Visual System](pinshu-visual-system/README.md) is a public preview (0.1.0) for article illustrations, covers, social cards and presentation visuals. It shares twelve explicitly scoped mode cards, seven business-visual method families, eleven platform presets, prompt planning, exact-size export and review checks. Work without a fixed character or supply your own approved references. Planning is usable with Python 3; rendering needs an image-capable agent, and export needs ImageMagick 7.
+
+Tell your Agent:
+
+> Use pinshu-visual-system to illustrate this article for WeChat. Read the source, recommend a coherent style, generate and inspect one first image, then prepare the reviewed platform-sized candidate. Use no fixed character.
+
+This is a usable initial sharing edition, with candidates and limitations clearly marked. We will keep improving it through the repository. It makes no claim of fully stable automatic batch generation. An existing private/local visual-system installation is protected from replacement by the installer.
 
 ## Core course-asset pipeline
 
@@ -61,7 +71,7 @@ Repository instructions remain in English. Learner-facing output follows `output
 
 When a course-capture manifest or state file exists, every Skill uses its path templates through `course_pipeline.py paths`; no Skill translates or invents a parallel directory tree. For a new course without a manifest, create and confirm the manifest or an explicit path map before writing.
 
-`pinshu-data-cleaning` is an optional upstream capability and is not included in this seven-package repository or installed by its installer. If it is unavailable, provide pre-cleaned Markdown or a transcript, or use only the clean-text inputs supported by the selected Skill. The workflow must not silently skip heterogeneous-source cleaning.
+`pinshu-data-cleaning` is an optional upstream capability and is not included in the seven course/content packages or installed by its installer. If it is unavailable, provide pre-cleaned Markdown or a transcript, or use only the clean-text inputs supported by the selected Skill. The workflow must not silently skip heterogeneous-source cleaning.
 
 ## Set the purpose before choosing assurance depth
 
@@ -79,6 +89,7 @@ For batches larger than three lessons, deliver one representative lesson first. 
 
 | Skill | Purpose |
 |---|---|
+| `pinshu-visual-system` | Plan, generate with an image-capable agent, visually inspect and export source-faithful content visuals |
 | `pinshu-transcript` | Turn raw transcripts into faithful edited transcripts while preserving substantive meaning and source boundaries |
 | `pinshu-distill` | Produce clear, self-contained structured study guides and approved cross-cutting topics from faithful transcripts |
 | `pinshu-content-assets` | Organize corrected course, livestream, or interview material into a source-traceable content master for later writing; never auto-write the article |
