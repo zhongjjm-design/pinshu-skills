@@ -329,6 +329,42 @@ test_repeated_upgrade() {
   [ -n "$repository_backup" ] || fail 'upgrade did not preserve the prior repository clone backup'
 }
 
+test_linux_rsync_timestamp_only_upgrade() {
+  local wrapper_dir
+  local real_rsync
+
+  new_case linux-rsync-timestamp
+  make_remote v1 valid
+  run_installer_success
+  update_remote v2
+  wrapper_dir="$CASE_ROOT/wrapper-bin"
+  mkdir -p "$wrapper_dir"
+  real_rsync=$(command -v rsync)
+  cat >"$wrapper_dir/rsync" <<'RSYNC_WRAPPER'
+#!/usr/bin/env bash
+set -e
+for argument in "$@"; do
+  if [ "$argument" = "--dry-run" ]; then
+    "$PINSHU_REAL_RSYNC" "$@"
+    printf '.d..t...... ./\n'
+    exit 0
+  fi
+done
+exec "$PINSHU_REAL_RSYNC" "$@"
+RSYNC_WRAPPER
+  chmod +x "$wrapper_dir/rsync"
+
+  if ! installer_env \
+    PATH="$wrapper_dir:$NO_NETWORK_BIN:$PATH" \
+    PINSHU_REAL_RSYNC="$real_rsync" \
+    bash "$INSTALLER" >"$LOG_FILE" 2>&1; then
+    printf '%s\n' 'Installer output:' >&2
+    sed 's/^/  /' "$LOG_FILE" >&2
+    fail 'timestamp-only Linux rsync output blocked an owned upgrade'
+  fi
+  assert_active_version v2
+}
+
 test_conflicting_claude_path_is_untouched() {
   new_case claude-conflict
   make_remote v1 valid
@@ -500,6 +536,7 @@ run_test 'suspicious legacy symlink is left untouched' test_suspicious_legacy_pa
 run_test 'owned old-six installation upgrades to seven with backups' test_old_six_owned_upgrade
 run_test 'altered installed copy blocks upgrade without mutation' test_altered_installed_copy_refusal
 run_test 'repeated upgrade replaces stale content and preserves backup' test_repeated_upgrade
+run_test 'Linux rsync timestamp-only output permits owned upgrade' test_linux_rsync_timestamp_only_upgrade
 run_test 'conflicting Claude path is left untouched' test_conflicting_claude_path_is_untouched
 run_test 'invalid repository roster causes no active mutation' test_invalid_roster_causes_no_active_mutation
 run_test 'mid-transaction failure restores all prior active paths' test_mid_transaction_failure_rolls_back

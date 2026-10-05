@@ -214,7 +214,7 @@ preflight_owned_installation() {
     # timestamp-only reports, but reject any byte, mode, type or path change.
     while IFS= read -r change; do
       case "$change" in
-        ''|'.f..t.... '*|'.d..t.... '*|'.f..T.... '*|'.d..T.... '*) ;;
+        ''|'.f..t.... '*|'.d..t.... '*|'.f..T.... '*|'.d..T.... '*|'.f..t...... '*|'.d..t...... '*|'.f..T...... '*|'.d..T...... '*) ;;
         *) die "Installed copy differs from the owned clone: $skill ($change)" ;;
       esac
     done <<< "$differences"
