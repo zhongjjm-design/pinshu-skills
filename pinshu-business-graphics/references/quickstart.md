@@ -1,6 +1,6 @@
 # Quick start and brief
 
-Install this package with the marked public pinshu-visual-system 0.2.3 or later in the same parent directory. Planning uses Python 3. Rendering needs an image-capable agent; raster delivery needs ImageMagick 7. No model subscription or charting backend is included.
+Install this package with the marked public pinshu-visual-system 0.2.4 or later in the same parent directory. Planning uses Python 3. Rendering needs an image-capable agent; raster delivery needs ImageMagick 7. No model subscription or charting backend is included.
 
 From the repository root:
 

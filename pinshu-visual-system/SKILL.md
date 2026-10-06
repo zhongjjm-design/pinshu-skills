@@ -5,7 +5,7 @@ description: "Create source-faithful article illustrations, covers, social cards
 
 # Pinshu Visual System
 
-Public preview: **0.2.3**. Original methods and tools by Aidan (Pinshu), developed with Codex. This is the portable sharing edition of the locally developed visual system. It contains no private character assets, account mappings or private example material. Repository instructions are English; output and visible text follow the user's requested language.
+Public preview: **0.2.4**. Original methods and tools by Aidan (Pinshu), developed with Codex. This is the portable sharing edition of the locally developed visual system. It contains no private character assets, account mappings or private example material. Repository instructions are English; output and visible text follow the user's requested language.
 
 ## Read for the current task
 

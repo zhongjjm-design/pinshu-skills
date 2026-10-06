@@ -52,7 +52,7 @@ def check_exact_text(exact: object, source: str, approvals: object = None) -> li
         if not isinstance(item, dict) or any(not isinstance(item.get(k), str) or not item[k].strip()
                                              for k in ("text", "approved_by", "reason", "user_quote")):
             raise ValueError("Each external text approval needs text, approved_by, reason and the real user_quote")
-        if re.search(r"(?i)\b(agent|assistant|codex|claude|gpt|ai)(?:\b|[-_])", item["approved_by"]):
+        if re.search(r"(?i)\b(agent|assistant|codex|claude|gpt|ai)(?:\b|[-_])|\u667a\u80fd\u4f53|\u667a\u80fd\u52a9\u624b|\u52a9\u624b|\u673a\u5668\u4eba|\u4eba\u5de5\u667a\u80fd", item["approved_by"]):
             raise ValueError("External text requires a human approval, not an agent estimate")
         if item["text"] not in exact or item["text"] in declared:
             raise ValueError("External text approvals must uniquely name an exact_text label")

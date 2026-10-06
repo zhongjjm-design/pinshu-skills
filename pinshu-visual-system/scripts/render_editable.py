@@ -15,7 +15,7 @@ import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
-from svg_label_checks import check_svg_labels
+from svg_label_checks import check_svg_labels, normalize_font_units
 
 from export_platform_image import convert_exact, load_profile, ExportError
 from prepare_publish_images import pixel_difference, is_zero_pixel_difference
@@ -70,11 +70,15 @@ def native_inventory(source: Path, slide: int = 1) -> dict:
             if tag in {"text", "tspan"} and "".join(element.itertext()).strip():
                 try:
                     fill_opacity = opacity_number(attrs.get("fill-opacity", "1"))
-                    size = float(attrs.get("font-size", "12").removesuffix("px"))
+                    size_value = attrs.get("font-size", "12").strip()
+                    size_match = re.fullmatch(r"([+]?(?:\d+(?:\.\d*)?|\.\d+))(?:px|pt|pc|in|cm|mm|Q)?", size_value)
+                    if not size_match:
+                        raise ValueError("Unsupported font-size; use an absolute SVG unit")
+                    size = float(size_match[1])
                 except ValueError:
-                    raise ValueError("SVG native text requires numeric opacity and numeric/px font sizes") from None
-                if not hidden and (effective * fill_opacity < .1 or not math.isfinite(size) or size < 8):
-                    raise ValueError("SVG native text opacity is below 0.1 or font size below 8; use readable labels")
+                    raise ValueError("SVG native text requires numeric opacity and absolute numeric SVG font sizes") from None
+                if not hidden and (effective * fill_opacity < .1 or not math.isfinite(size) or size <= 0):
+                    raise ValueError("SVG native text opacity is below 0.1 or font size is not positive; use readable labels")
             if tag in {"text", "tspan"} and hidden and "".join(element.itertext()).strip():
                 raise ValueError("Native labels must be visible; hidden or transparent SVG text is not delivered text")
             if tag == "text":
@@ -179,8 +183,9 @@ def render(source: Path, font: Path, platform: str, output: Path, *, slide: int 
         raw = work / "native.png"
         if source.suffix.lower() == ".svg":
             # MSVG avoids implicit switching between Inkscape, librsvg and the internal renderer.
-            command([magick, "-background", background, "-font", str(font), "MSVG:" + str(source), str(raw)])
-            visibility = check_svg_labels(source, font, raw, work, magick, background)
+            raster_source = normalize_font_units(source, work / "font-units.svg")
+            command([magick, "-background", background, "-font", str(font), "MSVG:" + str(raster_source), str(raw)])
+            visibility = check_svg_labels(raster_source, font, raw, work, magick, background, width, height, fit)
         else:
             local = work / "native.pptx"
             shutil.copyfile(source, local)

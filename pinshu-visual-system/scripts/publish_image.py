@@ -27,6 +27,14 @@ WORKFLOW_CHECKS = {
 }
 
 
+def numeric_annotation(text: str) -> bool:
+    """Recognize numeric claims, retaining structural headings such as 'upper two layers'."""
+    value = unicodedata.normalize("NFKC", text)
+    chinese = "\u96f6\u3007\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341\u767e\u5343\u4e07\u4ebf\u4e24\u534a\u58f9\u8d30\u53c1\u8086\u4f0d\u9646\u67d2\u634c\u7396\u62fe\u4f70\u4edf"
+    quantities = rf"[{chinese}]+(?:\u70b9[{chinese}]+)?(?:\u500d|\u6210|\u4e2a?\u767e\u5206\u70b9|%)|\u767e\u5206\u4e4b[{chinese}]+|\u7ffb[{chinese}]*\u756a|\u7ffb\u500d|\u4e00\u534a"
+    return any(c.isdigit() for c in value) or bool(re.search(quantities, value))
+
+
 def reviewed_editable_source(plan: dict, qa: dict, qa_path: Path, image_hash: str, image_path: Path) -> dict | None:
     chart = plan.get("rendering", {}).get("strategy") == "editable-chart-final"
     if plan.get("text_route") != "editable-text-layer" and not chart:
@@ -94,11 +102,11 @@ def reviewed_editable_source(plan: dict, qa: dict, qa_path: Path, image_hash: st
             raise ValueError("Unreviewed additional native text: " + text + "; list it in additional_text_review with origin and reason")
         if item["origin"] == "editorial-paraphrase" and (not item.get("source_excerpt") or item["source_excerpt"] not in original):
             raise ValueError("Additional paraphrase needs a matching source_excerpt")
-        if item["origin"] == "editorial-paraphrase" and any(c.isdigit() for c in unicodedata.normalize("NFKC", text)):
+        if item["origin"] == "editorial-paraphrase" and numeric_annotation(text):
             raise ValueError("Numeric paraphrases must be explicit planned labels with source review, not additional annotations")
         if item["origin"] == "structural-label":
             value = unicodedata.normalize("NFKC", text)
-            if any(c.isdigit() for c in value) or len(value) > 40:
+            if numeric_annotation(value) or len(value) > 40:
                 raise ValueError("Structural labels must be short nonnumeric headings; source factual or numeric annotations explicitly")
         if item["origin"] == "dataset-value":
             value = unicodedata.normalize("NFKC", text).strip().replace(",", "")

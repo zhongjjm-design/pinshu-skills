@@ -1,6 +1,6 @@
 # Quick start and brief
 
-Install the complete repository bundle or place pinshu-infographic and the marked public pinshu-visual-system 0.2.3 or later in the same parent folder. Planning needs Python 3. Generation needs an image-capable agent; delivery needs ImageMagick 7. Do not replace a private installation with the public bundle.
+Install the complete repository bundle or place pinshu-infographic and the marked public pinshu-visual-system 0.2.4 or later in the same parent folder. Planning needs Python 3. Generation needs an image-capable agent; delivery needs ImageMagick 7. Do not replace a private installation with the public bundle.
 
 From the repository root:
 

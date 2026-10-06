@@ -34,11 +34,11 @@ The visual system is now a three-piece public preview:
 
 | Package | Version | Best use |
 |---|---|---|
-| [pinshu-visual-system](pinshu-visual-system/README.md) | 0.2.3 | Choose among twelve scoped visual modes, plan a platform composition, render and prepare a reviewed candidate |
-| [pinshu-infographic](pinshu-infographic/README.md) | 0.1.3 | Explain knowledge through source-anchored processes, comparison, hierarchy, components and real loops |
-| [pinshu-business-graphics](pinshu-business-graphics/README.md) | 0.1.3 | Express a business argument with one of seven distinct visual method families |
+| [pinshu-visual-system](pinshu-visual-system/README.md) | 0.2.4 | Choose among twelve scoped visual modes, plan a platform composition, render and prepare a reviewed candidate |
+| [pinshu-infographic](pinshu-infographic/README.md) | 0.1.4 | Explain knowledge through source-anchored processes, comparison, hierarchy, components and real loops |
+| [pinshu-business-graphics](pinshu-business-graphics/README.md) | 0.1.4 | Express a business argument with one of seven distinct visual method families |
 
-All three use eleven platform presets. Work without a fixed character or supply your own approved references to a supported core mode. Planning uses Python 3; generation needs an image-capable agent; raster export uses ImageMagick 7. The companions require the public core 0.2.3 or later beside them, installed together by the repository installer. Precision charts need an editable chart tool and separate data review. Native SVG delivery requires an installed CJK font; PPTX delivery additionally uses LibreOffice and Poppler, with a render receipt and actual re-render pixel verification.
+All three use eleven platform presets. Work without a fixed character or supply your own approved references to a supported core mode. Planning uses Python 3; generation needs an image-capable agent; raster export uses ImageMagick 7. The companions require the public core 0.2.4 or later beside them, installed together by the repository installer. Precision charts need an editable chart tool and separate data review. Native SVG delivery requires an installed CJK font; PPTX delivery additionally uses LibreOffice and Poppler, with a render receipt and actual re-render pixel verification.
 
 Tell your Agent:
 
@@ -46,7 +46,7 @@ Tell your Agent:
 
 For a knowledge diagram, name pinshu-infographic instead. For a commercial mechanism, strategic relationship or typographic argument, name pinshu-business-graphics. The linked READMEs contain actual new examples and their evidence records.
 
-The core also has two experimental cultural-poster method cards. These are candidate research references outside the twelve-mode roster. Material-craft has two theme tests, with the origami sample awaiting cultural interpretation and layout-variation review; colorfield-landscape still needs an actual test. Neither enters automatic or batch routing. This is a maintained sharing edition with human review and repeatability limits clearly marked. The installer protects existing private/local installations of all three visual Skills from replacement. See the [visual repair notes](pinshu-visual-system/references/release-notes-0.2.3.md) for engineering changes and remaining acceptance limits.
+The core also has two experimental cultural-poster method cards. These are candidate research references outside the twelve-mode roster. Material-craft has two theme tests, with the origami sample awaiting cultural interpretation and layout-variation review; colorfield-landscape still needs an actual test. Neither enters automatic or batch routing. This is a maintained sharing edition with human review and repeatability limits clearly marked. The installer protects existing private/local installations of all three visual Skills from replacement. See the [visual repair notes](pinshu-visual-system/references/release-notes-0.2.4.md) for engineering changes and remaining acceptance limits.
 
 ## Brand-film teardown videos
 

@@ -5,11 +5,11 @@ description: "Create deliberate business concept visuals, report illustrations, 
 
 # Pinshu Business Graphics
 
-Public preview **0.1.3**, original methods by Aidan (Pinshu), developed with Codex. Choose a visual mother by the relationship the reader needs to understand. A mother has its own composition, typography and image language; it is not simply a palette.
+Public preview **0.1.4**, original methods by Aidan (Pinshu), developed with Codex. Choose a visual mother by the relationship the reader needs to understand. A mother has its own composition, typography and image language; it is not simply a palette.
 
 ## Dependency and scope
 
-The public pinshu-visual-system 0.2.3 or later must be installed beside this folder. It provides the shared platform registry and reviewed image export. This package owns the seven business-method cards, mother selection, semantic metaphor, series discipline and data checks. The planner creates a business-mother plan with mode=null; it does not mix a blueprint mother with an unrelated illustration mode.
+The public pinshu-visual-system 0.2.4 or later must be installed beside this folder. It provides the shared platform registry and reviewed image export. This package owns the seven business-method cards, mother selection, semantic metaphor, series discipline and data checks. The planner creates a business-mother plan with mode=null; it does not mix a blueprint mother with an unrelated illustration mode.
 
 No private character or approved internal artwork is included. This first business adapter is character-free. For fixed-identity illustration use the public core's approved local reference interface. Image generation requires the runtime's image tool; precision charts and editable slides require a chart/slide/design tool. baoyu-infographic is an optional separately installed workflow, never a bundled or automatically installed dependency.
 

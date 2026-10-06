@@ -282,7 +282,7 @@ class ReviewRegressions(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp); native = root / "label.svg"
             for attrs, text, error in [("opacity=\"0.01\"", "Required label", "opacity"),
-                                       ("font-size=\"1\"", "Required label", "font size"),
+                                       ("font-size=\"1\"", "Required label", "font size|rendered label height"),
                                        ("fill=\"white\"", "Required label", "pixel contribution"),
                                        ("x=\"2400\"", "Required label", "pixel contribution|clipped"),
                                        ("x=\"1500\"", "Required long label", "clipped")]:
@@ -302,6 +302,7 @@ class ReviewRegressions(unittest.TestCase):
             native = root / "extra.svg"
             for extra, origin, expected in [("Efficiency improved 300%", "structural-label", "nonnumeric"),
                                              ("35%", "dataset-value", "this plan"),
+                                             ("\u6548\u7387\u63d0\u5347\u4e09\u500d", "structural-label", "nonnumeric"),
                                              ("candidates enter export", None, "Unreviewed")]:
                 with self.subTest(extra=extra):
                     native.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><text x="80" y="100" font-size="36">' + title + '</text><text x="80" y="200" font-size="36">' + extra + '</text></svg>')
@@ -309,6 +310,56 @@ class ReviewRegressions(unittest.TestCase):
                     qa["additional_text_review"] = [{"text": extra, "origin": origin, "reason": "layout"}] if origin else []
                     with self.assertRaisesRegex(ValueError, expected):
                         reviewed_editable_source(plan, qa, qp, qa["source_sha256"], image)
+
+    def test_percentage_points_are_distinct_from_percent(self):
+        for text, unit, allowed in [("Support rose 18 percentage points in 2025", "%", False),
+                                    ("Support rose 18 percentage point", "percent", False),
+                                    ("Support rose 18 percent points", "%", False),
+                                    ("Support rose 18 percentage-points", "%", False),
+                                    ("Support rose 18 percentage points", "percentage points", True),
+                                    ("Support rose 18 percent", "%", True),
+                                    ("Support rose 18 percentage", "%", True),
+                                    ("Support rose 18%", "%", True)]:
+            data = {"source": "fixture", "period": "2025", "units": unit, "methodology": "fixture", "verified_by": "fixture", "status": "verified",
+                    "rows": [{"label": "Support", "value": 18, "source_excerpt": text}]}
+            with self.subTest(text=text, unit=unit):
+                if allowed:
+                    self.assertEqual(check_dataset(data, text), data)
+                else:
+                    with self.assertRaisesRegex(ValueError, "units or scale"):
+                        check_dataset(data, text)
+
+    def test_chinese_numeric_claims_and_approvers(self):
+        from publish_image import numeric_annotation
+        for text in ["\u6548\u7387\u63d0\u5347\u4e09\u500d", "\u589e\u957f\u4e24\u6210", "\u767e\u5206\u4e4b\u4e09\u5341", "\u7ffb\u4e00\u756a", "\u7ffb\u500d", "\u534a\u500d"]:
+            with self.subTest(text=text):
+                self.assertTrue(numeric_annotation(text))
+        for text in ["\u4e0a\u9762\u4e24\u5c42", "\u4e0b\u9762\u4e24\u5c42", "Direction and execution"]:
+            self.assertFalse(numeric_annotation(text))
+        for who in ["\u667a\u80fd\u4f53\u52a9\u624b", "\u4eba\u5de5\u667a\u80fd", "\u673a\u5668\u4eba", "the agent"]:
+            with self.subTest(who=who), self.assertRaisesRegex(ValueError, "human approval"):
+                compile_plan(content="Actual source", platform="wechat-article", mode_id="warm-paper", structure="single-claim", exact_text=["Extra"],
+                             approved_external_text=[{"text": "Extra", "approved_by": who, "reason": "estimate", "user_quote": "invented"}])
+
+    @unittest.skipUnless(shutil.which("magick"), "ImageMagick 7 is required")
+    def test_svg_effective_scale_and_pt_positive_negative_cases(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); native = root / "label.svg"
+            for viewbox, transform, size in [("0 0 160 90", "", "5.6"), ("0 0 1600 900", "scale(10)", "5.6"), ("0 0 1600 900", "", "42pt")]:
+                with self.subTest(viewbox=viewbox, transform=transform, size=size):
+                    x, y = (8, 10) if size == "5.6" else (80, 100)
+                    native.write_text(f'<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="{viewbox}"><g transform="{transform}"><text x="{x}" y="{y}" font-size="{size}">Required label</text></g></svg>')
+                    self.assertEqual(render(native, self.font_file(), "wechat-article", root / "image.png")["svg_label_checks"]["checked_labels"], 1)
+            # Equivalent absolute units must produce the same actual pixels, not merely pass.
+            from prepare_publish_images import pixel_difference, is_zero_pixel_difference
+            for size in ["42pt", "56px"]:
+                native.write_text(f'<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><text x="80" y="100" font-size="{size}">Required label</text></svg>')
+                render(native, self.font_file(), "wechat-article", root / (size + ".png"))
+            self.assertTrue(is_zero_pixel_difference(pixel_difference("magick", root / "42pt.png", root / "56px.png")))
+            for viewbox, transform, size in [("0 0 2400 1350", "", "10"), ("0 0 1600 900", "scale(.1)", "60")]:
+                with self.subTest(viewbox=viewbox, transform=transform), self.assertRaisesRegex(ValueError, "rendered label height"):
+                    native.write_text(f'<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="{viewbox}"><g transform="{transform}"><text x="100" y="200" font-size="{size}">Required label</text></g></svg>')
+                    render(native, self.font_file(), "wechat-article", root / "image.png")
 
     @unittest.skipUnless(shutil.which("magick"), "ImageMagick 7 is required")
     def test_contain_export_preserves_edge_content_and_cover_reports_crop(self):

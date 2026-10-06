@@ -19,8 +19,8 @@ try:
     core_version = tuple(int(part) for part in (CORE / "VERSION").read_text().strip().split("."))
 except (OSError, ValueError):
     raise SystemExit("HARD_STOP: The public core has no valid VERSION; reinstall the complete visual set") from None
-if core_version < (0, 2, 3):
-    raise SystemExit("HARD_STOP: This companion requires public pinshu-visual-system 0.2.3 or later; upgrade the complete visual set")
+if core_version < (0, 2, 4):
+    raise SystemExit("HARD_STOP: This companion requires public pinshu-visual-system 0.2.4 or later; upgrade the complete visual set")
 sys.path.insert(0, str(CORE / "scripts"))
 from visual_compiler import digest, load_configs
 from visual_contracts import anchor, check_relations, check_units, read_source, save_plan, check_brief_fields, check_exact_text, text_delivery
@@ -66,6 +66,8 @@ def check_dataset(dataset: object, source: str) -> dict:
             if not unit:
                 continue
             remainder = tail[unit.end():]
+            if declared == "%" and re.match(r"[\s-]*(?:points?|pts?|pp)\b", remainder, flags=re.I):
+                continue
             if unit[0][-1:].isascii() and unit[0][-1:].isalpha() and remainder[:1].isascii() and remainder[:1].isalpha():
                 continue
             if declared in {"\u4e07", "\u4ebf", "\u5343", "\u767e"} and re.match(r"[\u4e00-\u9fff]", remainder):
@@ -151,8 +153,8 @@ def compile_business(brief_path: Path) -> tuple[dict, str]:
         "Show a true loop only with a supported return path. Proposed metaphors are design interpretations, not facts. No invented data, pseudo-sources or generic technology decoration."
     ])
     return {
-        "schema_version": "public-visual-plan-v1", "version": "0.1.3", "status": "candidate-plan",
-        "workflow": {"kind": "pinshu-business-graphics", "version": "0.1.3"},
+        "schema_version": "public-visual-plan-v1", "version": "0.1.4", "status": "candidate-plan",
+        "workflow": {"kind": "pinshu-business-graphics", "version": "0.1.4"},
         "source": {"path": str(source_path), "sha256": hashlib.sha256(source.encode()).hexdigest(),
                    "file_sha256": digest(source_path)},
         "registry_sha256": digest(CORE / "references/system-registry.json"),

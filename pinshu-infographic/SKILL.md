@@ -5,11 +5,11 @@ description: "Turn source material into readable knowledge diagrams: processes, 
 
 # Pinshu Infographic
 
-Public preview **0.1.3**, created by Aidan (Pinshu) with Codex. Read the actual source, expose one information relationship and produce a readable diagram. This portable edition includes no personal character artwork or private examples.
+Public preview **0.1.4**, created by Aidan (Pinshu) with Codex. Read the actual source, expose one information relationship and produce a readable diagram. This portable edition includes no personal character artwork or private examples.
 
 ## Dependencies and routing
 
-Requires the public pinshu-visual-system 0.2.3 or later package beside this folder. It owns mode cards, optional approved character profiles, platform presets, generation planning and delivery. This package adds source-anchored units, arrow meaning, reading density and diagram review. If the public core is missing, report the dependency; do not overwrite or use an existing private core.
+Requires the public pinshu-visual-system 0.2.4 or later package beside this folder. It owns mode cards, optional approved character profiles, platform presets, generation planning and delivery. This package adds source-anchored units, arrow meaning, reading density and diagram review. If the public core is missing, report the dependency; do not overwrite or use an existing private core.
 
 Read `references/logic-and-density.md` for content structure and viewing distance, `references/mode-routing.md` for style choice, `references/visual-qa.md` for diagram review, and `references/quickstart.md` for the executable brief and delivery commands. Load the complete selected mode card from the public core.
 

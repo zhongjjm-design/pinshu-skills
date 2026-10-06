@@ -47,7 +47,7 @@ Run meaningful local checks:
 python3 -m unittest discover -s tests -v
 ```
 
-The shared package has a separate VERSION (0.2.3) from its internal ancestor. Existing private installations must not be replaced with it; the repository installer deliberately refuses that collision. On a clean colleague machine, the repository installer adds the visual Skill with both visual companions and the other suite packages. Restart the client afterward and verify it can discover the Skill and access an image backend.
+The shared package has a separate VERSION (0.2.4) from its internal ancestor. Existing private installations must not be replaced with it; the repository installer deliberately refuses that collision. On a clean colleague machine, the repository installer adds the visual Skill with both visual companions and the other suite packages. Restart the client afterward and verify it can discover the Skill and access an image backend.
 
 ## Explicit cultural-poster test
 
