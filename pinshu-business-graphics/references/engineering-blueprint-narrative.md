@@ -47,4 +47,3 @@ Reject when:
 - technical decoration exceeds operational content
 - no system boundary or human checkpoint exists
 - the result could not support a narrated walkthrough
-

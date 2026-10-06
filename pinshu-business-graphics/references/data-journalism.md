@@ -54,4 +54,3 @@ Reject when:
 - visual proportions contradict the values
 - annotations imply causation unsupported by evidence
 - the final needs precision or editability but only a generated bitmap exists
-

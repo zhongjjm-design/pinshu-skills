@@ -48,4 +48,3 @@ Reject when:
 - the text has been unnaturally squeezed
 - decorative objects carry a different metaphor from the typography
 - five or more modules compete with the hero word
-

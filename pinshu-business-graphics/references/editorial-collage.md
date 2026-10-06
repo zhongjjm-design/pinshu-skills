@@ -48,4 +48,3 @@ Reject when:
 - decoration is mistaken for documentary proof
 - more than five competing fragments destroy hierarchy
 - the layout copies a known publication too literally
-

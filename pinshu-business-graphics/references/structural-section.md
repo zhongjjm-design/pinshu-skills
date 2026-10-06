@@ -47,4 +47,3 @@ Reject when:
 - architectural realism overwhelms information
 - all components have equal visual weight
 - a generic house or building is used without business meaning
-

@@ -47,4 +47,3 @@ Reject when:
 - too many arrows create multiple reading paths
 - conceptual positions look like measured data without disclosure
 - the page is actually a process and should use another mother
-

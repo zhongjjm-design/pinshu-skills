@@ -41,4 +41,3 @@ Reject when:
 - the result looks nostalgic instead of contemporary
 - too many typefaces or red accents become festive decoration
 - the business conclusion is lost in atmosphere
-
