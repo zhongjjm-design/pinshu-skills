@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinshu Infographic"
+  short_description: "Source-anchored, readable knowledge diagrams"
+  default_prompt: "Use $pinshu-infographic to turn this source into one readable, reviewed knowledge diagram."

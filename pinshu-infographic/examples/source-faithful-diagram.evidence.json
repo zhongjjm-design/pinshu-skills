@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-06",
+  "sample": "source-faithful-diagram",
+  "status": "candidate-ready-for-review",
+  "source_file": "source.md",
+  "source_sha256": "1da4574c024902cff2cefe78531ec2ea85c44084d1f07a27a107221bfd942637",
+  "generation_record": "source-faithful-diagram.generation.json",
+  "generation_record_sha256": "0f8fa3168e9e970f722b0dab65b2121139402e4ee87ea85ce95b21b1af4f36dd",
+  "generation_channel": "Codex native image_gen",
+  "actual_model": null,
+  "generated_original_sha256": "40ddba731f91dc433fa24f143f04111d7cf79ea8598282552bcd4a43eda14045",
+  "generated_original_retained_locally": true,
+  "public_image": "source-faithful-diagram.png",
+  "public_image_sha256": "d1b387c816229c5c1329c3bdab230a7005cf7ad3cf6fe33aa62737d6c7e6889d",
+  "workflow": {
+    "kind": "pinshu-infographic",
+    "version": "0.1.0"
+  },
+  "visual_card": {
+    "character": "none",
+    "task": "content-visual",
+    "structure": "process",
+    "layout": "linear-steps",
+    "mode": "warm-paper",
+    "platform": "wechat-article",
+    "density": "document",
+    "units": 3
+  },
+  "method_status": null,
+  "mechanical_checks": {
+    "platform_export": "PASS",
+    "output_geometry": "1600x900",
+    "metadata_clean_copy": "PASS",
+    "pixel_difference_ae": 0
+  },
+  "actual_image_review": {
+    "reviewer": "Codex actual-image inspection, 2026-10-06",
+    "observations": "Actual image inspection: three source-supported steps read Find the claim, Choose the relationship, Review the image; both arrows have the correct direction and verbs then choose / then review. Warm-paper line illustration stays sparse. The hierarchy sketch is an illustration of choosing a relationship, not a factual dataset. No fixed identity or numerical claim. Short labels were visually checked; no editable text requirement in this brief.",
+    "thumbnail_observation": "The main claim and visual direction remain visible at 180px. Full labels are intended for full-width reading, not miniature text.",
+    "checks": {
+      "source-faithfulness": "pass",
+      "visible-text": "pass",
+      "mode-and-composition": "pass",
+      "identity-and-actions": "pass",
+      "thumbnail-and-crop": "pass",
+      "information-relationships": "pass",
+      "density-and-reading": "pass",
+      "text-delivery": "pass"
+    },
+    "scope": "Agent inspection; not human aesthetic approval"
+  },
+  "human_review": "pending",
+  "aesthetic_approval": false,
+  "batch_stability": "not-established"
+}

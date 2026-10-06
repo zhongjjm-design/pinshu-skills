@@ -1,0 +1,20 @@
+{
+  "source_file": "source.md",
+  "claim": "Explain the source faithfully",
+  "claim_source_excerpt": "A source-faithful knowledge graphic",
+  "mode": "warm-paper",
+  "platform": "wechat-article",
+  "structure": "process",
+  "density": "document",
+  "output_language": "en",
+  "exact_text": [],
+  "units": [
+    {"id": "claim", "label": "Find the claim", "source_excerpt": "identify the main claim supported by the original material"},
+    {"id": "relationship", "label": "Choose the relationship", "source_excerpt": "select the actual information relationship"},
+    {"id": "review", "label": "Review the image", "source_excerpt": "check the rendered labels and arrows against the source"}
+  ],
+  "relations": [
+    {"from": "claim", "to": "relationship", "verb": "then choose", "source_excerpt": "Then select the actual information relationship"},
+    {"from": "relationship", "to": "review", "verb": "then review", "source_excerpt": "Finally, check the rendered labels and arrows against the source"}
+  ]
+}
