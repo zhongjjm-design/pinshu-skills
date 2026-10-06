@@ -1,10 +1,10 @@
 # Pinshu Skills
 
-Aidan (Pinshu) maintains this suite of nine skills for faithful transcript editing, course production, learning, reusable content assets, visuals, and brand-film teardown videos. It works with Claude Code and other compatible agents.
+Aidan (Pinshu) maintains this suite of eleven skills for faithful transcript editing, course production, learning, reusable content assets, visuals, and brand-film teardown videos. It works with Claude Code and other compatible agents.
 
 ## Quick install
 
-On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. The same command installs all nine skills on a fresh computer or upgrades an older Pinshu installation. Before replacing an existing, correctly named Pinshu Skill, the installer moves the complete old directory and any previous repository clone to recoverable backups; unrelated or unsafe paths are refused. Inspect the installer before executing a remote script on your computer.
+On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. The same command installs all eleven skills on a fresh computer or upgrades an older Pinshu installation. Before replacing an existing, correctly named Pinshu Skill, the installer moves the complete old directory and any previous repository clone to recoverable backups; unrelated or unsafe paths are refused. Inspect the installer before executing a remote script on your computer.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/install.sh | bash
@@ -30,13 +30,23 @@ Use pinshu-content-assets to turn this lesson into one readable, source-traceabl
 
 ## Visual assets for colleagues
 
-The new [Pinshu Visual System](pinshu-visual-system/README.md) is a public preview (0.1.0) for article illustrations, covers, social cards and presentation visuals. It shares twelve explicitly scoped mode cards, seven business-visual method families, eleven platform presets, prompt planning, exact-size export and review checks. Work without a fixed character or supply your own approved references. Planning is usable with Python 3; rendering needs an image-capable agent, and export needs ImageMagick 7.
+The visual system is now a three-piece public preview:
+
+| Package | Version | Best use |
+|---|---|---|
+| [pinshu-visual-system](pinshu-visual-system/README.md) | 0.2.0 | Choose among twelve scoped visual modes, plan a platform composition, render and prepare a reviewed candidate |
+| [pinshu-infographic](pinshu-infographic/README.md) | 0.1.0 | Explain knowledge through source-anchored processes, comparison, hierarchy, components and real loops |
+| [pinshu-business-graphics](pinshu-business-graphics/README.md) | 0.1.0 | Express a business argument with one of seven distinct visual method families |
+
+All three use eleven platform presets. Work without a fixed character or supply your own approved references to a supported core mode. Planning uses Python 3; generation needs an image-capable agent; raster export uses ImageMagick 7. The companions require the public core 0.2.0 or later beside them, installed together by the repository installer. Precision charts need an editable chart tool and separate data review.
 
 Tell your Agent:
 
 > Use pinshu-visual-system to illustrate this article for WeChat. Read the source, recommend a coherent style, generate and inspect one first image, then prepare the reviewed platform-sized candidate. Use no fixed character.
 
-This is a usable initial sharing edition, with candidates and limitations clearly marked. We will keep improving it through the repository. It makes no claim of fully stable automatic batch generation. An existing private/local visual-system installation is protected from replacement by the installer.
+For a knowledge diagram, name pinshu-infographic instead. For a commercial mechanism, strategic relationship or typographic argument, name pinshu-business-graphics. The linked READMEs contain actual new examples and their evidence records.
+
+The core also has two experimental cultural-poster method cards. These are candidate research references outside the twelve-mode roster. Material-craft has two new theme tests; colorfield-landscape still needs an actual test. Neither enters automatic or batch routing. This is a maintained sharing edition with human review and repeatability limits clearly marked. The installer protects existing private/local installations of all three visual Skills from replacement.
 
 ## Brand-film teardown videos
 
@@ -100,6 +110,8 @@ For batches larger than three lessons, deliver one representative lesson first. 
 | Skill | Purpose |
 |---|---|
 | `pinshu-visual-system` | Plan, generate with an image-capable agent, visually inspect and export source-faithful content visuals |
+| `pinshu-infographic` | Plan source-anchored knowledge diagrams with explicit relationships, density and diagram review |
+| `pinshu-business-graphics` | Select seven business-visual method families, distinguish metaphor from fact and prepare source-faithful concept graphics |
 | `pinshu-film-teardown` | Turn a brand film (TVC, anniversary film, ad) into a teardown explainer video: real footage, AI narration, speaker bites, code-built motion and music, horizontal and vertical editions, covers, QC and an independent review loop |
 | `pinshu-transcript` | Turn raw transcripts into faithful edited transcripts while preserving substantive meaning and source boundaries |
 | `pinshu-distill` | Produce clear, self-contained structured study guides and approved cross-cutting topics from faithful transcripts |

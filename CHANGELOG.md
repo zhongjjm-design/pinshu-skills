@@ -1,5 +1,17 @@
 # Changelog
 
+## Visual set: core 0.2.0, companions 0.1.0 - 2026-10-06
+
+- Complete the public three-piece visual set with independent pinshu-infographic and pinshu-business-graphics packages. The repository now contains eleven Skills.
+- Preserve original-source excerpts, unit/arrow contracts and separate semantic review from mechanical validation. Enforce diagram density, real loop closure and explicit experimental-mode tests.
+- Move the seven full business-mother cards into the commercial companion. Keep business mothers separate from illustration modes; distinguish proposed metaphors from facts and require provenance for datasets.
+- Require editable precision-chart finals; reject raster delivery as a substitute. Require specialized workflow review alongside the five core image checks.
+- Add two research-derived cultural-poster candidate cards outside the original twelve modes. Material Craft has two new theme trials; Colorfield Landscape remains untested in this release. Neither is auto-routed or promoted.
+- Include actual new source-faithful diagram and business-workbench examples with exact generation histories, a rejected composition record, source/image hashes and export evidence.
+- Extend the transactional installer, its upgrade/private-collision tests, release checks and CI to eleven packages. Protect private installations of all three visual Skills.
+
+The public editions are usable sharing previews. Actual examples received agent inspection and exact-size/copy checks; human aesthetic acceptance and stable batch generation remain pending. Private character/IP assets are excluded.
+
 ## Film Teardown 0.1.0 - 2026-10-06
 
 - Add pinshu-film-teardown: turn a brand film into a teardown explainer video, with horizontal and vertical editions, covers, publishing copy, QC and an independent review loop.

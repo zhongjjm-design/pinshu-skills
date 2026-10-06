@@ -47,7 +47,7 @@ skills:
     origin: original
     distribution: bundled-sanitized
     present_in_repository: true
-    version: 0.1.0
+    version: 0.2.0
     status: public-preview
     depends_on: []
     runtime_dependencies: [python3, imagemagick-7, image-capable-agent]
@@ -59,3 +59,21 @@ skills:
     status: public-preview
     depends_on: []
     runtime_dependencies: [python3, ffmpeg, nodejs, hyperframes-cli, baocut-cli, gemini-api-key]
+  - name: pinshu-infographic
+    origin: original
+    distribution: bundled-sanitized
+    present_in_repository: true
+    version: 0.1.0
+    status: public-preview
+    depends_on: [pinshu-visual-system]
+    minimum_core_version: 0.2.0
+    runtime_dependencies: [python3, imagemagick-7, image-capable-agent]
+  - name: pinshu-business-graphics
+    origin: original
+    distribution: bundled-sanitized
+    present_in_repository: true
+    version: 0.1.0
+    status: public-preview
+    depends_on: [pinshu-visual-system]
+    minimum_core_version: 0.2.0
+    runtime_dependencies: [python3, imagemagick-7, image-capable-agent]

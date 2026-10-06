@@ -43,6 +43,8 @@ jobs:
           python3 -m unittest discover -s pinshu-md2pdf/tests -v
       - name: Public visual-system regression
         run: python3 -m unittest discover -s pinshu-visual-system/tests -v
+      - name: Public visual-companion regression
+        run: python3 -m unittest tests/test_visual_companions.py -v
       - name: Installer negative controls
         run: bash tests/test_installer.sh
       - name: Shell syntax

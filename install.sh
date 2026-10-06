@@ -22,6 +22,8 @@ EXPECTED_SKILLS=(
   pinshu-transcript
   pinshu-visual-system
   pinshu-film-teardown
+  pinshu-infographic
+  pinshu-business-graphics
 )
 LEGACY_SKILLS=(
   transcript-cleaner
@@ -105,7 +107,7 @@ assert_safe_slug() {
 
 is_expected_skill() {
   case "$1" in
-    pinshu-course-capture|pinshu-content-assets|pinshu-course|pinshu-distill|pinshu-md2pdf|pinshu-study|pinshu-transcript|pinshu-visual-system|pinshu-film-teardown)
+    pinshu-course-capture|pinshu-content-assets|pinshu-course|pinshu-distill|pinshu-md2pdf|pinshu-study|pinshu-transcript|pinshu-visual-system|pinshu-film-teardown|pinshu-infographic|pinshu-business-graphics)
       return 0
       ;;
     *)
@@ -170,14 +172,14 @@ preflight_target_paths() {
     if path_exists "$target"; then
       [ ! -L "$target" ] || die "Destination symlink was refused: $target"
       [ -d "$target" ] || die "Destination is not a real directory: $target"
-      if [ "$slug" = "pinshu-visual-system" ] && [ ! -f "$target/.public-bundle" ]; then
-        die "Existing visual system is private or locally managed; use a separate destination instead of replacing it: $target"
+      if { [ "$slug" = "pinshu-visual-system" ] || [ "$slug" = "pinshu-infographic" ] || [ "$slug" = "pinshu-business-graphics" ]; } && [ ! -f "$target/.public-bundle" ]; then
+        die "Existing visual Skill is private or locally managed; use a separate destination instead of replacing it: $target"
       fi
     fi
   done
 }
 
-# A prior official clone may be dirty and may contain five, six, seven, or eight
+# A prior official clone may be dirty and may contain an earlier roster of
 # packages. Back it up intact. Existing correctly named Skill directories are
 # backed up intact too; a same-name directory without a matching Skill identity
 # is refused rather than silently replaced.

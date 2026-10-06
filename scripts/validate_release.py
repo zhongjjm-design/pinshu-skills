@@ -24,6 +24,8 @@ EXPECTED_SKILLS = {
     "pinshu-transcript",
     "pinshu-visual-system",
     "pinshu-film-teardown",
+    "pinshu-infographic",
+    "pinshu-business-graphics",
 }
 TEXT_SUFFIXES = {
     ".bash", ".cfg", ".css", ".csv", ".html", ".ini", ".js", ".json",
@@ -233,6 +235,10 @@ def run_executable_gates(full: bool) -> None:
     run_check(
         "public visual-system regression",
         [sys.executable, "-m", "unittest", "discover", "-s", "pinshu-visual-system/tests", "-v"],
+    )
+    run_check(
+        "public visual-companion regression",
+        [sys.executable, "-m", "unittest", "tests/test_visual_companions.py", "-v"],
     )
     # The film-teardown self-test needs ffmpeg and numpy/soundfile/pillow; CI installs them and runs it as a hard step.
     import importlib.util
