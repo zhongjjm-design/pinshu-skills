@@ -29,6 +29,7 @@ jobs:
           tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP" gitleaks
           sudo install "$RUNNER_TEMP/gitleaks" /usr/local/bin/gitleaks
           gitleaks version
+          python3 -m pip install --quiet python-pptx==1.0.2
       - name: Validate release bundle
         run: python3 scripts/validate_release.py
       - name: Learning-asset validator self-test
@@ -64,6 +65,8 @@ jobs:
         run: python3 -m unittest tests/test_visual_companions.py -v
       - name: Independent visual-review regressions
         run: python3 -m unittest tests/test_visual_review_regressions.py -v
+      - name: Real native PPTX rendering
+        run: python3 -m unittest tests/test_native_pptx_render.py -v
       - name: Installer negative controls
         run: bash tests/test_installer.sh
       - name: Shell syntax

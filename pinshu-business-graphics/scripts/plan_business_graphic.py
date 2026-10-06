@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import re
 import sys
+import unicodedata
 
 ROOT = Path(__file__).resolve().parents[1]
 CORE = ROOT.parent / "pinshu-visual-system"
@@ -18,8 +19,8 @@ try:
     core_version = tuple(int(part) for part in (CORE / "VERSION").read_text().strip().split("."))
 except (OSError, ValueError):
     raise SystemExit("HARD_STOP: The public core has no valid VERSION; reinstall the complete visual set") from None
-if core_version < (0, 2, 2):
-    raise SystemExit("HARD_STOP: This companion requires public pinshu-visual-system 0.2.2 or later; upgrade the complete visual set")
+if core_version < (0, 2, 3):
+    raise SystemExit("HARD_STOP: This companion requires public pinshu-visual-system 0.2.3 or later; upgrade the complete visual set")
 sys.path.insert(0, str(CORE / "scripts"))
 from visual_compiler import digest, load_configs
 from visual_contracts import anchor, check_relations, check_units, read_source, save_plan, check_brief_fields, check_exact_text, text_delivery
@@ -47,6 +48,7 @@ def check_dataset(dataset: object, source: str) -> dict:
         if isinstance(value, bool) or not number.is_finite():
             raise ValueError("Data values must be finite numbers")
         excerpt = anchor(row.get("source_excerpt"), source)
+        excerpt = unicodedata.normalize("NFKC", excerpt)
         tokens = re.finditer(r"(?<![0-9A-Za-z.+-])([+-]?(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?)(?![0-9]|[.,][0-9])", excerpt)
         matches = [match for match in tokens if Decimal(match[1].replace(",", "")) == number]
         if not matches:
@@ -55,16 +57,16 @@ def check_dataset(dataset: object, source: str) -> dict:
         if not isinstance(declared_unit, str) or not declared_unit.strip():
             raise ValueError("Each data row needs a declared unit")
         unit_aliases = {"percent": "%", "percentage": "%", "\uff05": "%"}
-        declared = unit_aliases.get(declared_unit.strip().lower(), declared_unit.strip())
+        declared = unit_aliases.get(unicodedata.normalize("NFKC", declared_unit.strip()).lower(), unicodedata.normalize("NFKC", declared_unit.strip()))
         valid_context = False
         for match in matches:
             tail = excerpt[match.end():].lstrip()
-            pattern = re.escape(declared).replace(r"\ ", r"\s+")
+            pattern = r"(?:%|percent(?:age)?)" if declared == "%" else re.escape(declared).replace(r"\ ", r"\s+")
             unit = re.match(pattern, tail.replace("\uff05", "%"), flags=re.I)
             if not unit:
                 continue
             remainder = tail[unit.end():]
-            if declared[-1:].isascii() and declared[-1:].isalpha() and remainder[:1].isascii() and remainder[:1].isalpha():
+            if unit[0][-1:].isascii() and unit[0][-1:].isalpha() and remainder[:1].isascii() and remainder[:1].isalpha():
                 continue
             if declared in {"\u4e07", "\u4ebf", "\u5343", "\u767e"} and re.match(r"[\u4e00-\u9fff]", remainder):
                 continue
@@ -149,8 +151,8 @@ def compile_business(brief_path: Path) -> tuple[dict, str]:
         "Show a true loop only with a supported return path. Proposed metaphors are design interpretations, not facts. No invented data, pseudo-sources or generic technology decoration."
     ])
     return {
-        "schema_version": "public-visual-plan-v1", "version": "0.1.2", "status": "candidate-plan",
-        "workflow": {"kind": "pinshu-business-graphics", "version": "0.1.2"},
+        "schema_version": "public-visual-plan-v1", "version": "0.1.3", "status": "candidate-plan",
+        "workflow": {"kind": "pinshu-business-graphics", "version": "0.1.3"},
         "source": {"path": str(source_path), "sha256": hashlib.sha256(source.encode()).hexdigest(),
                    "file_sha256": digest(source_path)},
         "registry_sha256": digest(CORE / "references/system-registry.json"),

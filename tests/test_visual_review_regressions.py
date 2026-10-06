@@ -267,6 +267,49 @@ class ReviewRegressions(unittest.TestCase):
             qa.write_text(json.dumps(review))
             self.assertEqual(prepare(image, pp, qa, root / "reviewed")["editable_source"]["additional_text_review"][0]["text"], "Supplemental note")
 
+    def test_percent_words_fullwidth_digits_and_agent_alias(self):
+        for text, value, unit in [("Revenue grew 18 percent", 18, "%"), ("Revenue grew 18 percentage", 18, "percent"),
+                                  ("\u5458\u5de5\uff11\uff18\uff10\uff10\u4eba", 1800, "\u4eba")]:
+            data = {"source": "fixture", "period": "2025", "units": unit, "methodology": "fixture", "verified_by": "fixture", "status": "verified",
+                    "rows": [{"label": "metric", "value": value, "source_excerpt": text}]}
+            self.assertEqual(check_dataset(data, text), data)
+        with self.assertRaisesRegex(ValueError, "human approval"):
+            compile_plan(content="Actual source", platform="wechat-article", mode_id="warm-paper", structure="single-claim", exact_text=["Extra"],
+                         approved_external_text=[{"text": "Extra", "approved_by": "the agent", "reason": "estimate", "user_quote": "invented"}])
+
+    @unittest.skipUnless(shutil.which("magick"), "ImageMagick 7 is required")
+    def test_svg_low_opacity_small_invisible_and_clipped_labels_stop(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); native = root / "label.svg"
+            for attrs, text, error in [("opacity=\"0.01\"", "Required label", "opacity"),
+                                       ("font-size=\"1\"", "Required label", "font size"),
+                                       ("fill=\"white\"", "Required label", "pixel contribution"),
+                                       ("x=\"2400\"", "Required label", "pixel contribution|clipped"),
+                                       ("x=\"1500\"", "Required long label", "clipped")]:
+                with self.subTest(attrs=attrs), self.assertRaisesRegex(ValueError, error):
+                    native.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><rect width="1600" height="900" fill="white"/><text y="100" ' + attrs + '>' + text + '</text></svg>')
+                    render(native, self.font_file(), "wechat-article", root / "image.png")
+            native.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><text x="80" y="100" font-size="36"><tspan>Required</tspan><tspan x="80" dy="50">label</tspan></text></svg>')
+            self.assertEqual(render(native, self.font_file(), "wechat-article", root / "image.png")["svg_label_checks"]["checked_labels"], 1)
+
+    @unittest.skipUnless(shutil.which("magick"), "ImageMagick 7 is required")
+    def test_extra_numeric_claims_and_truncated_conditions_stop(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); image, pp, qp = self.delivery_inputs(root, editable=True)
+            plan = json.loads(pp.read_text()); title = plan["visible_labels"][0]
+            original = root / "source.md"; original.write_text(title + "\nOnly approved candidates enter export")
+            plan["source"] = {"path": str(original), "file_sha256": hashlib.sha256(original.read_bytes()).hexdigest()}
+            native = root / "extra.svg"
+            for extra, origin, expected in [("Efficiency improved 300%", "structural-label", "nonnumeric"),
+                                             ("35%", "dataset-value", "this plan"),
+                                             ("candidates enter export", None, "Unreviewed")]:
+                with self.subTest(extra=extra):
+                    native.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><text x="80" y="100" font-size="36">' + title + '</text><text x="80" y="200" font-size="36">' + extra + '</text></svg>')
+                    qa = self.bind_native(root, native, image, qp)
+                    qa["additional_text_review"] = [{"text": extra, "origin": origin, "reason": "layout"}] if origin else []
+                    with self.assertRaisesRegex(ValueError, expected):
+                        reviewed_editable_source(plan, qa, qp, qa["source_sha256"], image)
+
     @unittest.skipUnless(shutil.which("magick"), "ImageMagick 7 is required")
     def test_contain_export_preserves_edge_content_and_cover_reports_crop(self):
         with tempfile.TemporaryDirectory() as tmp:

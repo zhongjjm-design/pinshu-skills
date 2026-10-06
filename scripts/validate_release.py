@@ -242,6 +242,8 @@ def run_executable_gates(full: bool) -> None:
     )
     run_check("independent visual-review regressions",
               [sys.executable, "-m", "unittest", "tests/test_visual_review_regressions.py", "-v"])
+    run_check("real native PPTX render regressions",
+              [sys.executable, "-m", "unittest", "tests/test_native_pptx_render.py", "-v"], timeout=300)
     if os.environ.get("CI") == "true" and not shutil.which("magick"):
         fail("CI requires ImageMagick 7; real export tests must not be skipped")
     # The film-teardown self-test needs ffmpeg and numpy/soundfile/pillow; CI installs them and runs it as a hard step.

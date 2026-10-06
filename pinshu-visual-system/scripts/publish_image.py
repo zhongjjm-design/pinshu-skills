@@ -13,6 +13,8 @@ import struct
 import unicodedata
 import xml.etree.ElementTree as ET
 import zipfile
+import re
+from decimal import Decimal, InvalidOperation
 from render_editable import native_inventory, verify_render
 from prepare_publish_images import png_chunks, pixel_difference, is_zero_pixel_difference, PublishPrepError
 
@@ -56,12 +58,15 @@ def reviewed_editable_source(plan: dict, qa: dict, qa_path: Path, image_hash: st
         raise ValueError("Editable source has missing native labels (whole text segments): " + ", ".join(sorted(missing)))
     dataset = content.get("dataset") or {}
     if chart:
-        from decimal import Decimal
-        import re
         numbers = {Decimal(x.replace(",", "")) for text in inventory["texts"] for x in
                    re.findall(r"[+-]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?", text)}
         for row in dataset.get("rows", []):
-            native_pair = (row["label"], Decimal(str(row["value"]))) in inventory["chart_points"]
+            unit = unicodedata.normalize("NFKC", row.get("units", dataset.get("units", ""))).lower()
+            formatted = inventory.get("formatted_chart_points", [])
+            if unit in {"%", "percent", "percentage"} and any(p[0] == row["label"] for p in formatted):
+                native_pair = (row["label"], Decimal(str(row["value"])), "%") in formatted
+            else:
+                native_pair = (row["label"], Decimal(str(row["value"]))) in inventory["chart_points"]
             text_pair = normalize(row["label"]) in segments and Decimal(str(row["value"])) in numbers
             if not native_pair and not text_pair:
                 raise ValueError("Editable chart must contain its dataset labels and values as native text or linked chart data")
@@ -76,10 +81,12 @@ def reviewed_editable_source(plan: dict, qa: dict, qa_path: Path, image_hash: st
     allowed = {normalize(x) for x in labels + [row["label"] for row in dataset.get("rows", [])]}
     declarations = {normalize(item["text"]): item for item in qa.get("additional_text_review", [])}
     additional = []
+    # Whole lines/sentences retain conditions that a bare substring can omit.
+    source_segments = {normalize(part.strip(" #*-\t")) for part in re.split(r"[\n\r\u3002\uff01\uff1f!?;\uff1b]", original) if part.strip()}
     for text in inventory["texts"]:
         if normalize(text) in allowed:
             continue
-        if original and text in original:
+        if original and normalize(text).rstrip(".:!?;\u3002\uff01\uff1f\uff1b\uff1a") in {part.rstrip(".:!?;\u3002\uff01\uff1f\uff1b\uff1a") for part in source_segments}:
             additional.append({"text": text, "origin": "literal-source"})
             continue
         item = declarations.get(normalize(text))
@@ -87,7 +94,25 @@ def reviewed_editable_source(plan: dict, qa: dict, qa_path: Path, image_hash: st
             raise ValueError("Unreviewed additional native text: " + text + "; list it in additional_text_review with origin and reason")
         if item["origin"] == "editorial-paraphrase" and (not item.get("source_excerpt") or item["source_excerpt"] not in original):
             raise ValueError("Additional paraphrase needs a matching source_excerpt")
-        additional.append(item)
+        if item["origin"] == "editorial-paraphrase" and any(c.isdigit() for c in unicodedata.normalize("NFKC", text)):
+            raise ValueError("Numeric paraphrases must be explicit planned labels with source review, not additional annotations")
+        if item["origin"] == "structural-label":
+            value = unicodedata.normalize("NFKC", text)
+            if any(c.isdigit() for c in value) or len(value) > 40:
+                raise ValueError("Structural labels must be short nonnumeric headings; source factual or numeric annotations explicitly")
+        if item["origin"] == "dataset-value":
+            value = unicodedata.normalize("NFKC", text).strip().replace(",", "")
+            matched = False
+            for row in dataset.get("rows", []):
+                unit = unicodedata.normalize("NFKC", row.get("units", dataset.get("units", ""))).strip()
+                token = value[:-len(unit)].strip() if unit and value.endswith(unit) else value
+                try:
+                    matched |= Decimal(token) == Decimal(str(row["value"]))
+                except InvalidOperation:
+                    pass
+            if not matched:
+                raise ValueError("Additional dataset-value must be a numeric value from this plan's dataset, optionally with its unit")
+        additional.append(dict(item, semantic_approval="declared-review-only"))
     binding = verify_render(path, image_path, receipt, plan["visual_card"]["platform"])
     return {"path": str(path), "sha256": evidence["sha256"], "rendered_image_sha256": image_hash,
             "render_receipt": str(receipt_path), "render_receipt_sha256": hashlib.sha256(receipt_path.read_bytes()).hexdigest(),
