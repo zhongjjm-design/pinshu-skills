@@ -15,11 +15,11 @@ try:
     core_version = tuple(int(part) for part in (CORE / "VERSION").read_text().strip().split("."))
 except (OSError, ValueError):
     raise SystemExit("HARD_STOP: The public core has no valid VERSION; reinstall the complete visual set") from None
-if core_version < (0, 2, 0):
-    raise SystemExit("HARD_STOP: This companion requires public pinshu-visual-system 0.2.0 or later; upgrade the complete visual set")
+if core_version < (0, 2, 1):
+    raise SystemExit("HARD_STOP: This companion requires public pinshu-visual-system 0.2.1 or later; upgrade the complete visual set")
 sys.path.insert(0, str(CORE / "scripts"))
 from visual_compiler import compile_plan
-from visual_contracts import anchor, check_relations, check_units, read_source, save_plan
+from visual_contracts import anchor, check_relations, check_units, read_source, save_plan, check_brief_fields, check_exact_text, text_delivery
 
 MODES = {"warm-paper", "lively-vector", "character-presenter"}
 
@@ -27,6 +27,8 @@ MODES = {"warm-paper", "lively-vector", "character-presenter"}
 def compile_infographic(brief_path: Path, *, candidate_test: bool = False,
                         character_profile: Path | None = None) -> tuple[dict, str]:
     brief = json.loads(brief_path.read_text(encoding="utf-8"))
+    check_brief_fields(brief, {"source_file", "claim", "claim_source_excerpt", "mode", "platform", "structure",
+        "density", "units", "relations", "layout", "output_language", "exact_text", "approved_external_text"}, "pinshu-infographic")
     source_path, source = read_source(brief, brief_path)
     mode = brief.get("mode", "warm-paper")
     if mode not in MODES:
@@ -39,18 +41,25 @@ def compile_infographic(brief_path: Path, *, candidate_test: bool = False,
         raise ValueError("Presentation surfaces require slide density")
     units = check_units(brief.get("units"), source, 5 if density == "slide" else 7)
     structure = brief.get("structure")
+    if structure == "timeline":
+        raise ValueError("This infographic adapter has no timeline mode; use pinshu-business-graphics with mother=strategic-map and structure=timeline")
     relations = check_relations(brief.get("relations", []), units, source, structure)
     claim = brief.get("claim")
     if not isinstance(claim, str) or not claim.strip():
         raise ValueError("Supply one main claim")
     anchor(brief.get("claim_source_excerpt"), source)
     exact = brief.get("exact_text", [])
-    if not isinstance(exact, list):
-        raise ValueError("exact_text must be a list")
+    text_evidence = check_exact_text(exact, source, brief.get("approved_external_text"))
     plan = compile_plan(source, platform, mode, structure, brief.get("layout", "auto"),
-                        claim, candidate_test, character_profile, exact, len(units), source_path)
+                        claim, candidate_test, character_profile, exact, len(units), source_path,
+                        approved_external_text=brief.get("approved_external_text"))
+    delivery = text_delivery([claim] + [u["label"] for u in units] + [r["verb"] for r in relations] + exact, exact=exact)
+    plan.update(delivery)
+    plan["exact_text_evidence"] = text_evidence
+    if delivery["text_route"] == "editable-text-layer":
+        plan["prompt"] += "\nGenerate only a text-free supporting illustration. All final titles, unit labels and arrow verbs belong in the editable source, not in the bitmap."
     plan["visual_card"]["density"] = density
-    plan["workflow"] = {"kind": "pinshu-infographic", "version": "0.1.0"}
+    plan["workflow"] = {"kind": "pinshu-infographic", "version": "0.1.1"}
     plan["structured_content"] = {"claim": claim, "units": units, "relations": relations,
                                   "wording_review": "pending", "semantic_source_review": "pending"}
     plan["required_checks"] += ["information-relationships", "density-and-reading", "text-delivery"]
@@ -62,6 +71,8 @@ def compile_infographic(brief_path: Path, *, candidate_test: bool = False,
                         "Every arrow must match the supplied verb and source; generic icons cannot replace the information relationship. "
                         "Keep at most two annotation levels. If readable labels do not fit, split the graphic. "
                         "Use editable text for long or multiple exact labels; never paint over bitmap lettering.")
+    if delivery["text_route"] == "editable-text-layer":
+        plan["prompt"] += "\nFor this plan, render NO lettering in the illustration bitmap. Compose ALL visible labels and relationships in the native editable final and inspect that composite."
     return plan, source
 
 

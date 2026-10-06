@@ -1,4 +1,4 @@
-# Pinshu Business Graphics - public preview 0.1.0
+# Pinshu Business Graphics - public preview 0.1.1
 
 Seven visual method families for business arguments: typographic metaphor, strategic map, structural section, editorial collage, engineering blueprint narrative, Chinese modernism and data journalism.
 
@@ -8,7 +8,7 @@ Tell your image-capable agent:
 
 > Use pinshu-business-graphics to visualize this business source. Recommend a mother by its information relationship, preserve evidence boundaries, generate and inspect one image, then prepare the reviewed candidate.
 
-See [method router](references/router.md), [quickstart](references/quickstart.md) and [actual-image review](references/visual-qa.md). Requires the public pinshu-visual-system 0.2.0 or later beside this package. Python 3 plans the graphic; an image-capable agent renders; ImageMagick 7 exports raster candidates. Exact charts require an editable chart tool and independent data review.
+See [method router](references/router.md), [quickstart](references/quickstart.md) and [actual-image review](references/visual-qa.md). Requires the public pinshu-visual-system 0.2.1 or later beside this package. Python 3 plans the graphic; an image-capable agent renders; ImageMagick 7 exports raster candidates. Exact charts require an editable chart tool and independent data review.
 
 The seven cards describe methods, not seven bundled AI models or a claim of batch stability. Repository instructions are English; visible output follows the user's language. The repository's existing usage and redistribution terms apply.
 

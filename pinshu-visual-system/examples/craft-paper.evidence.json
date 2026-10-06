@@ -37,7 +37,7 @@
   "actual_image_review": {
     "reviewer": "Codex actual-image inspection, 2026-10-06",
     "observations": "Actual image inspection: visible Chinese title is correct. A flat generic worker lifts a mesh over a pulp basin; the resulting wet fibre sheet connects the small action to the dominant paper form. Warm paper and restrained tones, ample negative space. This is an original imagined craft concept, not a documentary depiction or historical claim. No fixed brand identity. Material-derived composition matches the method; human aesthetic review remains pending.",
-    "thumbnail_observation": "The main claim and visual direction remain visible at 180px. Full labels are intended for full-width reading, not miniature text.",
+    "thumbnail_observation": "The large translucent fibre sheet dominates at 180px; the vat and worker remain visible at lower left. The four vertical Chinese title characters are separated, but the detailed wet-paper action requires full-size inspection.",
     "checks": {
       "source-faithfulness": "pass",
       "visible-text": "pass",
@@ -51,5 +51,9 @@
   },
   "human_review": "pending",
   "aesthetic_approval": false,
-  "batch_stability": "not-established"
+  "batch_stability": "not-established",
+  "followup_review": {
+    "date": "2026-10-06",
+    "scope": "Codex full-image and separate 180px thumbnail review; no new generation or human acceptance"
+  }
 }

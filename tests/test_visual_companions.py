@@ -81,7 +81,7 @@ class CompanionTests(unittest.TestCase):
             path = self.brief(root, "pinshu-infographic", mode="character-presenter")
             with self.assertRaisesRegex(ValueError, "requires"):
                 compile_infographic(path)
-            path = self.brief(root, "pinshu-infographic", exact_text=["Exact name", "Exact amount"])
+            path = self.brief(root, "pinshu-infographic", exact_text=["main claim", "information relationship"])
             self.assertEqual(compile_infographic(path)[0]["text_route"], "editable-text-layer")
 
     def test_arrows_need_valid_endpoints_and_source(self):

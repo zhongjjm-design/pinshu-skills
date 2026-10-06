@@ -8,6 +8,8 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import struct
+import zlib
 from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -104,7 +106,7 @@ class PublicVisualTests(unittest.TestCase):
 
     def test_exact_text_routes_to_editable_layer(self):
         labels = ["Review the source", "Check names and numbers"]
-        plan = self.plan(exact_text=labels)
+        plan = self.plan(content="Review the source. Check names and numbers.", exact_text=labels)
         self.assertEqual(plan["text_route"], "editable-text-layer")
         for label in labels:
             self.assertIn(label, plan["prompt"])
@@ -136,13 +138,15 @@ class PublicVisualTests(unittest.TestCase):
 
     def make_delivery_inputs(self, root: Path):
         image = root / "rendered.png"
-        image.write_bytes(b"test image")
+        chunk = lambda kind, data: struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data) & 0xffffffff)
+        image.write_bytes(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", 1600, 900, 8, 2, 0, 0, 0))
+                          + chunk(b"IDAT", zlib.compress((b"\0" + b"\xff" * 4800) * 900)) + chunk(b"IEND", b""))
         plan = root / "route-plan.json"
         plan.write_text(json.dumps(self.plan()))
         qa = root / "qa.json"
         qa.write_text(json.dumps({"source_sha256": hashlib.sha256(image.read_bytes()).hexdigest(),
                                   "plan_sha256": hashlib.sha256(plan.read_bytes()).hexdigest(),
-                                  "reviewer": "test reviewer", "notes": "Test fixture; no aesthetic claim.",
+                                  "review_stage": "final-platform-image", "reviewer": "test reviewer", "notes": "Test fixture; no aesthetic claim.",
                                   "checks": {key: "pass" for key in CHECKS}}))
         return image, plan, qa
 
@@ -174,7 +178,7 @@ class PublicVisualTests(unittest.TestCase):
             with mock.patch("publish_image.subprocess.run", return_value=subprocess.CompletedProcess([], 1, "", "export failed")):
                 with self.assertRaisesRegex(ValueError, "no source-image fallback"):
                     prepare(image, plan, qa, root / "delivery")
-            self.assertFalse((root / "delivery/delivery-report.json").exists())
+            self.assertEqual(json.loads((root / "delivery/delivery-report.json").read_text())["status"], "FAIL")
             self.assertTrue(image.is_file())
 
     @unittest.skipUnless(shutil.which("magick"), "ImageMagick 7 is not installed")
@@ -182,7 +186,7 @@ class PublicVisualTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             image, plan, qa = self.make_delivery_inputs(root)
-            subprocess.run(["magick", "-size", "1024x512", "xc:#faf7f1", str(image)], check=True)
+            subprocess.run(["magick", "-size", "1600x900", "xc:#faf7f1", str(image)], check=True)
             data = json.loads(qa.read_text()); data["source_sha256"] = hashlib.sha256(image.read_bytes()).hexdigest()
             qa.write_text(json.dumps(data))
             before = image.read_bytes()

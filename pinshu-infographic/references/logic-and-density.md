@@ -1,6 +1,6 @@
 # Information logic and viewing distance
 
-Choose from the public core's seven structure IDs. Process and timeline diagrams need explicit sequential relationships. Comparisons need comparable dimensions. Hierarchies need actual containment or dependency. Components need membership, not decorative arrows. True loops need a supported last-to-first return, not only a circle drawn around steps.
+Choose a structure supported by the selected mode. The core defines seven structure IDs, but this package's three modes do not currently execute timelines. For a timeline, use pinshu-business-graphics with mother=strategic-map and structure=timeline. Process diagrams and timelines need source-supported sequential relationships. Comparisons need comparable dimensions. Hierarchies need actual containment or dependency. Components need membership, not decorative arrows. True loops need a supported last-to-first return, not only a circle drawn around steps.
 
 Document density permits up to seven principal units and two annotation levels. Slide density permits up to five and one conclusion. Three units can be enough; lower density is not a failure. Intersect these limits with the selected core mode's own maximum. Presentation surfaces use slide density; vertical media require the core's dedicated vertical layouts.
 

@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+from visual_contracts import check_exact_text, text_delivery
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -23,7 +24,8 @@ def load_configs() -> tuple[dict, dict]:
 def compile_plan(content: str, platform: str, mode_id: str, structure: str,
                  layout: str = "auto", title: str = "", candidate_test: bool = False,
                  character_profile: Path | None = None, exact_text: list[str] | None = None,
-                 units: int = 3, source_path: Path | None = None) -> dict:
+                 units: int = 3, source_path: Path | None = None,
+                 approved_external_text: list[dict] | None = None) -> dict:
     if not content.strip():
         raise ValueError("Source content is empty")
     registry, profiles = load_configs()
@@ -91,9 +93,9 @@ def compile_plan(content: str, platform: str, mode_id: str, structure: str,
         raise ValueError("Character Presenter requires a supplied approved identity profile")
 
     exact = exact_text or []
-    if not all(isinstance(item, str) for item in exact):
-        raise ValueError("Exact labels must be text")
-    editable_text = len(exact) > 1 or any(len(item) > 20 for item in exact) or mode_id == "archive-tabletop-editorial"
+    text_evidence = check_exact_text(exact, content, approved_external_text)
+    delivery = text_delivery([title] + exact, exact=exact, force=mode_id == "archive-tabletop-editorial")
+    editable_text = delivery["text_route"] == "editable-text-layer"
     card = ROOT / mode["mode_card"]
     text_route = "editable-text-layer" if editable_text else "short-text-with-visual-qa"
     prompt = "\n\n".join([
@@ -122,7 +124,7 @@ def compile_plan(content: str, platform: str, mode_id: str, structure: str,
                         "structure": structure, "layout": layout, "mode": mode_id, "platform": platform,
                         "density": "slide" if platform in {"ppt-16x9", "livestream-16x9"} else "social", "units": units},
         "platform_profile": profiles[platform], "identity_reference": identity,
-        "text_route": text_route, "prompt": prompt,
+        **delivery, "exact_text_evidence": text_evidence, "prompt": prompt,
         "rendering": {"provider": "agent-runtime", "actual_model": None, "channel": None,
                       "instruction": "Use the available image tool; record the actual returned model/channel without guessing."},
         "required_checks": ["source-faithfulness", "visible-text", "mode-and-composition", "identity-and-actions", "thumbnail-and-crop"],
@@ -182,19 +184,21 @@ def main() -> int:
     parser.add_argument("--candidate-test", action="store_true")
     parser.add_argument("--character-profile", type=Path)
     parser.add_argument("--exact-text", action="append")
+    parser.add_argument("--approved-text-file", type=Path, help="JSON list of real user approvals for source-external exact labels")
     parser.add_argument("--output-dir", required=True, type=Path)
     args = parser.parse_args()
     try:
         content = args.content_file.read_text(encoding="utf-8")
         if args.method_candidate:
-            if args.character_profile or args.exact_text or args.layout != "auto" or args.units != 3:
+            if args.character_profile or args.exact_text or args.approved_text_file or args.layout != "auto" or args.units != 3:
                 raise ValueError("Method tests currently use character-free single-claim defaults; put short text in --title")
             plan = compile_method_candidate(content, args.platform, args.method_candidate,
                                             args.structure, args.title, args.candidate_test, args.content_file)
         else:
             plan = compile_plan(content, args.platform, args.mode, args.structure, args.layout,
                                 args.title, args.candidate_test, args.character_profile,
-                                args.exact_text, args.units, args.content_file)
+                                args.exact_text, args.units, args.content_file,
+                                json.loads(args.approved_text_file.read_text()) if args.approved_text_file else None)
         args.output_dir.mkdir(parents=True, exist_ok=False)
         (args.output_dir / "source-content.txt").write_text(content, encoding="utf-8")
         (args.output_dir / "prompt-final.txt").write_text(plan["prompt"], encoding="utf-8")

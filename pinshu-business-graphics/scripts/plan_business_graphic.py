@@ -18,11 +18,11 @@ try:
     core_version = tuple(int(part) for part in (CORE / "VERSION").read_text().strip().split("."))
 except (OSError, ValueError):
     raise SystemExit("HARD_STOP: The public core has no valid VERSION; reinstall the complete visual set") from None
-if core_version < (0, 2, 0):
-    raise SystemExit("HARD_STOP: This companion requires public pinshu-visual-system 0.2.0 or later; upgrade the complete visual set")
+if core_version < (0, 2, 1):
+    raise SystemExit("HARD_STOP: This companion requires public pinshu-visual-system 0.2.1 or later; upgrade the complete visual set")
 sys.path.insert(0, str(CORE / "scripts"))
 from visual_compiler import digest, load_configs
-from visual_contracts import anchor, check_relations, check_units, read_source, save_plan
+from visual_contracts import anchor, check_relations, check_units, read_source, save_plan, check_brief_fields, check_exact_text, text_delivery
 
 MOTHERS = {"typographic-metaphor", "strategic-map", "structural-section", "editorial-collage",
            "engineering-blueprint-narrative", "chinese-modernism", "data-journalism"}
@@ -47,13 +47,32 @@ def check_dataset(dataset: object, source: str) -> dict:
         if isinstance(value, bool) or not number.is_finite():
             raise ValueError("Data values must be finite numbers")
         excerpt = anchor(row.get("source_excerpt"), source)
-        if not re.search(r"(?<![+\-\w.])" + re.escape(str(value)) + r"(?![\w.])", excerpt):
+        tokens = re.finditer(r"(?<![0-9A-Za-z.+-])([+-]?(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?)(?![0-9A-Za-z]|[.,][0-9])", excerpt)
+        matches = [match for match in tokens if Decimal(match[1].replace(",", "")) == number]
+        if not matches:
             raise ValueError("The exact data value must occur in its source excerpt")
+        declared_unit = row.get("units", dataset["units"])
+        if not isinstance(declared_unit, str) or not declared_unit.strip():
+            raise ValueError("Each data row needs a declared unit")
+        unit_aliases = {"percent": "%", "percentage": "%", "\uff05": "%"}
+        normalize_unit = lambda u: unit_aliases.get(u.strip().lower(), u.strip().lower())
+        observed = []
+        for match in matches:
+            unit = re.match(r"(?:[%\uff05]|[A-Za-z]+|[\u4e07\u4ebf\u5343\u767e]?(?:\u4eba|\u5143|\u5f20|\u4ef6|\u5428|\u6237|\u4e2a)|\u4ebf|\u4e07)", excerpt[match.end():].lstrip())
+            if unit:
+                observed.append(normalize_unit(unit[0]))
+        if observed and normalize_unit(declared_unit) not in observed:
+            raise ValueError("Declared units or scale do not match the source value; specify per-row units for mixed metrics")
+        if re.fullmatch(r"[0-9.,+\-eE\s%\uff05]+", excerpt):
+            raise ValueError("Data excerpts need metric context, not a bare number")
     return dataset
 
 
 def compile_business(brief_path: Path) -> tuple[dict, str]:
     brief = json.loads(brief_path.read_text(encoding="utf-8"))
+    check_brief_fields(brief, {"source_file", "claim", "claim_source_excerpt", "mother", "platform", "structure",
+        "units", "relations", "layout", "output_language", "exact_text", "approved_external_text", "metaphor",
+        "dataset", "delivery_medium", "character_profile"}, "pinshu-business-graphics")
     source_path, source = read_source(brief, brief_path)
     mother = brief.get("mother")
     if mother not in MOTHERS:
@@ -98,9 +117,10 @@ def compile_business(brief_path: Path) -> tuple[dict, str]:
         dataset = check_dataset(brief.get("dataset"), source)
         medium = "editable-required"
     exact = brief.get("exact_text", [])
-    if not isinstance(exact, list) or not all(isinstance(label, str) for label in exact):
-        raise ValueError("exact_text must be a list of strings")
-    editable_text = medium == "editable-required" or len(exact) > 1 or any(len(label) > 20 for label in exact)
+    text_evidence = check_exact_text(exact, source, brief.get("approved_external_text"))
+    delivery = text_delivery([claim] + [u["label"] for u in units] + [r["verb"] for r in relations] + exact,
+                             exact=exact, force=medium == "editable-required")
+    editable_text = delivery["text_route"] == "editable-text-layer"
     card = ROOT / "references" / (mother + ".md")
     structured = {"claim": claim, "units": units, "relations": relations, "metaphor": metaphor,
                   "dataset": dataset, "delivery_medium": medium,
@@ -118,8 +138,8 @@ def compile_business(brief_path: Path) -> tuple[dict, str]:
         "Show a true loop only with a supported return path. Proposed metaphors are design interpretations, not facts. No invented data, pseudo-sources or generic technology decoration."
     ])
     return {
-        "schema_version": "public-visual-plan-v1", "version": "0.1.0", "status": "candidate-plan",
-        "workflow": {"kind": "pinshu-business-graphics", "version": "0.1.0"},
+        "schema_version": "public-visual-plan-v1", "version": "0.1.1", "status": "candidate-plan",
+        "workflow": {"kind": "pinshu-business-graphics", "version": "0.1.1"},
         "source": {"path": str(source_path), "sha256": hashlib.sha256(source.encode()).hexdigest(),
                    "file_sha256": digest(source_path)},
         "registry_sha256": digest(CORE / "references/system-registry.json"),
@@ -129,7 +149,7 @@ def compile_business(brief_path: Path) -> tuple[dict, str]:
                         "density": "slide" if platform in {"ppt-16x9", "livestream-16x9"} else "social",
                         "units": len(units)},
         "platform_profile": profiles[platform], "identity_reference": None,
-        "structured_content": structured, "text_route": "editable-text-layer" if editable_text else "short-text-with-visual-qa",
+        "structured_content": structured, **delivery, "exact_text_evidence": text_evidence,
         "prompt": prompt,
         "rendering": {"provider": "agent-runtime", "actual_model": None, "channel": None,
                       "strategy": "editable-chart-final" if dataset else medium},

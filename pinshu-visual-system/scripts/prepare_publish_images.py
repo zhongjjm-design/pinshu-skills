@@ -11,6 +11,7 @@ import struct
 import subprocess
 import sys
 from pathlib import Path
+import zlib
 
 
 BLOCKED_MARKERS = (
@@ -59,31 +60,79 @@ def identify(magick: str, image: Path, format_string: str) -> str:
     return result.stdout.strip()
 
 
-def png_chunk_types(data: bytes) -> list[bytes]:
+def png_chunks(data: bytes) -> list[tuple[bytes, bytes]]:
     if not data.startswith(b"\x89PNG\r\n\x1a\n"):
         raise PublishPrepError("Publish copy is not a valid PNG.")
 
-    chunk_types: list[bytes] = []
+    chunks = []
     offset = 8
     while offset + 12 <= len(data):
         length = struct.unpack(">I", data[offset : offset + 4])[0]
         chunk_type = data[offset + 4 : offset + 8]
-        chunk_types.append(chunk_type)
+        end = offset + 12 + length
+        if end > len(data):
+            raise PublishPrepError("Truncated PNG chunk")
+        payload = data[offset + 8:offset + 8 + length]
+        crc = struct.unpack(">I", data[offset + 8 + length:end])[0]
+        if zlib.crc32(chunk_type + payload) & 0xffffffff != crc:
+            raise PublishPrepError("PNG chunk checksum mismatch")
+        chunks.append((chunk_type, payload))
         offset += 12 + length
         if chunk_type == b"IEND":
+            if length or offset != len(data):
+                raise PublishPrepError("Invalid PNG ending")
             break
-    return chunk_types
+    if not chunks or chunks[0][0] != b"IHDR" or len(chunks[0][1]) != 13 or chunks[-1][0] != b"IEND":
+        raise PublishPrepError("Incomplete PNG structure")
+    return chunks
+
+
+def png_chunk_types(data: bytes) -> list[bytes]:
+    return [kind for kind, _ in png_chunks(data)]
 
 
 def residual_provenance(data: bytes) -> list[str]:
-    lowered = data.lower()
     found: list[str] = []
-    for marker in BLOCKED_MARKERS:
-        if marker.lower() in lowered:
-            found.append(marker.decode("ascii"))
-    if b"caBX" in png_chunk_types(data) and "caBX" not in found:
-        found.append("caBX")
+    for kind, payload in png_chunks(data):
+        if kind == b"caBX":
+            found.append("caBX")
+        if kind not in {b"tEXt", b"iTXt", b"zTXt", b"eXIf", b"caBX"}:
+            continue
+        if kind == b"zTXt":
+            keyword, separator, rest = payload.partition(b"\0")
+            if not separator or not rest or rest[0] != 0:
+                raise PublishPrepError("Invalid compressed PNG metadata")
+            payload = keyword + b"\0" + metadata_text(rest[1:])
+        elif kind == b"iTXt":
+            keyword, separator, rest = payload.partition(b"\0")
+            if not separator or len(rest) < 2:
+                raise PublishPrepError("Invalid PNG international text metadata")
+            flag, method = rest[:2]
+            fields = rest[2:].split(b"\0", 2)
+            if len(fields) != 3:
+                raise PublishPrepError("Invalid PNG international text metadata")
+            language, translated_keyword, text = fields
+            if flag not in {0, 1} or method != 0:
+                raise PublishPrepError("Invalid PNG text compression")
+            payload = keyword + b"\0" + language + b"\0" + translated_keyword + b"\0" + (metadata_text(text) if flag else text)
+        for marker in BLOCKED_MARKERS:
+            if marker.lower() in payload.lower():
+                found.append(marker.decode("ascii"))
     return sorted(set(found))
+
+
+def metadata_text(data: bytes) -> bytes:
+    """Decode only bounded metadata, with actionable diagnostics on malformed input."""
+    decoder = zlib.decompressobj()
+    try:
+        decoded = decoder.decompress(data, 2 * 1024 * 1024 + 1)
+    except zlib.error as exc:
+        raise PublishPrepError("Invalid compressed PNG metadata") from exc
+    if len(decoded) > 2 * 1024 * 1024 or decoder.unconsumed_tail:
+        raise PublishPrepError("Compressed PNG metadata exceeds the inspection limit")
+    if not decoder.eof or decoder.unused_data:
+        raise PublishPrepError("Incomplete compressed PNG metadata")
+    return decoded
 
 
 def pixel_difference(magick: str, source: Path, publish_copy: Path) -> str:

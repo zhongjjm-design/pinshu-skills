@@ -1,7 +1,7 @@
 {
   "date": "2026-10-06",
   "sample": "craft-fold",
-  "status": "candidate-ready-for-review",
+  "status": "candidate-needs-cultural-and-layout-review",
   "source_file": "craft-fold.source.md",
   "source_sha256": "d2bdc02c83af0fa5bcb0d93427a93bb7d58754f16579b0e9fa001168de3d982f",
   "generation_record": "craft-fold.generation.json",
@@ -37,19 +37,24 @@
   "actual_image_review": {
     "reviewer": "Codex actual-image inspection, 2026-10-06",
     "observations": "Actual image inspection: visible Chinese title is correct. Two flat generic workers handle a paper strip on a table; the strip connects to a large angular folded crane form. Geometry differs substantially from the fibre-sheet papermaking sample. Warm paper, restrained red accent and small landscape texture; no event details, statistics or heritage claims. This is an imagined original craft concept and a method candidate, not stable batch acceptance.",
-    "thumbnail_observation": "The main claim and visual direction remain visible at 180px. Full labels are intended for full-width reading, not miniature text.",
+    "thumbnail_observation": "At 180px the angular crane, vertical title and red circle dominate. The two workers and tabletop are tiny; detailed folding action cannot be verified in miniature. The crane-plus-red-circle association remains disputed and needs owner/audience review.",
     "checks": {
       "source-faithfulness": "pass",
       "visible-text": "pass",
       "mode-and-composition": "pass",
       "identity-and-actions": "pass",
       "thumbnail-and-crop": "pass",
-      "method-grammar": "pass",
-      "cultural-source-fit": "pass"
+      "method-grammar": "partial-pending-layout-variation-test",
+      "cultural-source-fit": "disputed-pending-human-review"
     },
     "scope": "Agent inspection; not human aesthetic approval"
   },
   "human_review": "pending",
   "aesthetic_approval": false,
-  "batch_stability": "not-established"
+  "batch_stability": "not-established",
+  "followup_review": {
+    "date": "2026-10-06",
+    "scope": "Codex full-image and separate 180px thumbnail review; no new generation or human acceptance",
+    "notes": "The earlier cultural PASS is withdrawn. Crane and red circle may suggest Japanese symbolism to some Chinese readers; this association is an interpretation, not proof of copying. Both craft tests place workers at lower left and enlarge material upward/right, despite different title positions and material geometries. Cross-theme layout variation is not established."
+  }
 }

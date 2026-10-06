@@ -12,6 +12,23 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+      - name: Install verified visual-test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes build-essential pkg-config libpng-dev libjpeg-dev libfreetype6-dev
+          curl --fail --location https://github.com/ImageMagick/ImageMagick/archive/ad98b244c995d2e3051757fa3b7855f45b550d24.tar.gz --output "$RUNNER_TEMP/imagemagick.tar.gz"
+          tar -xzf "$RUNNER_TEMP/imagemagick.tar.gz" -C "$RUNNER_TEMP"
+          cd "$RUNNER_TEMP/ImageMagick-ad98b244c995d2e3051757fa3b7855f45b550d24"
+          ./configure --without-perl --disable-openmp
+          make -j2
+          sudo make install
+          sudo ldconfig
+          magick -version
+          curl --fail --location https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz --output "$RUNNER_TEMP/gitleaks.tar.gz"
+          echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  $RUNNER_TEMP/gitleaks.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP" gitleaks
+          sudo install "$RUNNER_TEMP/gitleaks" /usr/local/bin/gitleaks
+          gitleaks version
       - name: Validate release bundle
         run: python3 scripts/validate_release.py
       - name: Learning-asset validator self-test
@@ -45,6 +62,8 @@ jobs:
         run: python3 -m unittest discover -s pinshu-visual-system/tests -v
       - name: Public visual-companion regression
         run: python3 -m unittest tests/test_visual_companions.py -v
+      - name: Independent visual-review regressions
+        run: python3 -m unittest tests/test_visual_review_regressions.py -v
       - name: Installer negative controls
         run: bash tests/test_installer.sh
       - name: Shell syntax

@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import unicodedata
 
 
 def read_source(brief: dict, brief_path: Path) -> tuple[Path, str]:
@@ -23,7 +24,54 @@ def read_source(brief: dict, brief_path: Path) -> tuple[Path, str]:
 def anchor(excerpt: object, source: str) -> str:
     if not isinstance(excerpt, str) or not excerpt.strip() or excerpt not in source:
         raise ValueError("Every source_excerpt must occur verbatim in the original source")
+    if sum(c.isalnum() for c in excerpt) < 3:
+        raise ValueError("A verbatim source_excerpt must contain meaningful context, not punctuation or a single word fragment")
     return excerpt
+
+
+def check_brief_fields(brief: object, allowed: set[str], workflow: str) -> None:
+    if not isinstance(brief, dict):
+        raise ValueError("The brief must be a JSON object")
+    unknown = sorted(set(brief) - allowed)
+    if unknown:
+        hint = "Use relations, not relationships." if "relationships" in unknown else ""
+        if workflow == "pinshu-infographic" and set(unknown) & {"mother", "metaphor", "dataset", "delivery_medium"}:
+            hint += " Business briefs belong to pinshu-business-graphics."
+        raise ValueError("Unknown brief fields: " + ", ".join(unknown) + ". " + hint)
+
+
+def check_exact_text(exact: object, source: str, approvals: object = None) -> list[dict]:
+    if not isinstance(exact, list) or not all(isinstance(x, str) and x.strip() for x in exact):
+        raise ValueError("exact_text must be a list of nonempty strings")
+    approvals = [] if approvals is None else approvals
+    if not isinstance(approvals, list):
+        raise ValueError("approved_external_text must be a list of declared approvals")
+    declared = {}
+    for item in approvals:
+        if not isinstance(item, dict) or any(not isinstance(item.get(k), str) or not item[k].strip()
+                                             for k in ("text", "approved_by", "reason")):
+            raise ValueError("Each external text approval needs text, approved_by and reason")
+        if item["text"] not in exact or item["text"] in declared:
+            raise ValueError("External text approvals must uniquely name an exact_text label")
+        declared[item["text"]] = item
+    evidence = []
+    for text in exact:
+        if text in source:
+            evidence.append({"text": text, "origin": "literal-source"})
+        elif text in declared:
+            evidence.append(dict(declared[text], origin="declared-user-approval"))
+        else:
+            raise ValueError("exact_text is absent from the source: " + text + "; supply a real user approval in approved_external_text")
+    return evidence
+
+
+def text_delivery(labels: list[str], *, exact: list[str] | None = None, force: bool = False) -> dict:
+    labels = list(dict.fromkeys(x for x in labels if x.strip()))
+    width = lambda s: sum(2 if unicodedata.east_asian_width(c) in "WF" else 1 for c in s)
+    cjk_labels = sum(any(unicodedata.east_asian_width(c) in "WF" for c in s) for s in labels)
+    editable = force or len(exact or []) > 1 or any(width(s) > 20 for s in labels) or cjk_labels > 1
+    return {"visible_labels": labels, "text_route": "editable-text-layer" if editable else "short-text-with-visual-qa",
+            "routing_basis": "all visible labels; weighted width and multiple CJK labels are conservative heuristics, not a renderer guarantee"}
 
 
 def check_units(units: object, source: str, maximum: int) -> list[dict]:

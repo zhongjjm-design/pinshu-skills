@@ -5,7 +5,7 @@ description: "Create source-faithful article illustrations, covers, social cards
 
 # Pinshu Visual System
 
-Public preview: **0.2.0**. Original methods and tools by Aidan (Pinshu), developed with Codex. This is the portable sharing edition of the locally developed visual system. It contains no private character assets, account mappings or private example material. Repository instructions are English; output and visible text follow the user's requested language.
+Public preview: **0.2.1**. Original methods and tools by Aidan (Pinshu), developed with Codex. This is the portable sharing edition of the locally developed visual system. It contains no private character assets, account mappings or private example material. Repository instructions are English; output and visible text follow the user's requested language.
 
 ## Read for the current task
 
@@ -41,7 +41,7 @@ Inspect the actual full-size image and its thumbnail. Fix one real defect at a t
 
 ## Prepare delivery
 
-After actual visual inspection, write the review record described in `references/visual-qa.md`. Run `scripts/publish_image.py` with the image, plan and matching review record. It exports exact platform dimensions, creates a separate metadata-clean PNG copy and verifies pixel preservation. Any failure stops delivery; the source is never used as an export fallback. Inspect the resulting crop and preview as well.
+First export the complete composition with scripts/export_platform_image.py; its default contain fit preserves content. Inspect the final platform image and thumbnail, then write the review record described in `references/visual-qa.md`. Run `scripts/publish_image.py` with the image, plan and matching review record. It packages the reviewed platform-sized image, creates a separate metadata-clean PNG copy and verifies pixel preservation. Any failure stops delivery; the source is never used as an export fallback. Any intended crop must be completed before this review.
 
 Deliver the candidate image, insertion position or page function, source/plan/prompt paths, review evidence and any remaining limitation. Use the prepared copy for the reviewed candidate; keep the original. A mechanical PASS does not mean aesthetic approval, factual verification or permission to publish.
 
@@ -50,3 +50,5 @@ Deliver the candidate image, insertion position or page function, source/plan/pr
 Planning uses Python 3's standard library. Image generation requires an image-capable agent; no account, subscription or image backend is bundled. Export requires ImageMagick 7 (`magick`). Optional business/chart/PPT tools are chosen only when available; exact editable charts are not replaced by a bitmap.
 
 The shared edition is intended for colleagues and other compatible agents to use and improve with the maintainer. Private character files belong in the user's own local project. The installer refuses to overwrite a same-name private/local visual system; upgrade only a marked public installation.
+
+Before delivery, compose required native text, export the final platform image and inspect it and its thumbnail. Hash-bound QA must use review_stage=final-platform-image. For editable text/chart work, include the actual native SVG/PPTX evidence in QA; the wrapper rejects missing native labels. Source-external exact text needs a real declared user approval. See the core visual-qa reference for the precise contract.

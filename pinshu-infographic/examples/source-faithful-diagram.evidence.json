@@ -36,7 +36,7 @@
   "actual_image_review": {
     "reviewer": "Codex actual-image inspection, 2026-10-06",
     "observations": "Actual image inspection: three source-supported steps read Find the claim, Choose the relationship, Review the image; both arrows have the correct direction and verbs then choose / then review. Warm-paper line illustration stays sparse. The hierarchy sketch is an illustration of choosing a relationship, not a factual dataset. No fixed identity or numerical claim. Short labels were visually checked; no editable text requirement in this brief.",
-    "thumbnail_observation": "The main claim and visual direction remain visible at 180px. Full labels are intended for full-width reading, not miniature text.",
+    "thumbnail_observation": "The three orange number circles, left-to-right arrows and headline dominate at 180px; all step labels and arrow verbs are too small for reliable miniature reading. Equal columns and capsule labels visibly repeat a common three-step template.",
     "checks": {
       "source-faithfulness": "pass",
       "visible-text": "pass",
@@ -51,5 +51,9 @@
   },
   "human_review": "pending",
   "aesthetic_approval": false,
-  "batch_stability": "not-established"
+  "batch_stability": "not-established",
+  "followup_review": {
+    "date": "2026-10-06",
+    "scope": "Codex full-image and separate 180px thumbnail review; no new generation or human acceptance"
+  }
 }

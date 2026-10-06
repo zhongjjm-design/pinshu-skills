@@ -240,6 +240,10 @@ def run_executable_gates(full: bool) -> None:
         "public visual-companion regression",
         [sys.executable, "-m", "unittest", "tests/test_visual_companions.py", "-v"],
     )
+    run_check("independent visual-review regressions",
+              [sys.executable, "-m", "unittest", "tests/test_visual_review_regressions.py", "-v"])
+    if os.environ.get("CI") == "true" and not shutil.which("magick"):
+        fail("CI requires ImageMagick 7; real export tests must not be skipped")
     # The film-teardown self-test needs ffmpeg and numpy/soundfile/pillow; CI installs them and runs it as a hard step.
     import importlib.util
     film_deps = all(importlib.util.find_spec(m) for m in ("numpy", "soundfile", "PIL")) and shutil.which("ffmpeg") and shutil.which("ffprobe")
@@ -267,6 +271,8 @@ def run_executable_gates(full: bool) -> None:
             )
     else:
         warnings.append("gitleaks is unavailable; current-tree secret scan skipped")
+        if os.environ.get("CI") == "true":
+            fail("CI requires gitleaks; the secret scan must not be skipped")
 
 
 def main() -> int:

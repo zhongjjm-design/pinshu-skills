@@ -102,7 +102,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--fit",
-        default="cover",
+        default="contain",
         choices=["cover", "contain"],
         help="cover crops expendable edges; contain preserves all information and pads.",
     )
@@ -141,6 +141,15 @@ def main() -> int:
             )
 
         source_geometry = identify(magick, args.source)
+        oriented = run([magick, str(args.source), "-auto-orient", "-format", "%wx%h", "info:"])
+        if oriented.returncode:
+            raise ExportError("Cannot inspect oriented source geometry")
+        source_width, source_height = map(int, oriented.stdout.strip().split("x"))
+        scale = max(width / source_width, height / source_height) if args.fit == "cover" else min(width / source_width, height / source_height)
+        loss_x = max(0.0, 1 - width / (source_width * scale))
+        loss_y = max(0.0, 1 - height / (source_height * scale))
+        gx = 0 if "west" in args.gravity else 1 if "east" in args.gravity else .5
+        gy = 0 if "north" in args.gravity else 1 if "south" in args.gravity else .5
         convert_exact(
             magick,
             args.source,
@@ -214,6 +223,11 @@ def main() -> int:
             "policy": "preserve-generated-original-then-exact-platform-export",
             "source": str(args.source.resolve()),
             "source_geometry": source_geometry,
+            "oriented_source_geometry": oriented.stdout.strip(),
+            "crop_fraction": {"left": loss_x * gx, "right": loss_x * (1 - gx),
+                              "top": loss_y * gy, "bottom": loss_y * (1 - gy)},
+            "content_preserved": loss_x == 0 and loss_y == 0,
+            "semantic_review": "pending; inspect this export and thumbnail before delivery QA",
             "platform": args.platform,
             "profile_version": json.loads(
                 PLATFORM_PROFILES.read_text(encoding="utf-8")
