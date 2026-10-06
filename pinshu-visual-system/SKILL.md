@@ -5,7 +5,7 @@ description: "Create source-faithful article illustrations, covers, social cards
 
 # Pinshu Visual System
 
-Public preview: **0.2.1**. Original methods and tools by Aidan (Pinshu), developed with Codex. This is the portable sharing edition of the locally developed visual system. It contains no private character assets, account mappings or private example material. Repository instructions are English; output and visible text follow the user's requested language.
+Public preview: **0.2.2**. Original methods and tools by Aidan (Pinshu), developed with Codex. This is the portable sharing edition of the locally developed visual system. It contains no private character assets, account mappings or private example material. Repository instructions are English; output and visible text follow the user's requested language.
 
 ## Read for the current task
 
@@ -51,4 +51,6 @@ Planning uses Python 3's standard library. Image generation requires an image-ca
 
 The shared edition is intended for colleagues and other compatible agents to use and improve with the maintainer. Private character files belong in the user's own local project. The installer refuses to overwrite a same-name private/local visual system; upgrade only a marked public installation.
 
-Before delivery, compose required native text, export the final platform image and inspect it and its thumbnail. Hash-bound QA must use review_stage=final-platform-image. For editable text/chart work, include the actual native SVG/PPTX evidence in QA; the wrapper rejects missing native labels. Source-external exact text needs a real declared user approval. See the core visual-qa reference for the precise contract.
+Before delivery, compose required native text, export the final platform image and inspect it and its thumbnail. Hash-bound QA must use review_stage=final-platform-image. For editable text/chart work, include the actual native SVG/PPTX evidence in QA; the wrapper rejects missing native labels and requires a verified render receipt. Source-external exact text needs a real declared user approval. See the core visual-qa reference for the precise contract.
+
+For native SVG/PPTX composition, read [editable rendering](references/editable-rendering.md). Render with its explicit font and receipt workflow, review the final PNG, then verify re-render pixel identity during delivery.

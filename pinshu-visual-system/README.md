@@ -1,4 +1,4 @@
-# Pinshu Visual System - public preview 0.2.1
+# Pinshu Visual System - public preview 0.2.2
 
 A usable shared visual workflow developed by Aidan (Pinshu) with Codex: read the content, select a visual relationship and style, generate with your agent, inspect the actual image, and export a reviewed candidate for its platform.
 
@@ -31,7 +31,7 @@ The saved [compiled prompt](examples/draft-review.compiled-prompt.txt) and [evid
 
 ## The complete visual set
 
-Use [pinshu-infographic](../pinshu-infographic/README.md) for knowledge-diagram source anchors, relations and density. Use [pinshu-business-graphics](../pinshu-business-graphics/README.md) for the seven business mothers and commercial mechanism review. Both public companions require this public core 0.2.1 or later in a sibling folder. The repository installer adds the full set together and refuses to replace private installations of any of these names.
+Use [pinshu-infographic](../pinshu-infographic/README.md) for knowledge-diagram source anchors, relations and density. Use [pinshu-business-graphics](../pinshu-business-graphics/README.md) for the seven business mothers and commercial mechanism review. Both public companions require this public core 0.2.2 or later in a sibling folder. The repository installer adds the full set together and refuses to replace private installations of any of these names.
 
 ## Cultural-poster method experiments
 

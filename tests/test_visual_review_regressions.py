@@ -10,6 +10,7 @@ import sys
 import tempfile
 import unittest
 import zlib
+import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 for package in ["pinshu-visual-system", "pinshu-infographic", "pinshu-business-graphics"]:
@@ -20,6 +21,7 @@ from visual_compiler import compile_plan
 from publish_image import CHECKS, WORKFLOW_CHECKS, prepare, reviewed_editable_source
 from prepare_publish_images import residual_provenance, PublishPrepError
 from visual_contracts import anchor
+from render_editable import render, native_inventory
 
 
 def chunk(kind, data):
@@ -86,7 +88,7 @@ class ReviewRegressions(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "absent from the source"):
             compile_plan(**args, exact_text=["\u6536\u51652026\u4e07\u5143"])
         plan = compile_plan(**args, exact_text=["\u56e2\u961f\u5de5\u4f5c\u53f0"], approved_external_text=[
-            {"text": "\u56e2\u961f\u5de5\u4f5c\u53f0", "approved_by": "human fixture", "reason": "requested editorial heading"}])
+            {"text": "\u56e2\u961f\u5de5\u4f5c\u53f0", "approved_by": "human fixture", "reason": "requested editorial heading", "user_quote": "Use this requested editorial heading"}])
         self.assertEqual(plan["exact_text_evidence"][0]["origin"], "declared-user-approval")
 
     def test_weak_excerpt_is_not_a_useful_anchor(self):
@@ -116,22 +118,42 @@ class ReviewRegressions(unittest.TestCase):
             with self.subTest(kind=kind, body=body), self.assertRaises(PublishPrepError):
                 residual_provenance(insert(kind, body))
 
+    def font_file(self):
+        candidates = [Path("/System/Library/Fonts/STHeiti Light.ttc"), Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc")]
+        for candidate in candidates:
+            if candidate.is_file():
+                return candidate
+        self.skipTest("The documented CJK test font is not installed")
+
+    def bind_native(self, root, native, image, qa):
+        receipt = render(native, self.font_file(), "wechat-article", image)
+        rp = root / "render-receipt.json"; rp.write_text(json.dumps(receipt))
+        review = json.loads(qa.read_text())
+        review["source_sha256"] = hashlib.sha256(image.read_bytes()).hexdigest()
+        review["editable_source"] = {"path": native.name, "sha256": hashlib.sha256(native.read_bytes()).hexdigest(),
+            "rendered_image_sha256": review["source_sha256"], "render_receipt": rp.name}
+        qa.write_text(json.dumps(review))
+        return review
+
+    @unittest.skipUnless(shutil.which("magick"), "ImageMagick 7 is required")
     def test_native_chart_evidence_accepts_values_and_rejects_tampering(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp); native = root / "chart.svg"
-            native.write_text('<svg xmlns="http://www.w3.org/2000/svg"><text>Sales</text><text>2025 1,200</text></svg>')
+            native.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><text x="50" y="100">Sales</text><text x="50" y="200">2025</text><text x="50" y="300">1,200</text></svg>')
+            image = root / "image.png"; qp = root / "qa.json"; qp.write_text('{}')
+            qa = self.bind_native(root, native, image, qp)
+            qa["additional_text_review"] = [{"text": "1,200", "origin": "dataset-value", "reason": "reviewed value"}]
             plan = {"rendering": {"strategy": "editable-chart-final"}, "visible_labels": ["Sales"],
+                    "visual_card": {"platform": "wechat-article"},
                     "structured_content": {"dataset": {"rows": [{"label": "2025", "value": 1200}]}}}
-            qa = {"editable_source": {"path": "chart.svg", "sha256": hashlib.sha256(native.read_bytes()).hexdigest(),
-                                      "rendered_image_sha256": "fixture-image-hash"}}
-            result = reviewed_editable_source(plan, qa, root / "qa.json", "fixture-image-hash")
-            self.assertEqual(result["native_labels_checked"], ["Sales"])
+            result = reviewed_editable_source(plan, qa, qp, qa["source_sha256"], image)
+            self.assertEqual(result["re_render_pixel_difference_ae"], 0)
             plan["structured_content"]["dataset"]["rows"][0]["value"] = 1300
             with self.assertRaisesRegex(ValueError, "dataset labels and values"):
-                reviewed_editable_source(plan, qa, root / "qa.json", "fixture-image-hash")
+                reviewed_editable_source(plan, qa, qp, qa["source_sha256"], image)
             native.write_text('<svg xmlns="http://www.w3.org/2000/svg"><text>changed</text></svg>')
             with self.assertRaisesRegex(ValueError, "hash does not match"):
-                reviewed_editable_source(plan, qa, root / "qa.json", "fixture-image-hash")
+                reviewed_editable_source(plan, qa, qp, qa["source_sha256"], image)
 
     def delivery_inputs(self, root, size=(1600, 900), editable=False):
         plan = compile_plan("\u6807\u9898\u6765\u81ea\u771f\u5b9e\u539f\u6587", "wechat-article", "warm-paper", "single-claim", title="\u6807\u9898\u6765\u81ea\u771f\u5b9e\u539f\u6587")
@@ -160,10 +182,90 @@ class ReviewRegressions(unittest.TestCase):
                 prepare(image, pp, qa, root / "delivery")
             native = root / "layer.svg"; native.write_text('<svg xmlns="http://www.w3.org/2000/svg"><text>\u65e0\u5173\u6587\u5b57</text></svg>')
             review = json.loads(qa.read_text()); review["editable_source"] = {"path": "layer.svg",
-                "sha256": hashlib.sha256(native.read_bytes()).hexdigest(), "rendered_image_sha256": review["source_sha256"]}
+                "sha256": hashlib.sha256(native.read_bytes()).hexdigest(), "rendered_image_sha256": review["source_sha256"], "render_receipt": "receipt.json"}
+            (root / "receipt.json").write_text("{}")
             qa.write_text(json.dumps(review))
             with self.assertRaisesRegex(ValueError, "missing native labels"):
                 prepare(image, pp, qa, root / "delivery")
+
+    def test_compound_units_suffixes_and_metric_context(self):
+        for text, value, unit in [("\u51fa\u53e3\u989d\u8fbe\u5230300\u4ebf\u7f8e\u5143", 300, "\u4ebf\u7f8e\u5143"),
+                                  ("\u9500\u91cf\u8fbe\u5230120\u4e07\u8f86", 120, "\u4e07\u8f86"),
+                                  ("Revenue reached $1.2B", 1.2, "B"), ("Volume reached 1.2 billion units", 1.2, "billion units")]:
+            data = {"source": "fixture", "period": "2025", "units": unit, "methodology": "fixture", "verified_by": "fixture", "status": "verified",
+                    "rows": [{"label": "metric", "value": value, "source_excerpt": text}]}
+            with self.subTest(text=text):
+                self.assertEqual(check_dataset(data, text), data)
+        for text, value, unit in [("300\u4ebf\u5143", 300, "\u4ebf\u5143"), ("\u5e74\u4efd2025\u5e74", 2025, "%")]:
+            data["units"] = unit; data["rows"] = [{"label": "metric", "value": value, "source_excerpt": text}]
+            with self.subTest(text=text), self.assertRaises(ValueError):
+                check_dataset(data, text)
+
+    def test_agent_approval_and_nested_typo_are_rejected(self):
+        args = dict(content="Actual source text", platform="wechat-article", mode_id="warm-paper", structure="single-claim")
+        with self.assertRaisesRegex(ValueError, "human approval"):
+            compile_plan(**args, exact_text=["Unverified"], approved_external_text=[
+                {"text": "Unverified", "approved_by": "agent", "reason": "estimate", "user_quote": "made up"}])
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); path = self.write_brief(root); data = json.loads(path.read_text())
+            data["units"][0]["lable"] = "typo"; path.write_text(json.dumps(data))
+            with self.assertRaisesRegex(ValueError, "Unknown brief fields"):
+                compile_infographic(path)
+
+    def test_linked_pptx_chart_data_is_native_editable_evidence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "chart.pptx"
+            with zipfile.ZipFile(p, "w") as z:
+                z.writestr("ppt/slides/slide1.xml", '<p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><c:chart r:id="rId1"/></p:sld>')
+                z.writestr("ppt/slides/_rels/slide1.xml.rels", '<Relationships><Relationship Id="rId1" Target="../charts/chart1.xml"/></Relationships>')
+                z.writestr("ppt/charts/chart1.xml", '<c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart"><c:ser><c:cat><c:strCache><c:pt idx="0"><c:v>Revenue</c:v></c:pt></c:strCache></c:cat><c:val><c:numCache><c:pt idx="0"><c:v>1200</c:v></c:pt></c:numCache></c:val></c:ser></c:chartSpace>')
+            inventory = native_inventory(p)
+            self.assertEqual(str(inventory["chart_points"][0][1]), "1200")
+            self.assertEqual(inventory["chart_points"][0][0], "Revenue")
+            with zipfile.ZipFile(p, "a") as z:
+                z.writestr("ppt/presentation.xml", '<p:presentation xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><p:sldIdLst><p:sldId r:id="second"/><p:sldId r:id="first"/></p:sldIdLst></p:presentation>')
+                z.writestr("ppt/_rels/presentation.xml.rels", '<Relationships><Relationship Id="first" Target="slides/slide1.xml"/><Relationship Id="second" Target="slides/slide2.xml"/></Relationships>')
+                z.writestr("ppt/slides/slide2.xml", '<p:sld xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:p><a:r><a:t>Second slide</a:t></a:r></a:p></p:sld>')
+            self.assertEqual(native_inventory(p, 1)["texts"], ["Second slide"])
+            self.assertEqual(native_inventory(p, 2)["chart_points"][0][0], "Revenue")
+
+    @unittest.skipUnless(shutil.which("magick"), "ImageMagick 7 is required")
+    def test_actual_rerender_rejects_stale_preview_hidden_and_substring_labels(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); image, pp, qa = self.delivery_inputs(root, editable=True)
+            title = json.loads(pp.read_text())["visible_labels"][0]
+            native = root / "native.svg"
+            native.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><text x="70" y="150" font-size="60">' + title + '</text></svg>')
+            review = self.bind_native(root, native, image, qa)
+            self.assertEqual(prepare(image, pp, qa, root / "good-delivery")["editable_source"]["re_render_pixel_difference_ae"], 0)
+            # Modify layout, update declarations honestly, but deliberately keep the old PNG.
+            native.write_text(native.read_text().replace('x="70"', 'x="270"'))
+            receipt_path = root / "render-receipt.json"; receipt = json.loads(receipt_path.read_text())
+            receipt["source_sha256"] = hashlib.sha256(native.read_bytes()).hexdigest(); receipt_path.write_text(json.dumps(receipt))
+            review["editable_source"]["sha256"] = receipt["source_sha256"]; qa.write_text(json.dumps(review))
+            with self.assertRaisesRegex(ValueError, "re-render differs"):
+                prepare(image, pp, qa, root / "stale")
+            native.write_text(native.read_text().replace(title, "NOT " + title))
+            review["editable_source"]["sha256"] = hashlib.sha256(native.read_bytes()).hexdigest(); qa.write_text(json.dumps(review))
+            with self.assertRaisesRegex(ValueError, "whole text segments"):
+                prepare(image, pp, qa, root / "substring")
+            native.write_text(native.read_text().replace('<text ', '<text opacity="0" '))
+            with self.assertRaisesRegex(ValueError, "hidden or transparent"):
+                native_inventory(native)
+
+    @unittest.skipUnless(shutil.which("magick"), "ImageMagick 7 is required")
+    def test_unplanned_native_text_needs_actual_review(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); image, pp, qa = self.delivery_inputs(root, editable=True)
+            title = json.loads(pp.read_text())["visible_labels"][0]
+            native = root / "native.svg"
+            native.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><text x="70" y="150">' + title + '</text><text x="70" y="300">Supplemental note</text></svg>')
+            review = self.bind_native(root, native, image, qa)
+            with self.assertRaisesRegex(ValueError, "Unreviewed additional native text"):
+                prepare(image, pp, qa, root / "unreviewed")
+            review["additional_text_review"] = [{"text": "Supplemental note", "origin": "structural-label", "reason": "Reviewed nonfactual annotation label"}]
+            qa.write_text(json.dumps(review))
+            self.assertEqual(prepare(image, pp, qa, root / "reviewed")["editable_source"]["additional_text_review"][0]["text"], "Supplemental note")
 
     @unittest.skipUnless(shutil.which("magick"), "ImageMagick 7 is required")
     def test_contain_export_preserves_edge_content_and_cover_reports_crop(self):

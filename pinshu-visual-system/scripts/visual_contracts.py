@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import re
 import unicodedata
 
 
@@ -49,8 +50,10 @@ def check_exact_text(exact: object, source: str, approvals: object = None) -> li
     declared = {}
     for item in approvals:
         if not isinstance(item, dict) or any(not isinstance(item.get(k), str) or not item[k].strip()
-                                             for k in ("text", "approved_by", "reason")):
-            raise ValueError("Each external text approval needs text, approved_by and reason")
+                                             for k in ("text", "approved_by", "reason", "user_quote")):
+            raise ValueError("Each external text approval needs text, approved_by, reason and the real user_quote")
+        if re.match(r"(?i)^(agent|assistant|codex|claude|gpt|ai)(?:\b|[-_])", item["approved_by"]):
+            raise ValueError("External text requires a human approval, not an agent estimate")
         if item["text"] not in exact or item["text"] in declared:
             raise ValueError("External text approvals must uniquely name an exact_text label")
         declared[item["text"]] = item
@@ -81,6 +84,7 @@ def check_units(units: object, source: str, maximum: int) -> list[dict]:
     for unit in units:
         if not isinstance(unit, dict):
             raise ValueError("Each unit must have id, label and source_excerpt")
+        check_brief_fields(unit, {"id", "label", "source_excerpt"}, "unit")
         identifier, label = unit.get("id"), unit.get("label")
         if not isinstance(identifier, str) or not identifier.strip() or identifier in identifiers:
             raise ValueError("Unit IDs must be nonempty and unique")
@@ -99,6 +103,7 @@ def check_relations(relations: object, units: list[dict], source: str, structure
     for relation in relations:
         if not isinstance(relation, dict):
             raise ValueError("Each relation must name its endpoints, verb and source_excerpt")
+        check_brief_fields(relation, {"from", "to", "verb", "source_excerpt"}, "relation")
         pair = (relation.get("from"), relation.get("to"))
         if pair[0] not in ids or pair[1] not in ids or pair[0] == pair[1] or pair in edges:
             raise ValueError("Relationship endpoints must be distinct existing units; no duplicate edges")

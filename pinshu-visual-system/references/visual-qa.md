@@ -50,7 +50,8 @@ When text_route=editable-text-layer or an editable chart is required, add this t
   "editable_source": {
     "path": "final.svg",
     "sha256": "HASH_OF_NATIVE_SVG_OR_PPTX",
-    "rendered_image_sha256": "HASH_OF_THE_FINAL_PLATFORM_IMAGE"
+    "rendered_image_sha256": "HASH_OF_THE_FINAL_PLATFORM_IMAGE",
+    "render_receipt": "rendered/render-receipt.json"
   }
 }
 ```
@@ -58,3 +59,5 @@ When text_route=editable-text-layer or an editable chart is required, add this t
 Use native SVG text or native PowerPoint text; embed SVG image assets. Raster-only/PDF sources, missing files, changed files, absent labels or a mismatched bitmap are rejected. Native data-chart labels and numbers are also checked. These checks establish an artifact contract, not truth, correct chart geometry or honest review: inspect the actual native source and its complete rendered preview.
 
 If packaging fails, delivery-report.json says FAIL and all sub-step artifacts remain intermediates. Only a successful top-level delivery report lists usable candidate artifacts; a platform sub-step PASS cannot approve a failed delivery. Human acceptance stays pending.
+
+Native delivery now requires editable_source.render_receipt. Follow [editable rendering](editable-rendering.md); the wrapper re-renders and compares pixels, matches whole labels, and inventories additional native text through additional_text_review. Previous file/hash-only receipts are not sufficient.

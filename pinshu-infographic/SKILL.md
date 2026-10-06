@@ -5,11 +5,11 @@ description: "Turn source material into readable knowledge diagrams: processes, 
 
 # Pinshu Infographic
 
-Public preview **0.1.1**, created by Aidan (Pinshu) with Codex. Read the actual source, expose one information relationship and produce a readable diagram. This portable edition includes no personal character artwork or private examples.
+Public preview **0.1.2**, created by Aidan (Pinshu) with Codex. Read the actual source, expose one information relationship and produce a readable diagram. This portable edition includes no personal character artwork or private examples.
 
 ## Dependencies and routing
 
-Requires the public pinshu-visual-system 0.2.1 or later package beside this folder. It owns mode cards, optional approved character profiles, platform presets, generation planning and delivery. This package adds source-anchored units, arrow meaning, reading density and diagram review. If the public core is missing, report the dependency; do not overwrite or use an existing private core.
+Requires the public pinshu-visual-system 0.2.2 or later package beside this folder. It owns mode cards, optional approved character profiles, platform presets, generation planning and delivery. This package adds source-anchored units, arrow meaning, reading density and diagram review. If the public core is missing, report the dependency; do not overwrite or use an existing private core.
 
 Read `references/logic-and-density.md` for content structure and viewing distance, `references/mode-routing.md` for style choice, `references/visual-qa.md` for diagram review, and `references/quickstart.md` for the executable brief and delivery commands. Load the complete selected mode card from the public core.
 
@@ -36,3 +36,5 @@ Inspect the actual full image and the thumbnail. Check source meaning, labels, a
 Use the public core's scripts/publish_image.py for platform export and a separate metadata-clean copy. Any export failure stops delivery. Report image, source, brief, prompt, plan and review paths; state text-layer completion and remaining limitations. Agent review, mechanical PASS and the user's aesthetic acceptance are separate states. This edition is usable for shared trials, not a claim that every topic is stable in batches.
 
 Before delivery, compose required native text, export the final platform image and inspect it and its thumbnail. Hash-bound QA must use review_stage=final-platform-image. For editable text/chart work, include the actual native SVG/PPTX evidence in QA; the wrapper rejects missing native labels. Source-external exact text needs a real declared user approval. See the core visual-qa reference for the precise contract.
+
+For native SVG/PPTX composition, read the sibling core reference `../pinshu-visual-system/references/editable-rendering.md`. Render with its explicit font and receipt workflow, review the final PNG, then verify re-render pixel identity during delivery.

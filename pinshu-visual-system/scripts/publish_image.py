@@ -13,6 +13,7 @@ import struct
 import unicodedata
 import xml.etree.ElementTree as ET
 import zipfile
+from render_editable import native_inventory, verify_render
 from prepare_publish_images import png_chunks, pixel_difference, is_zero_pixel_difference, PublishPrepError
 
 CHECKS = ("source-faithfulness", "visible-text", "mode-and-composition",
@@ -24,7 +25,7 @@ WORKFLOW_CHECKS = {
 }
 
 
-def reviewed_editable_source(plan: dict, qa: dict, qa_path: Path, image_hash: str) -> dict | None:
+def reviewed_editable_source(plan: dict, qa: dict, qa_path: Path, image_hash: str, image_path: Path) -> dict | None:
     chart = plan.get("rendering", {}).get("strategy") == "editable-chart-final"
     if plan.get("text_route") != "editable-text-layer" and not chart:
         return None
@@ -32,52 +33,66 @@ def reviewed_editable_source(plan: dict, qa: dict, qa_path: Path, image_hash: st
     if not isinstance(evidence, dict) or not isinstance(evidence.get("path"), str):
         raise ValueError("An editable chart final requires a reviewed editable_source" if chart else
                          "Editable text delivery requires a reviewed editable_source, not only a background")
-    path = Path(evidence["path"])
-    if not path.is_absolute():
-        path = qa_path.parent / path
-    path = path.resolve()
+    resolve = lambda value: (qa_path.parent / value).resolve()
+    path = resolve(evidence["path"])
     if not path.is_file() or evidence.get("sha256") != hashlib.sha256(path.read_bytes()).hexdigest():
         raise ValueError("Editable source is missing or its hash does not match")
     if evidence.get("rendered_image_sha256") != image_hash:
         raise ValueError("Editable source review must bind its final rendered image")
-    if path.suffix.lower() == ".svg":
-        document = ET.fromstring(path.read_bytes())
-        for element in document.iter():
-            if element.tag.rsplit("}", 1)[-1] in {"script", "foreignObject"}:
-                raise ValueError("Editable SVG must use native SVG text and self-contained graphics")
-            for attr, value in element.attrib.items():
-                if attr.rsplit("}", 1)[-1] == "href" and value and not value.startswith(("data:", "#")):
-                    raise ValueError("Embed SVG assets instead of depending on external or local files")
-        texts = ["".join(e.itertext()) for e in document.iter() if e.tag.rsplit("}", 1)[-1] == "text"]
-    elif path.suffix.lower() == ".pptx":
-        texts = []
-        with zipfile.ZipFile(path) as deck:
-            for name in deck.namelist():
-                if name.startswith("ppt/slides/slide") and name.endswith(".xml"):
-                    document = ET.fromstring(deck.read(name))
-                    texts.extend(e.text or "" for e in document.iter() if e.tag.endswith("}t"))
-    else:
-        raise ValueError("Supply a native-text SVG or PPTX editable source; a raster/PDF is not editable text")
-    normalize = lambda s: "".join(unicodedata.normalize("NFC", s).split())
-    native = normalize(" ".join(texts))
+    receipt_path = resolve(evidence.get("render_receipt", ""))
+    if not receipt_path.is_file():
+        raise ValueError("Editable delivery requires a render_editable.py render_receipt; declarations alone do not bind pixels")
+    receipt = json.loads(receipt_path.read_text())
+    inventory = native_inventory(path, receipt.get("slide", 1))
+    normalize = lambda text: "".join(unicodedata.normalize("NFC", text).split())
+    segments = {normalize(text) for text in inventory["texts"]}
     content = plan.get("structured_content", {})
     labels = list(plan.get("visible_labels", [])) + [u["label"] for u in content.get("units", [])]
     labels += [r["verb"] for r in content.get("relations", [])]
     if content.get("claim"):
         labels.append(content["claim"])
-    missing = [label for label in set(labels) if normalize(label) not in native]
+    missing = [label for label in set(labels) if normalize(label) not in segments]
     if missing:
-        raise ValueError("Editable source has missing native labels: " + ", ".join(sorted(missing)))
+        raise ValueError("Editable source has missing native labels (whole text segments): " + ", ".join(sorted(missing)))
+    dataset = content.get("dataset") or {}
     if chart:
-        # Data geometry still requires actual data-accuracy review; this checks native labels/values only.
         from decimal import Decimal
         import re
-        numbers = {Decimal(x.replace(",", "")) for x in re.findall(r"[+-]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?", " ".join(texts))}
-        for row in content.get("dataset", {}).get("rows", []):
-            if normalize(row["label"]) not in native or Decimal(str(row["value"])) not in numbers:
-                raise ValueError("Editable chart must contain its dataset labels and values as native text")
+        numbers = {Decimal(x.replace(",", "")) for text in inventory["texts"] for x in
+                   re.findall(r"[+-]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?", text)}
+        for row in dataset.get("rows", []):
+            native_pair = (row["label"], Decimal(str(row["value"]))) in inventory["chart_points"]
+            text_pair = normalize(row["label"]) in segments and Decimal(str(row["value"])) in numbers
+            if not native_pair and not text_pair:
+                raise ValueError("Editable chart must contain its dataset labels and values as native text or linked chart data")
+    original = ""
+    source_info = plan.get("source", {})
+    if source_info.get("path"):
+        source_file = Path(source_info["path"])
+        if source_file.is_file():
+            if hashlib.sha256(source_file.read_bytes()).hexdigest() != source_info.get("file_sha256", source_info.get("sha256")):
+                raise ValueError("Original source changed; review the plan and visible text again")
+            original = source_file.read_text()
+    allowed = {normalize(x) for x in labels + [row["label"] for row in dataset.get("rows", [])]}
+    declarations = {normalize(item["text"]): item for item in qa.get("additional_text_review", [])}
+    additional = []
+    for text in inventory["texts"]:
+        if normalize(text) in allowed:
+            continue
+        if original and text in original:
+            additional.append({"text": text, "origin": "literal-source"})
+            continue
+        item = declarations.get(normalize(text))
+        if not item or item.get("origin") not in {"editorial-paraphrase", "structural-label", "dataset-value"} or not item.get("reason"):
+            raise ValueError("Unreviewed additional native text: " + text + "; list it in additional_text_review with origin and reason")
+        if item["origin"] == "editorial-paraphrase" and (not item.get("source_excerpt") or item["source_excerpt"] not in original):
+            raise ValueError("Additional paraphrase needs a matching source_excerpt")
+        additional.append(item)
+    binding = verify_render(path, image_path, receipt, plan["visual_card"]["platform"])
     return {"path": str(path), "sha256": evidence["sha256"], "rendered_image_sha256": image_hash,
-            "native_labels_checked": sorted(set(labels)), "scope": "file/hash/native-text checks; actual composition and data geometry require review"}
+            "render_receipt": str(receipt_path), "render_receipt_sha256": hashlib.sha256(receipt_path.read_bytes()).hexdigest(),
+            "native_labels_checked": sorted(set(labels)), "additional_text_review": additional, **binding,
+            "scope": "native labels/data and actual re-render pixel binding; semantics, other visibility and chart geometry require review"}
 
 def prepare(source: Path, plan_path: Path, qa_path: Path, output_dir: Path) -> dict:
     plan = json.loads(plan_path.read_text())
@@ -96,7 +111,7 @@ def prepare(source: Path, plan_path: Path, qa_path: Path, output_dir: Path) -> d
     required = CHECKS + WORKFLOW_CHECKS.get(kind, ())
     if any(qa.get("checks", {}).get(check) != "pass" for check in required):
         raise ValueError("Visual review is incomplete or contains failures")
-    editable = reviewed_editable_source(plan, qa, qa_path, expected)
+    editable = reviewed_editable_source(plan, qa, qa_path, expected, source)
     if qa.get("review_stage") != "final-platform-image":
         raise ValueError("Export first, inspect the final platform image and thumbnail, then write review_stage=final-platform-image")
     chunks = png_chunks(source.read_bytes())
@@ -134,6 +149,7 @@ def prepare(source: Path, plan_path: Path, qa_path: Path, output_dir: Path) -> d
             if hashlib.sha256(saved.read_bytes()).hexdigest() != editable["sha256"]:
                 raise ValueError("Editable delivery copy changed")
             editable["delivery_copy"] = str(saved.resolve())
+            shutil.copyfile(editable["render_receipt"], saved.parent / "render-receipt.json")
     except Exception as exc:
         (output_dir / "delivery-report.json").write_text(json.dumps({"status": "FAIL", "deliverable": False,
             "error": str(exc), "intermediates": "not approved for delivery"}, indent=2) + "\n")
@@ -154,7 +170,7 @@ def main() -> int:
     args = parser.parse_args()
     try:
         result = prepare(args.source, args.plan, args.qa, args.output_dir)
-    except (OSError, ValueError, KeyError, TypeError, PublishPrepError, ET.ParseError, zipfile.BadZipFile) as exc:
+    except (OSError, ValueError, KeyError, TypeError, PublishPrepError, ET.ParseError, zipfile.BadZipFile, subprocess.TimeoutExpired) as exc:
         parser.exit(1, f"HARD_STOP: {exc}\n")
     print(result["status"])
     return 0

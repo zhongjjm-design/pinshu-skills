@@ -15,7 +15,7 @@ jobs:
       - name: Install verified visual-test dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install --yes build-essential pkg-config libpng-dev libjpeg-dev libfreetype6-dev
+          sudo apt-get install --yes build-essential pkg-config libpng-dev libjpeg-dev libfreetype6-dev fonts-noto-cjk libreoffice-impress poppler-utils
           curl --fail --location https://github.com/ImageMagick/ImageMagick/archive/ad98b244c995d2e3051757fa3b7855f45b550d24.tar.gz --output "$RUNNER_TEMP/imagemagick.tar.gz"
           tar -xzf "$RUNNER_TEMP/imagemagick.tar.gz" -C "$RUNNER_TEMP"
           cd "$RUNNER_TEMP/ImageMagick-ad98b244c995d2e3051757fa3b7855f45b550d24"

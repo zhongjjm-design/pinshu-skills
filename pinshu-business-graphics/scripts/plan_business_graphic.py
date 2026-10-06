@@ -18,8 +18,8 @@ try:
     core_version = tuple(int(part) for part in (CORE / "VERSION").read_text().strip().split("."))
 except (OSError, ValueError):
     raise SystemExit("HARD_STOP: The public core has no valid VERSION; reinstall the complete visual set") from None
-if core_version < (0, 2, 1):
-    raise SystemExit("HARD_STOP: This companion requires public pinshu-visual-system 0.2.1 or later; upgrade the complete visual set")
+if core_version < (0, 2, 2):
+    raise SystemExit("HARD_STOP: This companion requires public pinshu-visual-system 0.2.2 or later; upgrade the complete visual set")
 sys.path.insert(0, str(CORE / "scripts"))
 from visual_compiler import digest, load_configs
 from visual_contracts import anchor, check_relations, check_units, read_source, save_plan, check_brief_fields, check_exact_text, text_delivery
@@ -47,7 +47,7 @@ def check_dataset(dataset: object, source: str) -> dict:
         if isinstance(value, bool) or not number.is_finite():
             raise ValueError("Data values must be finite numbers")
         excerpt = anchor(row.get("source_excerpt"), source)
-        tokens = re.finditer(r"(?<![0-9A-Za-z.+-])([+-]?(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?)(?![0-9A-Za-z]|[.,][0-9])", excerpt)
+        tokens = re.finditer(r"(?<![0-9A-Za-z.+-])([+-]?(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?)(?![0-9]|[.,][0-9])", excerpt)
         matches = [match for match in tokens if Decimal(match[1].replace(",", "")) == number]
         if not matches:
             raise ValueError("The exact data value must occur in its source excerpt")
@@ -55,16 +55,27 @@ def check_dataset(dataset: object, source: str) -> dict:
         if not isinstance(declared_unit, str) or not declared_unit.strip():
             raise ValueError("Each data row needs a declared unit")
         unit_aliases = {"percent": "%", "percentage": "%", "\uff05": "%"}
-        normalize_unit = lambda u: unit_aliases.get(u.strip().lower(), u.strip().lower())
-        observed = []
+        declared = unit_aliases.get(declared_unit.strip().lower(), declared_unit.strip())
+        valid_context = False
         for match in matches:
-            unit = re.match(r"(?:[%\uff05]|[A-Za-z]+|[\u4e07\u4ebf\u5343\u767e]?(?:\u4eba|\u5143|\u5f20|\u4ef6|\u5428|\u6237|\u4e2a)|\u4ebf|\u4e07)", excerpt[match.end():].lstrip())
-            if unit:
-                observed.append(normalize_unit(unit[0]))
-        if observed and normalize_unit(declared_unit) not in observed:
+            tail = excerpt[match.end():].lstrip()
+            pattern = re.escape(declared).replace(r"\ ", r"\s+")
+            unit = re.match(pattern, tail.replace("\uff05", "%"), flags=re.I)
+            if not unit:
+                continue
+            remainder = tail[unit.end():]
+            if declared[-1:].isascii() and declared[-1:].isalpha() and remainder[:1].isascii() and remainder[:1].isalpha():
+                continue
+            if declared in {"\u4e07", "\u4ebf", "\u5343", "\u767e"} and re.match(r"[\u4e00-\u9fff]", remainder):
+                continue
+            context = excerpt[:match.start()].rstrip("$\u00a5\u20ac\u00a3 ") + remainder
+            if sum(c.isalpha() for c in context) >= 2:
+                valid_context = True
+                break
+        if not valid_context:
+            if any(excerpt[match.end():].strip() == declared for match in matches) and not any(c.isalpha() for c in excerpt[:matches[0].start()]):
+                raise ValueError("Data excerpts need metric context, not a bare number and unit")
             raise ValueError("Declared units or scale do not match the source value; specify per-row units for mixed metrics")
-        if re.fullmatch(r"[0-9.,+\-eE\s%\uff05]+", excerpt):
-            raise ValueError("Data excerpts need metric context, not a bare number")
     return dataset
 
 
@@ -138,8 +149,8 @@ def compile_business(brief_path: Path) -> tuple[dict, str]:
         "Show a true loop only with a supported return path. Proposed metaphors are design interpretations, not facts. No invented data, pseudo-sources or generic technology decoration."
     ])
     return {
-        "schema_version": "public-visual-plan-v1", "version": "0.1.1", "status": "candidate-plan",
-        "workflow": {"kind": "pinshu-business-graphics", "version": "0.1.1"},
+        "schema_version": "public-visual-plan-v1", "version": "0.1.2", "status": "candidate-plan",
+        "workflow": {"kind": "pinshu-business-graphics", "version": "0.1.2"},
         "source": {"path": str(source_path), "sha256": hashlib.sha256(source.encode()).hexdigest(),
                    "file_sha256": digest(source_path)},
         "registry_sha256": digest(CORE / "references/system-registry.json"),
