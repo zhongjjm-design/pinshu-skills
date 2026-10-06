@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinshu Business Graphics"
+  short_description: "Seven evidence-aware business visual methods"
+  default_prompt: "Use $pinshu-business-graphics to turn this source into a deliberate, reviewed business visual."

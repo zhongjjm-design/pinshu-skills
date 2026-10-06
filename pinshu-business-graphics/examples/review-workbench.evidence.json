@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-06",
+  "sample": "review-workbench",
+  "status": "candidate-ready-for-review",
+  "source_file": "source.md",
+  "source_sha256": "40ce0ac54f29fda0ada94e76f45cfa3482e6710a636646a9a7f0586b811ffb50",
+  "generation_record": "review-workbench.generation.json",
+  "generation_record_sha256": "d38de079bf42c1e6f73c39fd2afcc5335971d337d6c32915f59164f75dc2f887",
+  "generation_channel": "Codex native image_gen",
+  "actual_model": null,
+  "generated_original_sha256": "944be2cf643c8e5aefd28a5becd1eb2a3c66085d350570a27fda2adf3c2d12f4",
+  "generated_original_retained_locally": true,
+  "public_image": "review-workbench.png",
+  "public_image_sha256": "35f275884added305c8f11c3d542aedd3aaa759ca044c37167258302fdf3ccd1",
+  "workflow": {
+    "kind": "pinshu-business-graphics",
+    "version": "0.1.0"
+  },
+  "visual_card": {
+    "character": "none",
+    "task": "business-graphic",
+    "structure": "process",
+    "layout": "linear-steps",
+    "mode": null,
+    "mother": "engineering-blueprint-narrative",
+    "platform": "wechat-article",
+    "density": "social",
+    "units": 4
+  },
+  "method_status": null,
+  "mechanical_checks": {
+    "platform_export": "PASS",
+    "output_geometry": "1600x900",
+    "metadata_clean_copy": "PASS",
+    "pixel_difference_ae": 0
+  },
+  "actual_image_review": {
+    "reviewer": "Codex actual-image inspection, 2026-10-06",
+    "observations": "Actual revised image inspection: Source -> Candidate -> Review -> Export, cyan Prepare/Check/Pass flow and dashed terracotta Revise returning Review to Candidate. The review gate controls export. Open inspection-workbench schematic replaces the rejected four equal cards. This is an explicitly proposed editorial metaphor; no dataset, invented metrics or branded identity. A single-image example establishes no series or batch consistency. All visible labels were checked; title Review before export is accurate.",
+    "thumbnail_observation": "The main claim and visual direction remain visible at 180px. Full labels are intended for full-width reading, not miniature text.",
+    "checks": {
+      "source-faithfulness": "pass",
+      "visible-text": "pass",
+      "mode-and-composition": "pass",
+      "identity-and-actions": "pass",
+      "thumbnail-and-crop": "pass",
+      "mother-integrity": "pass",
+      "metaphor-source-fit": "pass",
+      "data-accuracy": "pass",
+      "series-consistency": "pass",
+      "text-delivery": "pass"
+    },
+    "scope": "Agent inspection; not human aesthetic approval"
+  },
+  "human_review": "pending",
+  "aesthetic_approval": false,
+  "batch_stability": "not-established"
+}

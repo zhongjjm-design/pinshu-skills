@@ -1,0 +1,24 @@
+{
+  "source_file": "source.md",
+  "claim": "Review before export",
+  "claim_source_excerpt": "Only the reviewed candidate proceeds to platform export",
+  "mother": "engineering-blueprint-narrative",
+  "platform": "wechat-article",
+  "structure": "process",
+  "delivery_medium": "raster-concept",
+  "output_language": "en",
+  "exact_text": [],
+  "metaphor": {"description": "An editorial inspection workbench with a return path for revisions", "status": "proposed"},
+  "units": [
+    {"id": "source", "label": "Source", "source_excerpt": "An editor supplies a draft and the original source"},
+    {"id": "candidate", "label": "Candidate", "source_excerpt": "An agent prepares a candidate visual"},
+    {"id": "review", "label": "Review", "source_excerpt": "A reviewer checks the claim, labels and visual relationships against the source"},
+    {"id": "export", "label": "Export", "source_excerpt": "Only the reviewed candidate proceeds to platform export"}
+  ],
+  "relations": [
+    {"from": "source", "to": "candidate", "verb": "prepare", "source_excerpt": "An agent prepares a candidate visual"},
+    {"from": "candidate", "to": "review", "verb": "check", "source_excerpt": "A reviewer checks the claim, labels and visual relationships against the source"},
+    {"from": "review", "to": "export", "verb": "pass", "source_excerpt": "Only the reviewed candidate proceeds to platform export"},
+    {"from": "review", "to": "candidate", "verb": "revise", "source_excerpt": "the reviewer sends it back for revision"}
+  ]
+}
