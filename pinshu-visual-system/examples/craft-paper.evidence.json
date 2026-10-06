@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-06",
+  "sample": "craft-paper",
+  "status": "candidate-ready-for-review",
+  "source_file": "craft-paper.source.md",
+  "source_sha256": "7e5f9f7ae0b9aa1c9c03cf5266bb6130a07363b34b06dfc8fbf4a96be96e52d9",
+  "generation_record": "craft-paper.generation.json",
+  "generation_record_sha256": "1279ff426131abe76cc5103913ff3741a2d3553fc2bf1ba0e2fd75f68796dd1b",
+  "generation_channel": "Codex native image_gen",
+  "actual_model": null,
+  "generated_original_sha256": "dd5a68f15fc08a097a5c82c42be78b50b80a8fdfe68265a332fffc4cd352c9c7",
+  "generated_original_retained_locally": true,
+  "public_image": "craft-paper.png",
+  "public_image_sha256": "b439bf2159019558d833a4af5dab82af493a4d11b149548b7a38385e9e36f0eb",
+  "workflow": {
+    "kind": "pinshu-visual-method-test",
+    "version": "0.2.0"
+  },
+  "visual_card": {
+    "character": "none",
+    "task": "cultural-poster-test",
+    "structure": "single-claim",
+    "layout": "vertical-scene-flow",
+    "mode": null,
+    "platform": "xiaohongshu",
+    "density": "social",
+    "units": 1,
+    "method_candidate": "oriental-material-craft"
+  },
+  "method_status": "candidate-reference",
+  "mechanical_checks": {
+    "platform_export": "PASS",
+    "output_geometry": "1080x1440",
+    "metadata_clean_copy": "PASS",
+    "pixel_difference_ae": 0
+  },
+  "actual_image_review": {
+    "reviewer": "Codex actual-image inspection, 2026-10-06",
+    "observations": "Actual image inspection: visible Chinese title is correct. A flat generic worker lifts a mesh over a pulp basin; the resulting wet fibre sheet connects the small action to the dominant paper form. Warm paper and restrained tones, ample negative space. This is an original imagined craft concept, not a documentary depiction or historical claim. No fixed brand identity. Material-derived composition matches the method; human aesthetic review remains pending.",
+    "thumbnail_observation": "The main claim and visual direction remain visible at 180px. Full labels are intended for full-width reading, not miniature text.",
+    "checks": {
+      "source-faithfulness": "pass",
+      "visible-text": "pass",
+      "mode-and-composition": "pass",
+      "identity-and-actions": "pass",
+      "thumbnail-and-crop": "pass",
+      "method-grammar": "pass",
+      "cultural-source-fit": "pass"
+    },
+    "scope": "Agent inspection; not human aesthetic approval"
+  },
+  "human_review": "pending",
+  "aesthetic_approval": false,
+  "batch_stability": "not-established"
+}

@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "system_version": "0.1.0",
+  "system_version": "0.2.0",
   "updated_at": "2026-07-31",
   "generation_constraints_source": "project-presets-not-provider-guarantees",
   "global_rules": {

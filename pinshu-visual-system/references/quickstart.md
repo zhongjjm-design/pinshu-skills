@@ -36,4 +36,20 @@ Run meaningful local checks:
 python3 -m unittest discover -s tests -v
 ```
 
-The shared package has a separate VERSION (0.1.0) from its internal ancestor. Existing private installations must not be replaced with it; the repository installer deliberately refuses that collision. On a clean colleague machine, the repository installer adds the visual Skill alongside the seven course/content Skills. Restart the client afterward and verify it can discover the Skill and access an image backend.
+The shared package has a separate VERSION (0.2.0) from its internal ancestor. Existing private installations must not be replaced with it; the repository installer deliberately refuses that collision. On a clean colleague machine, the repository installer adds the visual Skill with both visual companions and the other suite packages. Restart the client afterward and verify it can discover the Skill and access an image backend.
+
+## Explicit cultural-poster test
+
+A candidate method is separate from a visual mode. For a single experiment:
+
+```bash
+python3 scripts/visual_compiler.py \
+  --content-file examples/craft-paper.source.md \
+  --platform xiaohongshu --method-candidate oriental-material-craft \
+  --structure single-claim --candidate-test --title "Paper from water" \
+  --output-dir ./work/craft-test
+```
+
+Supply a short localized title when required. The method branch rejects fixed-character profiles, custom layouts, multi-node units and exact-text arrays. It does not automatically recommend candidates. A completed QA record needs the five core checks plus method-grammar and cultural-source-fit; the wrapper enforces these even if the plan's required_checks array is changed. Obtain human acceptance and further theme tests before promoting a method.
+
+A companion plan similarly requires its own specialized checks. See each companion's quickstart for its schema. A Data Journalism plan requires an editable chart final and cannot be passed through the PNG wrapper as that final.

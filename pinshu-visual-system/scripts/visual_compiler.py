@@ -130,11 +130,51 @@ def compile_plan(content: str, platform: str, mode_id: str, structure: str,
     }
 
 
+def compile_method_candidate(content: str, platform: str, method_id: str, structure: str,
+                             title: str = "", candidate_test: bool = False,
+                             source_path: Path | None = None) -> dict:
+    registry, _ = load_configs()
+    methods = {item["id"]: item for item in registry.get("method_candidates", [])}
+    if method_id not in methods:
+        raise ValueError("Unknown experimental method")
+    if not candidate_test:
+        raise ValueError("Method candidates require --candidate-test for one explicit image")
+    if structure != "single-claim":
+        raise ValueError("Cultural poster methods support single-claim only")
+    method = methods[method_id]
+    if platform not in method["allowed_platforms"]:
+        raise ValueError("This method currently requires the xiaohongshu vertical poster platform")
+    plan = compile_plan(content, platform, "warm-studio-illustration", structure,
+                        title=title, source_path=source_path, units=1)
+    plan["visual_card"]["mode"] = None
+    plan["visual_card"]["method_candidate"] = method_id
+    plan["visual_card"]["task"] = "cultural-poster-test"
+    plan.pop("mode_status", None)
+    plan["method_status"] = "candidate-reference"
+    plan.pop("mode_card_sha256", None)
+    card = ROOT / method["method_card"]
+    plan["method_card_sha256"] = digest(card)
+    plan["workflow"] = {"kind": "pinshu-visual-method-test", "version": registry["version"]}
+    plan["required_checks"] += ["method-grammar", "cultural-source-fit"]
+    plan["prompt"] = "\n\n".join([
+        "Original source / design brief:\n" + content,
+        "Candidate cultural-poster method:\n" + card.read_text(),
+        "Title (only when requested):\n" + title,
+        "Use the dedicated vertical reading path. Keep a character-free scene; generic small craft workers are not a branded identity.",
+        "Platform requirements:\n" + plan["platform_profile"]["layout_rule"],
+        "Preserve the stated source limits. No invented event date, venue, named craft master, heritage certification or sponsor. "
+        "This is a single method test, not an approved default or a claim of historical authenticity."
+    ])
+    return plan
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--content-file", required=True, type=Path)
     parser.add_argument("--platform", required=True)
-    parser.add_argument("--mode", required=True)
+    style = parser.add_mutually_exclusive_group(required=True)
+    style.add_argument("--mode")
+    style.add_argument("--method-candidate")
     parser.add_argument("--structure", required=True)
     parser.add_argument("--layout", default="auto")
     parser.add_argument("--title", default="")
@@ -146,9 +186,15 @@ def main() -> int:
     args = parser.parse_args()
     try:
         content = args.content_file.read_text(encoding="utf-8")
-        plan = compile_plan(content, args.platform, args.mode, args.structure, args.layout,
-                            args.title, args.candidate_test, args.character_profile,
-                            args.exact_text, args.units, args.content_file)
+        if args.method_candidate:
+            if args.character_profile or args.exact_text or args.layout != "auto" or args.units != 3:
+                raise ValueError("Method tests currently use character-free single-claim defaults; put short text in --title")
+            plan = compile_method_candidate(content, args.platform, args.method_candidate,
+                                            args.structure, args.title, args.candidate_test, args.content_file)
+        else:
+            plan = compile_plan(content, args.platform, args.mode, args.structure, args.layout,
+                                args.title, args.candidate_test, args.character_profile,
+                                args.exact_text, args.units, args.content_file)
         args.output_dir.mkdir(parents=True, exist_ok=False)
         (args.output_dir / "source-content.txt").write_text(content, encoding="utf-8")
         (args.output_dir / "prompt-final.txt").write_text(plan["prompt"], encoding="utf-8")

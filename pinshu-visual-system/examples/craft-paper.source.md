@@ -1,0 +1,1 @@
+An original imagined cultural design study of handmade papermaking. A tiny flat-illustrated craft worker lifts a mesh frame beside a pulp basin. A single sheet or fibre spread from that frame becomes the large translucent paper form. This is a visual experiment, with no named event, venue, sponsor or heritage claim.

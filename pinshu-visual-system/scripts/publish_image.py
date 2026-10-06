@@ -11,6 +11,11 @@ import sys
 
 CHECKS = ("source-faithfulness", "visible-text", "mode-and-composition",
           "identity-and-actions", "thumbnail-and-crop")
+WORKFLOW_CHECKS = {
+    "pinshu-infographic": ("information-relationships", "density-and-reading", "text-delivery"),
+    "pinshu-business-graphics": ("mother-integrity", "metaphor-source-fit", "data-accuracy", "series-consistency", "text-delivery"),
+    "pinshu-visual-method-test": ("method-grammar", "cultural-source-fit"),
+}
 
 def prepare(source: Path, plan_path: Path, qa_path: Path, output_dir: Path) -> dict:
     plan = json.loads(plan_path.read_text())
@@ -22,8 +27,15 @@ def prepare(source: Path, plan_path: Path, qa_path: Path, output_dir: Path) -> d
         raise ValueError("Visual review does not match this image and plan")
     if not qa.get("reviewer") or not qa.get("notes"):
         raise ValueError("Name the reviewer and record actual visual observations")
-    if any(qa.get("checks", {}).get(check) != "pass" for check in CHECKS):
+    workflow = plan.get("workflow")
+    kind = workflow.get("kind") if isinstance(workflow, dict) else None
+    if workflow is not None and kind not in WORKFLOW_CHECKS:
+        raise ValueError("Unknown specialized visual workflow")
+    required = CHECKS + WORKFLOW_CHECKS.get(kind, ())
+    if any(qa.get("checks", {}).get(check) != "pass" for check in required):
         raise ValueError("Visual review is incomplete or contains failures")
+    if kind == "pinshu-business-graphics" and plan.get("rendering", {}).get("strategy") == "editable-chart-final":
+        raise ValueError("An editable chart final is required; a raster candidate cannot replace it")
     output_dir.mkdir(parents=True, exist_ok=False)
     scripts = Path(__file__).resolve().parent
     export_dir, clean_dir = output_dir / "platform", output_dir / "publish-clean"

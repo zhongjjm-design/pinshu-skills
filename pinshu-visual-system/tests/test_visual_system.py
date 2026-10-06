@@ -11,7 +11,7 @@ import unittest
 from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from visual_compiler import ROOT, compile_plan, load_configs
+from visual_compiler import ROOT, compile_plan, compile_method_candidate, load_configs
 from publish_image import CHECKS, prepare
 from prepare_publish_images import is_zero_pixel_difference
 
@@ -48,6 +48,35 @@ class PublicVisualTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "candidate-test"):
             self.plan(mode_id="lively-vector")
         self.assertEqual(self.plan(mode_id="lively-vector", candidate_test=True)["mode_status"], "candidate")
+
+    def test_method_candidates_are_separate_and_explicit(self):
+        args = dict(content="Original paper craft concept.", platform="xiaohongshu",
+                    method_id="oriental-material-craft", structure="single-claim")
+        with self.assertRaisesRegex(ValueError, "candidate-test"):
+            compile_method_candidate(**args)
+        plan = compile_method_candidate(**args, candidate_test=True)
+        self.assertIsNone(plan["visual_card"]["mode"])
+        self.assertEqual(plan["method_status"], "candidate-reference")
+        self.assertEqual(plan["workflow"]["kind"], "pinshu-visual-method-test")
+        self.assertFalse(plan["acceptance"]["production_claim"])
+        with self.assertRaisesRegex(ValueError, "single-claim"):
+            compile_method_candidate(**dict(args, structure="process"), candidate_test=True)
+        with self.assertRaisesRegex(ValueError, "platform"):
+            compile_method_candidate(**dict(args, platform="wechat-article"), candidate_test=True)
+
+    def test_method_cli_never_silently_accepts_other_mode_arguments(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); source = root / "source.md"; source.write_text("Original craft concept.")
+            command = [sys.executable, "-B", str(ROOT / "scripts/visual_compiler.py"),
+                       "--content-file", str(source), "--platform", "xiaohongshu",
+                       "--method-candidate", "oriental-material-craft", "--structure", "single-claim",
+                       "--candidate-test", "--output-dir", str(root / "plan")]
+            result = subprocess.run(command + ["--exact-text", "unsupported exact label"], capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse((root / "plan").exists())
+            result = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(json.loads((root / "plan/route-plan.json").read_text())["method_status"], "candidate-reference")
 
     def test_frozen_candidate_remains_blocked(self):
         with self.assertRaisesRegex(ValueError, "frozen"):

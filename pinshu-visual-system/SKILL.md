@@ -5,7 +5,7 @@ description: "Create source-faithful article illustrations, covers, social cards
 
 # Pinshu Visual System
 
-Public preview: **0.1.0**. Original methods and tools by Aidan (Pinshu), developed with Codex. This is the portable sharing edition of the locally developed visual system. It contains no private character assets, account mappings or private example material. Repository instructions are English; output and visible text follow the user's requested language.
+Public preview: **0.2.0**. Original methods and tools by Aidan (Pinshu), developed with Codex. This is the portable sharing edition of the locally developed visual system. It contains no private character assets, account mappings or private example material. Repository instructions are English; output and visible text follow the user's requested language.
 
 ## Read for the current task
 
@@ -16,6 +16,10 @@ Public preview: **0.1.0**. Original methods and tools by Aidan (Pinshu), develop
 - For a supplied character, read `references/character-profiles.md`.
 - After rendering, read `references/visual-qa.md` and inspect the actual image.
 - For installation, dependencies and command examples, read `references/quickstart.md`.
+
+## Companion routing
+
+Use pinshu-infographic for source-anchored knowledge diagrams and pinshu-business-graphics for the seven business-method families when those public companions are installed. They depend on this core for shared style/platform contracts and delivery. Read `references/method-candidates.md` only for explicitly requested cultural-poster method research; its two candidates do not enter default routing.
 
 ## Make the visual decision
 

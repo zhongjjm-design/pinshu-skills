@@ -29,3 +29,13 @@ Record notes with concrete observations; scores cannot override hard failures. W
 Compute hashes with Python hashlib.sha256(path.read_bytes()).hexdigest(). Never copy a review from a different image or fill the checks without inspecting it. The preparation script verifies the declared checks and hashes; it does not perform the image review itself.
 
 After export, inspect platform/preview-thumbnail-180.png and the center-square preview for a WeChat primary cover. Mechanical delivery remains a candidate until the user confirms its use. The pixel comparison applies between platform-export.png and its publish-clean copy, not between the raw generator image and the intentionally resized platform export.
+
+## Specialized plans
+
+The five core checks always remain mandatory. For a companion or method plan, also record:
+
+- pinshu-infographic: information-relationships, density-and-reading, text-delivery;
+- pinshu-business-graphics: mother-integrity, metaphor-source-fit, data-accuracy, series-consistency, text-delivery;
+- pinshu-visual-method-test: method-grammar, cultural-source-fit.
+
+A genuinely non-applicable check may pass only with an explicit observation explaining why (for example, no dataset or no series). Editable-layer work needs evidence of a completed text layer. A single raster is never an editable chart final; those plans must finish in the chart tool. The wrapper verifies required workflow checks from its own contract, rather than trusting an editable required_checks list in the plan.

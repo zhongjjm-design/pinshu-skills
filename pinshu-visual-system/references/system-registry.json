@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "distribution": "public-preview",
   "owner": "Aidan (Pinshu)",
   "identity_assets_included": false,
@@ -214,6 +214,28 @@
       ],
       "character_policy": "optional",
       "max_units": 5
+    }
+  ],
+  "method_candidates": [
+    {
+      "id": "oriental-colorfield-landscape",
+      "status": "candidate-reference",
+      "origin": "research-derived",
+      "method_card": "references/method-cards/oriental-colorfield-landscape.md",
+      "allowed_platforms": [
+        "xiaohongshu"
+      ],
+      "automatic_routing": false
+    },
+    {
+      "id": "oriental-material-craft",
+      "status": "candidate-reference",
+      "origin": "research-derived",
+      "method_card": "references/method-cards/oriental-material-craft.md",
+      "allowed_platforms": [
+        "xiaohongshu"
+      ],
+      "automatic_routing": false
     }
   ]
 }

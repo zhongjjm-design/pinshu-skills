@@ -1,0 +1,1 @@
+An original imagined cultural design study of folding paper. Two tiny flat-illustrated craft workers handle a long strip of paper on a worktable. The strip continues from their hands into one large angular folded form. This is a visual experiment, with no named event, venue, sponsor or historical claim.
