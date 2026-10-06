@@ -32,6 +32,8 @@ Use pinshu-content-assets to turn this lesson into one readable, source-traceabl
 
 The visual system is now a three-piece public preview:
 
+This is a sharing trial for one image at a time with an Agent and actual human review. Its ongoing scope includes article visuals, social carousels, WeChat image posts, seasonal posters and promotional posters. Each format needs its own composition and acceptance; a successful cover does not validate a whole series. See [visual evolution](pinshu-visual-system/references/visual-evolution.md) for turning useful references and colleague feedback into tested methods.
+
 | Package | Version | Best use |
 |---|---|---|
 | [pinshu-visual-system](pinshu-visual-system/README.md) | 0.2.4 | Choose among twelve scoped visual modes, plan a platform composition, render and prepare a reviewed candidate |

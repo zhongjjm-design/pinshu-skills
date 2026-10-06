@@ -16,6 +16,7 @@ Public preview: **0.2.4**. Original methods and tools by Aidan (Pinshu), develop
 - For a supplied character, read `references/character-profiles.md`.
 - After rendering, read `references/visual-qa.md` and inspect the actual image.
 - For installation, dependencies and command examples, read `references/quickstart.md`.
+- For a new visual reference, poster format or colleague feedback, read `references/visual-evolution.md`.
 
 ## Companion routing
 

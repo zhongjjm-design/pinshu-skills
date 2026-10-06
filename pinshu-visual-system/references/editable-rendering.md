@@ -4,6 +4,8 @@ Use this path for every editable-text or precision-chart plan. Produce a self-co
 
 ## Fonts and dependencies
 
+For this sharing release, use a 1:1 pixel SVG canvas matching the selected platform's final size. Larger 2x/4K canvases can exceed the text-mask limit and be rejected. Set font size with an explicit `font-size` attribute or inline `font-size` property in px or supported absolute units. Avoid CSS `font` shorthand: its unit conversion is incomplete and can produce different text sizes in this renderer and a browser.
+
 SVG rendering uses ImageMagick 7's explicit MSVG backend and a readable font file. A CSS font-family list is not enough. On macOS, check for `/System/Library/Fonts/STHeiti Light.ttc` and use it explicitly when available; set the SVG family to `Heiti SC` and normal weight for that Light font. Do not claim a 600-weight PingFang layout was delivered with this font. Another installed CJK font is acceptable after inspecting its actual Chinese glyphs. On Linux, install `fonts-noto-cjk` and use an existing CJK font such as `/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc`; use the actual chosen family in the SVG. Other systems must supply their own readable licensed CJK font. Fonts are not bundled or copied for public distribution.
 
 PPTX rendering additionally needs LibreOffice (`soffice`) and Poppler (`pdftoppm` and `pdfinfo`). On macOS, verify the LibreOffice CLI is on PATH; `brew install --cask libreoffice` and `brew install poppler` are possible manual setup steps. On Debian/Ubuntu, `libreoffice-impress`, `poppler-utils` and `fonts-noto-cjk` provide the needed tools. The package does not install them automatically on a user's machine. Set fonts inside the deck and ensure they are installed: `--font-file` fingerprints the selected font, and does not rewrite PPTX fonts. LibreOffice layout can differ from PowerPoint; review the actual PNG, not a screenshot from another renderer. The native chart reader currently supports linked category charts with cached category/value points, not all scatter, bubble or external-workbook forms.
@@ -36,6 +38,8 @@ The wrapper also inventories plan-external native text. Complete original-source
 ```
 
 Use a source excerpt actually present in your input; this example is not an approval for arbitrary wording. Any extra annotation, axis title or numeric label still needs source/QA review. A native-text inventory does not OCR words embedded in background pixels. Re-render identity establishes file-to-image correspondence, not semantic truth, chart proportions or aesthetic acceptance. Actual final-image review remains required.
+
+Quantity detection is incomplete: Chinese expressions meaning one third, thousands of customers, over half, several times, more than ten times, almost half, growth by multiples or tens of thousands of users can pass these checks. Review every added quantity and claim against its full source context, including words without Arabic digits. Approver keyword rejection also cannot prove human identity; product names and nicknames may pass.
 
 ## Percentage charts and visibility limits
 
