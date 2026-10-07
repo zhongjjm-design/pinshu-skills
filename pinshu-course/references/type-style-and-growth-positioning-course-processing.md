@@ -1,138 +1,138 @@
-# Processing Courses on Content Type, Style, and Evolutionary Positioning
+# 类型、风格与生长式定位课程整理
 
-Use this reference for courses that combine content-type classification, visual style, persona fit, platform production relationships, account-transition history, and copyright or qualification Q&A.
+用于整理同时包含类型分类、视觉风格、人设匹配、平台生产关系、账号转型史、版权/资质问答的课程。
 
-## 1. Faithful Transcript: Preserve Spectra, Transitions, and Q&A
+## 一、忠实稿：保留连续谱、转型过程和问答
 
-### 1. Do Not Compress Types into Fixed Boxes
+### 1. 不把类型压成固定盒子
 
-When the instructor describes content types through two endpoints, preserve the spectrum and intermediate transitions:
+当讲师用两个端点描述内容类型时，忠实稿应保留“连续谱”逻辑及中间过渡：
 
 ```text
-Pure visual
-→ image + text
-→ live dialogue / narrative scene
-→ story visuals + voice-over
-→ hybrid vlog
-→ situational talking head
-→ talking head + explanatory visuals
-→ pure talking head / black screen with captions
+纯视觉
+→ 画面＋文字
+→ 现场台词／剧情
+→ 故事画面＋旁白
+→ 综合vlog
+→ 情境口播
+→ 口播＋解释性画面
+→ 纯口播／黑屏字幕
 ```
 
-Preserve each case and the distinction among live dialogue, voice-over, and explanatory visuals. Do not summarize the entire model as only “presentation type and narration type.”
+逐个保留案例，以及现场台词、旁白、解释性画面三者的区别。不要只总结成“呈现型和讲述型两类”。
 
-### 2. Do Not Compress Account History into a Success Path
+### 2. 账号发展史不能压成成功路径
 
-Preserve in full:
+完整保留：
 
-- Initial conditions and constraints;
-- The problem that actually mattered at the time;
-- The event triggering each transition;
-- User resistance and data failures;
-- Transitional strategies;
-- Why the old style later stopped working;
-- How incidental collaborations and changes in life circumstances changed direction.
+- 初始条件和限制；
+- 当时真正关心的问题；
+- 每次转向的触发事件；
+- 用户抵触和数据失败；
+- 过渡策略；
+- 为什么旧风格后来失效；
+- 偶发合作和生命状态怎样改变方向。
 
-When the same experience appears in sections on type choice, style formation, persona transition, and sources of innovation, do not misclassify it as mechanical repetition. It may perform a different argumentative function each time.
+同一经历在“类型选择、风格生成、人设转型、创新来源”中多次出现时，不要误判为机械重复；它可能承担不同论证功能。
 
-### 3. First-Person Red Line
+### 3. 第一人称红线
 
-The faithful body must use wording such as “I played this in class,” “I judged at the time,” and “my answer was.” Do not use editorial perspectives such as “the course played,” “the course recommends,” or “the instructor believes.”
+忠实正文必须使用“我在课上播放、我当时判断、我的回答是”，不能出现“课程播放、课程建议、讲师认为”等编辑者视角。
 
-Use an independent blockquote for risk boundaries:
+风险边界使用独立引用块：
 
 ```markdown
-> Editorial verification: ...
+> 编辑核验：……
 ```
 
-This preserves the instructor’s original wording without elevating risky experience into fact.
+这样既保留讲师原说法，又不把有风险的经验升级成事实。
 
-## 2. Structured Lecture: Five Core Models
+## 二、系统讲义：五个核心模型
 
-### Model 1: Core and Form Priority
+### 模型1：内核—形式主次
 
 ```text
-Core = user + value + persona
-Form = type + style
-The core determines what to express; form determines how to express it
+内核＝用户＋价值＋人设
+形式＝类型＋风格
+内核决定表达什么，形式负责怎样表达
 ```
 
-### Model 2: Presentation–Narration Spectrum
+### 模型2：呈现—讲述连续谱
 
-Place cases according to their mix of visuals, live sound, voice-over, and talking head. State that this classification was “organized from the course”; do not present it as fixed terminology coined by the instructor.
+把案例按视觉、现场声音、旁白、口播的配比归位。标明该分级是“基于课程整理”，不要伪装成讲师固定命名。
 
-### Model 3: Persona–Form Fit
+### 模型3：人设—形式匹配
 
-Every format transfers the audience’s social impression of the creators who commonly use it. Evaluate with three questions:
+每种形式都会把某类博主的社会印象迁移到创作者身上。用三问验收：
 
-1. What kind of person usually uses this format?
-2. What identity and maturity level will the audience associate with it?
-3. Does that transfer strengthen or weaken the intended persona?
+1. 通常什么人在用这种形式？
+2. 观众会联想到哪类身份和成熟度？
+3. 这种迁移对当前人设是加分还是减分？
 
-### Model 4: PGC/UGC Relationship Judgment
+### 模型4：PGC／UGC关系判断
 
-The main issue is not a single definitive term, but whether the audience feels it is facing:
+重点不是争论唯一术语定义，而是观众感知自己面对：
 
-- An institution, program, or team; or
-- A specific person.
+- 机构、栏目、团队；还是
+- 一个具体的人。
 
-Include the counterexample in which neither side works: there is neither program-level quality nor personal conversational connection.
+单列“两边都不到位”的反例：没有栏目级质量，也没有个人交流感。
 
-### Model 5: Evolutionary Positioning
+### 模型5：生长式定位
 
 ```text
-Initial direction
-→ publish content
-→ user feedback
-→ data judgment
-→ reinforce effective impressions
-→ changes in life/business circumstances
-→ continue iterating
+初始方向
+→ 发布内容
+→ 用户反馈
+→ 数据判断
+→ 强化有效印象
+→ 生命／业务状态变化
+→ 继续迭代
 ```
 
-Positioning is not a one-time plan. The lecture should preserve both strategic commitment and review boundaries, so “persistence” does not become “ignoring data and pushing blindly.”
+定位不是一次规划。讲义应同时保留战略定力和复盘边界，避免把“坚持”写成“不看数据地硬扛”。
 
-## 3. Format-Decision Checklist
+## 三、形式决策清单
 
-- Does the current content need to be seen or understood?
-- Is the creator stronger visually or verbally?
-- Which format can be produced consistently every week?
-- Does the format delay publication or consume topic-development time?
-- Do explanatory visuals actually carry meaning?
-- Do phone, camera, and microphone choices serve the relationship objective?
-- Does the style fit identity, age, profession, maturity, and desired audience distance?
+- 当前内容更需要被“看见”还是被“听懂”？
+- 创作者偏视觉还是偏语言？
+- 哪种形式一周可以稳定生产？
+- 形式是否拖延发布或吞噬选题时间？
+- 解释性画面是否真正承担语义？
+- 手机、相机和麦克风是否服务关系目标？
+- 风格是否与身份、年龄、职业、成熟度和观众距离匹配？
 
-## 4. Extracting Innovation
+## 四、创新提炼
 
-Innovation commonly comes from four sources:
+创新常来自四类来源：
 
-1. Difficulties and constraints;
-2. A solution path shaped by personality;
-3. New knowledge and tools;
-4. Unexpected events, collaborations, and incidental feedback.
+1. 困难和限制；
+2. 个人性格决定的解决路径；
+3. 新知识和新工具；
+4. 突发事件、合作和偶然反馈。
 
-Treat real life as a differentiation asset that is difficult to copy. Cases such as “a noodle-shop couple closes the store and goes home to film templates” or “a researcher underestimates the uniqueness of their own life” should preserve the original scene and anti-template logic.
+把真实生活视作难以复制的差异化资产。课程中的“面馆夫妻关店回家拍模板”“科研者低估自己的独特生活”等案例，应保留原场景与反模板逻辑。
 
-## 5. Compliance and Fact Boundaries
+## 五、合规与事实边界
 
-Correct or label the following immediately:
+以下内容必须即时纠偏或标注：
 
-- English expansions and industry definitions of PGC/UGC may vary;
-- Duplicate detection, reach limitation, cross-platform distribution, DOU+, hiding old videos, and publishing order are time-sensitive;
-- Filming duration, views, likes, follower growth, and completion rate require backend verification;
-- “Noncommercial use does not infringe” is false; noncommercial use does not automatically eliminate infringement;
-- Platform muting does not prove lawful use;
-- Medical education must comply with current local qualifications; past professional identity does not automatically extend active practice authorization;
-- “An original-content protection agreement is monopolistic” may be preserved only as the instructor’s opinion and requires reading the actual agreement;
-- Identities and causal attributions involving public figures must be labeled as course judgments rather than facts.
+- PGC／UGC英文展开和产业定义可能不唯一；
+- 查重、限流、跨平台分发、DOU+、旧视频隐藏与发布顺序具有时效性；
+- 拍摄用时、播放、点赞、涨粉和完播率需核验后台；
+- “非商用不侵权”错误，非商用不自动排除侵权；
+- “平台静音”不构成合法使用证明；
+- 医疗科普必须服从当前所在地资质，过去职业身份不自动延续执业权限；
+- “原创保护协议是垄断”只可保留为讲师观点，需阅读具体协议；
+- 公共人物案例的身份与归因应标为课程判断，不能升级为事实。
 
-## 6. Acceptance
+## 六、验收
 
-- [ ] Every intermediate layer and key case in the content-type spectrum is preserved;
-- [ ] Account history preserves failures, transitions, and incidental factors;
-- [ ] The faithful transcript contains no third-party editorial narration;
-- [ ] The structured lecture distinguishes core, form, relationship, and evolutionary models;
-- [ ] Equipment and style remain subordinate to content rather than becoming the main subject;
-- [ ] Copyright, medical, platform-rule, and data boundaries are present;
-- [ ] Course assignments and closing Q&A were not omitted;
-- [ ] Map, formal draft, and preview titles agree and pass old-title and broken-link scans.
+- [ ] 类型连续谱的全部中间层和关键案例已保留；
+- [ ] 账号发展史保留失败、转向和偶发因素；
+- [ ] 忠实稿无第三方编辑叙述；
+- [ ] 系统讲义区分内核、形式、关系与生长模型；
+- [ ] 器材和风格被放在内容之后，而非成为主角；
+- [ ] 版权、医疗、平台规则和数据均有边界；
+- [ ] 课程作业和课末问答没有被省略；
+- [ ] 地图、正式稿、预览标题一致并通过旧标题与断链扫描。

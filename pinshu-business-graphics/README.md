@@ -10,7 +10,7 @@ Tell your image-capable agent:
 
 See [method router](references/router.md), [quickstart](references/quickstart.md) and [actual-image review](references/visual-qa.md). Requires the public pinshu-visual-system 0.2.4 or later beside this package. Python 3 plans the graphic; an image-capable agent renders; ImageMagick 7 exports raster candidates. Exact charts require an editable chart tool and independent data review.
 
-The seven cards describe methods, not seven bundled AI models or a claim of batch stability. Repository instructions are English; visible output follows the user's language. The repository's existing usage and redistribution terms apply.
+The seven cards describe methods, not seven bundled AI models or a claim of batch stability. Skill rules are maintained in Chinese; stable command names and file paths remain English where required. Visible output follows the user's language. The repository's existing usage and redistribution terms apply.
 
 ## An actual example
 

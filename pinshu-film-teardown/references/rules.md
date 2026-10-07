@@ -1,96 +1,96 @@
-# Brand Film Teardown: Current Rules
+# 品牌片拆解：现行规矩
 
-This file holds only the rules **currently in force**. The note in parentheses after each rule gives its source: reviewer feedback or a review finding. The dated history is in `pitfalls.md`.
-New feedback goes into `pitfalls.md` first; once it is confirmed as a rule, update this file. When the two disagree, this file wins.
+本文件只写**现在有效**的规矩。每条后面括号里是来源：Aidan 原话或审片结论；带日期的历史过程在 `pitfalls.md`。
+新的原话先记进 `pitfalls.md`，确认成规矩后再改这里；两处说法冲突时以本文件为准。
 
-## 1. Script
+## 一、稿子
 
-- The voice is "a peer breaking down a case": facts first, then reasons; conversational; no piling up of punchlines; no preaching, no self-praise, no promoting the brand (feedback: the narration sounded too AI-like, more like a promotional film than a case commentary).
-- Put verbal fillers only where a real person would naturally say them: 3 to 5 per script, each kind used once. Replace jargon with plain words and split long sentences (feedback: do not make it colloquial just for the sake of it).
-- The structure follows the article's sections. Length is set by the content; do not squeeze it into 60 seconds.
-- Moving from a specific case to a general conclusion needs a connecting phrase (such as "so what this shows is").
-- The ending ties back to the opening to close the loop, then gives peers one judgment they can take away. Do not end on a sentiment (feedback: the ending felt weightless).
-- Leave a beat (about 0.8 seconds) after a rhetorical question.
-- Move the fact list forward: before narration is recorded, find a source (the original film, the original article, public reports) for every number, name, and date.
-- Check the speakers' own words character by character against the transcript; never drop a single word from memory (feedback: a word was missing from a speaker's self-introduction in the captions).
+- 口吻是"同行拆案例"：先事实后原因，口语化，不堆金句，不说教、不自夸、不替品牌吹（"口播 AI 感有点重，像宣传片不像案例解说"）。
+- 口头词只放在真人自然会说的地方，一篇 3 到 5 处，每种一次；专业词换大白话；长句拆短（"不能为了口语化而口语化"）。
+- 结构跟文章章节对应，时长由内容决定，不压成 60 秒。
+- 从具体案例跳到普遍结论，中间要有承接词（"所以说"）。
+- 结尾回扣开头形成闭环，再给同行一句能带走的判断；不收在感慨上（"轻飘飘的结尾"）。
+- 设问句后要留一拍（约 0.8 秒）。
+- 事实清单前移：数字、人名、时间在配音前逐条找到出处（原片、原文、公开报道）。
+- 当事人原声的原话逐字对着转写核，一个字都不能凭印象删（"'你好，我叫张靓'少了个你字"）。
 
-## 2. Narration
+## 二、配音
 
-- Default voice: Gemini TTS, Charon, with the style note "like chatting with a peer about a case: relaxed, opinionated." Add a warm-up sentence at the start and cut it afterwards. The user's choice of voice prevails; if that voice is not available, say so instead of substituting another.
-- **Synthesize the whole narration in one pass**, then split it at the real silences between sections. Synthesizing each section separately makes the voice drift until it sounds like two people (feedback: it sounded like two different speakers).
-- **Never cut narration by the transcript's per-character timings** (they are off by one or two hundred milliseconds, so the cut lands in the middle of a word; feedback: very mechanical, no human feel). Narration on the same topic plays continuously; pauses are added only inside measured silences.
-- Before trimming a breath pause, transcribe the short stretch just before it on its own and confirm it is not a normal punctuation pause; otherwise leave it alone (after full-stop pauses were compressed, feedback was that it sounded rushed).
-- Slow down a few rushed words locally with `patch_voice.py`; do not re-synthesize (re-synthesis changes the voice).
-- Add 0.6 to 1.2 seconds of extra pause at topic changes (feedback: there were no pauses between sections and the delivery felt too dense).
-- Do not use a clone of the user's own voice for case commentary; the user's own voice is reserved for digital-avatar content.
-- Use naturalness-scoring models only to discard bad takes, never to rank voices (their ranking ran opposite to human listening).
+- 默认声音：Gemini TTS，Charon，风格说明"像跟同行朋友聊一个案例，松弛，有观点"；开头加一句热身句再剪掉。用哪个声音以 Aidan 的选择为准，手上没有就先说，不拿别的顶。
+- **整篇旁白一次合成**，再在段落间的真实静音处切开；分段各合成一次，声音会飘成两个人（"感觉是两个人"）。
+- **不许按转写的逐字时间切配音**（误差一两百毫秒，刀会落在字中间："特别机械，没有人感"）。同一话题的配音连续播放，停顿只加在实测的静音里。
+- 剪气口前先单独转写停顿前那一小段，核实不是标点处的正常停顿，否则不动（压掉句号停顿后"听上去急促"）。
+- 念急的几个字用 `patch_voice.py` 局部放慢，不重新合成（重新合成声音会变）。
+- 话题切换处多停 0.6 到 1.2 秒（"段与段之间没有停顿……说话特别密"）。
+- 案例解说不用本人克隆声音；本人声音只给数字人类内容。
+- 自然度打分模型只用来淘汰坏样本，不用来给声音排名（它和 Aidan 的耳朵方向相反）。
 
-## 3. Picture
+## 三、画面
 
-- **The main picture must be real footage** (feedback: it should not look like a slide deck). Text cards are only for chapters and key points.
-- **When discussing industry-wide problems or other companies' practices, do not use this brand's footage.** Use generic corporate stock footage (cities, meetings, award ceremonies, handshakes, applause) with no brand names visible, and avoid foreign faces where possible.
-- Every specific thing the narration names gets matching footage. If nothing fits, find stock footage to fill the gap rather than padding with warm, emotional shots.
-- Footage must make clear who is doing what. For list-style narration, use one shot per word, about 1 second each.
-- The same person appears at most once in the whole film; the same footage is used only once across adjacent scenes; the same group of shots is never replayed unchanged (feedback: a sequence of images was shown twice).
-- Prefer bright shots in which people are recognizable. Before starting, screen the original film person by person (a contact sheet at one frame per second).
-- **A still image stays on screen for at most 2 seconds at a time**, except when the narration is about that very image. End a story with a shot of that person moving in the original film (feedback: static still montages holding for several seconds look bad).
-- **The same picture is never held for more than 3 seconds in a row** (feedback: a blurred picture stayed on screen far too long).
-- **No "card on a black background" layout.** Images fill the whole screen, and the picture is mainly bright real footage (feedback: dark screens look ugly).
-- **Recaps and summaries use moving footage of real people**, not black-background infographics (feedback: a black-background recap with a scale looked messy and oppressive).
-- **No black-and-white or desaturated footage**: Chinese audiences read it as a sign of mourning (feedback: it suggested a death). To express "dull" or "uninteresting," pull back, blur, or darken while keeping the original color.
-- No text cards with slow push-ins, no persistent large title bands, no glows, and no grids of equal-weight cards (feedback: these look cheap).
-- Semi-transparent color blocks let the background show through; put opaque backing under overlaid text.
-- Large numbers use Source Han Serif, not Didot (its numeral 1 looks like a Roman numeral I).
+- **主画面必须是真实影像**（"不是像做 PPT 一样"）；字卡只做章节和点睛。
+- **讲行业通病、别人家的做法时，画面不能用本品牌素材**，用通用企业素材（城市、会议、颁奖、握手、鼓掌），不露品牌名，尽量不露外国人脸。
+- 旁白点名的具体事物，每一条都要配对应画面；配不上就找素材补，不拿温情镜头凑。
+- 素材要看得出"是谁在干什么"；列举式旁白一个词配一个镜头，每个 1 秒左右。
+- 同一个人物全片最多出现一次；同一段素材在相邻场景只用一次；同一组画面不原样重放（"1~16 这个图片放了两次"）。
+- 选镜头优先亮的、认得出人的；开工前按人头拉一遍原片（每格 1 秒的总览图）。
+- **静态图单次最多停 2 秒**，只有"讲的就是这张图"时例外；故事结尾用原片里这个人在动的镜头（"静态的组图持续好几秒，好难看"）。
+- **同一画面不连续挂超过 3 秒**（"这个画面虚化……持续的时间也过长"）。
+- **不用"卡片 + 黑底"版式**，图片铺满全屏；画面以亮的真实画面为主（"黑乎乎的……丑死了"）。
+- **回顾、总结段落用真人动态画面**，不用黑底信息图（"刻度乱七八糟……黑黑背景……很压抑"）。
+- **禁止黑白、去色画面**：在中国观众眼里就是丧事（"死人了吗？"）。要表达"索然无味"，用往后退、变虚、变暗，保留原色。
+- 禁止字卡加慢推镜、常驻大标题带、光晕、等权卡片阵列（"low得很"）。
+- 半透明色块会透出背景，叠字用不透明底。
+- 大号数字用思源宋体，不用 Didot（它的 1 像罗马数字 I）。
 
-## 4. Captions
+## 四、字幕
 
-- Horizontal captions are size 62, white text with a thin black outline and a soft drop shadow, with **no full-width black band** (feedback: such a wide and tall black caption background is unusual and does not look standard).
-- When the original film's burned-in captions need covering, use only a narrow, light frosted bar (about 200 pixels, not darkened). With a new original film, first measure the height of its captions in the frame and set `FRAME["subband_top"]` in `spec.py` (`None` when it has no burned-in captions); the scale and the corner it grows from are set in `FRAME` too.
-- Punctuation follows the Netflix Simplified Chinese style guide: full-width commas, full stops, semicolons, and colons are replaced by spaces; the enumeration comma (the Chinese list separator) is kept only in lists; quotation marks are used only for the speakers' own words.
-- Caption timing is anchored to real pronunciation. Each block lasts at least 0.6 seconds, blocks never overlap, and blocks shorter than 5 characters merge into the next block.
+- 横版字幕 62 号，白字加细黑描边和柔和投影，**不铺整宽黑带**（"黑色背景这么宽这么高……我好像没见过这种"）。
+- 需要遮原片自带字幕时，只用窄而浅的磨砂条（约 200 像素，不压黑）；换新原片先量原片字幕在画面里的高度，填进 `spec.py` 的 `FRAME["subband_top"]`（没有自带字幕就写 `None`），放大倍数和放大起点也在 `FRAME` 里调。
+- 标点照 Netflix 简体中文规范：逗号、句号、分号、冒号换空格；顿号只在列举时留；引号只给当事人原声。
+- 字幕时间按真实发音锚定，每块至少 0.6 秒，不重叠，不到 5 个字的块并到下一块。
 
-## 5. Transitions and motion
+## 五、转场和动效
 
-- Video to video is a hard cut, never a fade up from black (feedback: "dark, then bright again" looks like a blink).
-- Every clip runs 2 extra frames (about 0.07 s) underneath the next one, and the next one comes in with a very short 2-frame transition. This hides the renderer's misdrawn first frame. **Do not revert to a plain hard cut.**
-- Exits are staggered, last in, first out. Labels finish leaving before the new picture appears.
-- The original film's own title cards are not enlarged, are centered, and get no frosted caption bar during those seconds.
+- 视频接视频硬切，不从黑里淡入（"先暗一下再亮"像眨眼）。
+- 每段画面多放 2 帧压在下一段底下，下一段用 2 帧极短过渡进来，盖住渲染器第一帧的错位；**不要改回直接硬切**。
+- 退场错开，后进的先走；标签在新画面出现前收完。
+- 原片自己的字卡不放大、居中、这几秒不铺字幕磨砂条。
 
-## 6. Sound and music
+## 六、声音和配乐
 
-- Commentary films need music and sound effects (feedback: without background music and sound effects the film felt flat). Music sits underneath, transition sounds mark topic changes, and light effects accompany numbers, labels, and page turns.
-- Default music: sparse, darker solo piano chosen from a music library (feedback: soft, slightly dark, barely noticeable yet exactly right). Use `mix.py ... soft`, which keeps the music 14 dB below the narration.
-- Do not use AI-composed music as the main score. Do not reuse the original film's music (feedback: taken out of its context, it does not fit our picture and narration). Separate vocals from the speakers' original audio first.
-- Edit the music so that the track's real closing cadence lands on the end card (feedback: the ending always felt unfinished). Use `fit_music.py`.
-- The speakers' original audio is at most 1 dB louder than the narration. Final loudness is -14 LUFS with a true peak no higher than -1 dBTP, using fixed gain and no dynamic compression (feedback: the sound suddenly dropped a lot).
+- 解说片要配乐和音效："整体少了背景音乐少了音效有点平"。配乐垫底，换话题处转场音，数字、标签、翻页配轻音效。
+- 配乐默认：稀疏、偏暗的纯钢琴，从曲库挑（"轻柔、暗一点……不易察觉，而又恰如其分"），用 `mix.py ... soft`，比旁白低 14 分贝。
+- 不用 AI 作曲当主配乐；不沿用原片配乐（"抽离出来对应我们的画面和解说词，它是不搭的"）；当事人原声先做人声分离。
+- 配乐要剪到让原曲真正的收尾和弦落在片尾卡上（"老感觉好像没有说完"），用 `fit_music.py`。
+- 当事人原声最多比旁白响 1 分贝；最终响度 -14 LUFS，真峰值不超过 -1 dBTP，固定增益，不做动态压缩（"声音一下子降了很多"）。
 
-## 7. Covers and titles
+## 七、封面和标题
 
-- The cover uses a frame from the original film **with a face, emotion, and brightness** as the main image, plus one hook line (a number or a question) in bold type. Text-only covers do not attract viewers.
-- **No text over faces** (feedback: the text covered a child's face on the horizontal cover). Measure the face position first; `make_cover.py` blocks overlaps. Crop the horizontal 16:9 cover and the vertical 3:4 cover separately around the face.
-- WeChat Channels short titles **must not contain any punctuation** (no commas, question marks, or quotation marks).
+- 封面用原片里**有人脸、有情绪、亮**的一帧当主图，配一句钩子（数字或疑问），粗体字；纯文字封面没有吸引力。
+- **字不许压脸**（"直接把小孩子脸盖住了，好难看"）：先量脸的位置，`make_cover.py` 会拦；横版 16:9、竖版 3:4 各按脸单独裁。
+- 视频号短标题**不能带任何标点**（逗号、问号、引号都不要）。
 
-## 8. Platform publishing
+## 八、平台发布
 
-- WeChat Channels gets the horizontal edition, with the original WeChat Official Account article attached as the extended link. No paid promotion (feedback: in-feed ads are not needed), but the first 3 seconds and the cover still matter.
-- Douyin gets the vertical edition. The ending must not contain a WeChat QR code, "scan to follow" wording, or WeChat Official Account wording (Douyin's short-video mounting rules, section 4.5). Use `CLEAN_FOR_VERTICAL=1` to render a clean horizontal edition, then wrap it into the vertical edition.
-- On both platforms, **tick the "AI-generated / synthetic content" declaration** (the narration is an AI voice; China's Measures for Labeling AI-Generated Synthetic Content took effect on 2025-09-01).
-- Do not tick the originality declaration: the film uses a large amount of the brand's original footage.
-- Log the source and license of all outside material (library music tracks, external video).
+- 视频号发横版；挂公众号原文做扩展链接；不投流（"我们不需要投信息流"），但开头 3 秒和封面照样要紧。
+- 抖音发竖版：片尾不能有微信二维码、"扫码关注"、"公众号"字样（抖音《短视频挂载使用规范》4.5）；用 `CLEAN_FOR_VERTICAL=1` 出干净横版再包竖版。
+- 两个平台都**勾选"AI 生成/合成"声明**（旁白是 AI 配音；《人工智能生成合成内容标识办法》2025-09-01 施行）。
+- 原创声明不勾：片子大量用了品牌原片。
+- 外部片子里的素材许可要登记来源（曲库曲目、外部视频）。
 
-## 9. Publish checklist (every item ticked before publishing)
+## 九、可外发清单（条条打勾才发）
 
-1. The review loop reached "ready to publish," and every hard defect is fixed.
-2. QC passed: duration, black screens, first frame, loudness, true peak, sound on the end card, frozen picture, first frame at cuts, stutters.
-3. Fact check: every number, name, and date has a source.
-4. The user has watched and listened to the whole film once, with nothing that breaks immersion.
-5. One horizontal and one vertical cover, with no text over faces.
-6. Platform editions: horizontal for WeChat Channels, vertical for Douyin (no QR code, no WeChat Official Account wording).
-7. Publishing copy: a short title without punctuation, a description, and hashtags; tick the AI declaration when publishing.
+1. 审片循环做到"可以外发"，硬伤全部改掉。
+2. 体检通过：时长、黑屏、首帧、响度、真峰值、片尾卡有声、静止画面、切点第一帧、卡顿。
+3. 事实核对：数字、人名、时间都有出处。
+4. Aidan 完整看一遍、听一遍，没有出戏的地方。
+5. 封面横竖各一张，字不压脸。
+6. 平台版本：视频号横版、抖音竖版（无二维码、无"公众号"）。
+7. 发布文案：短标题无标点、描述、话题标签；发布时勾 AI 声明。
 
-## 10. How to work
+## 十、做事的方式
 
-- Show the user a film first and change what they point to. On big jobs, deliver something watchable every 30 to 60 minutes.
-- When one problem is pointed out, immediately scan the whole film for the same kind of problem and fix them all at once. Batch small flaws into a single render.
-- Verify reviewer findings and outside suggestions by measurement first, then sort them into "should fix," "the user decides," and "does not hold." Do not adopt suggestions that conflict with this file.
-- Record every change in `pitfalls.md`: symptom (with the feedback as given), cause, fix, and how to prevent it.
+- 先出片给 Aidan 看，他指哪改哪；大活每 30 到 60 分钟交一个能看的东西。
+- 被指出一处问题，立刻按同一类把全片扫一遍，一次改完；小毛病攒一批一起渲染。
+- 审片员和外部意见先实测核对，再分"该改 / 你定 / 不成立"；和本文件冲突的建议不采纳。
+- 每改一处，记进 `pitfalls.md`：现象（原话照录）、原因、修法、以后怎么防。

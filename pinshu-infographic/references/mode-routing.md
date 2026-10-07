@@ -1,13 +1,77 @@
-# Information graphic mode routing
+# 信息图视觉模式路由
 
-Use mode definitions from the public core, not a duplicate palette or layout registry.
+原创归属：Aidan（品叔）
 
-| Mode | Best use | Limit |
-|---|---|---|
-| warm-paper | Human, readable knowledge and method diagrams | No fixed character; avoid dense precision architecture |
-| lively-vector | Geometric processes, layers and comparisons | Candidate only; --candidate-test permits one explicit experiment |
-| character-presenter | A supplied character meaningfully teaches the diagram | Load the real approved identity and tested pairing; the information must remain clear without the person |
+更新：2026-07-26
 
-Choose a layout from the core by relationship: focus-hero for one claim, split-compare for comparison, linear-steps for a sequence, layered-steps for hierarchy, and an asymmetric composition for components. True loops must visibly close. A vertical output must use a dedicated vertical reading path. Layout IDs are fixed by the public core.
+## 先填视觉任务卡
 
-If the request is a cultural mood, material narrative, portrait or literary atmosphere, route it to pinshu-visual-system. Do not force it into an information diagram.
+先明确七个字段，再选画风：
+
+1. `character`：谁在讲；不需要人物就用 `none`。
+2. `task`：信息图、文章配图、PPT 关键页或其他任务。
+3. `structure`：流程、层级、对比、组成、循环或观点。
+4. `layout`：承担结构的版式骨架。
+5. `mode`：视觉语言。
+6. `platform`：文章、知识库、PPT、直播、课程或社交传播。
+7. `density`：`document` 或 `slide`。
+
+角色、任务、结构、版式和模式不得互相顶替。人物是谁，不决定信息必须画成什么结构；暖纸还是矢量，也不决定是否出现品哥。
+
+## 选 `warm-paper`
+
+满足任一：
+
+- 内容希望亲切、有温度、有笔记感；
+- 用于文章、知识库或课程讲义；
+- 需要把抽象概念讲得像人在纸上拆解；
+- 允许手写字、纸张和少量胶带，但仍要求专业。
+
+避免：
+
+- 高精度产品架构；
+- 大量并列数据；
+- 必须保持完全几何对齐的技术说明。
+
+## 选 `lively-vector`
+
+满足任一：
+
+- 内容是流程、架构、分层、对比或产品机制；
+- 需要比手绘更精确，但不能冷、不能像咨询模板；
+- 需要在课程或 PPT 中清楚远读；
+- 需要现代、清爽、活泼但不幼稚。
+
+避免：
+
+- 只靠三张等宽卡片解决所有内容；
+- 高饱和科技蓝；
+- 冷白背景和普通企业流程图。
+
+## 选 `character-presenter`
+
+必须同时满足：
+
+- 内容确实需要一个指定角色来讲，而不是人物装饰；
+- 正式生产时，该角色在注册表中为 `active` 且被当前模式列入 `tested_characters`；
+- 候选验证时，该角色在注册表中为 `candidate`、被列入 `candidate_characters`，并显式使用 `--candidate-test`；
+- 人物手势、视线和信息板可以形成明确阅读路径。
+
+当前生产状态以 `pinshu-visual-system/references/system-registry.json` 为准：角色看 `characters` 里的 `status`，讲解模式能用哪些角色看 `character-presenter` 的 `tested_characters`。本文件不再抄录状态，避免过期；不在 `tested_characters` 里的角色，不得生成替代形象。
+
+旧调用 `pinshu-presenter` 固定迁移为 `character-presenter + pingge`。
+
+## 模糊时怎么推荐
+
+- 普通文章与知识解释：优先 `warm-paper`。
+- 架构、流程、对比和机制：注册表里 `lively-vector` 为正式状态时优先用它；仍为候选时，交给视觉总控按平台主选画风路由，候选只做测试。
+- 用户明确指定一个已验证角色来讲：使用 `character-presenter`。
+- 内容需要角色，但角色或模式未验证：先给无人物版，人物版标为阻塞项，不擅自借用其他角色。
+
+仍有两种都适合时，给出两种推荐及取舍，等待用户确认，不要一次生成三张抽卡。
+
+## 候选模式不在这里直接生产
+
+照片涂鸦拼贴、文学蜡笔编辑、水墨叙事和手写纪实卡等候选方向统一由 `pinshu-visual-system` 管理。没有通过样张测试和用户确认前，不得伪装成正式模式。
+
+署名：Codex

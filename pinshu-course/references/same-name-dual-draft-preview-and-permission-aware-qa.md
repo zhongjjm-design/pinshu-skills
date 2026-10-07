@@ -1,127 +1,129 @@
-# Same-Name Dual-Draft Previews and Permission-Aware Acceptance
+# 同名双稿预览与权限感知验收
 
-Use this reference when a course knowledge base gives `official_faithful` and `official_lecture` the same filename but stores them at different manifest/path-map targets.
+适用于“一课双稿”采用相同文件名、但分别位于 `01_忠实精编稿/` 与 `02_结构化讲义/` 的课程知识库。
 
-## 1. Preview Synchronization Must Preserve Relative Directories
+## 1. 预览同步必须保留相对目录
 
-Incorrect:
-
-```text
-{preview_root}/
-└── {filename}
-```
-
-If the faithful transcript and lecture share a filename, flattening them into one directory causes the later copy to overwrite the earlier one silently. A successful copy command does not prove both drafts exist.
-
-Correct:
+错误做法：
 
 ```text
-{preview_root}/
-├── {course_map}
-├── {official_faithful_relative_target}
-└── {official_lecture_relative_target}
+预览/第12课/
+└── 第12课·标题.md
 ```
 
-### Synchronization Steps
+如果忠实稿和讲义文件名相同，平铺复制时后复制的文件会静默覆盖前一个。终端即使返回复制成功，也不能证明双稿都存在。
 
-1. Read the previous accepted lesson’s preview directory and reuse its structure;
-2. Create the relative parent directories rendered for `official_faithful` and `official_lecture`;
-3. Copy each draft into its corresponding subdirectory;
-4. Place the course map at the preview root for the lesson;
-5. Enumerate actual preview files and confirm there are exactly three: map, faithful transcript, and lecture;
-6. If an obsolete flattened copy exists, move it to the system Trash rather than permanently deleting it;
-7. After repair, read the frontmatter of both preview files; do not trust the copy command alone.
-
-## 2. Minimum Source-to-Preview Reconciliation
-
-Reconcile at least:
-
-- Relative directory;
-- Filename;
-- `content_type`;
-- `original_title`;
-- H1;
-- Total line count;
-- File size;
-- Placeholders and truncation markers;
-- Lesson-specific STT residue;
-- Third-party editorial voice in the faithful transcript.
-
-Checking only that “a file with the same name exists” is insufficient because the preview may contain only the lecture copy.
-
-## 3. Layer Acceptance State When Permissions Are Restricted
-
-If the system explicitly denies automated scans, scripts, or SHA commands and requires user authorization:
-
-- Do not retry the same restricted command;
-- Do not switch tools to bypass the restriction and obtain the same result;
-- Continue content checks that are clearly unrestricted and do not constitute a bypass;
-- Split state in the map and report rather than writing a broad “all acceptance passed.”
-
-Recommended state:
+正确结构：
 
 ```text
-Content-structure acceptance: passed
-Title/frontmatter/H1: passed
-Text-residue scan: passed
-Source/preview line count and file size: consistent
-SHA-256: not executed (permission restricted)
+预览/第12课/
+├── 00_课程地图.md
+├── 01_忠实精编稿/
+│   └── 第12课·标题.md
+└── 02_结构化讲义/
+    └── 第12课·标题.md
 ```
 
-“Not executed” means neither “failed” nor “passed.”
+### 同步步骤
 
-## 4. Map Update Timing: Two-Stage Commit, No Optimistic Marking
+1. 先读取上一节已验收预览目录，复用其结构；
+2. 创建 `01_忠实精编稿/`、`02_结构化讲义/` 子目录；
+3. 将双稿分别复制到对应目录；
+4. 课程地图放在本课预览根目录；
+5. 列出预览目录实际文件，确认恰有地图＋忠实稿＋讲义；
+6. 若历史上产生了错误平铺副本，用系统废纸篓工具移走，不直接永久删除；
+7. 修复后重新读取两份预览文件的 frontmatter，不能只相信复制命令返回值。
 
-Treat “content generated” and “preview synchronized and accepted” as separate commit stages.
+## 2. 源端与预览端的最小对账
 
-### Stage A: Source Side Complete
+至少对账：
 
-After both drafts and knowledge navigation are written, the map may say no more than:
+- 相对目录；
+- 文件名；
+- `content_type`；
+- `original_title`；
+- H1；
+- 总行数；
+- 文件大小；
+- 占位符与截断标记；
+- 本课STT残留词；
+- 忠实稿第三方编辑视角。
+
+仅核对“同名文件存在”不够，因为预览端可能只剩讲义副本。
+
+## 3. 权限受限时的验收状态分层
+
+如果自动扫描、脚本或SHA命令被系统明确拒绝，并要求等待用户授权：
+
+- 不重试同一受限命令；
+- 不换工具绕过以获得同一结果；
+- 继续执行明确不受限、且不等价于绕过的内容检查；
+- 地图和报告中拆分状态，不写笼统的“全部验收通过”。
+
+推荐状态：
 
 ```text
-Dual drafts: generated
-Preview: pending synchronization
-Non-restricted acceptance: pending
-SHA-256: not executed / awaiting authorization
+内容结构验收：通过
+标题/frontmatter/H1：通过
+文本残留扫描：通过
+源/预览行数与文件大小：一致
+SHA-256：未执行（权限受限）
 ```
 
-At this point, received lessons, lessons with dual drafts, knowledge navigation, and next lesson may be updated. **Do not write “acceptance passed,” “source and preview match,” or include the lesson in accepted totals prematurely.**
+“未执行”不等于“失败”，也不等于“通过”。
 
-### Stage B: Verify After Synchronization
+## 4. 地图更新时机：两阶段提交，禁止乐观标记
 
-Change the map to “non-restricted acceptance passed” only after reading all of the following from actual files:
+把“内容已生成”和“预览已同步并验收”视为两个独立提交阶段。
 
-1. Map, faithful transcript, and lecture exist in the preview directory;
-2. The two drafts occupy their correct subdirectories and did not overwrite each other;
-3. Source and preview line counts, sizes, or another permitted equivalence check agree;
-4. Frontmatter, H1, placeholders, STT residue, and first-person scans pass;
-5. Restricted items remain explicitly “not executed” and are not swallowed by “non-restricted checks passed.”
+### 阶段A：源端完成
 
-Then synchronize the final map into the preview root again and read back its progress line.
+双稿和知识导航写完后，地图最多只能写：
 
-### If Synchronization Is Permission-Blocked
+```text
+双稿：已生成
+预览：待同步
+非受限验收：待完成
+SHA-256：未执行/待授权
+```
 
-- Stop immediately; do not retry, alter the command, or switch tools to bypass the block;
-- Preserve or restore map state to “source dual drafts generated; preview pending synchronization; acceptance incomplete”;
-- If the map was incorrectly marked “passed,” the first action after renewed authorization is to correct that state before synchronizing;
-- Explain clearly to the user that source-side completion is not preview completion and a planned terminal state cannot replace an observed result.
+此时可以更新已收到课次、已生成双稿课次、知识导航和下一课，但**不得提前写“验收通过”“源/预览一致”或把本课计入已验收总数**。
 
-**No optimistic writes: any state dependent on the next tool action may be committed only after that action succeeds and is read back.**
+### 阶段B：同步后验证
 
-## 5. Separate Continuing Business Authorization from Runtime Tool Authorization
+只有在以下事实都已从实际文件读回后，才能把地图改为“非受限验收通过”：
 
-A user’s continuing authorization to “write both drafts and update the map directly for each later lesson” approves the **business scope** of one course series. It does not guarantee runtime approval for terminal copies, directory creation, or batch validation. These permission layers do not substitute for one another:
+1. 预览目录中地图、忠实稿、讲义三份文件真实存在；
+2. 双稿分别位于正确子目录，没有同名覆盖；
+3. 源端与预览端的行数、大小或允许执行的等价一致性检查通过；
+4. frontmatter、H1、占位符、STT残留和第一人称扫描通过；
+5. 受限项单独保持“未执行”，不得被“非受限通过”吞掉。
 
-- Series-level continuing authorization determines whether the current lesson may be processed and written into the agreed formal course directory;
-- Runtime tool authorization is determined by the current tool and safety layer for each synchronization, copy, or composite command.
+然后再把最终地图同步到预览根目录，并回读预览地图中的进度行。
 
-Therefore:
+### 同步动作被权限拦截时
 
-1. After source-side drafts and map updates are complete, keep “preview pending synchronization / acceptance pending”;
-2. When initiating preview synchronization, constrain directory creation, separate draft copies, map copy, and non-SHA reconciliation to explicit allowlisted paths for the lesson;
-3. If the runtime says it is waiting for authorization and eventually times out, stop immediately. Continuing authorization does not justify retrying or switching tools;
-4. Report “source side complete” separately from “preview/acceptance incomplete,” and keep task state in progress;
-5. When the user later authorizes resumption, **perform a read-only inventory of the actual preview directory and map state first**. Do not assume that a blocked composite command had no partial side effects, and do not rerun the entire command blindly;
-6. Complete only missing actions, reconcile through readback, then commit the terminal map state and synchronize that terminal map into the preview root again.
+- 立即停止，不重试、不改命令、不换工具绕过；
+- 保持或恢复地图为“源端双稿已生成，预览待同步，验收未完成”；
+- 若地图已被误写为“通过”，必须在用户重新授权后的第一步先纠正状态，再执行同步；
+- 对用户明确说明：源端完成不等于预览完成，不能用计划终态替代实际结果。
 
-This separation prevents two opposite errors: mistaking old business authorization for current tool permission, and reporting an entire lesson as failed after a tool timeout even though source-side work is complete.
+**禁止乐观写入原则：任何依赖下一步工具成功的状态，都只能在下一步成功并回读后提交。**
+
+## 5. 系列持续授权与运行时工具授权必须分层
+
+用户对某一课程系列明确授予“后续逐课直接写双稿并更新地图”的持续授权，只说明**业务范围已批准**，不保证运行时会自动放行终端复制、目录创建、批量校验等独立工具动作。两者不能互相代替：
+
+- 系列持续授权：决定是否可以处理本课和写入约定的正式课程目录；
+- 运行时工具授权：由当前工具和安全层决定某次同步、复制或复合命令是否需要即时确认。
+
+因此：
+
+1. 源端双稿和地图完成后，先保持“预览待同步／验收待完成”；
+2. 发起预览同步时，把“创建目录＋分别复制双稿＋复制地图＋非SHA对账”限定在本课白名单路径内；
+3. 若运行时提示等待用户授权并最终超时，立即停止，不能以系列持续授权为理由重试或换工具；
+4. 报告必须分成“源端已完成”与“预览/验收未完成”，并保留任务状态为进行中；
+5. 用户后来明确授权恢复时，**先只读盘点实际预览目录和地图状态**，不要假定被拦截的复合命令完全没有副作用，也不要盲目重跑整条命令；
+6. 依据盘点结果只补缺失动作，完成回读对账后再提交终态地图，并重新同步终态地图到预览根目录。
+
+这一分层可避免两种相反错误：一是把旧的业务授权误当成当前工具放行；二是工具超时后把已经完成的源端成果误报为整课失败。

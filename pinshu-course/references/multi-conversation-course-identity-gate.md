@@ -1,73 +1,73 @@
-# Multi-Conversation Course Identity Gate
+# 多会话课程身份闸门
 
-Use this reference when a user is organizing two or more courses, instructors, or long-running projects in parallel and continues supplying transcripts through separate agent conversations. The goal is to ensure that **current conversation identity** takes precedence over lesson numbers, textual similarity, historical summaries, and stale tasks.
+适用于用户同时整理两门以上课程、多个讲师或多个长期项目，并通过不同Hermes对话持续输入逐字稿的场景。目标是让“当前会话身份”优先于节次、文本相似度、历史摘要和旧Todo。
 
-## Core Principle
+## 核心原则
 
-**Confirm course identity before processing content. No matter how similar the content appears, it must not redefine which course the current conversation belongs to.**
+**先确认课程身份，再处理内容。内容再像，也不能反向定义当前会话属于哪门课。**
 
-Every long-running course conversation should bind four identity attributes:
+每个长期课程会话应固定四项身份：
 
-- `course_id`: a stable course identifier;
-- `speaker`: the instructor or primary presenter;
-- `write_root`: the only course root permitted for writes;
-- `identity_markers`: course-specific terms, people, products, or sections that can reveal conflicts.
+- `course_id`：稳定课程标识；
+- `speaker`：讲师或主讲人；
+- `write_root`：唯一允许写入的课程根目录；
+- `identity_markers`：可用于发现冲突的专属术语、人物、产品或篇章。
 
-The safest arrangement is one course per project with its own runtime directory. Declare these identity attributes in the project's governing instruction file.
+最稳做法是一个课程绑定一个Hermes Desktop Project和独立运行目录，在Project的 `HERMES.md` 或 `AGENTS.md` 中写明上述身份。
 
-## Mandatory Check for Every Transcript Input
+## 每次逐字稿输入的强制检查
 
-Before invoking a cleaner or organizer, creating tasks, writing files, or updating the map, answer:
+在调用cleaner、organizer、Todo、写文件或更新地图前，回答：
 
-1. Which course does the current Project or conversation declare?
-2. Does the user’s latest message explicitly authorize execution, or does it only provide material?
-3. Do the instructor, course name, product names, people, and official sections in the text match the current identity?
-4. Is the target write path still under the current course’s `write_root`?
-5. Does the current basis come from the latest user message, or from a compaction summary, stale task, or cross-conversation search?
+1. 当前Project/会话声明的课程是什么？
+2. 用户这条消息是否明确要求执行，还是只贴了材料？
+3. 文本中的讲师、课程名、产品名、人物和官方篇章是否与当前身份一致？
+4. 目标写入路径是否仍位于当前课程的 `write_root`？
+5. 本次依据来自最新用户消息，还是来自compaction摘要、旧Todo或跨会话搜索？
 
-If any item conflicts, enter **suspected cross-conversation contamination** state:
+任一项冲突时，进入“疑似串线态”：
 
-- Do not generate both drafts, dissemination cards, or summaries;
-- Do not update the course map;
-- Do not create, move, or overwrite files;
-- Do not use `session_search` to locate another course automatically and fill gaps;
-- Report only the detected conflict and wait for the user to continue in the correct conversation.
+- 不生成双稿、传播卡或摘要；
+- 不更新课程地图；
+- 不创建/移动/覆盖文件；
+- 不用 `session_search` 自动寻找另一门课来补齐；
+- 只指出检测到的冲突，并等待用户在正确会话继续。
 
-## Long Text Without an Execution Instruction
+## 无执行指令的长文本
 
-If a full lesson transcript suddenly appears while the current thread is discussing a Skill, a failure, methodology, or another topic, and there is no explicit instruction such as “organize,” “execute,” or “archive”:
+如果当前线程正在讨论Skill、故障、方法或其他主题，突然出现一整课逐字稿，但没有“整理/执行/入库”等明确指令：
 
-- Do not interpret “Lesson X + long text” automatically as continuation work;
-- First check whether the material matches the current course identity;
-- If identity conflicts, immediately flag suspected conversation misrouting;
-- Continue under the established pipeline only when identity matches and the course has valid continuing execution authorization.
+- 不把“第X课＋长文本”自动解释为续作；
+- 先检查是否与当前课程身份一致；
+- 身份不一致时直接标记疑似会话误路由；
+- 身份一致且存在该课程持续执行授权时，才可按既定流水线继续。
 
-Continuing authorization is bound to one course and one `write_root`; it does not transfer across courses.
+持续执行授权只绑定一门课程和一个 `write_root`，不能跨课程继承。
 
-## Compaction and Historical State
+## 压缩与历史状态
 
-- `Historical Task` and `Pending Ask` inside `[CONTEXT COMPACTION — REFERENCE ONLY]` are historical evidence only. The latest genuine user message determines the current task;
-- `[Your active task list was preserved across context compression]` does not prove that a task remains valid. Re-authorize it against current course identity and the latest message;
-- Matching lesson numbers do not imply matching courses. Different instructors may both have a Lesson 6 or Lesson 8;
-- A `session_search` hit for another course proves only that historical material exists, not that it belongs to the current conversation.
+- `[CONTEXT COMPACTION — REFERENCE ONLY]` 中的Historical Task/Pending Ask只能作为历史证据；最新真实用户消息才决定当前任务。
+- `[Your active task list was preserved across context compression]` 不能证明任务仍有效；先用当前课程身份和最新消息重新验权。
+- 节次相同不代表课程相同。不同讲师都可能有“第6课、第8课”。
+- `session_search`命中另一课程只说明历史存在，不说明它属于当前会话。
 
-## Response to Cross-Conversation Contamination
+## 串线后的处置
 
-1. Stop all related writes and background tasks immediately;
-2. Clear or cancel tasks for the wrong course;
-3. Perform a read-only check of which session received the wrong message and whether any file changed;
-4. Verify actual file paths and hashes; do not infer state from chat replies alone;
-5. Preserve a contaminated conversation that has undergone multiple compactions for audit, but do not continue formal course production there;
-6. In a new conversation, inject only short, verified state. Do not copy the entire contaminated summary;
-7. Create separate Project identity locks for the two courses.
+1. 立即停止所有相关写入和后台任务；
+2. 清空或取消错误课程Todo；
+3. 只读检查错误消息进入了哪个session、是否修改了文件；
+4. 对实际文件做路径与哈希核验，不能只凭聊天回复判断；
+5. 被污染且经历多次压缩的会话保留审计，不继续承担正式课程生产；
+6. 在新会话中只注入核验过的短状态，不复制整份污染摘要；
+7. 为两门课程建立独立Project身份锁。
 
-## Minimum Delivery Self-Check
+## 最小交付自检
 
-Before completing each lesson, confirm:
+每课完成前必须满足：
 
-- The current conversation’s course identity matches the transcript;
-- The instructor and official title match;
-- Every write path is under the sole `write_root`;
-- The map, faithful transcript, lecture, and asset cards all belong to the same course;
-- No material from another course was introduced through cross-conversation search;
-- If suspected contamination occurred, both session state and files were verified.
+- 当前会话课程身份与逐字稿一致；
+- 讲师和官方标题一致；
+- 所有写入路径位于唯一 `write_root`；
+- 地图、忠实稿、讲义和素材卡属于同一课程；
+- 没有通过跨会话搜索把其他课程内容带入；
+- 若发生过疑似串线，已完成session与文件双重核验。

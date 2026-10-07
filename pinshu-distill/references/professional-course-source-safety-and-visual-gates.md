@@ -1,74 +1,72 @@
-# Source, Safety, and Visual Gates for Professional Courses
+# 专业课程的来源、安全与视觉闸门
 
-A structured guide may reorganize knowledge, but the result must not become more certain, actionable, or factual than the course source. Apply these rules while drafting, not as disclaimers added during final QA.
+结构化讲义可以重组知识，但不能让重组后的文本比课堂来源更确定、更可执行或更像客观事实。本规则在写讲义时生效，不等到文末QA才补免责声明。
 
-## 1. Choose the primary structure, then embed real submodules
+## 一、先选主骨架，再嵌入真实子模块
 
-When a lesson mixes several instructional types, choose the primary structure by what learners should mainly be able to do afterward: understand a concept, compare options, complete an analysis, review a case, recognize a procedure, or interpret a source text. Embed the remaining types as submodules.
+一课混合多种课型时，按“学习者学完主要能做什么”选主骨架：理解概念、比较选择、完成推演、复盘病案、识别实操或解释经典。其他课型作为子模块嵌入。
 
-Templates organize only stages that actually occurred. If a case did not include a systematic differential analysis, state that the lesson did not cover one. If no outcome was reported, do not invent one. Never fill a template with side examples, generic knowledge, or editorial inference.
+模板只整理课堂真实发生的环节。病案没有系统鉴别就写“本课未展开系统鉴别”；没有反馈就不补反馈；不能拿旁支案例、通用知识或编辑推断填满模板。
 
-## 2. Attribute case details to the correct person
+## 二、病案人物归属
 
-Bind history, tests, treatment, outcomes, and conclusions to both the person and the source location. In multi-person Q&A, flashbacks to earlier cases, long-range pronoun references, or case switches, first establish whose information each detail represents.
+既往史、检查、治疗、反馈和结论必须绑定人物与来源位置。多人问答、前案插叙、代词跨段或病例切换时，先确认“这是谁的信息”。来源不能唯一确定时写“归属待回听”，不得选一个看似合理的人物，也不得基于不确定病史继续推导。
 
-If the source cannot establish a unique attribution, mark it `attribution requires source review`. Do not select the most plausible person or continue reasoning from an uncertain history.
+## 三、原型与改法分层
 
-## 3. Separate the prototype from adaptations
+方剂、方法、流程、模型等有原始对象时，分别写：
 
-When a formula, method, process, or model has an original form, separate:
+1. 原始组成或原始规则；
+2. 课堂推导；
+3. 条件加减或条件分叉；
+4. 讲师个人优化与个案用法；
+5. 现代安全或事实提示。
 
-1. the original components or rules;
-2. the reasoning presented in class;
-3. conditional modifications or branches;
-4. the instructor's optimization or case-specific use;
-5. modern safety or factual guidance.
+不能把条件加味写进原方，把编辑口诀写成老师原话，或把跨课补充挂在本课来源下。
 
-Do not fold conditional additions into an original formula, label an editorial mnemonic as the instructor's wording, or cite a cross-lesson addition as if it came from the current lesson.
+## 四、来源身份必须就地出现
 
-## 4. Identify sources locally
+以下内容在首次出现和被总结成表格、地图、卡片入口时，就近标明身份：
 
-At first mention, and again when condensed into a table, map, or card entry, label the identity of:
+- 讲师课堂观点或经验；
+- 编辑者归纳、命名、关系图和跨段重组；
+- 外部材料或跨课补充；
+- 待确认、争议、转写疑词；
+- 医疗、药物、剂量、毒性、法规和可执行操作。
 
-- instructor views or experience;
-- editorial synthesis, naming, relationship maps, and cross-passage restructuring;
-- external material or additions from other lessons;
-- disputed content, uncertain transcription, or material awaiting confirmation;
-- medical guidance, medication, dosage, toxicity, law, and actionable procedures.
+文末统一声明只能补充，不能替代近邻分层。直接引语必须逐字成立；意思相近但不是原句时不用引号。
 
-An endnote can supplement these local labels but cannot replace them. Use quotation marks only for exact wording. Paraphrases must not appear as direct quotations.
+## 五、高风险内容只做学习识别，不做无督导教程
 
-## 5. Treat high-risk material as recognition content, not unsupervised instruction
+医疗处置、药物剂量、毒性药、中西药合用、危重症分诊、针刺及其他可能伤人的实操：
 
-For medical treatment, medication dosage, toxic substances, combined use of traditional Chinese and Western medicines, emergency triage, needling, and any other procedure that could cause harm:
+- 保留课程内容和推导，但标明是课程记录；
+- 不把个案或课堂经验改成现实处方、家庭替代方案或唯一标准答案；
+- 讲义只帮助识别原理、风险和回看位置；
+- 需要资质、诊断、现场督导、器械、无菌或异常处置条件时，在相应段落直接说明；
+- 忠实稿本身存在绝对说法时，讲义保留其来源身份，不替它做外部背书。
 
-- preserve the course content and reasoning while labeling it as a course record;
-- do not turn a classroom case or instructor experience into a real-world prescription, home substitute, or sole correct answer;
-- use the guide to support recognition of principles, risks, and source locations;
-- state locally when execution requires credentials, diagnosis, supervision, equipment, sterile technique, or emergency-response capability;
-- when the faithful transcript contains absolute claims, preserve their source identity without endorsing them externally.
+## 六、强视觉与实操依赖
 
-## 6. Handle visual and procedural dependencies
-
-Conceptual relationships may support standalone review. Palpation, spatial relationships, angles, coordinated hand movements, force, timing, and abnormal feedback can only be indexed back to the demonstration. Use this block for every critical visual dependency:
+理论关系可以独立复习；触摸定位、空间关系、角度、双手配合、力度、时序和异常反馈只能作为课堂示范索引。每个关键视觉依赖使用统一中文块：
 
 ```text
-[VISUAL DEPENDENCY]
-Missing visual: What action, position, or change must be seen.
-Text supports: What the learner can understand from text alone.
-Do not use this text to: What cannot be performed from the text alone.
-Review: The relevant demonstration, image, or source location.
-Safety boundary: Required credentials, supervision, or stop conditions.
+【视觉依赖】
+缺失画面：需要看到什么动作、位置或变化。
+文字可学：仅凭文字可以理解什么。
+不可据此完成：不能凭文字自行执行什么。
+建议回看：对应示范或图片位置。
+安全边界：需要什么资质、督导或停止条件。
 ```
 
-"No image attached" does not mean the course contained no visuals. When a critical action lacks visual material, classify the guide as `theory reviewable; procedure requires source replay`. Never claim that the procedure can be learned independently.
+“本课无附图”不等于课程本身没有画面。核心动作没有视觉素材时，讲义只能判为“理论可复习、实操待回看”，不能宣称实操可独立学习。
 
-## 7. Audit source coverage in both directions
+## 七、生成前后的反向覆盖
 
-Before drafting, inventory the faithful transcript's distinct semantic units: main line, reasoning, conditions, counterexamples, cases, numbers, distinctive instructor judgments, uncertainties, and safety content. Assign each unit exactly one destination:
+先按忠实稿列出独立语义单元：主线、推导、条件、反例、案例、数字、讲师独有判断、待确认和安全内容。每项只允许三种去向：
 
-- the guide body;
-- a lower-priority section such as Instructor Perspective, Needs Verification, or Side Discussion;
-- explicit exclusion with a reason.
+- 进入讲义正文；
+- 降级进入课堂观点、待核验或旁支区；
+- 明确排除并写理由。
 
-Keep the inventory in production control, not in reader-facing prose. A structured guide may compress wording, but greater length or complete-looking headings do not prove semantic coverage.
+检查表留在生产控制区，不占用户正文。结构化讲义允许压缩篇幅，但不得用“讲义更长、标题齐全”代替语义覆盖证明。

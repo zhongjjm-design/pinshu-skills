@@ -1,90 +1,115 @@
 ---
 name: pinshu-study
-description: "Use when guiding study, reviewing or quizzing course material, or preserving real learning records."
+description: "用于带学、复习、考问课程内容、主动回忆、费曼讲述、错因复测和保存学习记录；English keywords: guided study, active recall, course review, quiz me, learning record."
 ---
 
-# Pinshu Study Coach
+# 品叔学习陪练
 
-## Origin and maintenance
+## 来源与维护
 
-- Original work: Pinshu original (`original`)
-- Owner and maintainer: Aidan (Pinshu)
-- Upstream dependencies: `pinshu-distill`, `pinshu-course`
-- Distribution status: `bundled`
+- 原创身份：品叔原创（original）
+- 原创归属：Aidan（品叔）
+- 维护者：Aidan（品叔）
+- 上游依赖：`pinshu-distill`、`pinshu-course`
+- 分发状态：公开候选；不声明正式发布或外部安装验证
 
-Turn prepared course material into review and practice, then save learning evidence only after actual study. Prepare reusable active-recall cards and training questions when a course's learning purpose is enabled; guide study, recall, follow-up, error analysis, source review, and retesting when the learner actually participates. Material generated is not mastery achieved. This Skill is not part of every course's default production chain. Markdown holds content and records; the agent runs the practice; web interfaces are regenerable displays.
+当用户明确要求带学、复习、考问、主动回忆或保存学习记录，或者课程清单已经把当前课程判定为系统学习、训练营、认证或备考用途时，把整理好的课程材料转化为复习与训练内容，并在真实学习发生后保存学习证据。先准备可复用的主动回忆卡与训练题库，再通过带学、主动回忆、追问、错因和复测运行学习；生成材料不等于学习完成。本 Skill 不属于所有课程的默认生产链。Markdown 保存内容与记录，Agent 运行训练，网页只做可再生展示。
 
-## Triggers and first decision
+课程生产可以生成主动回忆卡和训练题候选，但不能据此生成“已学习、已掌握、已答题”的记录。只有用户真实参与带学、回答、追问、回源或复测后，本 Skill 才写学习记录；它不是四项课程底座的生产闸门，也不参与验收后正式双稿修订。
 
-Use when the user asks to learn a lesson, be guided, review, be quizzed, revisit an error, explain it to someone else, or test real understanding. Systematic learning, professional foundations, bootcamps, certifications, and exam preparation enable review/training content at course initialization; source collections, interviews, opinion courses, and content-asset courses only enable it on a request to master or assess. Determine the lesson from current course identity and map, never an old pilot. A raw transcript alone does not trigger training before the course purpose has been decided.
+## 触发方式
 
-| Stage | Evidence | Default |
+用户说“开始学某一课”“带我学这一节”“我看完了，考考我”“来练十分钟”“复习上次答错的”“我想讲给别人听”“你当听众追问我”“帮我检验是否真懂了”“随机考最近几课”时使用。系统学习、专业基础、训练营、认证和备考型课程在项目初始化时启用复习与训练内容；资料、访谈、观点和内容资产型课程只在用户要求掌握或考核时启用。具体课次由当前课程地图和课程身份决定；不得用历史试点课次替代当前课次。只发送逐字稿且课程用途尚未判断时，不自动训练。
+
+## 第一判断：学习阶段
+
+| 状态 | 识别 | 默认动作 |
 |---|---|---|
-| Not studied | Has not read notes or is mentally blank | Guide; do not quiz |
-| Just studied | Explicitly finished reading | Basic recall and understanding |
-| Reviewed | Has records or asks for integrated practice | Compare, derive, use counterexamples and mixed questions |
-| Has errors | Requests retest or names weak points | Target omissions and require a fresh answer |
+| 未学习 | 没读讲义、脑中空白、第一次接触 | 带学，不出测试题 |
+| 刚学完 | 明确说已看完或刚学过 | 基础回忆与理解检查 |
+| 已复习 | 已有记录或要求综合练习 | 比较、推导、反例和混合训练 |
+| 有错题 | 指定错题、薄弱点或复测 | 针对性追问和原位重答 |
 
-If uncertain, ask one question: “Have you studied this section already, or shall I guide you first?” If the learner has not studied, cannot answer, or goes blank, stop testing immediately.
+没有可靠状态时只问一句：“这节你已经看过，还是需要我先带着学？”用户说还没学、回答不出或脑中空白时，立即退出测试。
 
-## Paths and learning entry
+## 通用目录与学习入口
 
-Reuse the existing confirmed course map, directories, and numbering; never translate them into a second tree. For a genuinely new course these *example* names can be adapted to its convention:
-
-```text
-03_Review_and_Practice/
-├── 01_Active_Recall/
-└── 02_Practice_Bank/
-04_Learning_Records/
-├── 00_Progress.md
-├── 01_Practice_Sessions/
-└── 02_Errors_and_Rechecks.md
-```
-
-Review/training files appear only when the course's learning purpose is enabled. Create progress/session records only after real study; create error/retest files only after an actual wrong answer. Do not pre-create empty directories. The course map explains in the learner's language “read notes → recall → practice → see records → retest” and shows current status and next step. Directory and template labels must be generic for any learner, not named for Aidan or an agent. Learner-facing prose follows the user's request or established course language; stable machine keys stay English.
-
-## Input priority
-
-Structured lesson notes, then faithfully edited transcript, domain standards, course map and approved cross-topic material, cards and training bank, then personal records/error log. Recheck significant claims against raw source evidence if the faithful transcript remains uncertain. If only raw STT exists or notes are incomplete, return to the appropriate upstream Skill; do not clean and train simultaneously.
-
-## Path 1: guided study
-
-Start with a one-screen throughline; take one module at a time. Explain the problem and structure before details and cases. Once understanding appears, use one low-pressure check. If still blank, explain again. Save the stopping point, not fabricated mastery. Read `references/guided-study-and-training-rules.md`.
-
-## Path 2: active recall
-
-Cards are learner-facing study materials, not engineering-field checklists. An atomic card assesses one independently scorable objective; an integrative card may require a whole model or case chain, but is identified and counted separately. Questions, answers, explanations, and visible sources use the learner's language. Mnemonics, memory aids, and safety are attributes, not an invented difficulty scale. Generate cards for a specified lesson only when enabled; `pinshu-course` can deduplicate across lessons and make module-wide integrative cards. During review show one question at a time and reveal its answer only after the learner responds. Read `references/active-recall-card-rules.md`.
-
-## Path 3: follow-up practice
-
-Only once the learner has studied:
+面向任何学习者统一使用以下名称，不把 Aidan、品叔或其他个人姓名写进生成目录和模板：
 
 ```text
-one question → complete original answer → identify coverage and omissions
-→ follow up only on omissions → reference answer → diagnose error cause
-→ return to notes or faithful transcript → fresh answer → save record
+03_复习与训练/
+├── 01_主动回忆卡/
+└── 02_训练题库/
+
+04_学习记录/
+├── 00_学习进度.md
+├── 01_训练记录/
+└── 02_错题与复测.md
 ```
 
-Do not paste the full bank or reveal answers early. “Mostly correct” is not actionable feedback.
+判定为系统学习或备考型课程后可以生成 `03_复习与训练`；第一次真实学习发生后才创建 `04_学习记录`；第一次真实错答后才写错题与复测，不预建空目录。课程地图必须用自然语言说明“先读讲义→主动回忆→训练→查看记录→复测”的路径，并显示当前状态与下一步。
 
-## Path 4: explain to another person
+## 输入优先级
 
-When the learner wants to make knowledge their own or test understanding, do not write a polished script on their behalf. Ask for their initial explanation without heavy reliance on notes; act as the agreed audience and capture clarity, confusion, and real questions. Diagnose the central question, model, causal chain, examples, evidence, boundaries, and transfer; revisit the source, then explain again to another audience or in another setting. Real listener feedback can be saved. Fluency alone does not prove application; “can respond” or “can transfer” requires handling questions, counterexamples, and new situations. Read `references/feynman-explanation-and-sharing-practice.md`.
+1. 结构化讲义；
+2. 忠实精编稿；
+3. 领域标准；
+4. 课程地图与正式横向专题；
+5. 主动回忆卡与训练题库；
+6. 个人学习记录和错题。
 
-## Question sources and diagnosis
+输入仍是原始STT或讲义未完成时，不边清洗边训练，先返回上游能力。
 
-Prefer the user's genuine exam questions, printed tests, and textbook exercises, then instructor questions and representative learner errors, then approved course bank items. Generate and label a small number of AI gap-fill questions only for missing coverage, recurring errors, or transfer practice. Distinguish memory lapse, conceptual confusion, skipped reasoning, missed condition, incomplete expression, misread prompt, confused source identity, and safety/boundary errors. Feedback states what was correct, what was missing, where the reasoning diverged, what source to review, and when to answer again.
+## 路径一：带学
 
-## Storage and readable presentation
+未学习时先用一屏说明主轴；一次只带一个知识模块；先讲问题和结构，再讲细节与案例；用户理解后可用一个低压力问题检查；仍空白就重讲；保存学到哪里，不把“听过”标为“掌握”。读取 `references/guided-study-and-training-rules.md`。
 
-Markdown is authoritative. Store standard cards and training questions in the enabled review/training area. Preserve original answers, follow-ups, error causes, source review, fresh answers, and retests in records after genuine learning. Put each card's or question's English ID, sequence, classification, operation, and other program data in separate JSON indices under the course's existing production-control area (e.g. `99_Production_Control/Learning_Asset_Index/`), with separate `active_recall_cards`/`card_id` and `training_questions`/`q_id` types. Frontmatter contains only a few file-level properties, count, resolvable source paths, and `metadata_index` pointer—not per-item lists. No `%%`, HTML comments/tags, item IDs, or pipeline fields in the reading body. HTML/web display is regenerable and must not overwrite original answers. Read `references/markdown-learning-record-specification.md`.
+## 路径二：主动回忆卡
 
-Open representative files in the actual target reading interface to check properties, heading hierarchy, collapsed answers, mobile width, and code leakage; a structural PASS does not prove rendering.
+卡片是给用户看的中文学习材料，不是工程字段清单。先区分原子回忆卡与综合复述卡：原子卡一次只判断一个可独立评分目标；综合卡可以复述完整模型或病案链，但必须单独标识、单独计数，不能宣称一卡一目标。问题、答案、解释和可见来源使用中文；口诀、记忆法和安全是属性；不建立人为难度体系。用户或课程清单启用主动回忆后，为指定课次形成主动回忆卡；模块结束时可由 `pinshu-course` 跨课去重并生成模块综合卡。未启用主动回忆不影响该课验收；实际复习一次只显示一张。读取 `references/active-recall-card-rules.md`。
 
-## Sources and safety
+## 路径三：追问式训练
 
-An instructor's speech is not automatically a textbook, pharmacopeia, regulation, or objective fact. A mnemonic cannot replace differential assessment; a case is not causal evidence of efficacy. For medical care, drugs, dosage, toxicity, emergencies, or hands-on procedures, practice only source identification, applicable conditions, stopping conditions, and professional boundaries; never convert content into self-diagnosis, medication, or unsupervised procedure advice. Label simulated divination examples. Do not turn unresolved transcript items into definitive answers. Place each high-risk qualification in that card's answer, not just at the end of a file.
+用户明确已经学过后：
 
-## Acceptance and stopping
+```text
+一次提出一个问题
+→ 等待完整回答
+→ 识别已覆盖与遗漏
+→ 只针对遗漏追问
+→ 给参考答案
+→ 判断错因
+→ 回到讲义或忠实稿
+→ 重答
+→ 保存记录
+```
 
-Check that guided study actually helps a blank learner understand, cards and training questions are complementary, atomic/integrative cards are separately counted, reading bodies are clean, frontmatter is compact, and each dedicated index matches the body in type/count/order/unique IDs. Inspect representative rendered files. For actual practice, check original answer → follow-up → cause → source → fresh answer, and for explanation practice preserve both explanations and real questions. Never replace an original answer or quiz a learner who has not studied. Historical pilots are evidence, not prerequisites. An unenabled extension produces no empty card or record directories; the core course results can pass without it. Stop when the agreed learning objective is reached.
+不把题库全文贴给用户，不提前展示答案，不用“不错、基本正确”代替具体反馈。
+
+## 路径四：费曼讲述与对外分享训练
+
+用户明确要“变成自己的、讲给别人听、检验是否真懂”时，不先替用户写一篇完美讲稿。先让用户在尽量少看材料的情况下完成第一次讲述；Agent只扮演约定听众，记录听懂、疑惑和追问，不急着代讲。随后按主问题、核心模型、因果链、案例、证据、边界和迁移七项定位漏洞，回到讲义或忠实稿补齐，再换一个听众或场景重新讲述。
+
+真实听众的追问和反馈可以导入训练记录。能顺着讲不等于会用；只有能处理追问、反例和新场景，才标记为“能应答”或“能迁移”。读取 `references/feynman-explanation-and-sharing-practice.md`。
+
+## 题目来源
+
+优先使用用户已有真题、纸质模拟题和教材题；其次是老师课堂问题和学员典型错答；再使用已验收课程训练题；只有覆盖缺口、反复错题或迁移训练需要时少量生成并标注AI补缺题。
+
+## 错因
+
+至少区分：记忆缺失、概念混淆、推导跳步、条件遗漏、表达不完整、题意误读、来源身份混淆、安全与边界错误。反馈必须说明答对什么、漏了什么、从哪一步偏、回看哪里、何时重答。
+
+## 保存与呈现
+
+正式母本使用 Markdown。课程标准卡和训练题进入 `03_复习与训练`；学习者第一次回答、追问、错因、回源、重答和复测进入 `04_学习记录`。英文 ID、动作、属性、题型和内部状态进入 `99_生产控制/学习资产索引/` 下的独立 JSON 索引；Frontmatter 只保留少量文件级属性和索引指针，不保存逐卡、逐题清单。HTML 或网页是可再生界面。读取 `references/markdown-learning-record-specification.md`。
+
+用户正文必须是完整、自然、排版良好的阅读产品：不得出现 `%%`、HTML 注释、逐项 ID、英文流水线字段或其它工程代码。代表性样稿必须在目标阅读界面真实打开，检查属性区、标题、折叠答案、手机阅读和代码泄漏；脚本 PASS 不能替代渲染验收。
+
+## 来源与安全
+
+课程口述不自动等于教材、药典、法规或客观事实；口诀不能替代辨证；个案不能升级为疗效因果；医疗、药物、毒性、剂量、危重症和实操内容只训练来源识别、适用前提、停止条件和专业边界，不形成自行诊断、用药或操作建议；术数模拟案例标注模拟；忠实稿待确认项不做确定答案。高风险边界必须出现在单卡答案中，不能只靠文件末尾声明。
+
+## 验收与停止
+
+检查带学是否让学习者从空白进入理解；主动回忆卡与训练题是否分工明确、没有大量重复；原子卡是否一张一目标，综合卡是否单独标识和计数；正文是否无工程代码，逐项元数据是否只在独立后台索引；索引类型、数量、顺序和唯一 ID 是否与正文一致；代表性文件是否完成目标阅读界面渲染验收；训练是否真实发生“回答—追问—错因—回源—重答”；费曼讲述是否保留第一次讲述、真实追问、漏洞、回源和第二次讲述；记录是否保留原始回答；没学过时是否停止考试。历史试点只能作为规则验证证据，不得成为新课程生产或学习训练的前置门槛。未启用学习用途时不生成空卡片、静态试卷或占位目录；四项核心课程结果完成后，该课即可完成基础验收。达到学习目标后停止。

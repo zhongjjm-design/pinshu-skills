@@ -1,131 +1,129 @@
-# Module-Closure Asset Package and AI Course Normalization
+# 模块收官资产包与AI课程规范化
 
-Use this reference to consolidate a completed course module—usually three to five lessons—across lessons. It is especially useful for modules that combine platforms, business, strategy, and foundational AI concepts.
+用于一个课程模块（通常3—5课）结束时的横向归并，尤其适合同时包含平台、商业、策略与AI基础认知的模块。
 
-## 1. Do Not Turn Cross-Lesson Outputs into One Giant Summary
+## 一、不要把横向成果做成一份巨型总结合集
 
-At module close, generate five kinds of **course-level assets** by default. Each serves one durable purpose:
+模块收官默认生成五类**班级级资产**，每类只承担一种长期职责：
 
-1. `{cross_lesson_methodology}`
-2. `{case_library}`
-3. `{tools_and_checklists}`
-4. `{fact_checking}`
-5. `{practice_and_assignments}`
+1. `03_横向方法论库/[模块]·核心方法论.md`
+2. `04_案例库/[模块]·案例索引.md`
+3. `05_工具与清单/[模块]·执行清单.md`
+4. `06_事实核查/[模块]·事实与风险清单.md`
+5. `07_练习与作业/[模块]·模块作业.md`
 
-These are semantic path-map keys, not literal English directories. Resolve them from the manifest or confirmed path map; if a key is absent, confirm it before writing.
+不要按每节课再建五份文件，也不要把五类内容全塞进一个总纲。
 
-Do not create five files for every lesson, and do not cram all five asset classes into one overview.
+## 二、五类资产的职责
 
-## 2. Responsibilities of the Five Asset Classes
+### 核心方法论
 
-### Core Methodology
+- 串联多课因果链，而非逐课摘要；
+- 提炼跨课共用的层级、流程和总心法；
+- 写明每课解决的问题与彼此递进关系；
+- 保留适用条件，避免把讲师偏好写成普遍规律。
 
-- Connect the causal chain across lessons rather than summarizing lesson by lesson;
-- Extract shared layers, processes, and governing principles;
-- Explain what each lesson solves and how the lessons build on one another;
-- Preserve applicable conditions so instructor preferences are not presented as universal laws.
+### 案例索引
 
-### Case Index
+- 按“案例解决什么问题”归类；
+- 标注来源课次；
+- 相同案例跨课出现时做对照，不重复建档；
+- 数字与效果保留课程口述状态。
 
-- Classify cases by the problem they solve;
-- Record source lessons;
-- Compare the same case when it appears across lessons rather than creating duplicates;
-- Preserve numbers and outcomes as course-reported claims.
+### 执行清单
 
-### Execution Checklist
+- 把方法转为任务卡、诊断表和发布前验收；
+- 每个动作有输入、目标和成功标准；
+- 不用清单替代方法论正文。
 
-- Convert methods into task cards, diagnostic worksheets, and pre-publication checks;
-- Give each action an input, objective, and success criterion;
-- Do not use the checklist as a substitute for methodology prose.
+### 事实与风险清单
 
-### Facts and Risks
+分三层：
 
-Use three levels:
+1. 可作为稳定原理理解；
+2. 讲师经验，需业务实测；
+3. 时效事实或高风险主张，使用前必须查一手来源。
 
-1. Stable principles suitable for understanding;
-2. Instructor experience requiring business testing;
-3. Time-sensitive facts or high-risk claims requiring primary-source verification before use.
+### 模块作业
 
-### Module Assignment
+- 每道作业有明确交付物；
+- 最终合并为一份可进入下一模块的底稿；
+- 作业是基于课程整理时，必须标注编辑来源。
 
-- Give each assignment a defined deliverable;
-- Combine assignments into one foundation that can enter the next module;
-- When assignments are editorially derived from the course, label their source explicitly.
+## 三、课程地图收官更新
 
-## 3. Closing Updates to the Course Map
+模块结束后同步修改：
 
-After a module ends, update all of the following together:
+- `current_progress` 写明课次和模块已完成；
+- `next_lesson` 指向下一模块第一课；
+- 模块表状态改为“已完成”；
+- 逐课目录写入本课知识标题与双稿链接；
+- 新增本课知识导航；
+- “阶段性横向提炼”写入五类资产相对链接。
 
-- `current_progress` to state that the lesson range and module are complete;
-- `next_lesson` to point to the first lesson of the next module;
-- Module-table status to “completed”;
-- Per-lesson catalog entries with the knowledge title and links to both drafts;
-- A knowledge-navigation entry for the current lesson;
-- Relative links to all five asset classes under “Milestone Cross-Lesson Synthesis.”
+链接必须指向真实已创建文件，禁止先宣布完成再补文件。
 
-Links must resolve to files that already exist. Never announce completion before creating the files.
+### 验收状态必须最后落锤
 
-### Acceptance State Must Be Committed Last
+不要在双稿或横向资产刚写完时，就把课程地图改成“已验收／模块已完成”。模块收官应采用两阶段状态提交：
 
-Do not mark the course map “accepted / module completed” as soon as drafts or cross-lesson assets are written. Use a two-stage state commit:
+1. **生成阶段**：双稿和五类资产真实存在后，可以补课程条目、知识导航和链接，但状态只写“已生成双稿／待验收”或项目已有的等价状态；
+2. **验收阶段**：完成正式稿与预览副本的标题、STT、第一人称、事实边界、链接解析、文件唯一性和同版校验后，最后一次补丁才把本课与模块改成“已整理／已验收／已完成”，并顺延 `next_lesson`。
 
-1. **Generation stage:** once both drafts and all five asset classes exist, add lesson entries, navigation, and links. The status may say only “dual drafts generated / pending acceptance” or the project’s equivalent;
-2. **Acceptance stage:** only after verifying titles, STT residue, first-person voice, fact boundaries, link resolution, file uniqueness, and version identity between formal and preview copies may the final patch mark the lesson and module “organized / accepted / completed” and advance `next_lesson`.
+如果最终SHA、链接解析或权限确认尚未完成：
 
-If final SHA checks, link resolution, or permission confirmation remain incomplete:
+- 不得对外报告“已验收”；
+- 不得让地图的 `current_progress` 超前于真实状态；
+- 应保留“待验收”并准确说明阻塞项；
+- 权限恢复后先完成只读验证，再落最终状态，不要重复生成内容。
 
-- Do not report “accepted” externally;
-- Do not allow `current_progress` in the map to run ahead of reality;
-- Retain “pending acceptance” and identify the exact blocker;
-- When permission returns, perform read-only verification first and then commit the final status. Do not regenerate content.
+## 四、AI技术课程的STT规范化
 
-## 4. STT Normalization for AI Courses
-
-Common corrections:
+常见纠错：
 
 - `dip sick / dp sick / deep sake / Deep Sick` → `DeepSeek`
-- Homophonic or number-substituted renderings of the Chinese product name → `Qwen`
-- `gbt / g bd` → `ChatGPT`, according to context
+- `通易千问 / 通1000问` → `通义千问`
+- `gbt / g bd` → `ChatGPT`（按语境）
 - `crock` → `Grok`
-- `crowd / clock` → `Claude`, according to context
-- Homophonic renderings of Lee Sedol’s Chinese name → `Lee Sedol`
-- A near-homophone meaning “deep-forming large model” → `generative large model`
-- Misrecognitions such as `Huawei AI` or `Huahao AI` → the course product name `Huahuo AI`
-- Normalize references to the Chinese product name “Kouzi” as `Coze`
-- Normalize `defy` as `Dify` in a tool context
+- `crowd / clock` → `Claude`（按语境）
+- `李世杰` → `李世石`
+- `深成式大模型` → `生成式大模型`
+- `华为AI / 花好AI` → 课程产品名 `花火AI`
+- `扣子`规范为 `Coze（扣子）`
+- `defy`按工具语境规范为 `Dify`
 
-Do not guess uncertain brands or book titles. Preserve the description and mark it `[confirmation required]`.
+不确定品牌或书名不要猜；可以保留描述并标 `[待确认]`。
 
-## 5. AI Fact Boundaries
+## 五、AI事实边界
 
-The lecture must distinguish:
+讲义中必须区分：
 
-- Antibiotic-candidate screening, AlphaGo, and large language models as different technical approaches;
-- “Probabilistic prediction” as an important simplified explanation of large language models, not a complete definition of all AI;
-- Whether AI “truly understands” as a technical and philosophical dispute;
-- Unsourced figures or causal claims such as “all internet data has already been consumed,” “only X% of information is in the cloud,” or “a certain IP makes the model smarter” as instructor-reported statements only;
-- Model access, platform labels, regional availability, and generated-content rules as time-sensitive;
-- The agent economy as a forward-looking judgment, not an inevitable fact.
+- 抗生素候选筛选、AlphaGo和大语言模型是不同技术路线；
+- “概率预测”是理解大语言模型的重要简化，不等于对全部AI的完整定义；
+- AI是否“真正理解”属于技术与哲学争议；
+- “互联网数据已全部喂完”“只有X%信息上云”“某IP让模型更聪明”等未给来源的数字或归因只能标为讲师口述；
+- 模型接入、平台标注、地区可用性和生成内容规则具有时效性；
+- 智能体经济属于前瞻判断，不写成必然事实。
 
-Preserve the instructor’s intended meaning in the faithful transcript. Put editorial calibration in a separate blockquote or note rather than silently rewriting the instructor’s position.
+忠实稿保留讲师原意；编辑校准用独立引用块或注释，不要悄悄改写讲师立场。
 
-## 6. Preview Copies and Uniqueness Acceptance
+## 六、预览副本与唯一性验收
 
-1. Copy the lesson’s two drafts, map, and module assets to the preview directory using an explicit allowlist;
-2. Enumerate all Markdown files in the preview directory;
-3. If obsolete names, duplicate “systemized/structured lecture” files, or old versions appear, move them to the system Trash;
-4. Keep exactly one faithful transcript and one structured lecture per lesson in the formal course directory;
-5. Search for STT residue, third-party editorial voice, placeholders, and empty files;
-6. Only then change the map status to accepted.
+1. 以白名单复制本课双稿、地图和模块资产到预览目录；
+2. 列出预览目录全部Markdown；
+3. 若出现旧命名、重复“系统化/结构化讲义”或旧版本，用废纸篓清理；
+4. 正式课程目录中每课只保留一份忠实稿和一份系统化讲义；
+5. 搜索STT残留、第三方编辑视角、占位符和空文件；
+6. 最后再把课程地图状态改为已验收。
 
-## 7. Minimum Acceptance Checklist
+## 七、最小验收清单
 
-- [ ] Titles and frontmatter in both drafts match the official outline
-- [ ] The faithful transcript preserves the instructor’s first-person voice
-- [ ] AI terminology has been normalized
-- [ ] Technical approaches are not conflated
-- [ ] Unsourced numbers are labeled
-- [ ] All five module asset classes exist
-- [ ] Every map link resolves
-- [ ] The preview directory contains no duplicate obsolete files
-- [ ] The next lesson points to the first lesson of the next module
+- [ ] 双稿标题、frontmatter与官方目录一致
+- [ ] 忠实稿保持讲师第一人称
+- [ ] AI术语已规范化
+- [ ] 技术路线未混写
+- [ ] 未来源数字已标注
+- [ ] 五类模块资产真实存在
+- [ ] 地图链接均可解析
+- [ ] 预览目录无重复旧文件
+- [ ] 下一课指向下一模块首课

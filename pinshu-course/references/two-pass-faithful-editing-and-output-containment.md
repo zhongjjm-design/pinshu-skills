@@ -1,102 +1,102 @@
-# Two-Pass Acceptance and Output-Scope Control for Faithful Long-Course Editing
+# 长课程忠实精编：两轮验收与输出范围控制
 
-Use this reference for course projects with dozens of audio files, long per-lesson drafts, and parallel editing by multiple agents.
+适用于数十个音频、多Agent并行精编、每课篇幅很长的课程项目。
 
-## 1. Generation Is Not Acceptance
+## 1. 生成不等于验收
 
-A subtask writing a file or reporting “semantic reconciliation complete” proves only that an initial draft exists. The controller must not change state directly to “complete.” Recommended states:
+子任务写出文件或自报“语义对账完成”，只代表初稿生成。主控不得直接把状态改成“完成”。推荐状态：
 
 ```text
-Initial draft generated → independent QA → targeted rework → second independent verification → accepted
+初稿生成 → 独立QA → 定点返工 → 第二轮独立复验 → 已验收
 ```
 
-Only after the second verification passes may the controller update the course map, frontmatter, and task state together.
+只有第二轮复验通过后，主控才统一修改课程地图、frontmatter和任务状态。
 
-## 2. Compression Ratio Is a Warning, Not a Quality Conclusion
+## 2. 压缩率是预警，不是质量结论
 
-Count non-whitespace characters in the source and edited draft. When length drops substantially, inspect whether every deletion was limited to verbal noise, silence hallucinations, breaks, and device chatter.
+统计源文与精编稿的非空白字符数。篇幅明显缩短时，必须检查删掉的是否只有口头噪声、静音幻觉、茶歇和设备闲聊。
 
-A low retention ratio is not by itself failure, but any of the following requires rework:
+低保留率本身不能直接判错，但出现以下任一情况即需返工：
 
-- A complete case has become only a conclusion;
-- Numbers, amounts, relationships, or tool names disappeared;
-- A live operation was rewritten as a generic SOP;
-- Limiting conditions, failure processes, or counterexamples were deleted;
-- High-risk language was sanitized into “compliant” wording;
-- A source truncation was completed into a satisfying conclusion.
+- 完整案例只剩结论；
+- 数字、金额、人物关系或工具名消失；
+- 现场操作被改写成通用SOP；
+- 限制条件、失败过程或反例被删；
+- 高风险表达被“合规化”净化；
+- 原声截断被补成圆满总结。
 
-## 3. Fixed Sampling for Independent QA
+## 3. 独立QA的固定抽样
 
-For every lesson, verify at least:
+每课至少核对：
 
-1. One continuous semantic passage from the opening;
-2. One important middle case or operation;
-3. The source’s actual ending;
-4. At least five semantic anchors covering people, numbers, tools, cases, and limitations;
-5. High-risk or easily abstracted source language.
+1. 开头一个连续语义段；
+2. 中段一个重要案例或实操；
+3. 结尾的真实收口；
+4. 至少5个语义锚点：人物、数字、工具、案例、限制条件；
+5. 原文中高风险或易被抽象化的表达。
 
-QA must return source file and line number, corresponding edited location, and the specific omission or semantic change. “It feels over-compressed” is insufficient.
+QA必须返回源文件与行号、精编稿对应位置、具体遗漏或改义，不能只写“感觉过度压缩”。
 
-## 4. Rework Against the Authoritative Source Only
+## 4. 返工只回到权威源
 
-A QA report locates problems; it is not a source for restoration. During rework, reread the raw transcript, subtitles, timestamped JSON, or audio. Preserve qualified passages and restore omissions locally so a whole-document rewrite does not introduce fresh errors.
+QA报告只负责定位问题，不能作为补写来源。返工时必须重新读取原始转写、字幕、JSON时间戳或音频；保留已合格段落，定点恢复遗漏，避免整篇重写再次引入新误差。
 
-For uncertain commands, names, amounts, or version numbers:
+遇到无法确认的命令、人名、金额或版本号：
 
-- Preserve the semantic slot;
-- Mark `[requires relistening]`;
-- Do not replace the specific term with a vague higher-level concept;
-- Do not present external common knowledge as original course wording.
+- 保留语义槽位；
+- 标记`[待回听]`；
+- 不把具体词替换成空泛上位词；
+- 不用外部常识伪装成课程原话。
 
-## 5. Audit Speaker Identity and Multiple Voices
+## 5. 讲者身份与多人声音审计
 
-In-person classes often switch among the lead instructor, guests, and students. In a first-person article, “I” must remain unambiguous:
+线下课常在主讲、嘉宾和学员问答之间切换。第一人称文章必须明确“我”是谁：
 
-- For a single guest session, add `speaker` to frontmatter and identify the speaker at the beginning;
-- For multi-speaker Q&A, add `speakers` to frontmatter and use headings or labels such as `## Dong Answers: ...` and `## Teacher Li Answers: ...` at each switch;
-- Never merge two speakers’ experiences, platform operations, or methods into one “I”;
-- If a full name is unclear, write “Teacher Li (full name requires relistening)” rather than deleting the person’s role.
+- 单一嘉宾课：frontmatter增加`speaker`，正文开头增加分享者说明；
+- 多人问答：frontmatter增加`speakers`，每次切换用`## 栋哥答：…`、`## 李老师答：…`等标题或显式标签；
+- 不得把两位讲者的个人经历、平台操作和方法合并成同一个“我”；
+- 完整姓名听不清时写“李老师（完整姓名待回听）”，不要删掉人物角色。
 
-The second QA pass must inspect speaker attribution explicitly, not only terminology and cases.
+第二轮QA必须专项检查人物归属，而不只检查术语和案例。
 
-## 6. Separate Editorial Notes from the Instructor’s Voice
+## 6. 编辑说明必须与讲师声音分离
 
-Use an independent blockquote for fact verification, compliance notices, source truncation, and relisten notes:
+事实核验、合规提示、来源截断、待回听说明使用独立引用块：
 
 ```markdown
-> **Editorial verification:** The critical verb in the source audio cannot be confirmed and requires relistening.
+> **编辑校对：** 原声此处关键动词无法确认，待回听。
 ```
 
-Never write an editorial synthesis as the instructor’s first-person ending. If the source closes with “thank you” or “let’s go eat,” do not add a grand concluding paragraph.
+禁止把编者归纳写成讲师第一人称结尾。原声以“谢谢大家”“去吃饭”收口时，不另加一段全课升华。
 
-## 7. Control Output Scope in Parallel Tasks
+## 7. 并行任务的输出范围控制
 
-Every subtask must receive an absolute-path allowlist and state explicitly:
+每个子任务必须给出绝对路径白名单，并明确：
 
-- Only listed files may be created or modified;
-- Additional QA reports, completion markers, asset candidates, and intermediate master drafts are prohibited;
-- “Finished writing” must not be upgraded unilaterally to “accepted”;
-- Return actual modified paths and file count.
+- 只允许创建或修改列出的文件；
+- 禁止额外生成QA报告、完成标记、资产候选和中间总稿；
+- 禁止把“写完”自行升级为“已验收”；
+- 返回实际修改路径和文件数。
 
-At the end of every batch, the controller immediately inventories:
+主控在每批结束后立即盘点目录：
 
 ```text
-Planned files ↔ actual files ↔ modification times ↔ status fields
+计划文件 ↔ 实际文件 ↔ 修改时间 ↔ 状态字段
 ```
 
-If files appear outside the allowlist, register and isolate them for judgment rather than deleting them unilaterally. Wait until authoritative products are verified before following the approved cleanup process.
+发现白名单外文件时先登记、隔离判断，不擅自删除；待权威产物验证后再走文件清理审批。
 
-## 8. Split Long Batches
+## 8. 长批次拆分
 
-Do not make one subtask generate many long documents and self-check them. Prefer one or two lessons per task or split by natural module. After a timeout, inspect actual files first; “timed out” does not mean “no output,” and “file exists” does not mean “qualified.”
+不要让一个子任务同时生成太多长文并负责自检。优先拆成每任务1—2课，或按自然模块拆分。任务超时后先检查真实文件是否已写入，不能把“超时”等同于“无产出”，也不能把“文件存在”等同于“已合格”。
 
-## 9. Final Green Conditions
+## 9. 最终判绿条件
 
-- Lesson boundaries match source transitions;
-- Every target file exists and has exactly one H1;
-- Speaker identity is clear;
-- Silence hallucinations and common STT errors scan to zero;
-- Editorial notes are separate from the instructor’s body;
-- Every issue from the prior QA pass is closed;
-- The second independent verification has no blocker;
-- Only the controller writes “faithful edit accepted.”
+- 课次边界与原声转场一致；
+- 全部目标文件存在且唯一H1；
+- 讲者身份明确；
+- 静音幻觉和常见STT错词扫描归零；
+- 编辑说明与讲师正文分离；
+- 上一轮QA问题逐项关闭；
+- 第二轮独立复验无阻塞项；
+- 只有主控统一写入“忠实精编已验收”。

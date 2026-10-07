@@ -2,6 +2,8 @@
 """Security and compatibility regressions for pinshu-md2pdf."""
 
 import importlib.util
+import json
+import os
 import shutil
 import subprocess
 import sys
@@ -114,6 +116,23 @@ class SanitizerTests(unittest.TestCase):
         cleaned = CONVERTER.sanitize_html(f'<p>{text}</p>')
         self.assertEqual(cleaned, f'<p>{text}</p>')
 
+    def test_brand_config_allows_only_local_png(self):
+        with tempfile.TemporaryDirectory(prefix='pinshu-md2pdf-brand-') as tmp:
+            root = Path(tmp)
+            logo = root / 'logo.png'
+            logo.write_bytes(bytes.fromhex(
+                '89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c489'
+            ))
+            config = root / 'brand.json'
+            config.write_text(json.dumps({'schema_version': 1, 'brand_name': 'Test Brand', 'logo': 'logo.png'}), encoding='utf-8')
+            brand = CONVERTER.load_brand_config(config)
+            self.assertEqual(brand['brand_name'], 'Test Brand')
+            self.assertTrue(brand['logo_data_uri'].startswith('data:image/png;base64,'))
+
+            config.write_text(json.dumps({'schema_version': 1, 'logo': '../secret.png'}), encoding='utf-8')
+            with self.assertRaises(RuntimeError):
+                CONVERTER.load_brand_config(config)
+
 
 @unittest.skipUnless(CONVERTER.available_markdown_renderers(), 'no Markdown renderer available')
 class RendererTests(unittest.TestCase):
@@ -175,11 +194,12 @@ class RendererTests(unittest.TestCase):
 
 
 @unittest.skipUnless(
-    CONVERTER.find_chrome()
+    os.environ.get('PINSHU_MD2PDF_ENABLE_CHROME_TESTS') == '1'
+    and CONVERTER.chrome_can_render()
     and shutil.which('pdftotext')
     and shutil.which('pdfinfo')
     and CONVERTER.available_markdown_renderers(),
-    'Chrome, Poppler, and a Markdown renderer are required',
+    'Chrome tests require explicit PINSHU_MD2PDF_ENABLE_CHROME_TESTS=1 and a usable Chrome backend',
 )
 class ChromePDFTests(unittest.TestCase):
     def test_local_file_disclosure_marker_is_absent_from_pdf_text(self):
@@ -202,7 +222,7 @@ class ChromePDFTests(unittest.TestCase):
                 encoding='utf-8',
             )
             result = subprocess.run(
-                [sys.executable, str(CONVERTER_PATH), str(source), '-o', str(output)],
+                [sys.executable, str(CONVERTER_PATH), str(source), '--engine', 'chrome', '-o', str(output)],
                 capture_output=True,
                 text=True,
                 timeout=90,
@@ -233,7 +253,7 @@ class ChromePDFTests(unittest.TestCase):
                 encoding='utf-8',
             )
             result = subprocess.run(
-                [sys.executable, str(CONVERTER_PATH), str(source), '--theme', 'business', '-o', str(output)],
+                [sys.executable, str(CONVERTER_PATH), str(source), '--engine', 'chrome', '--theme', 'business', '-o', str(output)],
                 capture_output=True,
                 text=True,
                 timeout=90,

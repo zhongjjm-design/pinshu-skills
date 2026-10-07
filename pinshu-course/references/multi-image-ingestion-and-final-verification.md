@@ -1,79 +1,79 @@
-# Ingesting Multiple Course Screenshots and Final Verification
+# 多截图课程素材入库与终检
 
-Use this reference when a user submits a long transcript together with multiple slides, screenshots, or temporary attachments for one course-processing task.
+适用于用户一次发送长逐字稿和多张PPT、屏幕截图、临时附件的课程整理任务。
 
-## 1. Inventory First, Draft Second
+## 一、先盘点，后写稿
 
-Do not archive material based on thumbnail counts or display order in the chat interface. Build an asset inventory first, recording:
+不要依据聊天界面中的缩略图数量或展示顺序直接入库。先建立素材清单，记录：
 
-- Original absolute path;
-- Whether the file exists;
-- File type;
-- Pixel dimensions;
-- File hash;
-- Visible title, key text, and corresponding course topic.
+- 原始绝对路径；
+- 文件是否存在；
+- 文件类型；
+- 像素尺寸；
+- 文件哈希；
+- 可见标题、核心文字和对应课程主题。
 
-If the image toolchain is temporarily unavailable, use native system commands to read dimensions and hashes. Preserve the general method of cross-checking through multiple paths, not a negative conclusion about one tool.
+如果图片工具链临时不可用，改用系统原生命令读取尺寸和哈希；应沉淀的是“多路径交叉核验”的方法，不是对某个工具的负面结论。
 
-## 2. Deduplicate and Sort Semantically
+## 二、去重与语义排序
 
-1. Use hashes first to detect byte-identical duplicates; retain one copy for matching hashes.
-2. Then perform semantic deduplication. If different hashes represent crops, resizes, or varying screenshot boundaries of the same slide, retain the clearest version with the most complete text. Record in source metadata: “N images received; M retained after semantic deduplication.”
-3. Temporary attachments, desktop attachments, and images embedded in messages may reside in different directories; inventory them together.
-4. **Screenshot time is supporting evidence only; it does not replace semantic course order.** A user may return to the opening slide after class, so the last screenshot could be the opening overview.
-5. Visually inspect attachments that were not expanded in chat. Never assume they duplicate visible thumbnails.
-6. Name the final files by “position in course + topic,” for example: `01_Follower-Growth-Milestones.png` and `02_Spiral-Growth-Model.png`.
+1. 先用哈希判断字节级重复；哈希相同只保留一份。
+2. 再做语义去重：哈希不同但属于同一页PPT的不同裁剪、缩放或截图范围时，保留文字更完整、清晰度更高的一张；在来源元数据写明“原收N张，语义去重后保留M张”。
+3. 临时附件、桌面附件和消息内图片可能来自不同目录，要统一盘点。
+4. **截图时间只用于辅助，不能替代课程语义顺序。** 用户可能在课程结束后跳回开头补拍，最后一张截图反而是开场总览。
+5. 对聊天中未展开预览的附件，必须单独视觉读取，不能假定与已展示缩略图重复。
+6. 最终按“课程出现位置＋主题”命名，例如：`01_涨粉里程碑.png`、`02_螺旋增长模型.png`。
 
-## 3. Permanent Archival
+## 三、永久归档
 
-- Copy assets from temporary storage into the course's manifest/path-map target `{lesson_assets}`;
-- Do not reference `/private/var/...`, desktop attachment folders, or any other temporary path from formal documents;
-- Preserve original images unless the user explicitly asks for cropping, redaction, or compression;
-- Use the same relative path rendered from `{lesson_assets}` in both documents.
+- 从临时目录复制到课程的 `assets/第XX课/`；
+- 不在正式文档中引用 `/private/var/...`、桌面附件目录或其他会失效的临时路径；
+- 原图保持不变，除非用户明确要求裁切、脱敏或压缩；
+- 两份文档统一使用 `../assets/第XX课/文件名` 相对路径。
 
-## 4. Connect Each Image to the Body
+## 四、图片与正文的对应关系
 
-Every image must serve at least one explicit purpose: section overview, course model, numerical or case evidence, operational process, resource recommendation, or closing judgment.
+每张图至少承担一种明确功能：章节总览、课程模型、数字或案例证据、操作流程、资源推荐或结课判断。
 
-Place each image near the corresponding semantic passage. If a slide contains an essential framework that the instructor did not read aloud in full, convert the visible text into searchable body text and label it as originating from the course slide. Do not present it as verbatim speech.
+图片应放在对应语义附近。若PPT含口播未完整念出的关键骨架，应把可见文字转成可检索正文，并注明来自原课PPT；不得伪装成讲师逐字口播。
 
-## 5. Two-Layer Treatment of Risk Information
+## 五、风险信息双层处理
 
-For revenue, follower counts, platform algorithms, public figures, documentaries, health, or psychology content:
+涉及收入、粉丝、平台算法、公开人物、纪录片、健康与心理内容时：
 
-- Preserve the instructor’s meaning in the faithful transcript and explain boundaries in a separate editorial note;
-- In the structured lecture, distinguish “course viewpoint, editorial structural analysis, external fact pending verification, and application recommendation”;
-- State that revenue and pricing cases are not income guarantees;
-- State that personal recovery experiences are not diagnostic, medication-discontinuation, or treatment advice;
-- State that experience-based psychological models do not replace professional assessment.
+- 忠实精编稿保留讲师原意，用独立编辑提示说明边界；
+- 系统化讲义明确区分“课程观点、编辑结构化分析、外部事实待核验、应用建议”；
+- 收入和价格案例注明不构成收益承诺；
+- 个人康复经历注明不构成诊断、停药或治疗建议；
+- 经验心理模型注明不替代专业评估。
 
-## 6. Final Inspection
+## 六、完工终检
 
-Before changing the course map to “organized,” the main agent must inspect the actual files directly:
+在把课程地图改成“已整理”前，主Agent必须直接检查真实文件：
 
-1. Both the faithful transcript and lecture exist and contain substantive content;
-2. Count total and unique image references in each document;
-3. Resolve every relative path; missing paths must total zero;
-4. Image-reference counts must match the final asset inventory;
-5. Search for destinations for critical lesson numbers, people, products, prices, cases, SOPs, and risk notices;
-6. Read the beginning and end of the lecture to confirm complete information layering, applicable boundaries, and transition to the next lesson;
-7. Only then update status in the faithful transcript, lecture, and course map.
+1. 忠实稿与讲义均存在且不是空壳；
+2. 统计每份文档中的图片引用总数与唯一数；
+3. 逐个解析相对路径，缺失数必须为0；
+4. 图片引用数应与最终素材清单一致；
+5. 搜索本课关键数字、人物、产品、价格、案例、SOP、风险提示是否有落点；
+6. 回读讲义开头和结尾，确认信息分层、适用边界和下一课衔接完整；
+7. 最后再更新忠实稿状态、讲义状态和课程地图。
 
-Recommended acceptance criteria:
+推荐验收口径：
 
 ```text
-Total assets = images after deduplication = unique image references in the faithful transcript = unique image references in the lecture
-Missing links = 0
-Samples of critical cases and numbers = all found
-Course-map status = updated only after verifying the actual files
+素材总数 = 去重后图片数 = 忠实稿唯一图片引用数 = 讲义唯一图片引用数
+缺失链接 = 0
+关键案例与数字抽样 = 全部命中
+课程地图状态 = 在真实文件验收后更新
 ```
 
-## 7. Common Pitfalls
+## 七、常见坑
 
-- Inspecting chat thumbnails only and missing collapsed attachments;
-- Numbering mechanically by screenshot time so the opening overview appears last;
-- Referencing temporary paths in formal documents;
-- Archiving an image without semantic integration in the body;
-- Trusting a subagent’s “all embedded” claim without direct main-agent verification;
-- Marking the course map “organized” before the deep lecture is complete;
-- Altering the instructor’s words to reduce risk instead of separating an editorial note.
+- 只看聊天缩略图，漏掉未展开附件；
+- 按截图时间机械编号，导致开场总览排在结尾；
+- 文档直接引用临时路径；
+- 图片已归档但正文没有语义承接；
+- 子Agent声称“全部嵌入”后主Agent不再检查；
+- 深度讲义完成前就把课程地图改成“已整理”；
+- 为降低风险而篡改讲师原话，而不是单列编辑提示。

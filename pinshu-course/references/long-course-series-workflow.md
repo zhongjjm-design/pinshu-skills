@@ -1,252 +1,252 @@
-# Lesson-by-Lesson Update Standard for Long Course Series
+# 长篇系列课程逐课更新规范
 
-This reference defines the detailed execution format for `pinshu-course`. It is intended for course series in which dozens of lessons are added to a knowledge base one at a time.
+本参考文件给出 `pinshu-course` 的详细执行格式，适合数十节课程逐节进入知识库的场景。
 
-## 1. Frontmatter
+## 一、Frontmatter
 
-### Faithfully Edited Transcript
-
-```yaml
----
-date: YYYY-MM-DD
-status: organized
-course: [course name]
-lesson: 6
-module: [module]
-speaker: [instructor]
-original_title: [official title]
-knowledge_title: [search-friendly knowledge title]
-source: user-provided course transcript
-document_type: proofread transcript
-tags: [topic 1, topic 2, topic 3]
----
-```
-
-The body of a faithful transcript should use natural paragraphs and a small number of semantic headings. Headings may aid navigation, but they must not rearrange the source into a lecture-note structure such as “background—steps—conclusion.” By default, do not convert continuous speech into a bullet-point summary.
-
-### Structured Lecture
+### 忠实清洗稿
 
 ```yaml
 ---
 date: YYYY-MM-DD
-status: organized
-course: [course name]
+status: 已整理
+course: [课程名]
 lesson: 6
-module: [module]
-speaker: [instructor]
-source: faithful transcript for Lesson 06
-tags: [topic 1, topic 2, topic 3]
+module: [模块]
+speaker: [讲师]
+original_title: [官方原题]
+knowledge_title: [可检索知识标题]
+source: 用户提供的课程逐字稿
+document_type: 校对版逐字稿
+tags: [主题1, 主题2, 主题3]
 ---
 ```
 
-## 2. Structured Lecture Template
+忠实稿正文使用自然段和少量语义标题。标题只帮助阅读，不能把原文重排成“背景—步骤—结论”式讲义。默认不要使用项目符号概括原本的连续口述。
 
-```markdown
-# Lesson XX · [Cleaned Official Title]
+### 结构化讲义
 
-## Problems This Lesson Solves
-
-1. ...
-2. ...
-
-## Core Model
-
-> **[Formula or model]**
-
-## 1. [Knowledge Module]
-
-[Principle, rationale, and applicable scenarios]
-
-## 2. [Case]
-
-### Background
-### Target Users and Problems
-### Actions Taken
-### Result as Described in the Course
-### Reusable Elements
-### Conditions That Must Not Be Copied Blindly
-
-## 3. [Execution Method]
-
-## Applicable Conditions and Limitations
-
-## Lesson Assignment / Canvas / Diagnostic Worksheet
+```yaml
+---
+date: YYYY-MM-DD
+status: 已整理
+course: [课程名]
+lesson: 6
+module: [模块]
+speaker: [讲师]
+source: 第06课忠实清洗稿
+tags: [主题1, 主题2, 主题3]
+---
 ```
 
-## 3. Course Map Fields
+## 二、结构化讲义模板
 
 ```markdown
-| Lesson | Cleaned Official Title | Knowledge Title | Organization Status |
+# 第XX课·[清理后的官方标题]
+
+## 本节解决的问题
+
+1. ……
+2. ……
+
+## 核心模型
+
+> **[公式或模型]**
+
+## 一、[知识模块]
+
+[原理、为什么、适用场景]
+
+## 二、[案例]
+
+### 背景
+### 目标用户与问题
+### 执行动作
+### 课程口述结果
+### 可复用点
+### 不可照搬条件
+
+## 三、[执行方法]
+
+## 适用条件与限制
+
+## 本节作业 / 画布 / 诊断表
+```
+
+## 三、课程地图字段
+
+```markdown
+| 节次 | 清理后的官方标题 | 知识标题 | 整理状态 |
 |---|---|---|---|
-| 06 | Building an Entry-Level Business Model from 0 to 1: Traffic First | Choosing a Traffic Starting Point Within the Overall Business Model | Organized |
+| 06 | 从0到1搭建初级商业模式：流量先行 | 从全局商业模式中选择流量起点 | 已整理 |
 ```
 
-The course map should also maintain:
+课程地图还应维护：
 
-- Course module boundaries;
-- The current overall model;
-- The range of transcripts received;
-- The next expected lesson input;
-- Naming and factual-discipline rules.
+- 课程模块划分；
+- 当前总模型；
+- 已收到逐字稿范围；
+- 下一节输入；
+- 命名和事实纪律。
 
-## 4. Incremental Rules for Cross-Lesson Libraries
+## 四、横向库增量规则
 
-### Methodology and Model Library
+### 方法论与模型库
 
-Add only models that appear for the first time in the course or are materially deepened. Do not copy lesson notes verbatim into this library.
+只追加课程首次出现或实质深化的模型。避免把逐课讲义原样复制进去。
 
-Recommended fields:
+推荐字段：
 
-- Model name;
-- Formula;
-- Definition;
-- Execution steps;
-- Applicable conditions;
-- Limitations.
+- 模型名称；
+- 公式；
+- 定义；
+- 执行步骤；
+- 适用条件；
+- 限制。
 
-### Case Library
+### 案例库
 
 ```markdown
-## [Sequential Number] [Case Name]
+## [连续编号] [案例名]
 
-- Background:
-- Existing base:
-- Users and problems:
-- Product and channel:
-- Actions taken:
-- Course-reported result:
-- Reusable elements:
-- Conditions that must not be copied:
-- Data status: instructor’s direct experience / friend’s case / public case / pending verification.
+- 背景：
+- 基本盘：
+- 用户与问题：
+- 产品和渠道：
+- 执行动作：
+- 课程结果：
+- 可复用点：
+- 不可照搬：
+- 数据状态：讲师亲历 / 朋友案例 / 公开案例 / 待核验。
 ```
 
-When the same case appears again at a later stage, add subsections such as “Cold-Start Addendum,” “0-to-1 Addendum,” or “1-to-10 Addendum.”
+同一案例后续出现新阶段时，增加“冷启动补充”“0—1补充”“1—10补充”等小节。
 
-### Tool Library
+### 工具库
 
-Prioritize the following:
+优先沉淀：
 
-- Uses of platforms and channels;
-- Market-research methods;
-- Data-recording fields;
-- Selection matrices;
-- Compliance and privacy boundaries.
+- 平台和渠道用途；
+- 市场调研方法；
+- 数据记录字段；
+- 选择矩阵；
+- 合规和隐私边界。
 
-### Template Library
+### 模板库
 
-Convert instructions such as “think this through” or “analyze this” into fillable tools, for example:
+把“你要想清楚”“你要分析”转成可填写工具，例如：
 
-- Direction-scoring worksheet;
-- Cold-start validation worksheet;
-- Problem-attribution worksheet;
-- Business Model Canvas;
-- Public-to-private channel priority matrix.
+- 方向评分表；
+- 冷启动验证表；
+- 问题归因表；
+- 商业模式画布；
+- 公域—私域优先级表。
 
-Number templates sequentially so they can be referenced reliably.
+模板连续编号，便于引用。
 
-### Fact-Verification Register
+### 事实核验表
 
 ```markdown
-| Lesson | Claim | Type | Current Status | Required Before Formal Use |
+| 节次 | 说法 | 类型 | 当前状态 | 正式使用前需要什么 |
 |---|---|---|---|---|
-| 06 | A particular case generated more than CNY 500,000 in annual revenue | B | Pending verification | Contracts and revenue records from the case owner |
+| 06 | 某案例年收入50万元以上 | B | 待核验 | 案例方合同和收入记录 |
 ```
 
-Do not invent sources merely to make the material “look rigorous.” Label the claim first, then perform separate verification only when the user requests it.
+不要为了“看起来严谨”而擅自替课程补来源。先标注，再按用户需求另做核验。
 
-## 5. Series Terminology Glossary
+## 五、系列术语表
 
-Maintain an internal correction dictionary throughout course processing. Typical recognition errors include:
+在课程处理过程中持续维护内部纠错词典。典型误识别包括：
 
-- Mis-segmented or homophonic renderings of “one-person company” → `one-person company`;
-- Misrecognized renderings such as “can start” or “cold action” → `cold start`;
-- Homophones of the Chinese term for “private domain” → `private domain`;
-- “Apartment traffic” or similar homophones → `public-domain traffic`;
-- “Conversion endpoint” when the context means the conversion function → `conversion end`;
-- Homophone-based misrecognitions of platform or product names.
+- 一人。公司 / 艺人公司 → 一人公司；
+- 能启动 / 冷行动 → 冷启动；
+- 思域 → 私域；
+- 公寓流量 → 公域流量；
+- 转换端 → 转化端；
+- 平台或产品专名的同音误识别。
 
-Do not treat these examples as fixed global replacements. Judge each occurrence in context to avoid corrupting valid text.
+不要把示例当成固定全局替换。必须结合上下文判断，防止误改正常词语。
 
-## 6. Truncated Input
+## 六、截断输入
 
-If the user’s message ends mid-sentence:
+如果用户消息结束于半句话：
 
-1. Do not invent the missing continuation;
-2. Organize only the clearly visible portion;
-3. Mark the lesson as “additional input required,” not “completed”;
-4. Tell the user where the last visible truncation occurs;
-5. When the user supplies the remainder, update the same file rather than creating a duplicate version.
+1. 不补齐后文；
+2. 只整理明确可见部分；
+3. 将该课标为“待补充”而非“已完成”；
+4. 告知用户最后可见的截断位置；
+5. 用户补发后再更新同一文件，不另建重复版本。
 
-## 7. Example: Handling Gray-Area Content
+## 七、灰度内容处理示例
 
-If the course discusses diverting users from comment sections, evading contact-information controls, or black-/gray-market tactics:
+若课程讲述评论区截流、联系方式规避或黑灰产玩法：
 
-### Faithful Transcript
+### 忠实稿
 
-- Preserve the instructor’s original judgments, cases, and operational details;
-- Place risk notices in an opening “Editorial Note,” a footnote, or a separate verification register rather than inserting rewrites into the instructor’s body text;
-- Do not proactively add more effective evasion techniques.
+- 保留讲师原有判断、案例和原始操作细节；
+- 风险提示放在文首“整理说明”、脚注或独立核验表，不要插入正文改写讲师原话；
+- 不主动补充更高成功率的规避细节。
 
-### Structured Lecture
+### 结构化讲义
 
-Add:
+增加：
 
-- Platform-policy violation risk;
-- Account and brand-reputation risk;
-- Effects on creator and user rights;
-- Weakness of long-term traffic compounding;
-- Compliant alternatives.
+- 平台违规风险；
+- 账号和品牌声誉风险；
+- 对创作者与用户权益的影响；
+- 长期流量复利不足；
+- 合规替代方案。
 
-### Cross-Lesson Knowledge Base
+### 横向知识库
 
-- Record compliance boundaries in the tool library;
-- Record claims such as “high effectiveness” in the fact-verification register;
-- Do not promote the method into a recommended SOP.
+- 工具库记录合规边界；
+- 事实核验表记录“效果高”等声明；
+- 不把该方法写入推荐SOP。
 
-## 8. Lesson Acceptance
+## 八、每课验收
 
-1. Read the first 20 lines of the faithful transcript and verify the frontmatter and title;
-2. Read the first 20 lines of the structured lecture;
-3. Read the corresponding lesson entry in the course map;
-4. Check `source_lessons` in all five cross-lesson libraries;
-5. Search for high-frequency STT residue specific to the lesson;
-6. Check whether cases have been duplicated;
-7. Check whether numerical claims have entered the verification register;
-8. Report “organized and written” to the user only after all of the above pass.
+1. 读取忠实稿前20行，核对 Frontmatter 和标题；
+2. 读取结构化讲义前20行；
+3. 读取课程地图对应节次；
+4. 检查五份横向库 `source_lessons`；
+5. 搜索该课高频STT残留；
+6. 检查案例是否重复；
+7. 检查数字是否进入核验表；
+8. 只有这些通过后，才向用户报告“已整理并写入”。
 
-For final acceptance of a long course, do not run only the basic validator. Use the following for the faithful transcript:
+长课程终验不得只运行基础校验。忠实稿使用：
 
 ```bash
-python3 scripts/validate-course-markdown.py FILE.md --profile long-course-faithful
+python3 scripts/validate-course-markdown.py 文件.md --profile long-course-faithful
 ```
 
-Use the following for the structured lecture:
+结构化讲义使用：
 
 ```bash
-python3 scripts/validate-course-markdown.py FILE.md --profile long-course-notes
+python3 scripts/validate-course-markdown.py 文件.md --profile long-course-notes
 ```
 
-A basic `PASS` proves only that format requirements such as UTF-8 encoding, heading spacing, and required terms are satisfied. It does not prove semantic fidelity, clear emphasis, or complete cases. Content reconciliation and scan-level reading checks are still mandatory.
+基础 `PASS` 只证明UTF-8、标题留白和必填词等格式条件成立，不证明内容忠实、重点清楚或案例完整。内容对账和扫读层检查仍必须人工完成。
 
-The current long-course profiles must also reject punctuation at the start of paragraphs, abnormal spaces in Chinese text, sentence fragments ending in commas or semicolons, clusters of mechanically short paragraphs, root-level lists with more than seven ungrouped items, and “Lesson Highlights” sections in lectures containing fewer than three or more than five sentences. These mechanical gates only eliminate obviously defective drafts; they do not replace reading-view acceptance.
+当前长课 profile 还必须拦截：段首标点、中文异常空格、逗号或分号收尾的残句、机械短段簇、超过7项未分组的根级列表，以及讲义中不足3句或超过5句的“本课要点速览”。这些机械门槛只负责淘汰明显坏稿，不能替代阅读视图验收。
 
-Never run a “insert blank lines after punctuation” script directly against a formal file. Any automated reflow must first write to a temporary file. An editor must then merge paragraphs by meaning and inspect the opening, the longest middle section, and the closing dissemination section in reading view.
+禁止直接对正式文件运行“按标点自动插入空行”的脚本。任何自动重排必须先写临时文件，随后由编辑者按语义合并段落，并在阅读视图检查文首、中段最长章节和文末传播区。
 
-## 9. Faithful-Transcript Acceptance
+## 九、忠实稿专项验收
 
-Checks for file existence, headings, and typographical errors do not prove fidelity. Perform content-level comparison as well:
+普通的文件存在、标题和错字检查，不能证明忠实。还要做内容级对照：
 
-1. Extract three to five consecutive substantive sentences from the beginning, middle, and end of the source input;
-2. Locate each sentence in the faithful transcript. A summary sentence that is merely “close in meaning” is not an acceptable substitute;
-3. Separately sample the longest case and confirm that its background, process, numbers, emotions, and instructor judgments all remain;
-4. Check whether questions, repeated emphasis, and transitions from the source were over-deleted;
-5. Check whether the result contains many bullet points even though the source was continuous speech;
-6. Compare the raw character volume with the cleaned character volume. If the result is substantially shorter, explain whether every deletion was pure noise;
-   - Compare only source body text with faithful body text, excluding frontmatter, lesson highlights, and derived closing content;
-   - 60% is an elimination threshold, not a passing score. The body-retention ratio can raise an alarm but cannot prove fidelity;
-   - Do not calibrate retention rates against drafts the user has not accepted, and do not unilaterally promote “usable as a reference” into a gold-standard exemplar;
-   - Whenever the body is substantially shorter, provide a deletion explanation and paragraph-by-paragraph coverage audit proving that every meaningful semantic unit has a destination. A ratio or basic-script `PASS` does not justify delivery;
-7. If the user says the material was “over-condensed,” rework the most recent lesson first as a calibration sample. After the user approves the scale, batch-rework historical lessons;
-8. Before batch rework, recover each lesson’s original source. Never reconstruct it from an old summary.
+1. 从原始输入开头、中段和结尾各抽取连续3—5个实质句；
+2. 在忠实稿中逐句定位，不接受“意思差不多”的总结句代替；
+3. 单独抽查最长案例，确认背景、过程、数字、情绪和讲师判断都在；
+4. 检查原文中的反问、重复强调和转折是否被过度删除；
+5. 检查是否出现大量项目符号，而原文实际是连续口述；
+6. 比较原始字符量和清洗后字符量。篇幅显著缩短时，必须说明删掉的是否全是纯噪声；
+   - 只比较原始正文与忠实正文，排除Frontmatter、本课核心和文末派生内容；
+   - 60%是淘汰线，不是达标线；正文比例只负责报警，不负责证明忠实；
+   - 不得使用未经用户验收的稿件校准正文保留率，也不得把“可作参照”自行升级为金牌样板；
+   - 只要正文明显缩短，就必须提交删减说明与逐段覆盖审计，证明全部有效语义有明确去处；不能因为比例或基础脚本PASS而交付；
+7. 若用户反馈“提炼太狠”，先返工最近一课作为尺度样本，确认后再批量返工历史课程；
+8. 批量返工前必须找回各课原始源，不得使用旧摘要反推。
 
-Use `document_type: proofread transcript` for the faithful transcript and clearly label the structured output as a lecture, so future maintainers do not confuse the two document types.
+建议把忠实稿标记为 `document_type: 校对版逐字稿`，把结构化成果明确标记为讲义，避免后续维护者混淆两种文档。

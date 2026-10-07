@@ -1,102 +1,101 @@
-# Reversed Recording Order, Cross-Lesson Continuations, and Duplicate-Content Merging
+# 录制顺序颠倒、跨课续讲与重复内容合并
 
-Use this reference when one long transcript contains several complications at once: recording order runs opposite to course order; one livestream first continues the previous lesson and then starts the next; a later segment resumes material recorded earlier; or the same concept appears repeatedly, with each occurrence adding demonstrations or constraints.
+用于一份长转写同时包含以下情况：录制顺序与课程顺序相反、同一次直播先续讲上一课再进入下一课、后半段又接入更早录制内容、相同概念在多处重复但各自带有新增演示或限制条件。
 
-## 1. Build Two Timelines Before Splitting by Timestamp
+## 1. 先建“双时间轴”，不要直接按时间戳切课
 
-Record both:
+同时记录：
 
-- **Recording timeline:** the actual text order and timestamps;
-- **Course timeline:** official lesson numbers, explicit instructor announcements, knowledge prerequisites, and assignment continuity.
+- **录制时间轴**：文本实际出现顺序和时间戳；
+- **课程时间轴**：官方节次、讲师明确报幕、知识前置关系和作业承接关系。
 
-A timestamp proves only where material sits in a recording; it does not prove lesson identity. When semantic anchors appear, such as “continuing Lesson 2,” “that concludes Lesson 1,” or “tomorrow we cover Plan/Go,” use those anchors first.
+时间戳只证明素材位置，不证明课程节次。出现“接着讲第二课”“第一课到这里”“明天讲 Plan/Go”等语义锚点时，优先用锚点判断归属。
 
-Build a segment register before drafting:
+建议先建分段台账：
 
-| Segment | Original Time Range | Semantic Anchor | Lesson Attribution | Relationship to Other Segments | Treatment |
+| 段落 | 原时间范围 | 语义锚点 | 课程归属 | 与其他段关系 | 处理 |
 |---|---|---|---|---|---|
-| A | 00:00–19:49 | Lesson 1 close / supplementary demonstration | Lesson 01 | Later-recorded supplement to Lesson 1 | Merge into Lesson 01 |
-| B | 19:50–39:42 | Starts covering Plan | Lesson 02 | Independent new knowledge | Main body of Lesson 02 |
-| C | 52:54–end | Reintroducing Codex / Plan tomorrow | Lesson 01 | Main body of Lesson 1 recorded earlier | Use as Lesson 01 backbone |
+| A | 00:00—19:49 | 第一课收尾/补充演示 | 第01课 | 补充后录的第一课 | 并入第01课 |
+| B | 19:50—39:42 | 开始讲 Plan | 第02课 | 独立新知识 | 第02课主干 |
+| C | 52:54—结尾 | 重新认识 Codex/明天讲 Plan | 第01课 | 更早录制的第一课主体 | 作为第01课主干 |
 
-The table contents are format examples only. Actual anchors must come from the current authoritative source.
+表中内容只是格式示例，实际锚点必须来自当前权威源。
 
-## 2. Merge Using “Backbone—Addendum—Pure Duplicate”
+## 2. 用“主干—补充—重复”三分法合并
 
-Label each knowledge unit as:
+对每个知识点标记：
 
-- **Backbone:** its first complete definition, argument, and structure;
-- **Addendum:** a later demonstration, number, failure process, boundary, or Q&A that adds information;
-- **Pure duplicate:** a restatement with no new information.
+- **主干**：第一次完整定义、论证和结构；
+- **补充**：后续新增的演示、数字、失败过程、边界或问答；
+- **纯重复**：没有新增信息的再次表述。
 
-Merge rules:
+合并规则：
 
-1. Use the earliest complete argument in course logic as the backbone;
-2. Move addenda into the corresponding backbone subsection; never delete them merely because the concept repeats;
-3. For pure duplicates, keep only the most complete and distinctive expression;
-4. If a later occurrence adds failure, correction, or limitations to the same case, preserve the full process;
-5. Do not equate “same concept” with “duplicate content.” Definitions, operational demonstrations, business judgments, and risk boundaries are different information layers.
+1. 课程逻辑中最早出现的完整论证作为主干；
+2. 补充内容移动到对应主干的小节，不因重复概念而删除；
+3. 纯重复只保留表达最完整、最有辨识度的一次；
+4. 同一案例若后段增加失败、纠错或限制，必须保留完整过程；
+5. 不把“概念相同”误判为“内容重复”——定义、操作演示、商业判断和风险边界属于不同信息层。
 
-A deduplication matrix can help:
+可用去重矩阵：
 
-| Topic | New in Segment A | New in Segment B | New in Segment C | Final Placement |
+| 主题 | 段A新增 | 段B新增 | 段C新增 | 最终落点 |
 |---|---|---|---|---|
-| Agent First | Definition | None | Background and assignment | Lesson 01 principles section |
-| Browser capability | Practical extraction | None | Infrastructure explanation | Lesson 01, principle before practice |
-| Plan | Preview | Full demonstration | Next-lesson preview | Keep full demonstration in Lesson 02; use previews only as transitions |
+| Agent First | 定义 | 无 | 背景与作业 | 第01课理念小节 |
+| 浏览器能力 | 实操抓取 | 无 | 基础设施解释 | 第01课先原理后实操 |
+| Plan | 预告 | 完整演示 | 下节预告 | 第02课保留完整演示，预告只作衔接 |
 
-## 3. “Complete Organization” Does Not Mean Retaining All Livestream Noise
+## 3. “完整整理”不等于保留全部直播噪声
 
-Delete by default: household conversation, homework supervision, searching for equipment, non-informative filler, repeated sales prompts, price countdowns, and irrelevant comment interactions.
+默认删除：家庭对话、作业辅导、设备寻找、无信息口头语、重复促单、价格倒计时和无关评论区互动。
 
-Retain by default: actual tool operations; success and failure processes; course-relevant numbers such as runtime, quantity, and price; Q&A that adds system differences, permission limits, or applicable conditions; and explanations that affect the learning order of the course.
+默认保留：工具实际操作步骤；成功和失败过程；运行时间、数量、价格等课程有效数字；用户问答中新增的系统差异、权限限制和适用条件；课程路线中会影响后续学习顺序的说明。
 
-Retain course-sales information only when it explains course structure, delivery, or community mechanisms. Pure sales pressure does not belong in the course body.
+课程销售信息只有在解释课程结构、交付方式或社群机制时才压缩保留；纯促单不进入课程正文。
 
-## 4. Responsibilities of the Two Drafts
+## 4. 双稿职责
 
-### Faithfully Edited Transcript
+### 忠实精编稿
 
-- Reorder by course sequence while preserving the instructor’s first-person voice;
-- State at the beginning that recording order was rearranged and identify the segmentation basis;
-- Do not turn it into a third-party course summary;
-- Do not invent prompts, scoring formulas, or methods absent from the course.
+- 按课程顺序重排，但保留讲师第一人称；
+- 在开头注明“录制顺序已重排”和分段依据；
+- 不写成第三方课程总结；
+- 不新增课程未给出的提示词、评分公式或方法。
 
-### Structured Lecture
+### 系统化讲义
 
-- May reorganize content into models, processes, comparison tables, templates, and exercises;
-- Editorial additions must be labeled “organized from the course logic” and must not masquerade as the instructor’s words;
-- Separate course facts, instructor experience, and editorial inference.
+- 可重组为模型、流程、对比表、模板和练习；
+- 编辑新增内容必须标注“根据课程逻辑整理”，不能伪装成讲师原话；
+- 课程事实、讲师经验和编辑推导分层。
 
-## 5. Original Sources and Permission
+## 5. 原始来源与权限
 
-If the authoritative source exists only in the current chat message:
+若权威原文只存在于当前聊天消息：
 
-1. Preserve the original message in the session first;
-2. Before extracting it from the conversation database into TXT, obtain the user’s approval;
-3. If runtime authorization is requested again or times out, stop. Do not switch tools to bypass it;
-4. Never present cleaned content as the raw transcript;
-5. Record in the course map that “the original source remains in the session / has not been separately archived.” Keep both drafts traceable without claiming that an original transcript file has been archived.
+1. 优先保留会话中的原始消息；
+2. 若要从会话数据库提取为 TXT，先确认用户同意；
+3. 运行时再次要求授权或超时时，停止，不换工具绕过；
+4. 不得把清洗后的内容冒充原始转写；
+5. 在课程地图写明“原始源仍在会话/未独立归档”，双稿状态保持可追溯但不声称原文文件已落库。
 
-## 6. Mandatory Pre-Delivery Acceptance
+## 6. 交付前强制验收
 
-- [ ] Both the recording and course timelines have been recorded;
-- [ ] Every segment has exactly one lesson attribution;
-- [ ] The supplemental Lesson 1 segment was not misplaced in Lesson 2;
-- [ ] Every new case, number, failure, and boundary inside repeated concepts has a destination;
-- [ ] The faithful transcript has been searched for and cleared of third-party editorial phrases such as “the course mentions,” “the instructor believes,” and “the course demonstrates”;
-- [ ] Newly created templates in the structured lecture are explicitly editorial;
-- [ ] The course map explains the rearrangement basis and lists unresolved terms;
-- [ ] The archival status of the raw transcript matches reality;
-- [ ] Filename, H1, frontmatter, lesson number, and map links agree;
-- [ ] Do not claim “all acceptance checks passed” if automated verification did not run.
+- [ ] 录制时间轴和课程时间轴均已记录；
+- [ ] 每个片段都有唯一课程归属；
+- [ ] 第一课补充段没有误丢到第二课；
+- [ ] 重复概念中的新增案例、数字、失败和边界均有去处；
+- [ ] 忠实稿正文搜索并清理“课程中提到、讲师认为、课程展示”等第三方编辑视角；
+- [ ] 系统讲义的新增模板明确是编辑整理；
+- [ ] 课程地图说明重排依据和待确认术语；
+- [ ] 原始转写是否独立归档与实际状态一致；
+- [ ] 文件、H1、Frontmatter、地图节次和链接一致。
 
-## 7. Common Errors
+## 7. 常见错误
 
-- Naming Lesson 01 and Lesson 02 according to transcript order;
-- Assuming consecutive timestamps belong to one lesson;
-- Retaining only the first definition and deleting later demonstrations or failure processes;
-- Including every sales prompt and household distraction in the name of “completeness”;
-- Rewriting the faithful transcript as a third-party overview;
-- Fabricating a “raw transcript” from organized material after automatic extraction from chat fails;
-- Claiming complete acceptance when automated checks were not run.
+- 按文本出现顺序命名第01、第02课；
+- 看到时间戳连续，就假定是同一次课程；
+- 只保留第一次定义，误删后续实操和失败过程；
+- 为了“完整”把促单和家庭噪声全部写进正文；
+- 忠实稿改成第三方概述；
+- 自动提取原始聊天失败后，用整理稿补造“原始转写”；
+- 在自动验证未运行时声称“全部验收通过”。

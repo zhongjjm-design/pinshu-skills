@@ -1,48 +1,48 @@
-# Write-and-Readback Loop for Approved Course Files
+# 已批准课程文件的落盘与回读闭环
 
-Use this workflow when a course transcript, structured lecture, case study, or similar deliverable has been completed and the user has explicitly approved writing it to the formal course library.
+用于课程逐字稿、结构化讲义、案例稿等已经整理完成，且用户已经明确批准写入正式课程库的场景。
 
-## Core States
+## 核心状态
 
-Keep these three states distinct:
+必须区分三个状态，禁止混用：
 
-1. **Content prepared (`content-prepared`)**: the body has been generated but has not been written to the target file.
-2. **File written (`file-written`)**: the write tool returned successfully, but the file has not yet been read back and verified.
-3. **Persisted and accepted (`persisted-and-accepted`)**: the target file exists, and its title, frontmatter, key sections, and counts have been reconciled through readback.
+1. **内容已整理**：正文已经生成，但尚未写入目标文件。
+2. **文件已写入**：写入工具返回成功，但尚未回读核验。
+3. **已落盘并验收**：目标文件真实存在，标题、Frontmatter、关键章节和数量均已回读对账。
 
-Only the third state permits telling the user that the file “has been saved to the library” or that the task is complete.
+只有第3种状态可以对用户说“已经存到库里”或“任务完成”。
 
-## Execution Rules After Authorization
+## 已授权后的执行规则
 
-- If the user has explicitly said “approved,” “save it here,” or “write it directly,” or if a valid series-level ongoing write authorization remains in force, perform the write immediately in the same turn. Do not ask again about the same scope.
-- Persist and verify the file before reporting. A plan, an acceptance description, or another repetition of the path is not a substitute for execution.
-- Use the exact directory and filename specified by the user. Create a separate file by default; do not overwrite an existing file with the same name. Overwriting requires explicit authorization.
-- After context compaction, recover the body from the user's original message, an existing formal draft, or the final draft in the conversation. Do not reconstruct an approximate version from a summary.
+- 用户已经明确说“批准”“存这里”“直接写入”，或仍处于有效的系列级持续写入授权时，下一步应在同一轮立即执行写入，不再重复询问相同范围。
+- 先完成落盘和验收，再汇报；不要用计划、验收说明或重复复述路径代替执行。
+- 用户指定文件名和目录时严格采用其路径；默认新建独立文件，不覆盖同名旧稿。需要覆盖时必须有明确授权。
+- 上下文压缩后，正文应从用户原始消息、已有正式稿或会话中的最终成稿恢复；不得凭摘要重新编造一个“近似版本”。
 
-## Minimum Write Loop
+## 最小写入闭环
 
-For every target file:
+对每一个目标文件执行：
 
-1. Lock the final body and absolute target path.
-2. Check whether the write would overwrite an existing file.
-3. Write the complete body and the required frontmatter/tags.
-4. Read back the beginning, a critical middle section, and the end.
-5. Reconcile the title, instructor name, case/step counts, pending-confirmation markers, and critical numbers.
-6. Report the absolute path and the state `persisted-and-accepted`, not merely “prepared.”
+1. 锁定最终正文与目标绝对路径；
+2. 检查是否会覆盖旧文件；
+3. 写入完整正文和规定的Frontmatter/tags；
+4. 回读文件开头、关键中段和结尾；
+5. 对账标题、讲师名、案例/步骤数量、待确认标记和关键数字；
+6. 报告绝对路径及“已落盘并验收”，不要只说“整理好了”。
 
-## Interruption and Recovery
+## 中断与恢复
 
-- If runtime authorization or a tool call is interrupted before the write, the state remains `content-prepared; file-not-written`. Report this truthfully and do not declare completion.
-- On recovery, first perform a read-only inventory to determine whether the target file contains partial side effects. Execute only the missing actions to avoid duplicate writes or overwrites.
-- If the user is already pressing for action after a delay, respond action-first: acknowledge the issue in one sentence and execute immediately. Do not provide another long plan, repeat the acceptance table, or ask the user to restate the path.
+- 如果运行时授权或工具调用在写入前中断，状态仍是“内容已整理，文件未写入”，必须如实说明，不能宣布完成。
+- 恢复后先只读盘点目标文件是否已产生部分副作用，再只补缺失动作，避免重复写入或覆盖。
+- 用户已经因拖延而催促时，回复应行动优先：一句承认问题，立即执行；避免再次给长方案、重复验收表或要求用户重述路径。
 
-## Acceptance Checklist
+## 验收清单
 
-- [ ] Path exactly matches the user's specification
-- [ ] No existing file was overwritten accidentally
-- [ ] File exists and is readable
-- [ ] Frontmatter and tags are present
-- [ ] Title and instructor name are correct
-- [ ] Case, step, and tool counts match the final body
-- [ ] Beginning, middle, and end are all present and untruncated
-- [ ] The report uses the accurate state among `content-prepared`, `file-written`, and `persisted-and-accepted`
+- [ ] 路径与用户指定完全一致
+- [ ] 未误覆盖旧文件
+- [ ] 文件真实存在且可读取
+- [ ] Frontmatter与tags存在
+- [ ] 标题和讲师名正确
+- [ ] 案例、步骤、工具数量与最终正文一致
+- [ ] 文件开头、中段、结尾均非截断
+- [ ] 汇报使用“内容已整理／文件已写入／已落盘并验收”中的准确状态

@@ -1,54 +1,54 @@
-# Markdown Heading Spacing and Asynchronous Finalization Control
+# Markdown 标题留白与异步定稿控制
 
-Use this reference when long course transcripts, structured lectures, and dissemination cards are generated, refined, and written by multiple agents or background processes.
+适用于长课程逐字稿、系统讲义和传播素材卡在多Agent或后台进程中生成、精修、落盘的场景。
 
-## 1. Heading Spacing Is a Delivery Acceptance Criterion
+## 1. 标题留白是交付验收项
 
-In Markdown source, every body heading (H1/H2/H3) must be followed by at least one blank line before a paragraph, list, blockquote, or code block begins. It is not enough to confirm that the heading parses correctly. In some Obsidian themes, body text immediately following a heading appears visually stuck to it.
+Markdown 源文件中，每个正文标题（H1/H2/H3）后必须至少有一个空行，再进入段落、列表、引用块或代码块。不要只确认标题被识别；“标题下一行直接接正文”在部分 Obsidian/主题样式中会显得粘连。
 
-Minimum rule:
+最小规则：
 
 ```markdown
-## Heading
+## 标题
 
-Body text begins here.
+正文从这里开始。
 ```
 
-Notes:
+注意：
 
-- Reading views usually collapse multiple blank lines; one is enough;
-- A `#` inside frontmatter is not a body heading;
-- Final acceptance must inspect the line after every H1/H2/H3. The violation count must be zero;
-- If the user supplies a screenshot showing spacing problems, inspect the actual line breaks in the source file rather than dismissing the issue because “Markdown adds default spacing.”
+- 多个空行在阅读视图中通常会折叠，一个空行即可；
+- Frontmatter 内的 `#` 不属于正文标题；
+- 终验应扫描 H1/H2/H3 后的下一行，违规数必须为 0；
+- 用户提供截图指出间距问题时，先核对源文件真实换行，不要只凭“Markdown 默认会有间距”反驳。
 
-## 2. Late Background Results Are Stale by Default After Promotion
+## 2. 正式稿提升后，迟到的后台结果默认视为过期
 
-Background subagents, Codex processes, and batch jobs must write only to exclusive temporary files. After the main agent promotes a draft into the formal library and reads it back, establish an explicit terminal state: formal path, line count, critical sections, and constraint-scan results.
+后台子Agent、Codex或批处理任务必须只写独占临时文件。主Agent将草稿提升到正式库并完成回读后，建立清晰终态：正式路径、行数、关键章节、约束扫描结果。
 
-If an older background task finishes later:
+若旧后台任务稍后才完成：
 
-1. It must not overwrite the formal draft directly;
-2. Determine whether it was based on an obsolete snapshot;
-3. Compare it against the current formal draft and check whether it reintroduces removed content such as sales pushes, group invitations, QR codes, old STT terms, or obsolete formatting;
-4. Absorb only clearly beneficial changes through targeted patches;
-5. Re-run the complete constraint scan and heading-spacing check;
-6. If it adds no value or violates current requirements, retain it as a temporary result and explicitly decline to promote it.
+1. 不得直接覆盖正式稿；
+2. 先判断它是否基于旧快照；
+3. 对照当前正式稿逐项检查它是否重新引入已删除内容，例如促单、邀群、二维码、旧STT词或过期格式；
+4. 只有确有增益时，按定点补丁选择性吸收；
+5. 重新执行完整约束扫描与标题留白检查；
+6. 无增益或违反当前要求时，保留临时结果但明确不晋升。
 
-## 3. Speed Gate: Avoid Endless Refinement
+## 3. 速度门控：避免无限精修
 
-Once a faithful transcript covers source order, cases, numbers, and sections, and only a few localized speech remnants remain:
+当忠实稿已覆盖原顺序、案例、数字和章节，且只剩少量可定位的口语残留时：
 
-- Prefer deterministic targeted corrections and a global residue scan;
-- Do not launch multiple overlapping whole-document refinement agents;
-- If the user reports that progress is too slow, stop expanding the process. Complete the minimum necessary corrections, write, and read back;
-- Background-task volume is not quality. Completion depends on the main agent’s actual acceptance.
+- 优先做确定性的定点修正和全局残留扫描；
+- 不再启动多个重叠的整篇精修代理；
+- 用户反馈“太慢”时，立即停止继续扩展流程，完成最小必要修正、落盘和回读；
+- 不把后台任务数量当作质量，主Agent真实验收才是完成标准。
 
-## 4. Final-Acceptance Checklist
+## 4. 终验清单
 
-- [ ] The formal file exists and can be read back as UTF-8;
-- [ ] There is exactly one H1, and H2/H3 counts match expectations;
-- [ ] Every H1/H2/H3 is followed by at least one blank line;
-- [ ] Residual specified STT errors, marketing noise, and placeholders total zero;
-- [ ] The faithful transcript remains first-person and preserves cases, numbers, and process;
-- [ ] Late background output has not overwritten the formal draft;
-- [ ] The completion report contains only absolute paths and key acceptance results.
+- [ ] 正式文件真实存在并可用 UTF-8 回读；
+- [ ] H1 唯一，H2/H3 数量符合预期；
+- [ ] 所有 H1/H2/H3 后至少一个空行；
+- [ ] 指定STT错误、营销噪声和占位符残留为0；
+- [ ] 忠实稿仍是第一人称且保留案例、数字和过程；
+- [ ] 迟到后台结果没有覆盖正式稿；
+- [ ] 完成汇报只给绝对路径与关键验收结果。

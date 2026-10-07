@@ -1,145 +1,145 @@
-# Multi-Lesson Asset Attribution and Cross-Lesson Contamination Recovery
+# 多课素材归属与串课恢复
 
-Use this workflow when transcripts, screenshots, slides, audio, and video arrive interleaved across a continuous course series. Establish asset ownership before any formal write. If cross-lesson contamination occurs, recover the whole set in a verifiable order.
+用于连续课程中“逐字稿、截图、PPT、音视频”交错到达的场景。目标是先锁定素材归属，再开始任何正式写入；若发生串课，按可验证顺序整体恢复。
 
-## 1. Authority Order
+## 1. 权威性顺序
 
-Determine attribution in this priority order:
+归属判断按以下优先级执行：
 
-1. the user's explicit statement of lesson number and attachment ownership;
-2. first-party markers such as the official lesson title, slide header, or lesson number shown in the video;
-3. an asset-attribution table confirmed by the user;
-4. filename and timestamp, used only as supporting evidence;
-5. content similarity, message proximity, and interface display order, none of which may establish attribution alone.
+1. 用户对节次和附件归属的明确说明；
+2. 官方课名、课件页眉、视频内节次等一手标识；
+3. 用户确认过的素材归属表；
+4. 文件名与时间戳，只能作为辅助证据；
+5. 内容相似度、消息邻近位置和界面显示顺序不能单独作为归属依据。
 
-“Highly relevant to the next lesson” does not mean “belongs to the next lesson.” During continuous uploads, images from a previous lesson may appear near the next lesson's transcript.
+“内容与下一课高度相关”不等于“属于下一课”。连续上传时，上一课图片可能显示在下一课逐字稿附近。
 
-## 2. Pre-Execution Asset Ledger
+## 2. 执行前素材台账
 
-Display and confirm first:
+先展示并确认：
 
-| Lesson | Official title | Transcript first–last sentence | Images/slides | Asset state | Attribution basis | User confirmed |
+| 节次 | 官方标题 | 逐字稿首句—尾句 | 图片/PPT | 素材状态 | 归属依据 | 用户确认 |
 |---|---|---|---:|---|---|---|
-| Lesson XX |  |  | N images | complete / missing / no images for this lesson |  | yes/no |
+| 第XX课 |  |  | N张 | 完整/缺失/本课无图 |  | 是/否 |
 
-Record all three states explicitly:
+必须显式记录三种状态：
 
-- `received-N-images`;
-- `image-attribution-pending`;
-- `no-images-for-this-lesson`.
+- `已收到N张图片`；
+- `图片待确认归属`；
+- `本课无配图`。
 
-`no-images-for-this-lesson` is a confirmed fact, not a blank. Recommended frontmatter:
+“本课无配图”不是空白，而是已确认事实。Frontmatter建议写：
 
 ```yaml
-source_state: complete-transcript-received; no-images-for-this-lesson
+来源状态: 已收到完整逐字稿；本课无配图
 ```
 
-## 3. Attribution Gate
+## 3. 归属门禁
 
-Before confirmation, the following are allowed:
+确认前允许：
 
-- read-only inspection of attachments;
-- hashing, deduplication, and reading image dimensions;
-- temporary numbering and an attribution-candidate table.
+- 只读检查附件；
+- 计算哈希、去重和读取图片尺寸；
+- 建立临时编号和归属候选表。
 
-Before confirmation, the following are prohibited:
+确认前禁止：
 
-- creating the formal `{lesson_assets}` target;
-- embedding images in a faithful transcript or lecture;
-- expanding a lesson body from image content;
-- updating the course map to `organized`;
-- delegating a background task that writes formal files.
+- 创建正式 `assets/第XX课/` 归档；
+- 在忠实稿或讲义中嵌图；
+- 用图片内容扩写某课正文；
+- 更新课程地图为“已整理”；
+- 派发会写正式文件的后台子任务。
 
-After confirmation, use this order:
+确认后顺序：
 
-1. archive the physical images;
-2. verify count, deduplication, and relative paths;
-3. create the faithful edited transcript;
-4. create the systematized lecture;
-5. update the course map;
-6. perform four-way reconciliation.
+1. 图片物理归档；
+2. 核验数量、去重与相对路径；
+3. 生成忠实精编稿；
+4. 生成系统化讲义；
+5. 更新课程地图；
+6. 四向对账。
 
-## 4. Boundaries for Images in the Body
+## 4. 图片对正文的边界
 
-- An image enters only the lesson to which it belongs.
-- Content unique to slides is labeled `slide-supplement` and must not be presented as spoken by the instructor.
-- The transcript remains authoritative for the faithful draft; images provide evidence and supplementation but must not rewrite the instructor's meaning.
-- A lesson without images must not borrow images from adjacent lessons, even when the topics continue across them.
-- A structured lecture may explain slides from the same lesson, but it still distinguishes speech, slides, editorial analysis, and unverified facts.
+- 图片只进入其所属课程。
+- PPT独有内容标注为“PPT补充”，不能伪装成讲师口播。
+- 忠实稿以逐字稿为权威源；图片用于留证和补充，不得反向改写讲师原意。
+- 无图课不得借用前后课程图片，即使主题连续。
+- 结构化讲义可以解释本课PPT，但仍要区分口播、PPT、编辑分析和待核验事实。
 
-## 5. Recovery Order After Cross-Lesson Contamination
+## 5. 串课后的恢复顺序
 
-Stop immediately when attribution is found to be wrong. Do not continue “while already here.”
+发现归属错误后立即停止，不要继续“顺手完成”。
 
-### A. Stop Side Effects
+### A. 停止副作用
 
-- Stop or cancel related background Agents, build tasks, and batch jobs.
-- Stop updating the course map.
-- Do not mark contaminated intermediate drafts as complete.
+- 停止或取消相关后台Agent、构建任务和批处理；
+- 不再更新课程地图；
+- 不把错误中间稿标记为完成。
 
-A background task that times out or is stopped may still have written a partial or complete file. Inspect target paths; never interpret `timeout` as “no side effects.”
+注意：后台任务超时或被停止，仍可能已经写出部分或完整文件。必须检查目标路径，不能把“timeout”理解为“没有副作用”。
 
-### B. Take a Read-Only Inventory
+### B. 只读盘点
 
-List separately:
+分别列出：
 
-- incorrect and correct image directories;
-- faithful transcripts and in-depth lectures for each lesson;
-- image references, source metadata, and lesson-specific cases in every file;
-- corresponding rows in the course map;
-- background tasks still running or recently completed.
+- 错误图片目录和正确图片目录；
+- 每节课的忠实稿与深度讲义；
+- 每份文件的图片引用、来源元数据和独有案例；
+- 课程地图对应行；
+- 仍在运行或刚结束的后台任务。
 
-### C. Recover the Authoritative Source
+### C. 找回权威源
 
-- Prefer the user's original message, source file, or audio/video transcript.
-- If context compaction makes the source unrecoverable, ask the user to resend it.
-- Do not infer the raw transcript backward from a contaminated lecture, old summary, or conversation summary.
+- 优先使用用户原始消息、原文件或音视频转写；
+- 上下文压缩后无法找回时，请用户重发；
+- 不从被污染的讲义、旧摘要或会话总结反推原逐字稿。
 
-### D. Restore Physical Placement
+### D. 物理归位
 
-First move images to the correct manifest/path-map target `{lesson_assets}`, then verify counts and hashes before editing documents. If the incorrectly assigned lesson is confirmed to contain no images, remove its empty image directory and every image path from its files.
+先把图片迁到正确 `assets/第XX课/`，核验数量与哈希，再处理文档。错误课程若确认为无图，应移除其空图片目录和所有图片路径。
 
-### E. Rebuild; Do Not Merely Change Links
+### E. 重建，而不是只换链接
 
-Cross-lesson contamination creates two types of corruption:
+串课会产生两类污染：
 
-1. explicit corruption: incorrect image links;
-2. implicit corruption: models, cases, names, and conclusions unique to an image enter the wrong lesson body.
+1. 显性污染：错误图片链接；
+2. 隐性污染：图片独有模型、案例、人名和结论进入了错误课程正文。
 
-Changing paths alone is therefore insufficient. Instead:
+因此不能只替换路径。应当：
 
-- return the faithful transcript to the raw transcript and remove image-derived lesson-specific content;
-- regenerate the in-depth lecture from the cleaned faithful transcript by default, overwriting the incorrect old draft;
-- for a no-image lesson, require `image syntax=0`, `assets paths=0`, and `adjacent-lesson-specific terms=0`;
-- for the correct lesson, confirm that image count, unique-image count, and missing-link count match expectations.
+- 忠实稿回到原逐字稿，删除图片带入的专属内容；
+- 深度讲义默认从已清理的忠实稿重新生成，覆盖错误旧稿；
+- 无图课执行“图片语法=0、assets路径=0、邻课专属词=0”检查；
+- 正确课检查图片数量、唯一数量和缺失链接均符合预期。
 
-### F. Correct the Map and State
+### F. 修正地图与状态
 
-Change the map to `organized` only after all four per-lesson files and image directories pass checks. Update both the received-transcript range and next expected lesson.
+只有四份逐课文件和图片目录通过检查后，才能把地图改为“已整理”。同时更新“已收到逐字稿范围”和“下一节输入”。
 
-## 6. Four-Way Reconciliation Template
+## 6. 四向对账模板
 
-| Lesson | Authoritative transcript | Image directory | Faithful transcript | In-depth lecture | Image references | Cross-lesson-specific terms | Map state |
+| 节次 | 权威逐字稿 | 图片目录 | 忠实稿 | 深度讲义 | 图片引用 | 跨课专属词 | 地图状态 |
 |---|---|---|---|---|---:|---:|---|
-| Lesson XX | path/message anchor | `{lesson_assets}` or “no images” | path | path | N | 0 | `organized` / `pending-acceptance` |
+| 第XX课 | 路径/消息锚点 | `assets/第XX课/`或“无图” | 路径 | 路径 | N | 0 | 已整理/待验收 |
 
-Minimum acceptance:
+最低验收：
 
-- all four files exist and begin with `tags`;
-- for lessons with images: image count equals expectation, references are unique, and no link is missing;
-- for lessons without images: zero Markdown image syntax and zero references to the rendered lesson-assets target;
-- people, cases, models, and source notes unique to adjacent lessons did not cross lesson boundaries;
-- source state in frontmatter matches actual assets;
-- map title, knowledge title, progress, and next lesson agree;
-- a subagent's “complete” message is only a lead; the primary Agent reads and accepts the actual files.
+- 四份文件均存在并以 `tags` 开始；
+- 有图课：图片数量等于预期、引用唯一、链接无缺失；
+- 无图课：Markdown图片语法为0，`assets/`引用为0；
+- 相邻课程独有人名、案例、模型和来源说明不串课；
+- Frontmatter中的来源状态与真实素材一致；
+- 地图标题、知识标题、进度和下一课一致；
+- 子Agent“完成”只作线索，主Agent必须读取实际文件验收。
 
-## 7. Multi-Agent and Late-Task Precautions
+## 7. 多Agent与迟到任务注意事项
 
-- Every delegated task names the authoritative source file, target lesson, image directory, and adjacent-lesson content that must not be referenced.
-- State explicitly whether a subtask overwrites the target file or performs a targeted edit. During contamination recovery, prefer complete overwrite from a clean source.
-- Multiple subtasks must not write the same file concurrently.
-- **Invalidation fence:** when the user says “stop,” corrects the lesson number, or changes asset attribution, the old delegation becomes logically invalid immediately. A late completion notice is stale information and cannot support a success claim.
-- Prefer background tasks that write temporary candidate files for primary-Agent acceptance before formal promotion. If direct writing cannot be avoided, reread the final persisted file after the task completes.
-- After a subtask times out, inspect actual modification time, source metadata, and content before deciding whether to overwrite or delete; `timeout` does not mean no file was written.
-- If a late subtask overwrites a formal version already produced by the primary Agent, recheck image count, missing links, adjacent-lesson-specific terms, critical figures, source metadata, and risk boundaries.
-- The primary Agent owns final acceptance for attribution, paths, figures, images, and boundaries; it must not accept a subagent's self-report directly.
+- 给每个子任务写清权威源文件、目标节次、图片目录和禁止引用的相邻课程内容。
+- 子任务应覆盖目标文件还是定点编辑，必须明确；串课恢复时优先“从干净源整体覆盖”。
+- 多个子任务不能同时写同一文件。
+- **失效围栏**：用户说“停止”、更正节次或改变素材归属后，旧 delegation 立即逻辑失效；迟到的完成通知只作为过期信息，不得据此宣布成功。
+- 优先让后台任务写临时候选文件，由主Agent验收后再覆盖正式路径；无法避免直写时，任务完成后必须重新读取最终落盘文件。
+- 子任务超时后先检查文件的实际修改时间、来源元数据和内容，再决定覆盖或删除；`timeout` 不等于没有写文件。
+- 主Agent已经生成正式版本后，迟到子任务若发生覆盖，必须重新核对图片数、缺失链接、相邻课程专属词、关键数字、来源元数据和风险边界。
+- 主Agent负责最终归属、路径、数字、图片和边界验收，不能直接采信子Agent自报。

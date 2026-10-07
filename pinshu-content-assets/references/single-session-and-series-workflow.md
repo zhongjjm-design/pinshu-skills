@@ -1,23 +1,23 @@
-# Single sessions, series, and the practical use of sourcebooks
+# 单篇、系列与内容资产的实际用法
 
-Read this when a course has multiple lessons, material crosses courses, or an existing asset entry needs checking. `SKILL.md` still decides the default deliverable and the order of sources; this reference does not introduce another production route.
+本参考只在多节课程、跨课复用或需要核查旧资产入口时读取。默认成品和素材优先级以 `SKILL.md` 为准，不另选生产路线。
 
-## One livestream, interview, or lesson
+## 一场直播或一节课
 
-Begin with the faithfully edited transcript and structured guide. Explain the whole argument before collecting views, methods, cases, numbers, phrases, and questions section by section. Group similar material for reuse and keep enough detail that a writer need not replay the lesson. When the two sources disagree or a literal quote matters, check the raw transcript, correction dictionary, and recording as needed. A known STT error in a raw transcript must not reappear in the reader-facing sourcebook.
+从**忠实精编稿和结构化讲义**起步，先说清整场的判断和论证，再沿精编稿逐节收观点、方法、案例、数字、表达与问题。同类内容归在一处，每项保留足够细节，写手不用回看整段课程也能理解。精编与讲义冲突或需要直接引语时，回原始转写、词典和必要的录音仲裁；原转写的已知错转不能回流前台。
 
-The authoritative asset is one readable document per session or lesson. Its eight responsibilities are explained in `SKILL.md`: what the session covered; views; methods; cases; figures; memorable phrasing; questions and angles; and source notes. They do not impose word counts, quotas, or rigid tables. A guide can reveal the framework but cannot replace a case's details, the steps of a method, or the speaker's admitted limitations. Category labels, bare conclusions, and “could become an article” notes alone are not source material.
+正本是一场或一节课一份可读文档。八部分是内容职责，不是固定字数、配额或机械表格：这场讲了什么、观点判断、方法做法、案例故事、数据数字、好表达、好问题与选题、来源说明。讲义可以帮助找框架，却不能替代有细节的案例、完整的步骤和讲者自己承认的条件与失误。句子只有分类名、结论和“可用于写稿”备注，仍不是内容资产。
 
-Older multi-page packages—fact-and-quote ledgers, claim-and-evidence pages, and expression/topic sheets—may be read for historical context but are not the new default format. Do not impose their A/B/C ranking or output-card quotas on new assets. Link existing work back to its sources when useful; do not draft a new piece merely to prove the sourcebook exists.
+旧版的 `00_事实与原话台账`、`01_观点、论据与边界`、`02_表达、金句与问题` 可用于回看历史包，**不再是新内容资产的默认结构**。旧版 A/B/C 打级和多张弹药卡不作生产配额，也不能吞掉好料。已有作品保持可发现的回链；没有写作请求，不用作品证明资产存在。
 
-## Full courses and cross-course reuse
+## 多节课程与跨课复用
 
-Keep each session's own through-line intact. For a completed course, also write a course-level sourcebook organized by central questions, with cross-lesson claims, methods, cases, figures, mutual support, and disagreements explained in usable prose and linked to the lesson detail. Do not concatenate all lessons or substitute a link-only table of contents. For large courses, the single course-level entry can link to major topic pages instead of repeating every detail. An index for writers should answer which course, lesson, and section has material for a real question and record actual uses. If speakers differ or a platform's conditions changed between lessons, say so; new evidence should lead to a sourced correction, not a retroactive claim that the old material had been verified.
+每场先保留自己完整的主线，不按同一主题强行剪碎。一门完整课程还要有**课程级内容母体**：以全课的中心问题为入口，把跨节观点、方法、案例、数字、相互支撑与冲突写成可直接取料的内容，引用时能点回单节材料；它不是逐节摘要拼接，也不是只有链接的目录。课次多时在课程级入口下按大问题链接专题，不重抄几十节正文。写稿索引按真实问题标出“哪门、哪节、哪一部分有料”，并记录真实使用过的作品。课间说法不同、证据不同或当时平台条件不同，写清分歧；新证据到来时回正本修订而不是把旧话改成已经验证。
 
-Follow existing course numbering and naming; do not invent a competing content-assets directory. Make new assets discoverable from the approved course entry. Old pending-review packages are not approved inputs. Overwriting, moving, or deleting them requires the user's approval for those exact files.
+课程栏目已有编号和同义入口时沿用，不自建第二个“传播资产／内容资产”目录。旧待审包不能冒充已验收材料，新文件要能从课程入口找到；覆盖、迁移或删除旧文件须按用户批准的文件范围进行。
 
-## Keep text and verification notes in their places
+## 正文与取证材料分开
 
-The front-facing text uses confirmed names and corrected lines. Keep known STT variants in the immutable source, correction dictionary, or private verification notes. Label a reliably corrected passage as an edited quotation, not a literal transcript quote; paraphrase if the change affects meaning or speaker identity is unknown. A speaker's unverified figures, hypothetical example, forecast, or demo can be retained with its identity and limits, but not portrayed as an independently measured outcome or current rule.
+前台使用已确认的名称和已校订的句子，读者需要了解的是方法与事实，而不是转写纠错过程。已知错转只在不可变原稿、术语词典映射或后台回源说明出现。确实做过校订的引文标“编辑校订引文”，不是原始逐字引文；改变意思或身份不清则转述且不加引号。未核验数字、演示、假设和讲者预判可作为有边界的料保存，但不能包装成客观效果、现行平台规则或已发生的未来。
 
-During review, follow every edited-transcript section and find where each distinctive view, example, and question landed. Verify direct quotes word for word, punctuation and cut points included. Check that no known STT error remains in headings, quotes, or lists. For a method without steps, restore them from the source or name the gap. Check separately whether a case was previously done, merely shown live, created live, or actually deployed. Finally let a reader unfamiliar with the talk open the sourcebook and retrieve specific support for a proposed angle. Unanswered costs, risks, or outcomes belong beside the relevant material. Test scripts and forensic logs are not default user deliverables.
+抽查时顺着精编稿逐节走：哪节的独到观点、例子或问题没有落点，就回去补；引文连标点与截句位置逐句对照，改过的降为校订引文或转述，不能只看意思相似就报告逐字全过。哪些错转仍出现在标题、引文或列表，改前台并留回源；哪项方法没有步骤，回材料补足或标明缺口。案例另核“此前做过／直播展示／现场制作／已经使用”四种状态。最终让未听课的人随机打开正本取料，检验可读性、具体性、选题能否找到论据；没有资料的地方说清课里没讲。测试脚本、时间码总账和反例故事不作为默认交付。

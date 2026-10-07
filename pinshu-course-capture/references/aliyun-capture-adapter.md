@@ -1,28 +1,28 @@
-# Alibaba Cloud Drive Video Transcript Capture Adapter
+# 阿里云盘视频原文采集适配器
 
-This adapter performs capability discovery and a standard handoff. Until validated, it does not assume that Alibaba Cloud Drive provides a native transcript.
+本适配器先负责能力探测和统一交接，不在尚未验证前假定阿里云盘一定有原生文稿。
 
-## Objective
+## 目标
 
-Return Alibaba Cloud Drive video content through the shared capture contract:
+把阿里云盘视频交回统一的采集契约：
 
 ```text
-Locate video -> inspect transcript entry points -> obtain source text -> verify opening/middle/ending -> save source transcript
+定位视频 → 判断文稿入口 → 取得原文 → 首中尾验收 → 保存原始稿
 ```
 
-## Discovery order
+## 探测顺序
 
-1. Confirm the account, shared directory, course directory, and video filename.
-2. Check the web player first for transcript, subtitle, or transcription controls.
-3. If the web player has none, check the official desktop player or an official export function.
-4. Consider local ASR only when the user has download permission.
-5. AI summaries, mind maps, slides, and comments cannot serve as source transcripts.
-6. Record one discovery outcome per attempt: `LOCATED`, `NATIVE_TRANSCRIPT_FOUND`, `BLOCKED_DESKTOP_EXTRACTION`, `NO_NATIVE_TRANSCRIPT`, or `BLOCKED`. These are discovery results or blocker reasons; the course state machine uses `BLOCKED` for a blocked lesson.
+1. 确认账号、分享目录、课程目录和视频文件名；
+2. 先检查网页播放器是否有“文稿/字幕/转写”；
+3. 若网页没有，再检查官方桌面端播放器或官方导出功能；
+4. 只有用户拥有下载权限时，才考虑本地 ASR；
+5. AI总结、脑图、课件和评论不能作为原始文稿；
+6. 每次探测记录能力结果：`LOCATED`、`NATIVE_TRANSCRIPT_FOUND`、`BLOCKED_DESKTOP_EXTRACTION`、`NO_NATIVE_TRANSCRIPT` 或 `BLOCKED`。
 
-## Handoff requirements
+## 交接要求
 
-On success, return the platform, video identity, complete path or URL, native transcript text, extraction method, first sentence, last sentence, and opening/middle/ending integrity evidence.
+成功时必须交回：平台、视频身份、完整路径/链接、原生文稿正文、采集方式、首句、末句和首中尾完整性证据。
 
-If the file is located but no transcript text is obtained, preserve the blocker. Do not create a fake source transcript or use an AI summary as full text.
+只定位到文件但没有拿到正文时，必须保留阻塞原因，不得创建伪原始稿，也不得把 AI 总结当成全文。
 
-After one real capability validation on Alibaba Cloud Drive, add the exact page selectors or desktop steps. Until then, this file is a safe discovery adapter and does not claim production readiness.
+阿里云盘完成一次真实能力验证后，再补充具体页面选择器或桌面端步骤；在此之前本文件是安全的探测适配器，不宣称已完成生产接入。

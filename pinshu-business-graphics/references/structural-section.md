@@ -12,6 +12,7 @@ Use for:
 
 Avoid when layers are merely a list with no dependency, load, or support relationship.
 
+Approved anchor: `../assets/approved-examples/03-structural-section.png`
 
 ## Composition families
 
@@ -36,7 +37,7 @@ Avoid when layers are merely a list with no dependency, load, or support relatio
 
 ## Prompt kernel
 
-> Create a restrained business-system structural section. Show [foundation], [operating layers], [critical interfaces], and [visible outcome] as one load-bearing architecture. Use [composition family], three to five levels, precise labels in the requested output language, section marks, and one accent that identifies the key weakness or leverage point. No decorative skyscraper, no generic pyramid, no impossible perspective, no unrelated icons.
+> Create a restrained business-system structural section. Show [foundation], [operating layers], [critical interfaces], and [visible outcome] as one load-bearing architecture. Use [composition family], three to five levels, precise Chinese labels, section marks, and one accent that identifies the key weakness or leverage point. No decorative skyscraper, no generic pyramid, no impossible perspective, no unrelated icons.
 
 ## Failure boundaries
 

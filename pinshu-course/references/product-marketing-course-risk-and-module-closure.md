@@ -1,119 +1,119 @@
-# Product and Marketing Courses: Risk Boundaries, Dual-Draft Responsibilities, and Module Closure
+# 产品与营销课程：风险边界、双稿分工与模块收官
 
-Use this reference when a continuing course enters high-risk sections involving product design, paid knowledge products, sales-page conversion, differentiated selling propositions, delivery, or earnings claims.
+适用于连续课程进入产品设计、知识付费、详情页转化、差异化卖点、交付与收益承诺等高风险章节时。
 
-## 1. Dual-Draft Responsibilities: Preserve the Course Without Amplifying Misleading Claims
+## 1. 双稿分工：保留原课，不升级误导
 
-### Faithfully Edited Transcript
+### 忠实精编稿
 
-- Preserve the instructor’s first-person voice, original sequence, cases, numbers, judgment strength, and formulas.
-- Correct obvious STT errors from context. Mark missing uncertain proper names, chart values, and book titles explicitly rather than guessing.
-- For high-risk expressions such as “guaranteed income,” rapid follower growth, luck or wealth claims, wellness or weight-loss claims, hair-loss prevention, extreme success cases, and false scarcity, preserve the course context but explain risk in a separate editorial boundary section.
-- Do not silently delete or alter the instructor’s viewpoint during safety review, and do not make risky cases more specific or executable.
+- 保持讲师第一人称、原顺序、案例、数字、判断力度和公式。
+- 明显STT错误按上下文修正；不确定专名、图表数值和书名明确标注缺失，不猜测。
+- 对“保证赚钱、短期涨粉、招财开运、养生减肥、防脱生发、极端成功案例、虚假稀缺”等高风险表达，保留课程语境，但在独立的编辑边界区说明风险。
+- 不因安全审查暗中删改讲师观点，也不把有风险的案例写得更具体、更可执行。
 
-### Structured Lecture
+### 系统化讲义
 
-- Do not extract gray-area or misleading marketing into an operating manual.
-- Upgrade “high-stimulation concept packaging” into “real user job + real value change + perceptible expression + credible evidence + sustainable delivery.”
-- Convert “guaranteed business outcomes” into controllable learning outcomes, behavioral outcomes, and delivery commitments. For income, follower growth, promotion, efficacy, and similar outcomes, explain only influencing factors and evidence requirements.
-- Add consumer rights, refund rules, privacy authorization, testimonial authorization, platform and advertising compliance, unit economics, and delivery capacity.
+- 不把灰色或误导性营销提炼成操作指南。
+- 将“强刺激概念包装”升级为“真实用户任务＋真实价值变化＋可感知表达＋可信证据＋可持续交付”。
+- 将“保证商业结果”改写为可控的学习结果、行为结果和交付承诺；收入、涨粉、晋升、疗效等只可说明影响因素和证据要求。
+- 补充消费者权益、退款规则、隐私授权、评价案例授权、平台与广告合规、单位经济和交付容量。
 
-## 2. Handling Common High-Risk Content
+## 2. 常见高风险内容的处理
 
-| Course Expression | Faithful Transcript | Structured Lecture |
+| 课程表达 | 忠实稿 | 系统讲义 |
 |---|---|---|
-| “Follow this and you will make money” | Preserve as a course case and flag earnings-claim risk | Separate seller-controlled, user-controlled, and externally influenced outcomes |
-| “Profitable in 24 hours / 10,000 followers in 30 days” | Preserve the original example, not as advice | Prohibit unsupported use; replace with verifiable behavioral outcomes |
-| “Wealth-attracting, luck-enhancing, or wellness jewelry” | Preserve cultural and sales context | Permit only aesthetic value, cultural meaning, and ritual significance; prohibit financial, health, or destiny-effect claims |
-| Before-and-after weight-loss or hair-growth comparison | Preserve the original description and flag weak evidence | Require scientific evidence, fair conditions, authorization, and regulatory review; a simple demonstration cannot prove efficacy |
-| Income screenshots and customer praise | Preserve source type | Require authorization, privacy protection, disclosure of material interests, and explanation of sample and conditions |
-| Limited time, limited quantity, original-price discount | Preserve the course method | Use only genuine constraints and enforce them at expiry; never repeat “last day” indefinitely |
-| “No refunds for virtual products” | Preserve as a rule pending review | Apply governing law, platform rules, and actual performance; a unilateral declaration is not automatically valid |
+| “跟着做就赚钱” | 保留为课程案例并标注收益承诺风险 | 拆成卖家可控、用户可控、外部影响三类结果 |
+| “24小时盈利/30天万粉” | 保留原例，不视为建议 | 禁止无证据使用；改为可验收行为结果 |
+| “招财、开运、养生首饰” | 保留文化与销售语境 | 只允许审美、文化寓意和仪式感，不得宣称财务、健康或命运功效 |
+| 减肥、防脱前后对比 | 保留原讲述并提示证据不足 | 要求科学证据、公平条件、授权和监管审查；简单演示不能证明功效 |
+| 收入截图、用户好评 | 保留来源性质 | 要求授权、隐私保护、利益关系披露、样本与条件说明 |
+| 限时、限量、原价折扣 | 保留课程方法 | 只有真实限制可使用，到期后必须执行，不得反复“最后一天” |
+| “虚拟产品概不退款” | 保留为待审规则 | 必须服从销售地区法律、平台规则和实际履约，单方声明不当然有效 |
 
-## 3. When Charts or Assets Are Missing
+## 3. 图表或素材缺失时
 
-If the narration says “look at the chart on the right,” “price according to the range shown,” or “I recommend this book,” but the current input is text only:
+当口播说“看右图、按图中区间定价、推荐这本书”，但本轮只有纯文本：
 
-1. Do not ask again if the user has explicitly chosen high-throughput text-only mode;
-2. State in the faithful transcript that “the original lesson referred to a chart/book list, but the current text does not contain the values/title”;
-3. Retain only logic confirmed by the narration in the lecture. Do not invent ranges, data, titles, or authors;
-4. During acceptance, search for placeholders and suspected guesses to ensure no fabrication remains.
+1. 不追问已经明确采用纯文本高速模式的用户；
+2. 忠实稿写明“原课提到图表/书目，但当前文本未包含数值/书名”；
+3. 系统讲义只保留可从口播确认的逻辑，不补造区间、数据、标题或作者；
+4. 验收时搜索占位符和疑似猜测，确保没有虚构。
 
-## 4. Reusable Models for Product Courses
+## 4. 产品类课程的可复用模型
 
-### Product Types
-
-```text
-Paid knowledge product / physical goods / service
-```
-
-### Six-Part Knowledge-Product Positioning
+### 产品类型
 
 ```text
-Target user + core problem + degree of solution + product type + teaching method + price
+知识付费 / 货品 / 服务
 ```
 
-### Five-Step Product Development
+### 知识产品六点定位
 
 ```text
-Benchmark analysis → outline/service process → content and deliverables → packaging → launch
+目标用户＋核心问题＋解决程度＋产品类型＋教学手段＋定价
 ```
 
-### Sales-Page Trust Chain
+### 产品开发五步
 
 ```text
-Problem relevance → real outcomes → method mechanism → credible evidence → differentiation → purchase terms → genuine action window
+对标分析→大纲/服务流程→内容与交付物→包装→上线
 ```
 
-### Differentiation
+### 详情页信任链
 
 ```text
-Real user job + real value change + perceptible expression + credible evidence + sustainable delivery
+问题相关性→真实结果→方法机制→可信证据→差异化→购买说明→真实行动窗口
 ```
 
-### Delivery
+### 差异化
 
 ```text
-Need ↔ promise ↔ product ↔ delivery ↔ user outcome ↔ unit economics
+真实用户任务＋真实价值变化＋可感知表达＋可信证据＋可持续交付
 ```
 
-These are cross-course candidate models. Register them as candidates before the full course is complete; do not prematurely solidify them into a new Skill.
+### 交付
 
-## 5. Operating Checks Required in Delivery Lessons
+```text
+需求↔承诺↔产品↔交付↔用户结果↔单位经济
+```
 
-- Reconcile promise, expectation, and actual experience;
-- Score light versus intensive delivery;
-- Define service scope, number of revisions, communication channels, and response time;
-- Calculate per-customer contribution margin: transaction price minus acquisition, tools, human delivery, aftercare, and refund reserve;
-- Calculate safe capacity: available delivery time divided by average time per customer, multiplied by a safety factor;
-- Evaluate an MVP through purchase, use, completion, outcomes, refunds, complaints, and recommendations;
-- For low-priced tests with acquaintances, disclose price bias, follower bias, proactive-praise bias, and usage bias.
+这些是跨课程候选模型；全课完成前只登记候选，不提前固化为新Skill。
 
-## 6. Module-Closure Acceptance
+## 5. 交付课程必须补的经营检查
 
-When a course module—for example, five consecutive lessons—is complete, do not inspect only the final lesson:
+- 承诺—预期—实际体验对账；
+- 轻/重交付评分；
+- 服务范围、修改次数、沟通渠道、响应时间；
+- 单客贡献利润：成交价减获客、工具、人工交付、售后与退款预留；
+- 安全容量：可用交付时间除以单客平均时间，再乘安全系数；
+- MVP测试同时观察购买、使用、完成、结果、退款、投诉和推荐；
+- 低价熟人测试需标注价格偏差、粉丝偏差、主动好评偏差和使用偏差。
 
-1. Confirm that every lesson in the module has a paired faithful transcript and structured lecture;
-2. Reconcile each lesson’s title, knowledge title, and status in the course map;
-3. Search the module for frequent STT residue and third-party editorial voice;
-4. Verify that risky statements retain context in the faithful transcript but are not amplified in the lecture;
-5. Summarize the module’s method chain. If the user has requested that Skill extraction wait until the whole course ends, register candidates only; do not create the final Skill;
-6. Move progress to the next module and state clearly that no submitted material remains unorganized.
+## 6. 模块收官验收
 
-## 7. Common STT Correction Cluster
+完成一个课程模块（例如连续5课）时，不能只验最后一课：
 
-Search product-course text for these common recognition errors:
+1. 核对模块每课忠实精编稿与系统化讲义成对存在；
+2. 核对课程地图中每课标题、知识标题和状态；
+3. 搜索该模块高频STT残留和第三方编辑视角；
+4. 核对风险表达是否“忠实稿留语境、讲义不强化”；
+5. 汇总模块方法链，但若用户指定全课结束后再提Skill，只登记候选，不创建最终Skill；
+6. 下一课进度切换到下一个模块，明确当前无待整理资料。
 
-- Homophones meaning “artist company” or “amateur company” → `one-person company`
-- A homophonic personal name → `prerecorded course`
-- A homophone resembling the name Mike → `sell a course`
-- Homophones meaning “bamboo manuscript,” “bracelet manuscript,” or “table manuscript” → `transcript`
-- Homophones meaning “share price” or “large gold stock” → `framework`
-- A phonetic rendering of the digits → `1688`
-- A homophone meaning “wearable fake” → `press-on nails`
-- A clipped rendering meaning “delivery appears” → `delivery overflow`
-- A homophone meaning “benefits” → `compounding`
-- `be a guest` → `create a course`
-- A homophone meaning “slow down” → `selling proposition`
+## 7. 常见STT纠错簇
 
-Corrections must be judged in context; never apply them as blind global string replacements.
+产品课程常见误识别应全文搜索：
+
+- 一人公司←艺人公司/业余公司；
+- 录播课←杜布克；
+- 卖课←迈克；
+- 逐字稿←竹子稿/镯子稿/卓子稿；
+- 骨架←股价/大金股；
+- 1688←幺六八八；
+- 穿戴甲←穿戴假；
+- 交付溢出←交付一出；
+- 复利←福利；
+- 做课←做客；
+- 卖点←慢点。
+
+纠错必须结合上下文，不得仅靠字符串全局替换。

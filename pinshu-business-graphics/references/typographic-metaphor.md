@@ -12,6 +12,7 @@ Use for:
 
 Avoid for dense evidence, multi-variable comparison, and exact analytical charts.
 
+Approved anchor: `../assets/approved-examples/01-typographic-metaphor.png`
 
 ## Composition families
 
@@ -37,7 +38,7 @@ Choose one family; do not repeat the same family across every page.
 
 ## Prompt kernel
 
-> Create a restrained Chinese business visual in the typographic-metaphor mother. Make “[core phrase]” the main information geometry using [composition family]. Preserve natural Chinese width. Integrate the single metaphor “[metaphor]” into the letterform itself. Keep the full title “[complete title]” readable in smaller type. Use [palette], generous whitespace, and precise editorial annotations. No ordinary PPT title layout, no decorative icons, no fake condensed Chinese, no unrelated metaphor objects.
+> Create a restrained Chinese business visual in the typographic-metaphor mother. Make “[核心词]” the main information geometry using [composition family]. Preserve natural Chinese width. Integrate the single metaphor “[metaphor]” into the letterform itself. Keep the full title “[完整标题]” readable in smaller type. Use [palette], generous whitespace, and precise editorial annotations. No ordinary PPT title layout, no decorative icons, no fake condensed Chinese, no unrelated metaphor objects.
 
 ## Failure boundaries
 

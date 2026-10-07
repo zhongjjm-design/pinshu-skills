@@ -1,83 +1,85 @@
-# Orchestration and Model Routing
+# 编排与模型路由
 
-The objective is reliable course production at the lowest stable total cost. Never assign permanent roles by model brand.
+目标是用最低的稳定总成本完成可靠课程生产，不按模型品牌预设永久角色。
 
-## Roles
+## 角色
 
-- **Orchestrator:** maintains the manifest, dispatches work packages, and reads state; never edits course prose.
-- **Capture worker:** saves the immutable source transcript; never generates derivatives.
-- **Lesson writer:** produces the faithful edit, structured lecture, uncertainty ledger, and semantic self-check in one task; never writes to the official library.
-- **Mechanical validator:** checks only deterministic structure, paths, formatting, and counts; never judges semantic fidelity.
-- **Independent QA:** is created only when a risk trigger or stable sample selects the lesson; compares outputs with the source and does not rewrite them.
-- **Rework worker:** normally the original lesson writer; changes only issues identified by QA.
-- **Strong model:** establishes samples, resolves ambiguity, repairs systemic deviation, and improves the Skill.
-- **Committer:** the only role allowed to promote official files and update the course map idempotently.
+- 总控：维护清单、分发工作包、读取状态；不改正文。
+- 采集器：保存不可变原始转写；不生成派生稿。
+- 单课写稿者：一次生成忠实精编稿、结构化讲义、待确认台账和语义自检；不写正式库。
+- 机械验证器：只检查确定性结构、路径、格式与计数，不判语义忠实。
+- 独立 QA：只在风险触发器或稳定抽样命中时创建；对照原文验收，不直接重写。
+- 返工者：默认由本课写稿者只修 QA 定位的问题。
+- 强模型：建立样板、解决歧义、修系统性偏差和改进 Skill。
+- 图解生产者：仅在讲义语义通过且清单启用后调用 `pinshu-visual-learning`，输出 MD 主笔记、分模块 PNG、SVG 与 HTML 辅助页；临时目录独占，不改双稿。
+- 提交者：唯一允许提升正式文件（含启用后的图解资产）并幂等更新课程地图的角色。
 
-One agent system may schedule several roles. Create only one writing task per lesson by default. Independent QA must use a context isolated from the writing task, but no empty QA task is created when the selector does not match.
+角色可以由同一 Agent 系统调度。每课默认只创建一次写稿任务；独立 QA 必须与写稿任务隔离，但未命中选择器时不创建空 QA 任务。
 
-## Model qualification
+## 模型资格
 
-Kimi, GLM, DeepSeek, and every other model must pass the same representative test before receiving a role. Record the exact model version; never infer capability from the provider brand.
+Kimi、GLM、DeepSeek或其他模型都必须通过同一代表性测试后才能取得角色。按精确模型版本记录，不按供应商品牌推断。
 
-Test conditions must be identical:
+测试条件必须一致：
 
-- the same source transcript;
-- the same core contract;
-- the same approved sample;
-- the same work package;
-- the same QA rules; and
-- the same tools and context delivery.
+- 同一原始稿；
+- 同一核心合同；
+- 同一金牌样板；
+- 同一工作包；
+- 同一QA规则；
+- 同样的工具和上下文方式。
 
-Record first-pass success, semantic omissions, unsupported additions, rework count, human review time, call cost, and final accepted cost. A model with low call cost and high rework cost is not inexpensive.
+记录首次通过、语义遗漏、擅自增加、返工次数、人工复核时间、调用成本和最终合格成本。调用费低但返工多的模型不算便宜。
 
-## Default routing
+## 默认路由
 
-1. Prefer scripts or the browser for deterministic capture and file checks.
-2. For a batch larger than three lessons, produce one real sample and wait for user approval before scaling.
-3. A qualified lesson writer generates the faithful edit, structured lecture, and semantic self-check once in the approved style.
-4. Independent-QA evidence strength and sampling follow the assurance mode; the core quality contract is identical in every mode.
-5. Only a `high` issue triggers one targeted rework. The recheck examines only previous issues.
-6. If a `high` remains after one rework, QA conflicts, or the source is ambiguous, a strong model adjudicates once.
-7. Use strong models for exceptions, samples, and method improvements, not repeated polishing.
+1. 确定性采集和文件检查优先脚本/浏览器；
+2. 批量超过 3 课时先做 1 课真实样稿，用户批准后才放量；
+3. 已通过资格测试的单课写稿者按批准样式一次生成忠实稿、讲义与语义自检；
+4. 独立 QA 的证据强度与抽样率服从保障模式，核心质量合同对三种模式完全相同；
+5. 只有 `high` 触发一次定点返工，复验输入只含修改块、必要前后文和原问题，仍绑定完整产物哈希；
+6. 一次返工后仍有 `high`、QA冲突或来源歧义时，强模型只做一次裁决；
+7. 强模型处理异常、样板和方法改进，不承担反复润色；
+8. 讲义语义通过后，启用图解时调用下游、读取真实 `visual-result.json` 并登记 `record-visual`。图解样课用户批准后才放量；双稿 QA 不代替图解语义／桌面／手机／Obsidian检查。唯一提交者提升后，图解闸门满足才进入 `ACCEPTED`。
 
-## Model or workflow changes
+## 模型或流程变更
 
-Any of the following creates a new production condition:
+以下任一变化都视为新生产条件：
 
-- exact model or version changes;
-- Harness or agent runner changes;
-- the core quality contract changes;
-- the work package changes;
-- the approved sample changes; or
-- the QA contract changes.
+- 精确模型或版本变化；
+- Harness/Agent运行器变化；
+- 核心质量合同变化；
+- 工作包变化；
+- 金牌样板变化；
+- QA合同变化。
 
-Rerun a representative sample after a change. Never switch production conditions inside a batch without validation.
+变化后先重跑代表性样本，不能在批次中无验证切换。
 
-## Context and concurrency
+## 上下文与并行
 
-- The user submits one task; the system handles context isolation internally.
-- Each lesson worker reads only the current lesson and required rules, not the complete course text.
-- The orchestrator does not retain full text in chat; state files and actual artifacts are authoritative.
-- Independent temporary drafts may run with limited concurrency.
-- Writing, QA, and rework for the same lesson remain dependency-ordered and serial.
-- Official promotion and course-map updates remain serial under one writer.
+- 用户只发一次任务；上下文隔离由系统内部完成；
+- 每课Worker只读取当前课和必要规范，不读取整个课程正文；
+- 主控不在聊天中保存全文；以状态文件和实际产物为准；
+- 相互独立的临时稿可有限并行；
+- 同一课写稿、QA、返工按依赖串行；
+- 正式入库和课程地图更新必须单写者串行。
 
-## Scaling and stopping
+## 放量与停线
 
-For a new course, model, or work package: real sample -> user approval -> small batch -> scale after stability. Before sample approval, do not scale paired outputs.
+新课程、新模型或新工作包：真实样稿 → 用户批准 → 小批 → 稳定后扩大。样稿未批准，不得放量双稿。
 
-Stop one lesson for an incomplete source, identity conflict, a `high` remaining after one rework, factual ambiguity, or exhausted budget.
+单课停线：来源不完整、身份冲突、一次返工后仍有 `high`、事实歧义、预算超限。
 
-Stop the whole batch for repeated omissions across lessons, systematic formatting regression, a sudden concentration of high-risk QA issues, a mid-batch model or Skill change, systematic inconsistency between state and files, or cumulative cost beyond the manifest budget.
+整批停线：连续多课同类遗漏、统一格式退化、QA高危突然集中、模型或Skill中途变更、状态与文件系统性不一致，或累计成本超出 manifest 预算。
 
-After stopping, fix the earliest control point that failed. Do not continue lesson-by-lesson repairs or add synonymous prohibitions to multiple files.
+停线后修最早的失控点，不继续逐课返工，也不在多个文件追加同义禁令。
 
-## Cost boundaries
+## 成本边界
 
-- Per lesson, allow at most one routine rework and two routine QA decisions: the initial review plus a targeted recheck. If severe distortion remains, allow only one strong-model adjudication, targeted repair, and final verification.
-- Wording, formatting, and ledger notes do not start a new agent.
-- Check channel connectivity once at initial deployment, after a model change, or after a real failure.
-- A worker must read the core quality contract, current assurance-mode production card, current lesson, approved sample, and necessary sources. Load additional complete rules only during a dispute; never omit the core contract.
-- Stop and report when token or wall-clock usage reaches the manifest budget. Never exceed a budget silently.
+- 每课最多一次常规返工、两次常规 QA 判断（首轮＋定点复验）；若仍有严重失真，只允许一次强模型裁决、定点修复与终验；
+- 措辞、格式和台账 notes 不启动新 Agent；
+- 通道连通性只在首次部署、换模型或真实故障后检查一次；
+- Worker 必读核心质量合同、当前档位生产卡、当前课、批准样稿和必要来源；争议时再扩展读取其他完整规则，而不是省略核心合同；
+- Token 或墙钟达到 manifest 预算时立即停线并汇报，不允许无感超支。
 
-Strong-model effort must create reusable leverage: an approved sample, failure diagnosis, source adjudication, or Skill improvement.
+强模型的投入必须产生复用杠杆：批准样板、失败诊断、来源裁决和 Skill 改进。

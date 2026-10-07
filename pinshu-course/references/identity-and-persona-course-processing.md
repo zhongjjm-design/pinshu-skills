@@ -1,107 +1,107 @@
-# Processing Standard for Identity, Positioning, and Personal-Brand Courses
+# 人设、定位与个人品牌课程整理规范
 
-Use this reference for long-form positioning courses that contain extensive personal experience, account cases, personified brands, emotional expression, relationship posture, platform mechanisms, and psychological tools.
+适用于包含大量个人经历、账号案例、品牌人格化、情绪表达、关系姿态、平台机制和心理工具的长篇定位课程。
 
-## 1. Responsibilities of the Paired Drafts
+## 1. 双稿分工
 
-### Faithful Edited Transcript
+### 忠实精编稿
 
-- Preserve the instructor's first-person voice and original course order.
-- Do not rewrite “I believe,” “I have done,” or “how I decide” as “the course believes” or “the instructor proposes.”
-- When the same experience is told more than once, do not delete later appearances merely because the material repeats. Record the new theme, angle, and deduction supported by each telling.
-- Preserve the people, accounts, scenes, figures, behavioral process, and results in each case.
-- Mark account names, English abbreviations, or spoken terms that cannot be recovered reliably as `pending-verification`; do not guess.
+- 保持讲师第一人称和原课顺序；
+- 不把“我认为、我做过、我如何判断”改成“课程认为、讲师提出”；
+- 同一经历被多次讲述时，不因素材重复就删掉：记录每次对应的新主题、新角度和新推导；
+- 保留案例中的人物、账号、场景、数字、行为过程和结果；
+- 无法可靠恢复的账号名、英文缩写或口播术语标注“待核验”，不要猜写。
 
-### Systematized Lecture
+### 系统化讲义
 
-Reorganize the material into an executable identity system without replacing complete cases with a model. Recommended structure:
+把内容重组为可执行的人设系统，但不得用模型替代完整案例。推荐结构：
 
-1. identity definition;
-2. relationship between user value and identity marketing;
-3. relationship posture between creator and audience;
-4. identity assets;
-5. stage-specific content strategy;
-6. presentation channels;
-7. case index;
-8. factual and ethical boundaries;
-9. exercises and execution templates.
+1. 人设定义；
+2. 用户价值与人设营销的关系；
+3. 创作者与观众的关系姿态；
+4. 人设资产；
+5. 阶段性内容策略；
+6. 呈现渠道；
+7. 案例索引；
+8. 事实与伦理边界；
+9. 练习和执行模板。
 
-## 2. General Framework for Consolidating Identity Assets
+## 2. 人设资产的通用归并框架
 
-Course content may be consolidated into seven asset types:
+可将课程内容归并为七类资产：
 
-- stories and experiences;
-- personality and character;
-- relationship posture;
-- worldview and positions;
-- aspirations and goals;
-- emotional tone;
-- thinking habits and content forms.
+- 故事经历；
+- 性格品行；
+- 关系姿态；
+- 三观立场；
+- 愿望目标；
+- 情绪基调；
+- 思维习惯与内容形态。
 
-This is an editorial model. Identify its source explicitly and never present it as the instructor's verbatim terminology.
+这是编辑提炼模型，必须明确其来源，不能伪装成讲师逐字原话。
 
-## 3. Case Completeness
+## 3. 案例完整性
 
-A person or account case preserves at least:
+人物或账号案例至少保留：
 
-- original identity and scene;
-- problem encountered;
-- why the instructor cited it;
-- action taken;
-- audience behavior that formed an impression;
-- data or outcome;
-- reusable mechanism;
-- conditions that cannot be copied mechanically.
+- 原始身份和场景；
+- 面临的问题；
+- 讲师为什么引用它；
+- 做了什么；
+- 观众由什么行为形成印象；
+- 数据或结果；
+- 可复用机制；
+- 不可机械复制的条件。
 
-When one person serves different functions in the course, record them separately. The same experience may support “story value,” “emotional tone,” and “example over instruction.” Do not reduce it to a one-sentence case entry.
+同一人物在课程中承担不同功能时分别记录，例如一段经历可以同时用于“故事性”“情绪基调”“身教大于言传”。不要只建一个一句话案例条目。
 
-## 4. Fact and Ethics Layers
+## 4. 事实与伦理分层
 
-Distinguish:
+必须区分：
 
-1. the instructor's first-hand experience;
-2. the instructor's interpretation of a public figure or account;
-3. platform mechanisms and recommendation rules;
-4. follower, sales, like, and growth figures;
-5. personality tools such as MBTI or astrology;
-6. analogies involving religion, politics, public figures, and fictional characters;
-7. editorially distilled models.
+1. 讲师亲历；
+2. 讲师对公开人物或账号的解读；
+3. 平台机制和推荐规则；
+4. 粉丝量、销售额、点赞和涨粉数据；
+5. MBTI、星座等人格工具；
+6. 宗教、政治、公共人物和影视角色类比；
+7. 编辑者提炼的模型。
 
-Processing requirements:
+处理要求：
 
-- Mark platform mechanisms, years, and recommendation order as time-sensitive facts.
-- Do not promote reported operating data into a universal conversion rate.
-- Use MBTI only as an aid to self-observation, never as a clinical diagnosis or definitive career judgment.
-- Religious and public-figure cases illustrate expression or narrative mechanisms only; do not promote them to objective fact.
-- Narrative techniques such as “save the cat,” vulnerability, and contrast must not conceal real harm, fabricate credentials, or manipulate the audience.
-- A strong position does not permit attack, defamation, discrimination, or boundaryless demands in private-domain relationships.
+- 平台机制、年份和推荐顺序按时效事实标注；
+- 口述经营数据不升级为普遍转化率；
+- MBTI只作自我观察辅助，不写成临床诊断或职业定论；
+- 宗教和公共人物案例只说明表达或叙事机制，不升级为客观事实；
+- “救猫咪”、示弱、反差等叙事技巧不能用于掩盖真实伤害、虚构履历或操纵观众；
+- 鲜明立场不等于攻击、造谣、歧视或无边界私域索取。
 
-## 5. Final First-Person Scan
+## 5. 第一人称终检
 
-After completing the faithful transcript, scan separately for:
+忠实稿完成后单独扫描：
 
-- `instructor-believes`;
-- `author-believes`;
-- `this-lesson-proposes`;
-- `course-believes`;
-- `course-recommends`;
-- `course-judges`;
-- `course-emphasizes`;
-- `course-provides`;
-- `course-frames`;
-- `course-uses`;
-- `in-the-course`.
+- 讲师认为；
+- 作者认为；
+- 本课提出；
+- 课程认为；
+- 课程建议；
+- 课程判断；
+- 课程强调；
+- 课程给出；
+- 课程把；
+- 课程用；
+- 课程里的。
 
-Review each match. Rewrite observer-perspective language in the body as first-person wording such as “I believe,” “I recommend,” “I use,” or “I frame.” Only separate editorial notes and source notes may retain a neutral perspective.
+命中后逐条判断。正文里的旁观者视角应改回“我认为、我建议、我把、我用”；只有独立编辑说明和来源注可以保留中性视角。
 
-## 6. Title and State Acceptance
+## 6. 标题与状态验收
 
-- When an official section prefix belongs to the title, include it consistently in the filename, H1, `original_title`, official map title, and both draft links.
-- Advance the map states `received`, `paired-drafts-complete`, and `accepted` together with the lesson.
-- Use the next lesson's full official title.
-- After copying formal drafts to preview copies, calculate SHA-256 to confirm identical content.
-- Search for old filenames, old H1s, titles missing the section prefix, and residual placeholders.
+- 官方篇章前缀属于标题时，同时写入文件名、H1、`original_title`、地图官方标题和双稿链接；
+- 课程地图的“已收到、已生成双稿、已验收”必须随本课一起推进；
+- 下一课使用完整官方标题；
+- 正式稿与预览副本复制后计算SHA-256，确保内容一致；
+- 搜索旧文件名、旧H1、无篇章前缀标题和占位符残留。
 
-## 7. Scope Boundary
+## 7. 适用边界
 
-This reference governs course organization. It must not be used to design a fabricated persona for the user. Identity strategy must be grounded in real experience, real capability, and real delivery.
+本参考适用于课程整理，不用于直接替用户设计虚构人格。人设策略必须建立在真实经历、真实能力和真实交付上。

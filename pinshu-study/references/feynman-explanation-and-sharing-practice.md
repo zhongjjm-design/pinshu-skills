@@ -1,86 +1,86 @@
-# Feynman Explanation and External-Sharing Practice
+# 费曼讲述与对外分享训练
 
-## Objective
+## 目标
 
-Move from "I read the course" to "I can explain it clearly in my own words, answer follow-up questions, identify its boundaries, and transfer it to a real problem." This path supports personal learning and produces an authentic source draft for team briefings, conversations with friends, and formal teaching.
+把“读过课程”推进到“能用自己的语言讲清楚、回答追问、识别边界并迁移到真实问题”。这条路径既服务个人学习，也为团队分享、朋友交流和正式授课提供真实母稿。
 
-## Core disciplines
+## 核心纪律
 
-1. **The user explains first; the AI supplements afterward.** Writing a polished script first conceals genuine gaps in understanding.
-2. **Define the audience.** Agree on who they are, what they already know, and what they care about. An explanation for an executive, employee, customer, or student must differ.
-3. **Preserve the first explanation.** The original expression is learning evidence; do not save only an AI-polished version.
-4. **Follow-up questions are not harassment.** They should expose gaps in concepts, causality, evidence, boundaries, and transfer.
-5. **Separate the instructor's view from the user's understanding.** The user may develop an independent judgment, but the record must distinguish the original course from the user's synthesis.
+1. **用户先讲，AI后补。**先写完美讲稿会遮住真实理解缺口。
+2. **听众要具体。**先约定对方是谁、懂多少、关心什么；给老板、员工、客户和学生的讲法不同。
+3. **保留第一次讲述。**原始表达是学习证据，不能只保存AI润色稿。
+4. **追问不等于刁难。**问题要暴露概念、因果、证据、边界和迁移漏洞。
+5. **老师观点与用户理解分开。**用户可以发展自己的判断，但必须标明哪里是原课、哪里是自己的综合。
 
-## Standard process
+## 标准流程
 
-### Step 1: define the audience and objective
+### 第一步：定听众与目标
 
-Confirm the audience's identity, prior knowledge, available time, and what they should understand or be able to do afterward. When the user says only "explain it to someone," ask for these four items in one prompt.
+确认：听众身份、已有知识、交流时长、希望对方听完能理解或行动什么。用户只说“讲给别人”时，一次只追问这四项。
 
-### Step 2: first explanation without a script
+### 第二步：第一次无稿讲述
 
-While consulting the notes as little as possible, the user speaks for 5-15 minutes or writes one complete response covering:
+用户尽量不看讲义，用5—15分钟或一段完整文字回答：
 
-- what problem the course solves;
-- its most important structure;
-- why that structure holds;
-- one representative example;
-- the conditions under which it does not hold;
-- how it relates to the user or audience.
+- 这门课解决什么问题；
+- 最重要的结构是什么；
+- 为什么成立；
+- 一个代表案例；
+- 在什么条件下不成立；
+- 与自己或听众有什么关系。
 
-The agent records the explanation without rewriting it midway.
+Agent不在中途重写，只记录。
 
-### Step 3: audience follow-up questions
+### 第三步：听众追问
 
-The agent asks questions as the agreed audience, one at a time. Prioritize questions such as:
+Agent按约定听众提问，一次一个。优先问：
 
-- What do you mean by that term?
-- Why does the former lead to the latter?
-- What evidence or example supports it?
-- What happens in the opposite case?
-- Who is this method unsuitable for?
-- What would be the first step in my business?
+- 你刚才这个词是什么意思？
+- 为什么前者会导致后者？
+- 有什么证据或案例？
+- 如果出现相反情况怎么办？
+- 这个方法不适合谁？
+- 放到我的业务里第一步是什么？
 
-When the user cannot answer, mark the gap first. Do not immediately bury it under the answer.
+用户回答不出时先标记，不立即用答案淹没缺口。
 
-### Step 4: seven-dimension diagnosis
+### 第四步：七项诊断
 
-Assess the central question, core model, causal chain, examples, evidence, boundaries, and transfer separately. At minimum, distinguish these error causes: memory failure, concept confusion, skipped reasoning step, vague example, source-identity confusion, omitted condition, and audience mismatch.
+分别判断：主问题、核心模型、因果链、案例、证据、边界、迁移。错因至少区分：记忆缺失、概念混淆、推导跳步、案例空泛、来源身份混淆、条件遗漏、听众表达错位。
 
-### Step 5: source-based correction
+### 第五步：回源修正
 
-Point to the exact section in the structured lesson notes. Return to the faithful transcript for instructor quotations, numbers, cases, and disputed claims. If the faithful transcript remains uncertain, return to the original evidence. Repair only the current gap rather than reteaching the entire course.
+指定回到结构化讲义的章节；涉及讲师原话、数字、案例和争议时回忠实稿；忠实稿仍不确定时回原始证据。只补当前漏洞，不把整课重新灌给用户。
 
-### Step 6: second explanation
+### 第六步：第二次讲述
 
-Change the question order, audience, or scenario, and have the user explain the material again. The user must not read the polished version of the first explanation aloud. The second attempt must at least repair every identified gap while preserving the user's own language.
+换一个问题顺序、听众或场景重新讲。不能照着第一次的润色稿朗读。第二次至少修复已识别漏洞，并保留用户自己的语言。
 
-### Step 7: create a sharing asset
+### 第七步：形成分享资产
 
-Only after the learning assessment passes, generate the materials appropriate to the setting:
+通过学习验收后，才按场景生成：
 
-- the presentation throughline and time allocation;
-- one relationship diagram or knowledge map;
-- a representative example;
-- common follow-up questions and boundaries;
-- a question that requires audience participation;
-- one action the audience can take afterward.
+- 交流主线与时间分配；
+- 一张关系图或知识地图；
+- 代表案例；
+- 常见追问与边界；
+- 需要听众参与的提问；
+- 分享后可执行的一步。
 
-These materials must grow from the learner's real explanation, not from an AI-written script that the user later memorizes.
+这是从真实讲述中长出的材料，不是AI先写、用户再背。
 
-## Mastery levels
+## 掌握等级
 
-- Can recall: state the throughline without consulting the material.
-- Can explain: explain causality and examples in the learner's own words.
-- Can respond: handle follow-up questions, counterexamples, and boundaries.
-- Can transfer: apply the material to a new real-world setting and propose a verifiable action.
-- Can teach: adapt the explanation to different audiences and enable the audience to restate or act on it.
+- 能回忆：不看材料说出主线；
+- 能解释：用自己的语言讲清因果与案例；
+- 能应答：处理追问、反例和边界；
+- 能迁移：落到新的真实场景并提出可验证动作；
+- 能教学：根据不同听众调整讲法，并让对方复述或行动。
 
-## Learning record
+## 学习记录
 
-For every session, preserve the date, course scope, audience definition, full first explanation, audience follow-up questions, user answers, seven-dimension diagnosis, source-review locations, second explanation, feedback from any real audience, current mastery level, and next training session. Personal records do not update shared lesson notes. Only explanation methods that prove consistently effective across users may enter standard learning assets.
+每次保存：日期、课程范围、听众设定、第一次讲述原文、听众追问、用户回答、七项诊断、回源位置、第二次讲述、真实听众反馈、当前掌握等级和下一次训练。个人记录不回写公共讲义；跨用户稳定有效的解释方式才进入标准学习资产。
 
-## Stopping conditions
+## 停止条件
 
-Stop when the agreed time ends, the learner has reviewed the source for each critical gap and completed a second explanation, the user becomes fatigued, or the scheduled real presentation begins. Carry unfinished gaps into the next session rather than forcing one practice session to eliminate all of them.
+达到约定时长；核心漏洞已回源并完成第二次讲述；用户疲劳；或真实分享时间已到。未完成的漏洞写入下一次训练，不用一次练习强行清零。

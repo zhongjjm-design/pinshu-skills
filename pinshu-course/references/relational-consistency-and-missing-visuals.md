@@ -1,108 +1,108 @@
-# Relationship-Direction Consistency, No-Image Lesson Records, and First-Person Final Checks
+# 关系方向一致性、无图课登记与第一人称终检
 
-Use this reference for three easily missed quality problems in long course transcripts: reversed case-role direction, spoken references to screenshots that the user did not supply, and editorial voice leaking into a faithfully edited transcript.
+用于长课程逐字稿中三类容易漏过的质量问题：案例角色方向互换、口播提到截图但用户未提供图片、忠实精编稿混入编辑者视角。
 
-## 1. Audit Case Roles and Relationship Direction
+## 一、案例角色与关系方向审计
 
-A transcript may state a shorthand conclusion first and explain the full story later. STT or a slip of the tongue may reverse the direction between the two, for example:
+逐字稿常先给一句简写结论，后面再讲完整故事。STT或口误可能让两处方向相反，例如：
 
-- Shorthand: copied A’s traffic and B’s product;
-- Full story: actually used A’s product together with B’s content.
+- 简写：抄A的流量、B的产品；
+- 详细故事：实际拿了A的产品，再配B的内容。
 
-Do not preserve the shorthand in one place and the full-story relationship elsewhere, creating an internal contradiction.
+不能在成稿里一处沿用简写、一处沿用详细故事，形成自相矛盾。
 
-### Internal Event Tuple
+### 内部事件元组
 
-For cases involving A/B, Person A/Person B, merchant/creator, or content/product relationships, first record internally:
-
-```text
-Role A: What does this role provide?
-Role B: What does this role provide?
-Action: Whose content/product/traffic was used?
-Outcome: Could not sell, was displaced, or produced profit?
-Causality: Why?
-```
-
-### Decision Order
-
-1. User’s explicit correction;
-2. Clear image or slide;
-3. Complete event process later in the transcript;
-4. One-sentence shorthand earlier in the transcript;
-5. Editorial inference.
-
-If the full story resolves the ambiguity, normalize the relationship according to that story. Record in an editorial note: “The shorthand spoken earlier conflicts with the direction in the later full case; organized according to the complete event process.” If ambiguity remains, mark it for confirmation rather than selecting a version yourself.
-
-### Final Check
-
-Search all role names and relationship terms and confirm:
-
-- A/B direction is consistent in headings, body text, and summaries;
-- Content source, product source, and traffic source have not been swapped;
-- The case conclusion agrees with the detailed process;
-- The structured lecture does not reverse a relationship that is correct in the faithful transcript.
-
-## 2. No-Image Lessons and Spoken References to Missing Visuals
-
-If the user supplies no images in the current batch, treat that as the complete current asset set and do not ask whether more images exist. Distinguish two cases:
-
-### Genuinely No-Image Lesson
-
-Write in frontmatter and the course map:
-
-```yaml
-images: none
-```
-
-### The Narration Repeatedly Mentions Screenshots or Slides, but None Were Supplied
-
-Write in frontmatter:
-
-```yaml
-images: none (the original lesson mentions screenshots or slides, but none were supplied in this batch)
-```
-
-Also register in the course map:
-
-- Images: none;
-- Types of visuals mentioned in the narration, such as a mind map, revenue table, viewing curve, or search screenshot;
-- If images are later supplied, perform visual-text integration and four-way reconciliation.
-
-Processing rules:
-
-- Recover only content confirmed by the narration;
-- Do not invent account names, data, table rows and columns, or curve values from absent screenshots;
-- If the narration says “you can see it in this image” without reading a value aloud, record only “the visual from the original lesson was not supplied”;
-- Do not misstate “no images in this batch” as “the course itself contains no images.”
-
-## 3. Final First-Person Check for the Faithful Transcript
-
-Even when a faithful draft is broadly written as “I,” local passages can slip into editorial voice. In addition to common phrases such as “the instructor believes,” “the course mentions,” and “the author points out,” search for equivalents of:
+遇到A/B、张三/李四、商家/博主、内容/产品等关系案例，整理前先在内部写清：
 
 ```text
-the course gave an example
-the course analyzed
-the course proposed
-the course chose
-the course screenshot
-this lesson believes
+角色A：提供什么？
+角色B：提供什么？
+执行动作：拿了谁的内容/产品/流量？
+结果：卖不掉、被截胡或形成利润？
+因果：为什么？
 ```
 
-In body text, rewrite these as appropriate:
+### 裁决顺序
 
-- “Let me give an example…”
-- “I analyzed several creators…”
-- “The experience-based metric I use is…”
-- “Next, I choose…”
-- “This screenshot of mine did not capture the whole view…”
+1. 用户明确纠正；
+2. 清晰图片或PPT；
+3. 逐字稿后文的完整事件过程；
+4. 逐字稿前文的一句简写；
+5. 编辑者推测。
 
-Editorial notes, fact verification, and asset notes may retain neutral third-person voice, but they must remain visually separate from the instructor’s body.
+若完整故事足以确认，统一按故事中的角色关系书写；同时在编辑提示中记录“原口播简写与后文案例方向不一致，按完整事件过程整理”。若仍无法确认，必须标注待确认，不能自行选一个版本。
 
-## 4. Minimum Acceptance Checklist
+### 终检方法
 
-- [ ] An A/B relationship event tuple was created
-- [ ] Relationship direction agrees across headings, body, and summary
-- [ ] No-image state is recorded in frontmatter and the course map
-- [ ] No visual information was invented when the narration mentioned an image that was not supplied
-- [ ] Editorial-viewpoint phrases were searched and removed from the faithful body
-- [ ] Case relationships in the structured lecture match the faithful transcript
+全文搜索所有角色名与关键关系词，确认：
+
+- 标题、正文和总结中的A/B方向一致；
+- “内容来源”“产品来源”“流量来源”没有互换；
+- 案例结论与详细过程一致；
+- 系统化讲义没有把精编稿中的关系再次改反。
+
+## 二、无图课与“口播提图但未提供”
+
+用户本批没有附图时，默认这就是本课全部素材，不追问“还有没有图”。但需要区分两种情况：
+
+### 纯无图课
+
+Frontmatter与课程地图写：
+
+```yaml
+images: 无
+```
+
+### 口播反复提到截图/PPT，但本批未附图
+
+Frontmatter写：
+
+```yaml
+images: 无（原课提到截图或PPT，本批未提供）
+```
+
+课程地图同时登记：
+
+- 图片：无；
+- 原课口播提到的视觉素材类型（思维导图、收入表、观看曲线、搜索截图等）；
+- 后续若补图，再做图文融合与四向对账。
+
+处理原则：
+
+- 只按口播还原能确认的内容；
+- 不补造截图里的账号名、数据、表格行列或曲线数值；
+- 口播说“这个图里能看到”但没有念出具体值时，只记录“原课图示未提供”；
+- 不能把“本批无图”误写成“课程本身没有图”。
+
+## 三、忠实精编稿第一人称终检
+
+忠实精编稿初稿即使整体使用“我”，局部仍容易滑入编辑者视角。除常见的“讲师认为、课程中提到、作者指出”外，还要搜索：
+
+```text
+课程里举了
+课程里拆了
+课程提出
+课程选择
+课程截图
+本课认为
+```
+
+正文中的这类句子通常应改回：
+
+- “我举一个……”
+- “我拆了多位博主……”
+- “我给出的经验指标是……”
+- “接下来，我选择……”
+- “我这张截图没有完整截出来……”
+
+编辑提示、事实核验和素材说明可以保留中性第三方视角，但必须与讲师正文分隔。
+
+## 四、最小验收清单
+
+- [ ] 建立了A/B关系事件元组
+- [ ] 标题、正文、总结里的关系方向一致
+- [ ] 无图状态已写入Frontmatter和课程地图
+- [ ] 口播提图但未提供时，没有补造图中信息
+- [ ] 搜索并清除忠实精编正文里的编辑者视角短语
+- [ ] 系统化讲义中的案例关系与忠实精编稿一致

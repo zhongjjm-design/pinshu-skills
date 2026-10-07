@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinshu Writing"
+  short_description: "Grow a rough idea into a mature judgment, then write and cross-vendor review a plain Chinese long-form article"
+  default_prompt: "Use $pinshu-write to write an article for the configured account. Read the account profile first; it is the authority. Stop only at the four approval points: topic, judgment, outline with title, final draft. Grow the judgment before outlining, keep facts sourced, run scripts/audit_draft.py before every review, and use reviewers from a different model vendor than the writer."

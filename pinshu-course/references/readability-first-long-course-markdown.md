@@ -1,124 +1,124 @@
-# Readability-First Acceptance for Long Course Markdown
+# 长课程 Markdown 的可读性优先验收
 
-## Trigger Conditions
+## 触发条件
 
-Use this reference when the user says the material is “too dense,” “a wall of text,” or “hard to get through,” or when one lesson combines a long argument, dozens of consultation cases, and dissemination assets.
+当用户说“密密麻麻”“不想看”“文字墙”“看不进去”，或一节课同时含长论证、几十个问诊案例和传播素材时，使用本参考。
 
-## Core Judgment
+## 核心判断
 
-**Completeness and ease of reading are not mutually exclusive.** The faithful transcript preserves complete meaning; the structured lecture is the primary reading entry point. Do not force all content into one reading layer, and do not treat extra blank lines as the sole solution to density.
+**信息完整与阅读轻松不是二选一。** 忠实稿保存完整语义，系统讲义承担主阅读入口。不能把所有内容塞进同一阅读层，也不能只靠增加空行解决密度问题。
 
-## 1. Route Content According to Document Responsibility
+## 一、先按文档职责分流
 
-### Faithfully Edited Transcript: Consult the Original Voice
+### 忠实精编稿：查原话
 
-- Preserve first person, source sequence, complete cases, numbers, and judgments;
-- Put no more than three key points at the beginning and state clearly that “this document is for consulting the original voice”;
-- Under the current knowledge base’s Obsidian Nord theme, use one H1 and H3 section headings throughout the faithful transcript. Do not use H2 for body subheadings: H2 renders as large yellow text and competes with yellow bold emphasis, while H3 renders green and matches the accepted gold-standard examples;
-- Navigate with natural section and case headings, but do not force continuous reasoning into lists;
-- For long content, link to the structured lecture as the preferred reading entry point.
+- 保留第一人称、原讲述顺序、完整案例、数字和判断；
+- 文首只给最多3条核心，并明确“此稿用于查原话”；
+- 在当前知识库的 Obsidian Nord 主题中，忠实稿统一使用一个H1加H3章节标题。不得使用H2作为正文小标题：H2会显示为大号黄色，与黄色粗体争夺注意力；H3显示为绿色，与既有金牌样板一致；
+- 用自然小标题和案例标题导航，但不把连续论证强拆成清单；
+- 当内容很长时，链接到系统讲义作为首选阅读入口。
 
-### Structured Lecture: Primary Reading Surface
+### 系统讲义：主阅读
 
-- Present models, judgments, and actions before replaying Q&A in livestream order;
-- Use a small number of H2 headings for major modules and H3 headings for “problem background, reasoning, applicable conditions, and case cards” inside each module. This creates three visual levels: yellow major modules, green subheadings, and yellow bold emphasis;
-- Put large numbers of cases into separate “case cards” rather than embedding them in the methodology spine;
-- Physically separate core explanation from the case library so the reader can read either layer independently;
-- Keep dissemination assets and verification boundaries toward the end so they do not displace the reading entry point.
+- 先讲模型、判断和动作，不按直播顺序堆问答；
+- 讲义使用H2承载少量大模块，使用H3承载模块内的“问题背景、推导逻辑、适用条件、案例卡”。形成黄色大模块、绿色小标题、黄色重点粗体的三级视觉层次；
+- 大量案例单独做“案例卡”，不要揉进方法论主线；
+- 主线解释与案例库物理分节，读者可以只读任一层；
+- 传播素材、核验边界继续放在后部，不抢占阅读入口。
 
-## 2. Hard Layout Rules
+## 二、版面硬规则
 
-- Leave at least one blank line after H1/H2/H3/H4 headings;
-- Leave blank lines before and after root-level lists; use loose list spacing when readability requires it;
-- Each body paragraph should express one idea and should generally remain within 120 Chinese characters in Chinese source projects, or an equivalent compact semantic unit in translation;
-- If a continuous list exceeds seven items, group it or add subheadings. Do not disguise a 30-item list as “structure”;
-- A horizontal rule may create breathing room before each H2, but it must not replace content hierarchy;
-- Use an Obsidian callout or separate blockquote for core judgments, with only a few highlighted conclusions per screen;
-- Maintain clear visual boundaries between headings, body text, lists, quotations, and images;
-- Organize body paragraphs as complete semantic units, usually two to four connected sentences. Never split mechanically after every period;
-- No body paragraph or list item may begin with punctuation such as a comma, period, semicolon, colon, enumeration comma, or closing quotation mark. Punctuation belongs with the preceding sentence and must not be pushed onto a new line;
-- Allow a short paragraph only when it carries a complete judgment. Merge isolated body text of 12 Chinese characters or fewer—or an equivalently fragmentary English clause—and fragments ending in a comma or colon back into context, or delete pure noise;
-- Five consecutive body paragraphs under 45 Chinese characters, or equivalently short translated fragments, constitute a mechanically fragmented cluster by default and must be recombined semantically;
-- Do not use repeated half-width spaces to manufacture letter spacing in Chinese source text. Let the reading theme control character spacing, line spacing, and alignment;
-- Do not create fake breathing room by placing every spoken sentence in a separate paragraph. Blank lines serve semantic segmentation, not sentence splitting.
+- H1/H2/H3/H4 后必须至少一个空行；
+- 根级列表前后必须留空行，列表项之间按阅读需要使用宽松列表；
+- 一个正文段落只表达一个意思，建议不超过120个中文字符；
+- 连续列表超过7项时，优先分组或增加小标题；不要用30项长列表伪装成“结构化”；
+- 每个H2前可用水平分隔线制造章节呼吸感，但不能靠分隔线替代内容分层；
+- 核心判断可用Obsidian callout或独立引用块，一屏只突出少数结论；
+- 标题、正文、列表、引用、图片之间必须有明确视觉边界。
+- 正文段落必须按完整语义单元组织，通常由2至4个相互承接的句子构成；禁止把每个句号都机械切成一个新段落；
+- 任何正文、列表项不得以逗号、句号、分号、冒号、顿号或右引号等标点开头；标点必须跟随前一句，不得被换行推到下一段；
+- 只有承载完整判断时才允许短段落。12个汉字以内的孤立正文、以逗号或冒号结尾的残句，必须并回上下文或删除纯噪声；
+- 同一章节连续出现5个不足45字的正文段落，默认判定为机械碎段，必须重新合并语义；
+- 中文正文不得用多个半角空格制造字距。字距、行距与对齐交给阅读主题，不得在Markdown正文中手工排版；
+- 连续口述不能用“逐句空一行”的方式伪装呼吸感。空行服务于语义分段，不服务于句子切割。
 
-### Build a Mandatory Scan Layer
+### 强制建立扫读层
 
-“Avoid excessive bolding” does not mean “use no bold.” In long course documents, a reader scanning only headings, bold text, and quotations must be able to restate the lesson’s main line.
+“避免大面积加粗”不等于“完全不加粗”。长课程正文必须让读者只扫标题、粗体和引用，就能复述本课主线。
 
-- Put no more than three key judgments at the beginning, and bold the judgment sentences themselves;
-- In the body, bold only key definitions, core judgments, decisive actions, and important transitions;
-- A long draft over 7,000 bytes will usually retain five to ten bold spans. Fewer than five is acceptable only when the source genuinely lacks enough judgments; do not reduce bolding mechanically to zero in the name of restraint;
-- Use no more than ten bold spans per file; do not create a second competing bold layer in the dissemination section;
-- One to three instructor quotations may carry the lesson’s overall judgments. Never present editorial extraction as a direct quotation;
-- During final acceptance, scan the headings, bold text, and quotations. If they do not reveal the lesson’s core, the document fails form acceptance even if paragraph lengths and scripts pass.
+- 文首最多3条核心判断，判断句本身应加粗；
+- 正文只加粗关键定义、核心判断、决定性动作和重要转折；
+- 超过7000字节的长稿，通常保留5至10处加粗；来源确实没有足够判断时可以少于5处，但不得为了克制而机械归零；
+- 每文件加粗最多10处，传播素材区不重复制造新的粗体层；
+- 可用1至3条讲师原话引用承接全课总判断，编辑提炼不得伪装成原话；
+- 终验时实际扫一遍标题、粗体和引用。如果无法说出本课核心，视为形态不合格，即使段落长度与脚本检查通过也不能交付。
 
-## 3. Boundaries of Mechanical Reflow
+## 三、机械重排的边界
 
-Automated line wrapping and blank-line insertion may repair local formatting, but cannot replace editorial judgment.
+自动换行和增加空行只能修复局部版式，不能替代编辑判断。
 
-Failure signals:
+失败信号：
 
-- Source line count rises, but the primary reading document remains excessively long;
-- A long paragraph is merely split into many small paragraphs while the main line and cases remain mixed;
-- Every sentence is bolded or placed in a card, creating more visual noise;
-- List items touch the next body paragraph and absorb it into the same list when rendered;
-- Only H1–H3 are checked, while H4 and list spacing are ignored;
-- A comma, colon, or closing quotation mark is pushed to the start of a new paragraph;
-- Every sentence becomes a separate paragraph, leaving a screen of same-level body text and oversized empty space;
-- Character count, line count, and scripts all pass, but reading view still resembles unedited STT fragments.
+- 源文件行数变多，但主阅读稿仍然很长；
+- 只是把长段切成很多小段，主线和案例仍混在一起；
+- 每句话都加粗或做成卡片，导致视觉噪声更大；
+- 列表项紧贴后续正文，Markdown渲染时被吞入同一列表；
+- 只检查H1—H3，遗漏H4和列表前后间距。
+- 逗号、冒号或右引号被推到新段开头；
+- 每句话独立成段，导致整屏只剩同层级正文和巨大空洞；
+- 源文件字符数、行数与脚本全部达标，但阅读视图仍像未经编辑的STT切片。
 
-Correct sequence:
+正确顺序：
 
-1. Decide what belongs to the main line and what moves into case cards;
-2. Then split long paragraphs and lists;
-3. Finally use blank lines, horizontal rules, and callouts for visual organization.
+1. 先决定哪些属于主线，哪些移入案例卡；
+2. 再拆长段和长列表；
+3. 最后用空行、分隔线、callout完成视觉整理。
 
-### Never Generate Formal Drafts by Automatically Splitting at Punctuation
+### 禁止使用“按标点自动拆段”直接生成正式稿
 
-An automated script may identify overly long paragraphs, but it must not insert blank lines directly into a formal file after periods, question marks, or semicolons. Before splitting, an editor must decide whether the sentences jointly complete one idea and whether transitions, causal links, and examples belong in the same semantic unit.
+自动脚本可以用于发现超长段落，但不得按句号、问号或分号直接向正式文件插入空行。需要拆段时，编辑者必须先判断：这一组句子是否共同完成一个意思，转折、因果和例子是否仍在同一语义单元内。
 
-Automated formatting output may enter only a temporary file. Before promotion, inspect paragraph-leading punctuation, clusters of short paragraphs, fragments, abnormal spaces in Chinese source text, and the actual reading view.
+任何自动排版结果只能进入临时文件。正式稿晋升前必须检查段首标点、短段簇、残句、中文异常空格和实际阅读视图。
 
-## 4. Case Cards for Case-Heavy Lessons
+## 四、多案例课程的案例卡
 
-Every substantive case must preserve at least:
+每个有效案例至少保留：
 
-- Person’s background;
-- Original problem;
-- Instructor judgment;
-- Recommended action;
-- Applicable boundary.
+- 人物背景；
+- 原问题；
+- 讲师判断；
+- 建议动作；
+- 适用边界。
 
-Group cases by problem class, such as “product/capability, traffic/content, delivery/organization, or market/transition.” Separate cards visually; do not place dozens of cases into one very long table.
+案例按“产品/能力、流量/内容、交付/组织、赛道/转型”等问题类型分组。案例卡之间留分隔，不把几十个案例连续堆成一张超长表格。
 
-## 5. Final Readability Acceptance Before Delivery
+## 五、交付前的可读性终验
 
-In addition to routine UTF-8, unique-H1, terminology, and number checks, verify:
+除常规UTF-8、唯一H1、术语和数字验收外，再检查：
 
-- [ ] No more than three key points appear at the beginning;
-- [ ] The primary reading entry point is explicit; the user is not required to begin with the complete transcript;
-- [ ] Long body paragraphs over 180 characters are zero, with ordinary paragraphs kept compact where possible;
-- [ ] H1–H4 heading-spacing violations are zero;
-- [ ] Root-level list adjacency violations are zero;
-- [ ] Paragraph-leading punctuation is zero, and fragments ending in commas or colons are zero;
-- [ ] Isolated fragmentary body text is zero, and clusters of five mechanically short paragraphs are zero;
-- [ ] Repeated half-width spaces used to manufacture Chinese character spacing are zero;
-- [ ] Headings, bold text, and quotations form a self-contained scan layer;
-- [ ] Bolding in long drafts was not mechanically reduced to zero and does not exceed ten spans per file;
-- [ ] Consultation cases are separated from the methodology spine;
-- [ ] No ungrouped list exceeds seven items;
-- [ ] The primary reading document was opened in the preview area and inspected in reading view;
-- [ ] Reading-view inspection covered at least the opening, the longest middle section, and the closing dissemination section, with no hanging punctuation, screens of undifferentiated body text, or abnormal empty space;
-- [ ] The completion report contains only results, paths, and key acceptance findings, not a long process replay.
+- [ ] 文首核心不超过3条；
+- [ ] 主阅读入口已明确，不要求用户先读完整逐字稿；
+- [ ] 正文长段（>180字符）为0，普通段落尽量≤120字符；
+- [ ] H1—H4标题后空行违规为0；
+- [ ] 根级列表前后粘连为0；
+- [ ] 段首标点为0，以逗号或冒号结尾的残句为0；
+- [ ] 12字以内孤立正文为0，连续5个短段落的机械碎段为0；
+- [ ] 中文正文用于制造字距的连续半角空格为0；
+- [ ] 标题、粗体和引用已经形成可独立扫读的重点层；
+- [ ] 长稿加粗没有机械归零，且每文件不超过10处；
+- [ ] 问诊案例已从方法主线分离；
+- [ ] 不存在超过7项而未分组的长列表；
+- [ ] 已在预览区打开主阅读稿，进行一次实际阅读视图检查；
+- [ ] 阅读视图至少检查文首、中段最长章节、文末传播区三屏，并确认没有标点悬挂、整屏同层级正文或异常空洞；
+- [ ] 完成汇报只给结果、路径和关键验收，不复述冗长流程。
 
-## 6. Rework Order After a User Complaint
+## 六、用户投诉后的返工顺序
 
-When the user explicitly says the material is hard to read, stop adding content or explaining causes:
+用户明确表示“不想看”时，立即停止继续堆内容或解释原因：
 
-1. Make the structured lecture the primary reading document;
-2. Reduce opening metadata to no more than three points;
-3. Separate the main line from case cards;
-4. Repair spacing around H1–H4 and lists;
-5. Preview the primary reading document;
-6. Report the revision in one sentence without another long explanation.
+1. 把系统讲义设为主阅读稿；
+2. 压缩文首元信息为3条以内；
+3. 分离主线与案例卡；
+4. 修复H1—H4及列表前后留白；
+5. 预览主阅读稿；
+6. 用一句话告知已改，不再输出长篇说明。

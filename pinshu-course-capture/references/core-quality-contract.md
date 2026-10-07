@@ -1,92 +1,97 @@
-# Core Quality Contract
+# 核心质量合同
 
-Writing workers, rework workers, QA workers, and the official committer read this contract directly. A production card selects an assurance mode and budget; it never replaces this quality floor.
+本合同由写稿 Worker、返工 Worker、QA Worker 和正式提交者直接读取。生产卡只负责选择档位与预算，不能替代本文件的质量底线。
 
-## Deliverable identities
+## 成品身份
 
-### Faithful edit
+### 忠实精编稿
 
-The reader should receive a complete edited article that still sounds as if the lecturer is speaking.
+目标是让读者读到一篇经过编辑、仍由讲师本人说出的完整文章。
 
-- The source transcript is the highest authority for facts and meaning.
-- Preserve the lecturer's first-person voice, narrative order, strength of judgment, and constraints.
-- Preserve substantive people, numbers, brands, tools, case processes, causal chains, and counterexamples.
-- Remove only verbal noise, mechanical repetition, and superseded false starts.
-- You may repair sentence boundaries, add paragraphs, correct confirmed STT errors, and add restrained subheadings.
-- Do not summarize away the reasoning process, turn the lecturer into a third-party subject, or add views absent from the source.
-- Mark uncertain proper nouns, numbers, and transcriptions; never guess.
+- 原文是事实与语义的最高权威；
+- 保留讲师第一人称、叙述顺序、判断力度和限制条件；
+- 保留有效人物、数字、品牌、工具、案例过程、因果链和反例；
+- 清理纯口头噪声、机械重复和已经废弃的口误版本；
+- 可以断句、分段、修复确定的 STT、添加克制的小标题；
+- 不得概括掉论证过程，不得把讲师改成第三方，不得补写原文没有的观点；
+- 不确定的专名、数字和听写必须标记，不能猜。
+- 正式忠实稿必须使用可点击的 Markdown 相对链接回链本课原始转写；链接从正式文件最终位置解析为真实文件，不得引用 `runtime/`、`lesson-*` 或其他临时生产路径。
 
-### Structured lecture
+### 结构化讲义
 
-Organize source knowledge for study and retrieval.
+目标是把原文知识组织成便于学习和调用的结构。
 
-- You may reorder material, merge related knowledge, and use tables or procedures.
-- Preserve source arguments, cases, and applicability boundaries.
-- Link back to the source transcript and faithful edit.
-- Never present editorial interpretation as the lecturer's judgment. Put claims requiring external verification into the fact-review list.
+- 可以重组顺序、合并同类知识、使用表格和步骤；
+- 必须保留原文的论证、案例和适用边界；
+- 必须分别使用可点击的 Markdown 相对链接回链原始稿与忠实稿；两条链接从正式讲义最终位置解析为真实文件，不得引用 `runtime/`、`lesson-*` 或其他临时生产路径；
+- 不得把编辑理解冒充讲师判断；需要外部核验的内容进入事实核验项。
 
-## Semantic-fidelity priority
+### 图解学习（启用后由下游制作）
 
-When requirements conflict, apply this order:
+讲义先完成语义验收，再由 `pinshu-visual-learning` 制作 MD 主学习笔记、逐模块 PNG、可编辑 SVG 和同源自包含 HTML 辅助页。图形表达关系，不替代讲义推导与案例；因果、比较、数量、条件和边界必须能回源。未核验数字和讲师观点仍保持原身份与不确定标记。缺可靠视觉来源时留下具体限制，不凭想象画图。
 
-1. Do not fabricate or change the original meaning.
-2. Do not omit substantive information.
-3. Preserve lecturer identity, voice, and strength of judgment.
-4. Improve readability.
-5. Standardize formatting.
+## 语义保真优先级
 
-Layout, length targets, summarization efficiency, or a desire to sound “more professional” must never override the first three priorities.
+发生冲突时按以下顺序处理：
 
-## One quality baseline, different evidence intensity
+1. 不捏造、不改变原意；
+2. 不遗漏有效信息；
+3. 保留讲师身份、语气和判断力度；
+4. 改善可读性；
+5. 统一格式。
 
-Every mode rechecks people, numbers, key cases, methods, constraints, the opening, middle, and ending. No mode may replace substantive meaning with a summary. These modes describe only how quality is demonstrated:
+不得为了排版、字数、摘要效率或“更专业”牺牲前三级。
 
-- `fast`: compact anchor evidence; no sentence-level ledger.
-- `standard`: standard evidence by section or natural argument unit.
-- `strict`: every substantive source block enters `coverage.json` as `retained | merged | noise | uncertain`, with a destination or reason.
+## 同一质量基线，不同证据强度
 
-`noise` must never hide difficult content, and a coverage map is not proof of acceptance. Budget, mode names, and a desire for exhaustive evidence must not lower completeness, fidelity, or lecture quality.
+所有模式都必须回扫人物、数字、关键案例、方法、限制条件、开头、中段和结尾，不能用摘要代替有效语义。下列差异只规定如何证明质量，不规定质量本身：
 
-A domain adapter may add authoritative terminology, source hierarchy, risk triggers, and boundaries. A content adapter may add required content anchors and noise criteria for that lesson type. Neither adapter type may weaken this contract, add default outputs, or duplicate the complete workflow.
+- `fast`：使用紧凑锚点证据，不逐句建表；
+- `standard`：按章节或自然论述单元提供标准证据；
+- `strict`：每个有效内容块进入 `coverage.json`，标记 `retained | merged | noise | uncertain` 并注明去向或理由。
 
-## Proxy metrics cannot prove acceptance
+`noise` 不能隐藏难处理内容；覆盖表也不是合格证明。不得因预算、模式名称或追求“全量证据”降低正文完整度、忠实度和讲义质量。
 
-The following are warning signals only:
+领域适配器只能补充术语权威、来源层级、风险触发器和边界；内容适配器只能补充该课型必须保留的内容锚点与噪声判定。两类适配器不得降低本合同、不得新增默认产物、不得复制整套流程。
 
-- faithful-edit-to-source character ratio;
-- whether a file exceeds a byte threshold;
-- heading count;
-- em-dash, bold, or filler-word count; and
-- file existence.
+## 禁止用代理指标判合格
 
-When a ratio is abnormal, compare source and output block by block. Never add filler to reach a ratio, and never skip semantic QA because a ratio appears normal.
+以下指标只能报警，不能单独判定通过：
 
-## Editing and layout boundaries
+- 忠实稿与原文字数比例；
+- 文件是否超过某个字节数；
+- 标题数量；
+- 破折号、加粗或语气词数量；
+- 文件是否存在。
 
-- Do not create a wall of text by merely adding headings to the transcript.
-- Do not fragment a complete story into excessive snippets, lists, or formulaic summaries.
-- Use bold only for a small number of genuinely navigational terms; do not bold whole sentences or paragraphs repeatedly.
-- Avoid excessive em dashes, mechanical parallelism, forced uplifting conclusions, and stock transitions such as “In conclusion.”
-- Preserve an appropriate amount of the lecturer's questions, conversational transitions, and characteristic phrasing; do not enforce a percentage.
-- Headings serve comprehension, not symmetry or a fixed count.
+比例异常时回到原文逐块核查。不能为达到比例灌水，也不能因比例正常就跳过语义QA。
 
-## STT and facts
+## 编辑与排版边界
 
-- Correct confirmed STT errors in the body and preserve the correction evidence.
-- `uncertainties.json` records only corrections or conflicts that affect proper nouns, numbers, facts, sources, or later review. Do not log ordinary sentence breaks, punctuation, or semantic-neutral cleanup item by item.
-- Before completion, search the source again for people, accounts, brands, tools, numbers, and dates. When one object has meaningfully different names or values, record source variants, the chosen treatment, and verification needs.
-- Similar pronunciation alone is not enough to force a proper-noun correction.
-- Business figures, brand information, and operating judgments spoken in the course do not automatically become externally verified facts.
-- Label claims needing external review as lecturer statements or unverified; do not silently rewrite them.
+- 不允许只是给原文加标题形成文字墙；
+- 不把完整故事拆成大量碎片、列表或模板化小结；
+- 加粗只用于极少量真正需要定位的关键词，不整句、整段连续加粗；
+- 不引入大量破折号、机械排比、强行升华和“综上所述”等模板腔；
+- 讲师原有的反问、口语衔接和标志性表达适度保留，不设固定百分比；
+- 标题服务理解，不追求整齐、对称或固定数量。
 
-## Failure criteria
+## STT与事实
 
-Semantic review fails if any condition applies:
+- 已确认纠错可修正文；必须保留纠错依据；
+- `uncertainties.json` 记录真正影响专名、数字、事实、来源或后续复核的纠错与冲突；普通断句、标点和不改变语义的口语清理不逐项登记；
+- 完稿前按人物、账号、品牌、工具、数字和日期回扫原文；同一对象出现有意义的不同写法或数值时，登记原文变体、处理方式和核验需求；
+- 仅凭相似发音不能硬改专名；
+- 原文中的商业数据、品牌信息和经营判断不自动当作外部事实；
+- 需要外部核验的内容标注“讲师原话/待核验”，不静默改写。
 
-- A key case, number, person, method, or constraint is missing.
-- A judgment absent from the source is presented as the lecturer's view.
-- First person becomes a third-party summary.
-- Changed narrative order alters meaning or causality.
-- Major content is summarized instead of preserving the reasoning process.
-- Uncertain material is resolved by guessing.
-- The faithful edit remains an unedited wall of text or is overformatted into fragments.
+## 失败判定
+
+任一情况即语义不通过：
+
+- 关键案例、数字、人物、方法或限制条件丢失；
+- 原文没有的判断被写成讲师观点；
+- 第一人称被改成第三方摘要；
+- 叙述顺序变化导致原意或因果关系改变；
+- 主要内容只是被概括，而没有保留论证过程；
+- 不确定内容被擅自猜定；
+- 忠实稿仍是未编辑的文字墙，或被过度格式化成碎片。

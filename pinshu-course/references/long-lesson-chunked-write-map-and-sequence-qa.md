@@ -1,78 +1,78 @@
-# Chunked Writes, Map Consistency, and Sequence-Conflict Handling for Very Long Lessons
+# 超长单课的分块落盘、目录一致性与顺序冲突处理
 
-Use this reference when a single transcript is very long, the two document bodies may exceed the capacity of one tool write, or the original recording sequence differs from the formal course outline.
+用于单节逐字稿很长、双稿正文可能超过一次工具写入容量，或原录制转场顺序与正式课程目录不一致的场景。
 
-## 1. Do Not Gamble on a Single Write for a Long Document
+## 一、长文档不要一次性豪赌写入
 
-A successful `write_file` response does not prove that an entire long body reached the file. Long arguments may be truncated at the invocation layer, especially when the interface displays only a summary or the actual byte count written is unexpectedly small.
+一次 `write_file` 返回成功，不代表超长正文一定完整进入文件。长参数可能在调用层被截短，尤其当前台只显示摘要或实际写入字节明显偏小时。
 
-### Safe Write Procedure
+### 安全写法
 
-1. Split the document at natural section boundaries into chunks of approximately 6,000–10,000 characters;
-2. Write the first chunk with `write_file` and place a unique sentinel at its end: `<!-- CONTINUE_LESSON_XX -->`;
-3. Immediately inspect the beginning and end of the file, or count written bytes, to confirm the first chunk was not truncated;
-4. For each later chunk, use `patch` to replace the sentinel with “this chunk’s body + the same sentinel”;
-5. When replacing the sentinel with the final chunk, do not retain the sentinel;
-6. Final acceptance must search for `CONTINUE_LESSON_XX`, `[truncated]`, placeholders, and duplicate H1 headings. The result for each must be zero;
-7. Never infer file completeness from arguments shown in truncated form in the tool interface. Read the actual file back.
+1. 把文档按自然章节拆成约 6k—10k 字符的块；
+2. 第一块用 `write_file` 写入，并在结尾放唯一哨兵：`<!-- CONTINUE_LESSON_XX -->`；
+3. 立即读取文件头、文件尾或统计写入字节，确认第一块没有被截断；
+4. 后续每块用 `patch` 把哨兵替换为“本块正文＋同一哨兵”；
+5. 最后一块替换哨兵时不再保留哨兵；
+6. 终验必须搜索 `CONTINUE_LESSON_XX`、`[truncated]`、占位符和重复H1，结果应为0；
+7. 不要根据工具调用界面中被缩略显示的参数判断文件完整，必须回读真实文件。
 
-### Failure Recovery
+### 失败恢复
 
-If the first long write produces only a few lines or frontmatter:
+若首次超长写入只落下数行或frontmatter：
 
-- Rewrite the first chunk immediately; do not continue appending to the incomplete file;
-- Restart chunking with a unique sentinel;
-- After completion, inspect section continuity to ensure neither the first nor the last chunk is missing;
-- Do not fossilize the incomplete write as an “environment failure.” Retain only the general chunking-and-readback method.
+- 立即重写该文件的第一块，不在残缺文件上继续追加；
+- 用唯一哨兵开始分块；
+- 完成后检查章节连续性，避免第一块或最后一块丢失；
+- 不把残缺写入当成“环境故障”固化，只保留分块＋回读的通用方法。
 
-## 2. Update Course-Map State Atomically
+## 二、课程地图必须做原子式状态更新
 
-Completing a lesson requires more than changing one row in the map. One update must reconcile all of the following:
+每完成一课，地图中的状态不是只改一行。一次更新要同时核对：
 
-- Frontmatter `current_progress`;
-- Frontmatter `next_lesson`;
-- “Transcripts received”;
-- “Dual drafts generated”;
-- “Accepted”;
-- Completed range of the current module;
-- Module completion ratio, such as `2/7`;
-- Total number of organized lessons;
-- The lesson’s catalog row: knowledge title, links to both drafts, and status;
-- The lesson’s knowledge-navigation entry;
-- The next-lesson notice at the end of the file.
+- frontmatter `current_progress`；
+- frontmatter `next_lesson`；
+- “已收到转写”；
+- “已生成双稿”；
+- “已验收”；
+- 当前模块完成范围；
+- 模块完成比例（如2/7）；
+- 总计已整理课数；
+- 该课目录行：知识标题、双稿链接、状态；
+- 本课知识导航；
+- 文末下一课提示。
 
-After updating, search for the previous lesson number and the old “awaiting input” status to confirm there is no partial update. In particular, a successful patch does not synchronize other counters in the same region automatically.
+更新后搜索前一课数字和旧“待输入”状态，确认没有半更新。尤其注意：patch成功不代表同一区域其他统计字段自动同步。
 
-## 3. Conflict Between Recording Sequence and Formal Outline
+## 三、原录制顺序与正式目录冲突
 
-A common signal is that the lesson ends with “next we will cover X,” even though the formal outline places X before the current lesson. Recording order, livestream order, publication order, and archive numbering may differ.
+常见信号：本课结尾说“下一节讲X”，但正式目录已把X排在本课之前；或者直播录制顺序、课程上架顺序和归档编号不同。
 
-Apply this precedence:
+处理优先级：
 
-1. The official outline controls the filename, H1, `original_title`, map row, and archived next-lesson state;
-2. The faithfully edited transcript preserves the instructor’s original transition meaning; do not silently rewrite it to match the current outline order;
-3. Add one concise explanation in each of the faithful transcript’s editorial note, the structured lecture’s “Course Sequence Note,” and the map’s risk/boundary area;
-4. Do not misclassify a sequence conflict as a wrong-lesson transcript unless the instructor, topic, or main body also conflicts;
-5. Build later cross-links according to the formal outline and optionally note the difference from recording order.
+1. 官方目录决定文件名、H1、`original_title`、地图行和下一课归档状态；
+2. 忠实精编稿保留讲师原有转场语义，不偷偷改成当前目录顺序；
+3. 在忠实稿编辑说明、系统讲义“课程顺序说明”和地图风险边界各用一句话说明；
+4. 不把顺序冲突误判为逐字稿错课，除非讲师、主题或内容主体也不一致；
+5. 后续课互链按正式目录建立，同时可注明原录制顺序差异。
 
-## 4. When Verification Is Permission-Gated
+## 四、验证受权限门控时
 
-If automated scans or SHA commands are blocked pending permission:
+当自动扫描或SHA命令被权限确认拦截：
 
-- Do not retry the same command;
-- Do not switch tools to bypass the gate;
-- You may continue with authorized steps that are independent of the blocked check, such as already approved preview synchronization;
-- Split status into “content complete / preview synchronized / automated scan incomplete / SHA incomplete”;
-- Run blocked verification only after the user explicitly authorizes it;
-- If the map says “accepted” but final automated acceptance has not passed, state clearly that closure is incomplete. After authorization, complete verification before ending the lesson session.
+- 不重试同一命令；
+- 不改用另一工具绕过；
+- 可以继续执行与被拦校验不同、且已获授权的独立步骤，例如既定范围内的预览同步；
+- 将任务拆成“内容已完成／预览已同步／自动扫描未完成／SHA未完成”；
+- 只有在用户明确授权后再执行被拦校验；
+- 地图若写成“已验收”，但最终自动验收未通过，应在交付状态中明确指出未闭环，获得授权后补验并再结束该课session。
 
-## 5. Minimum Final-Acceptance Checklist
+## 五、最小终验清单
 
-- Both drafts and the map exist;
-- H1, filename, frontmatter, and official title in the map agree;
-- No chunk sentinel, truncation marker, or placeholder remains at the end;
-- First-person scan of the faithful transcript has been judged in context;
-- The STT scan glossary excludes short terms that would falsely match normal phrases;
-- Every map counter is consistent;
-- Each formal file and its preview copy have matching SHA values;
-- If any automated check was not authorized, do not write “all acceptance checks complete.”
+- 双稿与地图真实存在；
+- H1、文件名、frontmatter、地图官方标题一致；
+- 结尾无分块哨兵、截断标记和占位符；
+- 忠实稿正文第一人称扫描已做上下文判定；
+- STT词表扫描已去除会误命中正常词组的短词；
+- 地图全部统计字段一致；
+- 正式稿与预览稿逐对SHA一致；
+- 若任一自动校验未获授权，不写“全部验收完成”。

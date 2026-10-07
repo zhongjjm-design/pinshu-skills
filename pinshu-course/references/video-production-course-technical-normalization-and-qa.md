@@ -1,97 +1,97 @@
-# Technical Normalization and QA for Video Production Courses
+# 视频制作课程的技术归一化与验收
 
-Use this reference when a transcript simultaneously covers smartphone filming, exposure, HDR, white balance, A-roll/B-roll, shot breakdowns, shot sizes, focal lengths, depth of field, layers, and numerous visual examples.
+适用于逐字稿同时包含手机拍摄、曝光、HDR、白平衡、A-roll/B-roll、分镜、景别、焦段、景深、图层与大量示例画面时。
 
-## 1. Roles of the Two Drafts
+## 一、双稿分工
 
-### Faithfully Edited Transcript
+### 忠实精编稿
 
-- Preserve the instructor's first-person voice and original speaking order;
-- Retain equipment recommendations, demonstration cases, rhetorical questions, numerical thresholds, and experience-based judgments;
-- Normalize high-confidence STT near-homophones directly, but do not recast the instructor's experience as an industry-wide conclusion;
-- Put strict technical qualifications in editorial notes so they do not interrupt the main narrative.
+- 保持讲师第一人称与原讲述顺序；
+- 保留设备建议、演示案例、反问、数字阈值与经验判断；
+- STT近音术语直接归一，但不把讲师经验偷换成行业定论；
+- 严格技术边界另放编辑注，不打断正文主线。
 
-### Systemized Lecture
+### 系统化讲义
 
-Reorganize the material into the following sequence:
+按以下链路重组：
 
 ```text
-Minimum standard for an acceptable shot
-→ equipment and image troubleshooting
-→ visual and auditory asset matrix
-→ action-based shot breakdown
-→ shot size and attention
-→ spatial depth
-→ layers and editing
-→ exercises, SOPs, and risk boundaries
+镜头合格线
+→ 设备与画面排查
+→ 视觉/听觉素材矩阵
+→ 动作分镜
+→ 景别与注意力
+→ 空间纵深
+→ 图层与剪辑
+→ 练习、SOP、风险边界
 ```
 
-For every method, explain the problem it solves, why it works, an example, operating steps, applicable conditions, and risks of misuse.
+每个方法写清：解决什么问题、为什么有效、案例、操作步骤、适用条件、误用风险。
 
-## 2. Normalize High-Frequency Terminology
+## 二、高频术语归一
 
-Use context to normalize common near-homophones in transcripts:
+逐字稿常见近音词须结合上下文统一：
 
-- `A ròu`, `A row`, `error`, and similar forms → `A-roll`;
-- `B ròu`, `B row`, `bro`, `bureau`, and similar forms → `B-roll`;
-- `Kùlǐ xiāofù`, `Kùlǐ xiāofū`, and similar forms → `Kuleshov effect`;
-- `chún kǒubō`, `chún kǒu bō`, and similar forms → `pure talking-head delivery`;
-- `veri log` and similar forms → `vlog`;
-- Suspected near-homophones such as `tèxiě zhòng zhì`, `zhōngjǐng zhòngshì`, and `quánjǐng zhòngshì` → use context to verify the intended principle: “close-ups emphasize emotion, medium shots emphasize events, and wide shots emphasize momentum.” Never apply a mechanical glossary replacement without checking context;
-- `utility diminishing at the margin` → use semantics to verify and normalize as `diminishing marginal utility`.
+- A肉、A row、error 等 → `A-roll`；
+- B肉、B row、bro、bureau 等 → `B-roll`；
+- 库里消复、库里消夫 → `库里肖夫效应`；
+- 唇口播、唇口波 → `纯口播`；
+- veri log 等 → `vlog`；
+- 特写重质、中景重视、全景重视等疑似近音 → 结合上下文核为“特写重情、中景重事、全景重势”，不能只凭词表机械替换；
+- 效用边际递减 → 结合语义核为“边际效用递减”。
 
-Every scan hit must be reviewed in context. Short terms can produce false positives in ordinary phrases. For example, `jǐng zhōng` may occur inside `chǎngjǐng zhōng de` (“within the scene”). Narrow the final scan to genuine errors so false positives are not reported as residue.
+扫描命中后必须读上下文。短词可能误命中正常短语，例如“景中”会命中“场景中的”；最终扫描应缩窄到真正错误词，避免把误报当残留。
 
-## 3. Separate the Instructor's Simplifications from Strict Technical Concepts
+## 三、讲师简化说法与严格技术概念分层
 
-Do not silently revise the instructor's position in the faithful transcript. Apply the following distinctions in editorial notes and the systemized lecture:
+不要在忠实稿里暗改讲师观点；在编辑注和系统讲义中分层：
 
-1. **Exposure compensation is not fully manual exposure:** swiping up or down on a phone usually applies compensation to an existing automatic-exposure decision; shutter speed, ISO, frame rate, computational processing, and encoding also affect the result.
-2. **Automatic white balance does not mechanically turn colors back to white:** it estimates a neutral point within the scene; mixed lighting, color rendering, and color casts can still affect the result.
-3. **HDR does not necessarily produce a sharper image:** it extends highlight and shadow detail, but can introduce tone-mapping artifacts, motion artifacts, and platform-compatibility problems.
-4. **Image noise is not lens grease or aggressive beauty processing:** noise is commonly associated with low light and gain, while the latter problems are optical contamination or algorithmic processing.
-5. **Photographic depth of field is not foreground-midground-background depth composition:** the former is the range of acceptable sharpness in front of and behind the focal plane; the latter concerns spatial layering and narrative relationships.
-6. **Frame size, camera distance, and focal length are three separate variables:** perspective is determined primarily by camera position; focal length determines angle of view. Moving the camera to preserve the same framing changes spatial compression and facial perspective.
-7. **A-roll and B-roll are not an absolute on-camera/off-camera binary:** the course may use “main narrative” and “supplementary footage” as a beginner-friendly definition, but the lecture must note that industry usage is broader.
+1. **曝光补偿 ≠ 完全手动曝光**：手机上下滑动通常只是在既有自动曝光上的补偿；实际还涉及快门、ISO、帧率、算法与编码。
+2. **自动白平衡 ≠ 把颜色机械还原成白**：它是在场景中估计中性点；混合光、显色性和色偏仍会影响结果。
+3. **HDR ≠ 必然更清晰**：它用于扩展亮暗细节，但可能带来色调映射、运动伪影与平台兼容问题。
+4. **噪点 ≠ 镜头油污或重美颜**：前者多与低照度和增益有关，后者属于光学污染或算法处理。
+5. **摄影景深 ≠ 前中后景纵深构图**：前者是焦点前后可接受清晰范围；后者是空间层次与叙事关系。
+6. **画面大小、相机距离、焦段是三个变量**：透视主要由机位决定；焦段决定视角，保持相同构图时移动机位会改变空间压缩与面部透视。
+7. **A-roll/B-roll不是出镜/不出镜的绝对二分**：课程可采用主线/补充的初学者口径，讲义要标明行业用法更宽。
 
-## 4. Boundary Between Content and Form
+## 四、内容与形式的边界
 
-When a course emphasizes that “production should not hold the content back,” preserve its resource-allocation logic in the lecture:
+当课程强调“制作不拖后腿”时，讲义应保留其资源分配逻辑：
 
-- First define the minimum usable image quality;
-- Once production meets that threshold, inspect topic selection, copy, structure, hooks, and information density;
-- Invest further in motion, optics, color, and stylization only after the content has been validated and production has demonstrably become the limiting factor;
-- Treat instructor-provided figures such as 60 points, 75 points, and 80/20 as experiential benchmarks, not industry-standard assessments.
+- 先定义最低可用画面；
+- 制作达标后检查选题、文案、结构、钩子和信息密度；
+- 只有内容已验证、制作确实构成上限时，再投入运动、光学、色彩和风格化；
+- 讲师给出的60分、75分、80/20等数字按经验标尺处理，不写成行业测评。
 
-## 5. Asset and Copyright Governance
+## 五、素材与版权治理
 
-When the material includes online images, film clips, music, program footage, PPT slides, voices, or likenesses:
+涉及网络图片、电影片段、音乐、节目画面、PPT、人物声音和肖像时：
 
-- Retain the original examples in the faithful transcript, but do not imply that the assets are free to use;
-- Add source, license, likeness, voice, trademark, and platform-rule considerations to the lecture;
-- Kuleshov-style juxtaposition can create implied causality and attitude. Do not use misleading edits to distort the intended meaning of interviews, public events, or commercial testimonials;
-- Product-promotion footage must not use filters, lighting, cropping, or editing to misrepresent a product's color, size, performance, or usage results.
+- 忠实稿保留原案例，但不默认素材可自由使用；
+- 讲义补充来源、许可、肖像、声音、商标和平台规则；
+- 库里肖夫式组接能生成因果和态度，采访、公共事件与商业证言不得用误导剪辑歪曲原意；
+- 带货画面不得通过滤镜、光线、裁切和剪辑误导产品颜色、尺寸、效果或使用结果。
 
-## 6. Per-Lesson Acceptance
+## 六、逐课验收
 
-1. Keep the title, filename, H1, `original_title`, and course-map link consistent;
-2. Scan the faithful transcript for third-party editorial phrasing such as “the course plays,” “the course mentions,” “the course uses,” and “the instructor believes.” In the body, restore first-person forms such as “I play in the lesson,” “I mention,” and “I use”;
-3. Scan for near-homophone terminology and placeholders. Review every hit in context, exclude false positives, and only then declare zero residue;
-4. Verify that the lecture distinguishes the technical boundaries among exposure, white balance, HDR, depth of field, focal length, camera position, and related concepts;
-5. Distinguish course-map states for material received, paired drafts generated, and acceptance passed;
-6. Calculate SHA-256 separately for the formal draft and preview draft, then compare each pair. Declare them the same version only when the hashes match or a byte-for-byte comparison succeeds;
-7. Verify that every course-map target file actually exists. Do not treat the appearance of link text as proof that the target resolves;
-8. If a compound terminal script is blocked by a permission-confirmation gate, do not falsely report that it passed. After receiving permission, use smaller, single-purpose, read-only commands to verify hashes and file existence if needed. Do not convert a temporary permission block into a permanent claim that the tool is unavailable.
+1. 标题、文件名、H1、`original_title`、地图链接统一；
+2. 忠实稿扫描第三方编辑视角，如“课程播放、课程提到、课程用、讲师认为”；命中正文改回“我在课上播放、我提到、我用”等第一人称；
+3. 扫描近音术语与占位符；所有命中按上下文判定，排除误报后再宣告清零；
+4. 检查讲义是否区分曝光、白平衡、HDR、景深、焦段与机位等技术边界；
+5. 地图状态区分已收到、已生成双稿、已验收；
+6. 正式稿与预览稿分别计算SHA-256，并逐对比较；只有哈希一致或字节比较一致才宣布同版；
+7. 验证地图目标文件真实存在；不要把“链接文字出现”当作目标可解析；
+8. 若终端复合脚本被权限确认拦截，不伪报通过。得到许可后可改用更小、用途单一的只读命令完成哈希和文件存在性验证；不要把短暂权限拦截固化为工具不可用。
 
-## 7. Minimum Completion Report
+## 七、最小完成报告
 
-Report only:
+报告只列：
 
-- Absolute paths to both drafts and the course map;
-- Line count or file count;
-- First-person and STT scan results;
-- Whether all technical boundaries were added;
-- SHA values for the formal and preview copies;
-- Status of the next lesson.
+- 双稿与地图绝对路径；
+- 行数或文件数；
+- 第一人称与STT扫描结果；
+- 技术边界是否补齐；
+- 正式端与预览端SHA；
+- 下一课状态。
 
-Do not restate the entire workflow.
+不要复述整套处理过程。

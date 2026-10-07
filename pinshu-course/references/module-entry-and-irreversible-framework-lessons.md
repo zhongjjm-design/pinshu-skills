@@ -1,171 +1,171 @@
-# Processing Module-Entry Lessons and Irreversible Sequential Models
+# 模块开篇课与不可逆顺序模型整理
 
-## When to Use
+## 适用场景
 
-Use this reference when a lesson shows several of the following signals:
+当一节课同时出现以下信号时使用：
 
-- It formally opens a new module;
-- It reviews the full course or relationships between earlier and later sections;
-- It explains the hierarchy of lessons inside the new module;
-- It introduces a process that must run in order and in which a later step must not destroy an earlier one;
-- It validates the process through many live cases, one segment at a time.
+- 正式进入一个新模块；
+- 回顾整门课程或前后篇章关系；
+- 说明新模块内部各课的层级；
+- 给出必须按顺序执行、后一步不得破坏前一步的流程；
+- 大量使用现场案例逐段验证流程。
 
-This is neither an ordinary lesson nor a module-closing lesson. It establishes the **module entry point, dependency declarations, and acceptance criteria for later work**.
+这类课不是普通单课，也不是模块收官课。它承担的是**模块入口、依赖声明和后续验收标尺**。
 
-## 1. Identify the Three-Level Course Architecture First
+## 一、先识别三层课程架构
 
-Both the faithful transcript and lecture must preserve:
+忠实稿和讲义都要保留：
 
-1. **Whole-course level:** what the prerequisite modules solved and why practice can begin now;
-2. **Current-module level:** which lessons form the foundation, which add detail, and which are specialized extensions;
-3. **Current-lesson level:** how this lesson’s process constrains later lessons.
+1. **全课程层**：前置模块解决了什么，为什么现在可以开始实践；
+2. **当前模块层**：哪些课是基本盘，哪些是细节补充，哪些是专题扩展；
+3. **本课层**：本课流程如何约束后续课程。
 
-Do not remove the opening discussion of course relationships as idle chatter. If the instructor explicitly says that “learning and practice proceed in parallel” or that particular lessons must be learned first, those are module dependencies, not course-process noise.
+不要把开篇的课程关系删成闲聊。若讲师明确说“学习与实践并行”“某几课必须先学”，这是模块依赖，不是课程流程噪声。
 
-## 2. Distinguish Module Entry from Module Closure
+## 二、区分模块开篇与模块收官
 
-After a module-entry lesson:
+模块开篇课完成后：
 
-- Change the current module in the map from “awaiting input” to `1/N`;
-- Add navigation for the lesson and identify the next lesson;
-- Do not pre-generate the five module-level assets for methodology, cases, checklists, risks, and assignments;
-- Register only cross-lesson candidates and wait until the module reaches `N/N` before consolidation.
+- 地图把当前模块从“待输入”改为 `1/N`；
+- 补本课导航和下一课；
+- 不提前生成模块级方法论、案例、清单、风险、作业五件套；
+- 只登记跨课候选，等模块达到 `N/N` 再横向归并。
 
-Run complete module consolidation only after the closing lesson. Do not misclassify a dense opening lesson as module closure.
+模块收官课才执行完整模块归并。禁止因为开篇课信息密度高就误判为模块闭合。
 
-## 3. Extract the Irreversible Model
+## 三、抽取不可逆模型
 
-If the instructor says that “the order cannot change” or “a later step must not erase an earlier one,” the lecture must represent the method as **stage gates**, not three parallel techniques.
+若讲师明确表示“顺序不能换”“后一步不能把前一步改没”，讲义必须把它写成**阶段门控**，而不是三个并列技巧。
 
-Recommended structure:
+推荐结构：
 
 ```text
-Step 0: Freeze the destination / target object
-→ Layer 1: Establish prerequisite A
-→ Layer 2: Add B without breaking A
-→ Layer 3: Add C while preserving A and B
-→ Regression test: Did C break B? Did B break A?
+第0步：冻结终点／目标对象
+→ 第一层：建立前提A
+→ 第二层：在不破坏A的前提下增加B
+→ 第三层：在保留A与B的前提下增加C
+→ 回归测试：C是否破坏B，B是否破坏A
 ```
 
-For every layer, specify at least:
+每层至少写清：
 
-| Field | Requirement |
+| 字段 | 要求 |
 |---|---|
-| Purpose | What problem this layer solves |
-| Input | Which prerequisite results it depends on |
-| Tools | Methods, signals, or materials available at this layer |
-| Failure | Common misuse and inversion of priorities |
-| Pass criterion | How to decide whether to enter the next layer |
-| Regression question | Whether a later change breaks this layer |
+| 目的 | 本层解决什么问题 |
+| 输入 | 依赖哪些前置结果 |
+| 工具 | 本层可用的方法、信号或素材 |
+| 失败 | 常见误用与本末倒置 |
+| 通过标准 | 怎样判断可以进入下一层 |
+| 回归问题 | 后续修改是否破坏本层 |
 
-Finish with a diagnostic tree or regression table so “irreversible” becomes operational.
+最终提供诊断树或回归表，让“不可逆”可以真正执行。
 
-## 4. Preserve the Causal Chain of Classroom Walkthroughs
+## 四、忠实稿保留课堂推演的因果链
 
-These lessons often build a model by playing a video, pausing to ask questions, analyzing second by second, and reasoning backward. The faithful transcript must preserve:
+此类课常通过播放视频、暂停提问、逐秒拆解和重新倒推建立模型。忠实稿必须保留：
 
-- The target-audience definition before a case begins;
-- What question the instructor asks at each point;
-- Which information causes target users to leave;
-- Which later information is the real entry point;
-- How the instructor uses the case to prove sequence irreversibility;
-- Classroom corrections and feedback when students reverse the order.
+- 案例开始前的目标人群定义；
+- 讲师在哪一秒提出什么问题；
+- 哪些信息导致目标用户流失；
+- 哪个后置信息才是真正入口；
+- 讲师如何用该案例证明顺序不可逆；
+- 课堂纠错、学生把顺序说反时的反馈。
 
-You may delete player malfunctions, waiting, and non-informative repetition, but never compress a segment-by-segment walkthrough into one “case insight.”
+可以删播放器故障、等待和无信息重复，但不能把“逐段推演”压成一句案例启示。
 
-## 5. Correct Terminology Through Model Relationships
+## 五、术语必须依靠模型关系校正
 
-In long transcripts, key layer names may be rendered as homophones by STT. Do not correct from one sentence alone. Check all of the following:
+长转写中，关键层级词可能被STT写成近音词。不要只按单句字面修正，应同时检查：
 
-1. The term used when the instructor first enumerates the layers;
-2. Later definitions and cases;
-3. The sequence recap at the end;
-4. The official outline or slides;
-5. Co-occurrence patterns for the term across the lesson.
+1. 讲师第一次列举时的词；
+2. 后续定义与案例；
+3. 课末复盘顺序；
+4. 官方目录或PPT；
+5. 同一术语在全课的共现关系。
 
-If a term consistently co-occurs with “expanding relevant audiences, shared emotions, and latent needs,” normalize it according to the concept’s meaning rather than preserving an obvious homophone error. If uncertainty remains, mark it in the editorial note rather than inventing a term from common knowledge.
+若一个词始终与“扩大相关人群、共同情绪、潜在需求”共现，应按概念语义统一，不能保留明显近音错词。仍不确定时在编辑说明中标记，不凭常识补造。
 
-## 6. Recommended Outputs for the Structured Lecture
+## 六、系统化讲义的推荐产物
 
-In addition to the standard lecture structure, prioritize:
+除普通讲义结构外，优先产出：
 
-1. Course-architecture diagram;
-2. Overall irreversible process;
-3. Tool table for every layer;
-4. Failure modes for every layer;
-5. Case matrix: case × stage × evidence × risk;
-6. “Who will be rejected / who will remain” test;
-7. Iterative revision SOP;
-8. Irreversibility regression table;
-9. Opening or process diagnostic tree;
-10. AI-collaboration prompt template;
-11. Progressive training cadence;
-12. Interface to the next lesson.
+1. 课程架构图；
+2. 不可逆总流程；
+3. 每层工具表；
+4. 每层失败模式；
+5. 案例矩阵：案例×阶段×证据×风险；
+6. “谁会被拒绝／谁会留下”测试；
+7. 逐轮改稿SOP；
+8. 不可逆回归表；
+9. 开头或流程诊断树；
+10. AI协作提示模板；
+11. 渐进训练节奏；
+12. 与下一课的接口。
 
-Tables and templates must follow complete explanation; they cannot replace the instructor’s reasoning.
+表格和模板必须放在完整解释之后，不能代替讲师的论证。
 
-## 7. Separate Facts and Risks by Level
+## 七、事实与风险分层
 
-Module-entry lessons often mix platform mechanics, experience-based thresholds, public-account cases, and health examples. Distinguish at least:
+模块开篇课常混合平台机制、经验阈值、公共账号案例和健康案例。至少区分：
 
-- Stable methodology;
-- Instructor judgment from experience;
-- Thresholds used for teaching emphasis;
-- Time-sensitive platform mechanics;
-- Public account or view-count data;
-- Medical, health, and safety content.
+- 稳定方法论；
+- 讲师经验判断；
+- 强调式教学阈值；
+- 平台时效性机制；
+- 公共账号或播放数据；
+- 医疗、健康和安全内容。
 
-Statements such as “X seconds determine survival” or “more than Y% leave” must not be presented as fixed scientific thresholds without sample evidence. Medical cases may illustrate content structure but must not become individualized diagnostic or treatment advice.
+“X秒定生死”“Y%以上离开”等无样本比例不得写成固定科学阈值。医疗案例只用于说明内容结构，不能转成个体诊疗建议。
 
-## 8. Recording Time and Archive Time
+## 八、录制时间与归档时间
 
-If the instructor states a date during class:
+若课堂口述了具体日期：
 
-- Record the spoken class date in `recorded_at`;
-- Retain the course archive or catalog date in `date`;
-- Keep both fields; do not decide unilaterally which one is the “real course time.”
+- `recorded_at` 记录课堂口述日期；
+- `date` 保留课程归档或目录日期；
+- 两者并行，不自行判断哪一个“才是真的课程时间”。
 
-## 9. Atomic Map Update
+## 九、地图原子更新
 
-When a module-entry lesson is complete, update in the same operation:
+模块开篇课完成时，同一轮更新：
 
-- `current_progress`;
-- `next_lesson`;
-- The three status layers: received, dual drafts generated, accepted;
-- Current module `1/N`;
-- Total course completion count;
-- Official catalog row, knowledge title, dual-draft links, and status;
-- The lesson’s knowledge navigation;
-- The “next lesson” notice at the end of the map.
+- `current_progress`；
+- `next_lesson`；
+- 已收到、已生成双稿、已验收三层状态；
+- 当前模块 `1/N`；
+- 全课完成数；
+- 官方目录行、知识标题、双稿链接和状态；
+- 本课知识导航；
+- 地图尾部“下一课”说明。
 
-Then search for and clear:
+完成后搜索并清除：
 
-- “Awaiting this lesson’s input”;
-- The old total count;
-- “Awaiting input” on the current module;
-- “Pending organization” in the lesson catalog row;
-- The old next lesson.
+- “待本课输入”；
+- 旧总数；
+- 当前模块“待输入”；
+- 本课目录行“待整理”；
+- 旧下一课。
 
-## 10. Preview and Final Acceptance
+## 十、预览与终验
 
-1. Run content scans after completing the faithful transcript and lecture;
-2. Update the map to the true source-side state;
-3. Synchronize previews into two separate subdirectories; never flatten same-named files and overwrite one;
-4. Use text equality, line counts, and byte counts for non-SHA acceptance;
-5. Scan the map again for stale state;
-6. Third-party editorial voice must be zero in the faithful transcript. The lecture may use third-person course analysis; do not apply the same red-line judgment to both document types;
-7. Continuation anchors, `[truncated]`, “to be continued,” and “additional input required” must be zero unless the source genuinely has a documented gap;
-8. The map may state “non-restricted acceptance passed” only after previews actually exist and reconciliation passes.
+1. 忠实稿和讲义完成后先做内容扫描；
+2. 地图更新至真实源端状态；
+3. 按双子目录同步预览，禁止同名文件平铺覆盖；
+4. 用文本相等、行数和字节数做非SHA验收；
+5. 再扫描地图旧状态；
+6. 忠实稿第三方编辑视角必须为0；讲义允许第三人称课程分析，不把两种稿型共用同一红线判断；
+7. 续写锚点、`[truncated]`、待续、待补残留必须为0，除非原始输入确有缺口并已明确标注；
+8. 只有预览真实存在且对账通过后，地图才能写“非受限验收通过”。
 
-## 11. Minimum Fields in the Completion Report
+## 十一、完成报告最小字段
 
-- Formal lesson title;
-- Recording date and archive date;
-- Paths, line counts, and key new tools for both drafts;
-- Current overall progress and module ratio;
-- Next lesson;
-- Whether the source is truncated;
-- Whether platform, public-case, and medical risks were separated;
-- Preview path;
-- Text-consistency result;
-- Whether SHA was executed.
+- 正式课名；
+- 录制时间与归档时间；
+- 双稿路径、行数和核心新增工具；
+- 当前总进度与模块比例；
+- 下一课；
+- 原文是否截断；
+- 平台、公共案例和医疗风险是否分层；
+- 预览路径；
+- 文本一致性结果；
+- SHA是否执行。

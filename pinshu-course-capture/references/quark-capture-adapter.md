@@ -1,45 +1,45 @@
-# Quark Cloud Drive Video Transcript Capture Adapter
+# 夸克网盘视频文稿采集适配器
 
-This is a discovery and conditional capture procedure, **not a production-approved adapter**. Quark has not passed an end-to-end desktop transcript extraction and source-integrity test. It does not clean, summarize, or generate paired outputs. Do not route Quark lessons into the default production pipeline merely because this procedure exists.
+本文件只负责定位夸克网盘视频并从夸克播放器取得视频原文，不负责清洗、总结或双稿生成。
 
-## Observed behavior (not end-to-end validation)
+## 已验证的产品事实
 
-- The Quark web interface is suitable for locating shared directories and video files.
-- A web file list or preview is not the transcript panel.
-- A panel containing Playlist, AI Summary, and Transcript has been observed in the Quark desktop player; this does not establish a working automated extraction path.
-- A prospective Quark capture path requires web discovery plus desktop-player extraction. Do not reuse Baidu web selectors.
+- 夸克网页端适合定位“来自：分享”等目录和视频文件；
+- 网页文件列表/网页预览不等于文稿面板；
+- 当前已验证的“播放列表 / AI总结 / 文稿”面板出现在夸克桌面端播放器；
+- 因此夸克采集是“网页定位 + 桌面端取稿”，不能按百度网盘的网页选择器复用。
 
-## Prerequisites
+## 前提
 
-- The controlled browser is signed in to Quark.
-- The course directory, video path, and lesson identity are known.
-- The user has permission to access the video and any exported content.
+- 受控浏览器已登录夸克；
+- 课程目录、视频路径和课次身份已知；
+- 用户对视频或导出内容具有访问权限。
 
-## Capture procedure
+## 采集
 
-1. Open the user-specified shared directory in the Quark web interface. Confirm the course directory, video filename, and lesson identity.
-2. Use **Open in app**, or the equivalent desktop entry point, to open the same video in the Quark desktop player. Confirm through the window title, video title, or player view that the player really opened. Do not continue before confirmation.
-3. Confirm the title and video identity in the desktop player. Play or load at least two seconds so Quark can complete cloud recognition. The Transcript control may appear late; an initially empty view is not proof of failure.
-4. Poll the Transcript tab and text state for one complete processing window. After the tab appears, enter it and continue waiting until the transcript stabilizes. AI Summary cannot replace Transcript.
-5. Prefer the desktop player's copy or export function. If text is available only through the interface, use controlled desktop text extraction. Never infer the active window from screen coordinates.
-6. Extract from the lecturer's opening text and exclude player controls, buttons, timeline, playlist, and recommendations.
-7. Save the platform, video filename, complete path, extraction method, first sentence, last sentence, and text length.
-8. If the web interface locates the file and the transcript visibly exists in the desktop player but automation cannot read it, mark the lesson `BLOCKED` with reason code `BLOCKED_DESKTOP_EXTRACTION`. Record what was actually observed: location, whether full transcript text was visible, and the broken extraction link. Do not claim there is no transcript or that full text was confirmed when only a tab was seen.
-9. If only a summary, mind map, or slides can be verified, record that **no full source transcript was obtained in this attempt**. Do not infer a platform-wide absence from one view, and never substitute a summary.
+1. 在夸克网页端打开用户指定的分享目录，确认课程目录、视频文件名和课次身份；
+2. 通过网页端“打开客户端”或等价的夸克桌面端入口，把同一视频交给桌面播放器；必须用窗口标题、视频标题或播放器画面确认播放器确实已打开，未确认前不得进入下一步；
+3. 在桌面播放器确认标题与视频身份一致后，先让视频播放或加载至少 2 秒，等待夸克云端识别处理；“文稿”可能延迟出现，不能因首次查看为空就判定失败；
+4. 轮询“文稿”标签和正文状态，至少等待一个完整处理窗口；看到标签后再进入“文稿”，并继续等待正文稳定；“AI总结”不能替代“文稿”；
+5. 优先使用桌面端的复制/导出正文能力；若只能读取界面文字，必须通过受控桌面文本提取，不得用屏幕坐标猜测窗口；
+6. 从讲师正文开始提取，排除播放器、按钮、时间轴、播放列表和推荐内容；
+7. 保存平台、视频文件名、完整路径、采集方式、首句、末句和正文长度；
+8. 若网页能定位但桌面端文稿控件无法被自动化接入，标记 `BLOCKED_DESKTOP_EXTRACTION`，记录“已定位/文稿已确认存在/桌面端读取链路未接通”，不得声称无文稿；
+9. 如果只有总结、脑图或课件，没有可核对的全文文稿，才标记“平台未提供原始文稿”，不要用总结冒充原稿。
 
-## Integrity verification
+## 完整性验收
 
-- File identity agrees with the course manifest.
-- The opening, middle, and ending are present, and the final sentence is complete.
-- Browser- or desktop-extracted text matches the saved text after newline normalization.
-- No obvious truncation, duplicate loading, mixed lessons, or interface contamination is present.
-- Frontmatter identifies the source as the Quark Cloud Drive video transcript or the actual source type.
+- 文件身份与课程清单一致；
+- 正文开头、中段、结尾均存在，末句完整；
+- 浏览器提取内容与落盘内容去除换行差异后相符；
+- 没有明显截断、重复加载、混课或界面污染；
+- frontmatter 标明 `source: 夸克网盘视频「文稿」` 或实际来源类型。
 
-## Failure handling
+## 失败处理
 
-- Not signed in, CAPTCHA, or insufficient permission: `BLOCKED` with the exact reason.
-- Transcript still processing: wait for a bounded interval and reopen the video once; never retry without limit.
-- No Transcript tab in the web interface: check the desktop player before concluding that no transcript exists.
-- Desktop window cannot be controlled reliably: lesson state `BLOCKED`, reason `BLOCKED_DESKTOP_EXTRACTION`; preserve web discovery evidence and video identity.
-- AI summary only: evaluate permitted local video transcription.
-- Send the file to local ASR only when the user explicitly authorizes a permitted download. Otherwise preserve the blocker. Local ASR is a separate fallback, not proof that the Quark adapter works.
+- 未登录、验证码或权限不足：`BLOCKED`，记录具体原因；
+- 文稿仍在加载：有限等待和重新进入视频，不反复无限重试；
+- 网页端没有“文稿”标签：不要直接判定无文稿，先检查桌面端播放器；
+- 桌面端窗口无法稳定控制：标记 `BLOCKED_DESKTOP_EXTRACTION`，保留网页定位证据和视频身份；
+- 只有 AI 总结而没有全文：转入本地视频转写判断；
+- 允许下载时才交给本地 ASR；不能下载时保留阻塞状态。

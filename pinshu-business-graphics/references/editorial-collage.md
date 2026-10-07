@@ -12,6 +12,7 @@ Use for:
 
 Avoid when exact comparison, auditability, or a clean system diagram is primary.
 
+Approved anchor: `../assets/approved-examples/04-editorial-collage.png`
 
 ## Composition families
 
@@ -37,7 +38,7 @@ Avoid when exact comparison, auditability, or a clean system diagram is primary.
 
 ## Prompt kernel
 
-> Design an editorial-collage business visual around the argument “[thesis]”. Use one dominant [image role], two or three sourced evidence fragments, concise captions in the requested output language, a numbered reading path, and a restrained [paper/ink] palette. Make each fragment serve context, proof, contrast, or consequence. No mood-board randomness, no fake logos, no invented documents, no scrapbook stickers, no generic stock-business people.
+> Design an editorial-collage business visual around the argument “[thesis]”. Use one dominant [image role], two or three sourced evidence fragments, concise Chinese captions, a numbered reading path, and a restrained [paper/ink] palette. Make each fragment serve context, proof, contrast, or consequence. No mood-board randomness, no fake logos, no invented documents, no scrapbook stickers, no generic stock-business people.
 
 ## Failure boundaries
 

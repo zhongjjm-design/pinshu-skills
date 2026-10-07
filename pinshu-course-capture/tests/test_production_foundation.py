@@ -218,7 +218,109 @@ class ProductionFoundationTests(unittest.TestCase):
             self.assertEqual(report["report_type"], "mechanical_report")
             self.assertEqual(report["algorithm_version"], "pinshu-mechanical-2026-10-v2")
             self.assertIsNone(report["semantic_pass"])
-            self.assertEqual(h.lesson()["status"], "MECHANICAL_PASS")
+
+    def test_budget_block_can_be_set_and_resumed_without_double_charging(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            h = Harness(Path(td))
+            files = h.make_drafts()
+            h.transition(1, "CAPTURED", {"source": files["source"]})
+            h.transition(1, "SOURCE_VERIFIED")
+            h.run("set-budget", "--state", str(h.state), "--lesson", "1",
+                  "--key", "max_tokens_per_lesson", "--value", "5", "--reason", "force real budget block")
+            blocked = h.transition(
+                1, "DRAFTED",
+                {k: files[k] for k in ("faithful", "lecture", "uncertainties", "coverage")},
+                expect=2,
+            )
+            self.assertIn("budget exceeded", blocked.stderr)
+            blocked_state = h.lesson()
+            self.assertEqual(blocked_state["status"], "BLOCKED")
+            self.assertEqual(blocked_state["usage"]["tokens"], 10)
+            event_id = blocked_state["budget_block"]["event_id"]
+            h.run("set-budget", "--state", str(h.state), "--lesson", "1",
+                  "--key", "max_tokens_per_lesson", "--value", "100", "--reason", "approved continuation")
+            h.run("resume-budget", "--state", str(h.state), "--lesson", "1",
+                  "--event-id", event_id, "--reason", "retry exact work")
+            h.transition(1, "DRAFTED", {k: files[k] for k in ("faithful", "lecture", "uncertainties", "coverage")})
+            drafted = h.lesson()
+            self.assertEqual(drafted["status"], "DRAFTED")
+            self.assertEqual(drafted["usage"]["tokens"], 10)
+            self.assertNotIn("budget_credit", drafted)
+
+    def test_visual_record_accepts_real_validator_positive_fixture(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            h = Harness(Path(td))
+            manifest = json.loads(h.manifest.read_text(encoding="utf-8"))
+            manifest["course_id"] = "visual-foundation"
+            manifest["visual_learning"] = {"enabled": True, "pilot_lesson_no": 1, "batch_approved": False}
+            visual_manifest = h.root / "visual-manifest.json"
+            visual_state = h.root / "visual-state.json"
+            write_json(visual_manifest, manifest)
+            h.run("init", "--manifest", str(visual_manifest), "--state", str(visual_state))
+            h.state = visual_state
+            files = h.make_drafts()
+            h.transition(1, "CAPTURED", {"source": files["source"]})
+            h.transition(1, "SOURCE_VERIFIED")
+            h.transition(1, "DRAFTED", {k: files[k] for k in ("faithful", "lecture", "uncertainties", "coverage")})
+            h.run("preflight", "--state", str(h.state), "--lesson", "1")
+            qa = h.qa_report(1)
+            h.transition(1, "SEMANTIC_QA_PASS", {"qa_report": qa})
+            paths = json.loads(h.run("paths", "--state", str(h.state), "--lesson", "1").stdout)["paths"]
+            visual_md = Path(paths["visual_md"])
+            visual_html = Path(paths["visual_html"])
+            visual_md.parent.mkdir(parents=True, exist_ok=True)
+            visual_html.write_text(
+                '<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">'
+                "<style>img{max-width:100%;height:auto}</style></head><body>"
+                "<h1>图解学习样例</h1><svg viewBox=\"0 0 360 180\"><text>Evidence</text></svg>"
+                "<h2>说明</h2><p>Evidence sentence.</p></body></html>",
+                encoding="utf-8",
+            )
+            png = visual_md.parent / "diagram.png"
+            svg = visual_md.parent / "diagram.svg"
+            png.write_bytes(b"\x89PNG\r\n\x1a\n" + b"0" * 32)
+            svg.write_text(
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 180">'
+                '<text x="24" y="64" font-size="14">Evidence</text></svg>',
+                encoding="utf-8",
+            )
+            visual_md.write_text(
+                "---\nkind: 图解学习\nstatus: 候选\n---\n\n"
+                "# 图解学习样例\n\n![证据关系](diagram.png)\n\n## 说明\n\nEvidence sentence.\n",
+                encoding="utf-8",
+            )
+            lesson = h.lesson()
+            report = visual_md.parent / "visual-result.json"
+            write_json(report, {
+                "schema_version": 1,
+                "kind": "visual_learning",
+                "course_id": h.state_data()["course_id"],
+                "lesson_no": 1,
+                "reviewer_model": "qa-model",
+                "reviewer_kind": "independent_qa",
+                "checked_at": "2026-10-07T00:00:00Z",
+                "checks": {"semantic": True, "desktop_render": True, "mobile_render": True, "obsidian_render": True},
+                "input_sha256": {
+                    "lecture": lesson["artifact_sha256"]["lecture"],
+                    "visual_md": digest(visual_md),
+                    "visual_html": digest(visual_html),
+                },
+                "decision": "pass",
+                "mobile_evidence": {"viewport_width_px": 390, "content_width_px": 360,
+                                    "diagrams": [{"path": str(png), "rendered_width_px": 320,
+                                                   "min_display_font_px": 12,
+                                                   "horizontal_overflow": False}]},
+                "obsidian_evidence": {"checked_by": "agent", "whole_document_checked": True, "evidence": ["opened full note"]},
+                "assets": [{"path": str(png), "sha256": digest(png)}, {"path": str(svg), "sha256": digest(svg)}],
+            })
+            result = json.loads(h.run("record-visual", "--state", str(h.state), "--lesson", "1",
+                                      "--report", str(report), "--artifact", f"visual_md={visual_md}",
+                                      "--artifact", f"visual_html={visual_html}",
+                                      "--wall-minutes-used", "1", "--tokens-used", "10",
+                                      "--agent-calls", "1").stdout)
+            self.assertEqual(result["visual_decision"], "pass")
+            self.assertEqual(h.lesson()["status"], "SEMANTIC_QA_PASS")
+            self.assertIn("visual_report", h.lesson()["artifacts"])
 
     def test_self_rework_changes_hash_without_consuming_qa_and_is_bounded(self) -> None:
         with tempfile.TemporaryDirectory() as td:

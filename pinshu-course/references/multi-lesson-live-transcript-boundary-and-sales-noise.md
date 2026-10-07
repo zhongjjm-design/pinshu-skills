@@ -1,108 +1,108 @@
-# Boundary Splitting, Repeated Playback, and Sales-Noise Handling for Multi-Lesson Livestream Transcripts
+# 多课直播转写的边界切分、重复回放与销售噪声处理
 
-Use this reference when one long livestream transcript contains pre-class industry judgments, two or more formal lessons, full repeated playbacks, inter-lesson transitions, post-class sales promotion, and small amounts of new knowledge embedded in the sales ending.
+适用于一份长直播转写同时包含：课前行业判断、两节或多节正式课程、整段重复回放、课间转场、课后促单，以及在销售尾段中夹杂的少量新增知识。
 
-## Objective
+## 目标
 
-Reconstruct the course’s knowledge sequence from the recording timeline while ensuring that:
+把录制时间线还原为课程知识线，同时做到：
 
-- Two formal lessons are not merged into one;
-- Valuable judgments are not discarded merely because they occur before or after class;
-- Numbers, operations, or failure processes added in a later replay are not lost;
-- Sales prompts, bookings, and livestream interactions do not enter the course body;
-- New course evidence embedded in a generally low-value sales ending is not missed.
+- 不把两节正式课程合并成一课；
+- 不因“课前/课后”位置删除高价值判断；
+- 不因重复回放删掉后一次新增的数字、操作或失败过程；
+- 不让促单、预约和直播互动进入课程正文；
+- 不因销售尾段整体低价值而漏掉夹在其中的新增课程证据。
 
-## 1. Build a Segment-Attribution Table First
+## 一、先建立片段归属表
 
-Segment by explicit semantic anchors, not fixed-minute intervals:
+按显式语义锚点切片，不按固定分钟数切：
 
-| Segment | Common Anchors | Default Treatment |
+| 片段 | 常见锚点 | 默认处理 |
 |---|---|---|
-| Pre-class industry judgment | “Before we formally begin,” “Let me first share a judgment” | If directly relevant to the series, include it as background to the next lesson; otherwise register it only |
-| Formal lesson opening | “Today we cover Lesson X,” “Last lesson… this lesson…” | New-lesson boundary; highest priority |
-| Repeated playback | The same opening, case, or steps recur | Use the first complete segment as backbone; absorb only additions from later segments |
-| Next-lesson opening | “Next comes Lesson 5,” “In the next lesson…” | Switch attribution immediately; do not continue writing into the previous lesson |
-| Sales ending | Pricing, early-bird offers, reservations, orders, community benefits | Delete by default |
-| Knowledge return inside the sales ending | Tools, numbers, or methodological boundaries reappear | Extract separately and merge into the appropriate lesson |
+| 课前行业判断 | “正式开始前”“先分享一个判断” | 与本系列主线直接相关则进入下一课背景，否则只登记 |
+| 正式课程开场 | “今天来讲第X课”“上一课…这一课…” | 新课边界，优先级最高 |
+| 重复回放 | 相同开场、案例、步骤再次出现 | 首次完整段为主干，后段只吸收增量 |
+| 下一课开场 | “接下来第五课”“下一节讲…” | 立刻切换归属，不能继续写入上一课 |
+| 销售尾段 | 价格、早鸟、预约、下单、社群福利 | 默认删除 |
+| 销售尾段中的知识回返 | 再次讲工具、数字、方法边界 | 单独摘出并并回对应课程 |
 
-An explicit lesson-number declaration takes precedence over temporal proximity, topical similarity, and old lesson titles.
+显式节次声明高于时间邻近、话题相似和旧课程标题。
 
-## 2. Handle Pre-Class Material in Three Ways
+## 二、课前内容用三分法处理
 
-### Retain in the Body
+### 保留进正文
 
-Retain material when it explains why the lesson matters, provides a real product case, establishes industry context for the later method, or contains reusable product strategy, tool boundaries, or workflow changes.
+满足以下任一条件：解释本课为何重要、提供真实产品案例、建立后续方法的行业背景，或包含可复用的产品策略、工具边界和工作流变化。
 
-Keep the instructor’s first-person voice in the faithful transcript. In the lecture, label it “course background / instructor judgment”; do not elevate it to verified fact.
+忠实稿保持讲师第一人称；讲义中标为“课程背景/作者判断”，不要升级成已核实事实。
 
-### Put Only in the Map or Fact Boundary
+### 只进地图或事实边界
 
-Use this treatment when material relates to the course but is not developed, or when it consists of market forecasts, user counts, product mergers, or penetration-rate judgments.
+与课程主线相关但没有展开，或属于市场预测、用户量、产品合并和渗透率判断。
 
-### Delete
+### 删除
 
-Delete livestream warm-up, device setup, booking prompts, requests to share, sales pressure, irrelevant household conversation, and comment-thread interaction.
+直播暖场、设备调试、预约、转发、促单、无关家庭对话和评论区互动。
 
-## 3. Separate Device Setup from Credential Exposure
+## 三、设备调试与凭据片段必须分开处理
 
-Device setup is usually removable noise. If it contains a remote-control code, pairing code, verification code, account identifier, token, connection string, or any other reusable credential, elevate it to sensitive-information handling:
+设备调试通常属于可删除噪声；其中一旦出现远程控制码、配对码、验证码、账号、令牌、连接字符串或其他可复用凭据，就升级为敏感信息处理：
 
-1. Do not repeat the original value in the faithful transcript, lecture, course map, source note, pending-confirmation list, or delivery response;
-2. If the entire segment is connection troubleshooting, delete it. If course content appears in the same segment, preserve the course meaning and replace sensitive values with `[REDACTED]`;
-3. Do not retain credentials as “details of a live failure,” and do not reveal their prefixes, suffixes, or lengths to prove they were removed;
-4. During acceptance, search semantically for pairing codes, device codes, verification codes, `token`, `secret`, `password`, remote-control references, and likely high-entropy strings. Judge every hit; only generalized boundary descriptions without original values may remain;
-5. A user posting a credential in chat does not authorize writing it to a long-term knowledge base.
+1. 不在忠实稿、讲义、课程地图、原始资料说明、待确认清单或交付回复中复述原值；
+2. 若整段只是连线排障，整段删除；若同段夹有课程信息，只保留课程语义，并把敏感值替换为`[REDACTED]`；
+3. 不把凭据作为“现场失败细节”保留，也不为证明已清理而列出其前缀、后缀或长度；
+4. 验收时搜索“配对码、设备码、验证码、token、secret、password、远程控制”等语义和可能的高熵字符串；命中后逐项判断，最终只允许保留不含原值的泛化边界说明；
+5. 用户已把凭据贴进聊天，不等于授权写入长期知识库。
 
-## 4. Use a Backbone—Increment—Pure-Duplicate Matrix for Replays
+## 四、重复回放采用“主干—增量—纯重复”矩阵
 
-1. Choose the first complete and clearest segment as the backbone.
-2. Compare every later repetition for new numbers, interface actions, prompt fragments, failures or corrections, permission boundaries, and case outcomes.
-3. Merge increments into the corresponding position in the backbone; do not retain a second duplicate explanation in the final draft.
-4. Delete pure repetition, but record in the course map’s source note that “repeated playback was merged as backbone + new details.”
+1. 选择首次完整、顺序最清楚的一段作为主干。
+2. 对后续重复逐段比较新数字、新界面动作、新Prompt片段、新失败或修正、新权限边界和新案例结果。
+3. 将增量合并回主干对应位置，不在成稿中保留第二套重复讲解。
+4. 纯重复删除，但在课程地图来源说明中登记“已按主干＋新增细节合并”。
 
-Never deduplicate in bulk solely by textual similarity. A repeated segment may add a boundary value, runtime, button name, directory, or recovery step.
+禁止仅凭词句相似批量去重；重复段落可能新增边界值、耗时、按钮、目录或失败恢复。
 
-## 5. Attribute Cross-Lesson Cases by Teaching Function
+## 五、跨课案例按教学功能归属
 
-- Put the first complete execution process in the practical lesson;
-- In the next lesson, retain only the recap needed to introduce the new concept;
-- Preserve every new step, comparison experiment, runtime, and result introduced in the new lesson;
-- Do not compress the new lesson into “continues from the previous lesson” merely because the case name repeats.
+- 第一次出现的完整执行过程归入实战课；
+- 下一课只保留为建立新概念所必需的回顾；
+- 新课新增的步骤、对比实验、耗时和结果必须完整保留；
+- 不要因为案例名称相同，把下一课压成一句“承接上一课”。
 
-## 6. Never Delete the Entire Sales Ending Mechanically
+## 六、销售尾段不能整段机械删除
 
-Before deleting the remaining sales material, scan for:
+先扫描以下高价值信号，再删除其余销售内容：
 
-- Official tool names;
-- The instructor’s actual usage data;
-- Reasons behind method design;
-- Self-corrections of earlier STT errors;
-- New limitations or applicable boundaries.
+- 工具正式名称；
+- 讲师真实使用数据；
+- 方法设计原因；
+- 前文STT错误的自我校正；
+- 新的限制条件或适用边界。
 
-If a sales segment clearly states a tool’s official name, use that clear utterance to correct earlier homophone STT. Pricing, benefits, and order language still must be removed.
+若促单段中再次清楚说出某工具正式名称，必须以该清晰口述校正前文近音STT；价格、福利和下单话术仍删除。
 
-## 7. Terminology Authority and Reversal Corrections
+## 七、术语权威与反转纠正
 
-Authority order: the user’s latest explicit correction > clear course visuals > a clear later self-restatement in the same transcript > repeated consistent speech > contextual inference.
+权威顺序：用户最新明确纠正 > 清晰课程画面 > 同一转写后段的清晰自我复述 > 多次一致口播 > 上下文推断。
 
-When the user reverses an earlier confirmation, propagate the latest wording to the faithful transcript, lecture, map, and frontmatter. Search for zero residual occurrences of the old form and verify coverage of the new form. Unless the name change is itself a course fact, do not preserve obsolete confirmation history in the body.
+用户反转旧确认时，把最新口径传播到忠实稿、讲义、地图和Frontmatter，并同时执行旧写法零残留搜索与新写法覆盖搜索。除非名称变化本身是课程事实，否则不要在正文保留过时确认痕迹。
 
-## 8. Gates and Acceptance
+## 八、门控与验收
 
-### Before Writing
+### 写入前
 
-- Identify start and end anchors for every lesson;
-- List files to create and modify;
-- Check whether target files already exist;
-- Mark cross-lesson cases and repeated segments;
-- Consolidate interface names, model names, and prompts that cannot be confirmed from text alone.
+- 明确每课起止锚点；
+- 列出新建与修改文件；
+- 检查目标文件是否存在；
+- 标出跨课案例和重复片段；
+- 集中列出纯文本无法确认的界面名、模型名和Prompt。
 
-### After Completion
+### 完成后
 
-- Both draft files exist;
-- Filename, H1, frontmatter, and map title agree;
-- The faithful transcript uses first person, and editorial risk notes are separate callouts;
-- Old STT forms have zero residual occurrences;
-- Numbers, commands, directories, prompts, and case outcomes are covered;
-- The map explains how repeated playback was handled;
-- Pending items are grouped by lesson, and status remains draft until the list is empty.
+- 双稿文件真实存在；
+- 文件名、H1、Frontmatter和地图标题一致；
+- 忠实稿第一人称，编辑风险说明独立成Callout；
+- 旧STT写法零残留；
+- 数字、命令、目录、Prompt和案例结果均有覆盖；
+- 地图说明重复回放的处理方式；
+- 待确认项按课集中列出，未清零时状态保持草稿。

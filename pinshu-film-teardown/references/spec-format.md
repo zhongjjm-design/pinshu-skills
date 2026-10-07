@@ -1,61 +1,61 @@
-# Config File (`spec.py`) Field Reference
+# 配置文件（spec.py）字段说明
 
-Everything a film says lives in `spec.py`; how the film is made lives in this skill's scripts. `new_project.py` copies a commented template into the project.
+一条片子讲什么全在 `spec.py`；怎么做在本 Skill 的脚本里。`new_project.py` 会复制一份带注释的模板。
 
-## Required
+## 必填
 
-| Field | Form | Notes |
+| 字段 | 写法 | 说明 |
 |---|---|---|
-| `VO_SRC` | `"voice/gemini_Charon"` | Narration source folder (relative to the project): the output of `gen_voice.py`, or the folder written by `patch_voice.py` |
-| `S` | Scene list | See below |
-| `TITLE` | `{"d": 3.4, "src": 0.0, "t1": "...", "t2": "...", "sub": "...", "by": "..."}` | Opening title page: duration, which second of the original film is used as the background, two title lines, a small red label, and the byline |
-| `END` | `{"kicker", "title_html", "author", "author_clean", "qr", "qr_text"}` | End card. `author_clean` is the byline for the Douyin edition (it must not contain WeChat Official Account wording); `qr` is the QR code image under `wide/assets/img/` |
-| `BGM` | `{"file": "....mp3", "loop": (b1, b2), "cadence": (dominant chord seconds, tonic chord seconds)}` | Music. The loop seam means "when playback reaches b1 seconds, jump back to b2 seconds"; the harmony at both points must be nearly identical. `cadence` is the position of the track's own closing cadence |
+| `VO_SRC` | `"voice/gemini_Charon"` | 配音源目录（相对项目）：`gen_voice.py` 的输出，或 `patch_voice.py` 修补后的目录 |
+| `S` | 场景列表 | 见下文 |
+| `TITLE` | `{"d": 3.4, "src": 166.0, "t1": "…", "t2": "…", "sub": "…", "by": "…"}` | 开头主题页：时长、原片第几秒做背景、两行标题、红色小标签、署名 |
+| `END` | `{"kicker", "title_html", "author", "author_clean", "qr", "qr_text"}` | 片尾卡。`author_clean` 是抖音版署名（不能出现"公众号"）；`qr` 是 `wide/assets/img/` 下的二维码图 |
+| `BGM` | `{"file": "….mp3", "loop": (b1, b2), "cadence": (属和弦秒, 主和弦秒)}` | 配乐：接缝是"播到 b1 秒跳回 b2 秒"，两处和声要几乎一样；`cadence` 是原曲自己的收尾和弦位置 |
 
-## Scene list `S`
+## 场景表 `S`
 
-Each item is `(type, narration text, params)`. **Joining the narration of all scenes in order must reproduce the text of each section in `sections.json` exactly, character for character** (`build.py` stops with an error if it does not).
+每一项是 `(类型, 旁白原文, 参数)`。**按顺序把各场景的旁白拼起来，要和 `sections.json` 各段原文逐字一致**（`build.py` 对不上会直接报错）。
 
-| Type | Purpose | Common params |
+| 类型 | 用途 | 常用参数 |
 |---|---|---|
-| `full` | Original film full screen with narration | `src` second in the original film; `over` small label at the top right; `clips` multiple shots |
-| `comments` | Comment-section screenshots (over a blurred original film) | `src`; uses `COMMENTS` |
-| `ask` | Large-text question (over a blurred original film) | `src`; uses `ASK`. Mind the rules: a dark text card held too long makes viewers swipe away, so use real footage whenever possible |
-| `chapter` | Chapter card (the first 2.9 seconds are the card, then footage) | `no` number, `t1` title, `t2` subtitle; the first item in `clips` must be a video (it becomes the blurred background) |
-| `story` | One person's story | `n` number, `tag` label, `bite` speaker bite name; **a story with a `bite` must be the first scene of its section** |
-| `chips` | Key points that pop in one by one | `head` heading, `items` list `[(display text, word that triggers the pop), ...]` |
-| `posters` | Poster wall or a single poster | Uses `POSTERS` (starting from `wide/assets/img/hd/p01.jpg`) |
-| `end` | End card | Narration is an empty string; params are `{}` |
+| `full` | 原片全屏 + 旁白 | `src` 原片秒数；`over` 右上角小标签；`clips` 多镜头 |
+| `comments` | 评论区截图（模糊原片做底） | `src`；用到 `COMMENTS` |
+| `ask` | 大字提问（模糊原片做底） | `src`；用到 `ASK`。注意规矩：暗底字卡挂太久会被划走，能用真实画面就别用 |
+| `chapter` | 章节卡（前 2.9 秒是卡，之后是画面） | `no` 编号、`t1` 标题、`t2` 副标题；`clips` 的第一个必须是视频（做模糊底） |
+| `story` | 一个人的故事 | `n` 编号、`tag` 标签、`bite` 当事人原声名；**带 `bite` 的故事必须是一段话（section）的第一个场景** |
+| `chips` | 要点逐个弹出 | `head` 标题、`items` 列表 `[(显示文字, 念到哪个词弹出), …]` |
+| `posters` | 海报墙或单张海报 | 用到 `POSTERS`（`wide/assets/img/hd/p01.jpg` 起） |
+| `end` | 片尾卡 | 旁白为空字符串，参数 `{}` |
 
-### Writing shots in `clips`
+### 镜头 `clips` 的写法
 
-| Form | Meaning |
+| 写法 | 含义 |
 |---|---|
-| `12.5` | The original film from second 12.5 (cut to it at the start of the scene) |
-| `{"src": 12.5, "at": "<word>"}` | Cut to second 12.5 of the original film when `<word>` is spoken (the cut happens 0.12 s early). `<word>` must appear in this scene's narration |
-| `{"f": "4801", "ms": 2.0, "at": ...}` | Stock footage `wide/assets/stock/4801.mp4`, starting at second 2 |
-| `{"img": "hd/p01.jpg", "at": ..., "full": True}` | An image; `full` fills the whole screen (do not use a card on a black background) |
-| `{"gfx": "brand", "at": ...}` | An animated card whose content is defined in `GFX` (name -> HTML; the wrapper gets the class `gk-<name>`, and only `gk-recap` has built-in styles, so style other cards inline in their HTML); `recap` is generated automatically from `RECAP` and accepts `"t2at": "<word>"`, the word at which the recap line draws (default: 2.2 s before the clip ends) |
-| `{"flip": 16, "at": ...}` | A fast poster flip |
+| `12.5` | 原片第 12.5 秒起（场景开头就切到它） |
+| `{"src": 12.5, "at": "某个词"}` | 念到"某个词"时切到原片第 12.5 秒（提前 0.12 秒切）。"某个词"必须出现在本场景旁白里 |
+| `{"f": "4801", "ms": 2.0, "at": …}` | 外部素材 `wide/assets/stock/4801.mp4`，从第 2 秒起 |
+| `{"img": "hd/p01.jpg", "at": …, "full": True}` | 图片，`full` 铺满全屏（不要用卡片加黑底） |
+| `{"gfx": "brand", "at": …}` | 动画卡，内容在 `GFX` 里写（名字 → HTML，外层自动带 `gk-<名字>` 样式名；只有 `gk-recap` 自带样式，其他卡把样式写在 HTML 里）；`recap` 由 `RECAP` 自动生成，可加 `"t2at": "<词>"`：念到这个词时画出回顾卡的横线（不写就在镜头结束前 2.2 秒） |
+| `{"flip": 16, "at": …}` | 海报快速翻页 |
 
-Flags on a shot: `"card": True` marks the original film's own title card (not enlarged, centered, no frosted caption bar); `"hideover": True` marks an original-film segment that carries its own numerals, so the story number is hidden there; `"quote": "<comment text with a [bold part]>"` overlays a comment card (the name line beside the avatar comes from `COMMENTS["meta"]`, so `COMMENTS` must be filled in when `quote` is used).
+镜头上的标记：`"card": True` 原片自己的字卡（不放大、居中、不铺字幕磨砂条）；`"hideover": True` 这段原片自己带数字，故事编号在这里收起；`"quote": "评论原文，[加粗部分]"` 叠评论卡片（卡片上的头像旁文字取 `COMMENTS["meta"]`，用 quote 就必须写 `COMMENTS`）。
 
-## Optional
+## 选填
 
-| Field | Notes |
+| 字段 | 说明 |
 |---|---|
-| `BITE_TEXT` / `BITE_CUTS` | Speaker bites: the exact words (used for captions; check them character by character) and their start and end seconds in the original film (used by `prep_bites.py`) |
-| `SPLITS` | `[(phrase, seconds)]`: add a pause in the real silence just before this phrase |
-| `SEC_TAIL` | `{section number: seconds}`: silence after a section ends, default 0.4; 0.6 to 1.2 at topic changes |
-| `PATCH` | Local slow-down of the narration (`patch_voice.py`); the time points must be measured against that particular take |
-| `COMMENTS` / `ASK` / `POSTERS` / `RECAP` / `GFX` | Fill in only when the matching scene type is used |
-| `WHOOSH_AT` / `CHIME_AT` | Extra transition whooshes and chimes, by scene index; **indices shift when scenes are added or removed, so update them** |
-| `END_BG` | End-card background color, default `#b3161b` |
-| `VERTICAL` | Top band of the vertical edition: `{"kicker": ..., "title": [two lines]}`; an empty `title` hides the title band |
-| `COVER` | Cover: which frame of the original film, the face position (forehead to chin), the hook line, font size, and the horizontal and vertical crops (see the top of `make_cover.py`) |
-| `FRAME` | Original-film framing: `{"zoom": (1.12, 1.19), "origin": "0% 0%", "subband_top": 878}`. `zoom` is the scale at the start and end of each original-film shot (a slow push); `origin` is the corner the scaling grows from (`"0% 0%"` keeps the top-left fixed and crops the right and bottom, which pushes a logo out of frame); `subband_top` is the top edge, in pixels, of the frosted strip over the film's burned-in subtitles, or `None` when the film has none. The defaults are the pilot film's values; **measure every new film from a few frames before filling this in** |
-| `BITES_DIR` / `OUT_VOICE_SUBDIR` | Compatibility settings for older projects; new projects leave them unset |
+| `BITE_TEXT` / `BITE_CUTS` | 当事人原声：原话（字幕用这个，要逐字核对）和在原片里的起止秒数（`prep_bites.py` 用） |
+| `SPLITS` | `[(短语, 秒)]`：在这个短语前的真实静音处加停顿 |
+| `SEC_TAIL` | `{段号: 秒}`：一段说完后的留白，默认 0.4；换话题处 0.6 到 1.2 |
+| `PATCH` | 局部放慢配音（`patch_voice.py`），时间点要对着那一遍配音实测 |
+| `COMMENTS` / `ASK` / `POSTERS` / `RECAP` / `GFX` | 对应场景类型用到时才填 |
+| `WHOOSH_AT` / `CHIME_AT` | 额外转场音、"叮"一声，按场景序号；**增删场景后序号会变，记得跟着改** |
+| `END_BG` | 片尾卡底色，默认 `#b3161b` |
+| `VERTICAL` | 竖版顶部 `{"kicker": …, "title": [两行]}`；`title` 为空就不显示标题带 |
+| `COVER` | 封面：原片哪一帧、脸的位置（额头到下巴）、钩子句、字号、横竖版裁法（见 `make_cover.py` 开头） |
+| `FRAME` | 原片画面适配：`{"zoom": (1.12, 1.19), "origin": "0% 0%", "subband_top": 878}`。`zoom` 是原片镜头开始和结束时的放大倍数（慢推）；`origin` 是从哪个角放大（`"0% 0%"` 左上角不动，右边和下边被裁，用来把角标推出画面）；`subband_top` 是遮原片自带字幕的磨砂条上沿（像素），原片没有自带字幕就写 `None` 关掉。不填就是好想来那支片子的值；**换新原片先抽几帧量过再填** |
+| `BITES_DIR` / `OUT_VOICE_SUBDIR` | 老项目兼容用（好想来是 `vo9/bites` 和 `vo9`）；新项目不用填 |
 
 ## sections.json
 
-`{"sections": [{"j": 0, "text": "<first section narration>"}, ...]}`: one section is one topic. The whole script is synthesized in one pass and then split by section. The section number `j` is also the key used in `SEC_TAIL`.
+`{"sections": [{"j": 0, "text": "第一段旁白……"}, …]}`：一段是一个话题，整篇一次合成后按段切开。段号 `j` 也是 `SEC_TAIL` 的键。

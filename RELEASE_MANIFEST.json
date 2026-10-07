@@ -4,7 +4,7 @@
     ".git/**",
     "RELEASE_MANIFEST.json"
   ],
-  "file_count": 237,
+  "file_count": 278,
   "files": [
     {
       "bytes": 3590,
@@ -22,9 +22,29 @@
       "sha256": "25e2b38b635aeee1e3607c6e98fe31191a1158baa15a37355f9bf8f1facbb233"
     },
     {
+      "bytes": 628,
+      "path": "CONTRIBUTING.md",
+      "sha256": "aba53a7d1b2208305da5565ae0a0f301652324ee926ff89a4d415bfbd2b09f8c"
+    },
+    {
+      "bytes": 2857,
+      "path": "LICENSE",
+      "sha256": "f05efcb1ba1e663492c8ba47b3c3234d901eee20968c6caaf8d8e0ed10860bd1"
+    },
+    {
+      "bytes": 2321,
+      "path": "NOTICE.md",
+      "sha256": "e3408825e32086780b3f79547d71070f72d0abda45394fd7cfc4991634c5269d"
+    },
+    {
       "bytes": 1512,
       "path": "PROVENANCE.md",
       "sha256": "04182efe2b47d5875f699d4c5fb30aa14ef16d7fa0d2334e46da221e85dcc91e"
+    },
+    {
+      "bytes": 973,
+      "path": "PUBLISHING.md",
+      "sha256": "0eac394a6e87a9d1f2ccbc7fe57bc319b3a09f356bb90135ca573c363db2c370"
     },
     {
       "bytes": 5940,
@@ -32,14 +52,19 @@
       "sha256": "94c684812d34e4e189816fb28305f1ac63483fb8001216b911317bdd4e196533"
     },
     {
-      "bytes": 15496,
+      "bytes": 18648,
       "path": "README.md",
-      "sha256": "065934bc0eb3f83d1904063400c08db4b9e59311da533e60c1968e153b2f55ba"
+      "sha256": "d5bfddad74b5db15517acc83e4eb3dea232744bbd3bf38342fff02930efd23d2"
     },
     {
-      "bytes": 21148,
+      "bytes": 1984,
+      "path": "README.zh-CN.md",
+      "sha256": "f70c44342bf0deb857bd275220e8130d71cd6eee4d0fd53784d9cc71ac0e88f7"
+    },
+    {
+      "bytes": 28202,
       "path": "install.sh",
-      "sha256": "5b94d4ec499a43e4d98c8c68adfb9124f3c8bcfd10ee5084f2b1522b23aa3fe8"
+      "sha256": "c0d199fde037a61e2e0bbdd4d0f819e593a46dbb7372a9d384b293630c53465b"
     },
     {
       "bytes": 30,
@@ -52,14 +77,14 @@
       "sha256": "eb8b4d30f744ab376839690a1d2ef1fa762a7ebd4d90c2bd6e58feab2bcfd67d"
     },
     {
-      "bytes": 2287,
+      "bytes": 2356,
       "path": "pinshu-business-graphics/README.md",
-      "sha256": "9db28c2a489ae0eb31fb69d2536caf2e6fd2417c714e316b0d9bd20f511650e5"
+      "sha256": "3d4f608c31f446710d5b8e511ade400fc53dfe62e88975dec457becef70a1405"
     },
     {
-      "bytes": 6082,
+      "bytes": 5777,
       "path": "pinshu-business-graphics/SKILL.md",
-      "sha256": "62eb9b81d97266bdb8ae89ae2009b969ac644e8ed53ee32fe2715a7cee57e93e"
+      "sha256": "8ee51c3b5fa1c535123854414207439565946af8cf73b1e2e8c761a3c25015a0"
     },
     {
       "bytes": 6,
@@ -97,24 +122,24 @@
       "sha256": "40ce0ac54f29fda0ada94e76f45cfa3482e6710a636646a9a7f0586b811ffb50"
     },
     {
-      "bytes": 2298,
+      "bytes": 2370,
       "path": "pinshu-business-graphics/references/chinese-modernism.md",
-      "sha256": "d86881e7f1544b18f4cf7409e8c4a1013142ade69ed2d3519e84cd3d18ec3208"
+      "sha256": "d147d91fb1338d3d593eb9d80ade1c9475b537c57db676add10a73b3d4c9c9cf"
     },
     {
-      "bytes": 2784,
+      "bytes": 2854,
       "path": "pinshu-business-graphics/references/data-journalism.md",
-      "sha256": "2fdc6741753d8cd04c0bd6edc550c4af27c1eac470d0cef17a38d41c80c77d53"
+      "sha256": "84f11727007b6dabd0c73c2b0e4b1e13c51a5cc908e82568718df2eaab354a73"
     },
     {
-      "bytes": 2301,
+      "bytes": 2348,
       "path": "pinshu-business-graphics/references/editorial-collage.md",
-      "sha256": "8e9f82a5828a056a8383df54e696c9d619368367932ec959276279a7673c3622"
+      "sha256": "fd87bab80d530f16249e8f4eaf0b5a84fa296661c61df5528cd3cb65bae6492d"
     },
     {
-      "bytes": 2356,
+      "bytes": 2417,
       "path": "pinshu-business-graphics/references/engineering-blueprint-narrative.md",
-      "sha256": "57438a2613198e446be59674ce212b8f95653f432798451d3e50487f9d563ac9"
+      "sha256": "3c700e4a523dea6b2884bef7ae60436738f482a9de6f15d6b3848a2716b70fc4"
     },
     {
       "bytes": 1581,
@@ -132,24 +157,24 @@
       "sha256": "639b97f452e78f25aa42b23ba4bc906339d0203fa749e6c1da00bfc6f3751ded"
     },
     {
-      "bytes": 2825,
+      "bytes": 2426,
       "path": "pinshu-business-graphics/references/strategic-map.md",
-      "sha256": "9ab7450cdd2984d2f27efcb0a3326af909643418205852e753448b70c0116fcf"
+      "sha256": "5fb3c12bc651f208d2103a547bd3078631ee00b4bcb244719b2d5cb78dd06928"
     },
     {
-      "bytes": 2284,
+      "bytes": 2332,
       "path": "pinshu-business-graphics/references/structural-section.md",
-      "sha256": "46c9193bd4beaa49e2bea8eb154c6ba9bf68068a0094192a30df1c94a8fcb155"
+      "sha256": "111a9acf883f5502cc6e4ea0c1ad6160b9f18d73d4704919a7f1eeee2045a482"
     },
     {
-      "bytes": 2463,
+      "bytes": 2534,
       "path": "pinshu-business-graphics/references/typographic-metaphor.md",
-      "sha256": "efa03a30de8ee168218777b6c3ede603cf3782ea74fe09e07a69b1995fa0dbaf"
+      "sha256": "ce036a61ea91d353e45a64e9d35ea6fc164431da6824656ca0af1867803d3eff"
     },
     {
-      "bytes": 1778,
+      "bytes": 2008,
       "path": "pinshu-business-graphics/references/visual-qa.md",
-      "sha256": "22b98cd4b0af638b340dc0f7371e506f6b6328089a3088a0e5633b3e4b42f5c5"
+      "sha256": "95ae88a55a036e62515c6de323ea42da5faebc3a45e0738c6f85217c886dc6e2"
     },
     {
       "bytes": 11919,
@@ -157,9 +182,9 @@
       "sha256": "be1ede0d18c3bf2440e12c6f0d159ab566da9d9993951b87e74511bbf1f05a5c"
     },
     {
-      "bytes": 11362,
+      "bytes": 10536,
       "path": "pinshu-content-assets/SKILL.md",
-      "sha256": "81f311684b9685578473bd12e62f8a32be53bc6adad283dc44ec8ddcffba1039"
+      "sha256": "ad3e902390c5462a8d54ee7cc1b62b065694282f4f5ca7db73600d9809ee8b68"
     },
     {
       "bytes": 1027,
@@ -167,14 +192,14 @@
       "sha256": "b3893b20be5949811289edf9f4df0f95c95161010876b9ddc0f16ae7b3d1207a"
     },
     {
-      "bytes": 4186,
+      "bytes": 3693,
       "path": "pinshu-content-assets/references/single-session-and-series-workflow.md",
-      "sha256": "4fc92a6a67006a72690e79d70380ce3c288132356481751423d0916f0980a515"
+      "sha256": "e9483fb5a8bf06473478834858641e8a054f32165ccc3536f852e440bc7e3492"
     },
     {
-      "bytes": 5865,
+      "bytes": 5231,
       "path": "pinshu-content-assets/references/source-verification-risk-and-handoff.md",
-      "sha256": "50f4eb528017755b26f0ae71ea6f92ca2204960d355e911fbf5babe0d0ac2806"
+      "sha256": "e6be61f73dbd2461984320b44cd6f70b8fb08672c7168987ece7e09dbbf9dc54"
     },
     {
       "bytes": 4901,
@@ -182,14 +207,24 @@
       "sha256": "8ebe7f7ef787202bf167ff8f93a2a49db4d591965a84d8b215386a339b2d6f3a"
     },
     {
+      "bytes": 62496,
+      "path": "pinshu-content-assets/scripts/validate-propagation-assets.py",
+      "sha256": "6dca4fe76bf41924cb2ff7d916a2d47daa6c4ec489accd0001e04a5ccea6afd6"
+    },
+    {
+      "bytes": 61526,
+      "path": "pinshu-content-assets/tests/test_content_assets_legacy.py",
+      "sha256": "0017f1fe95c6021ae6cdd2b9096a669874f86448caa90e78ebc43d9c109448ea"
+    },
+    {
       "bytes": 2961,
       "path": "pinshu-content-assets/tests/test_route.py",
       "sha256": "d9e44290aa844f0586b0dc575724c147b323061847b958cddbd757f0b807ed5a"
     },
     {
-      "bytes": 14442,
+      "bytes": 18709,
       "path": "pinshu-course/SKILL.md",
-      "sha256": "9e27e06e655db29b4190f2ea1310d40adb7fb68e029c5a16986c5cf60432edf3"
+      "sha256": "b4d1e2991bc6cc4808aa805605ce077d99349ec2d9db944aa1c7f376c5813f64"
     },
     {
       "bytes": 705,
@@ -197,29 +232,29 @@
       "sha256": "d986d7222ca381051412eb511e9c08f9a2b977de763618b67f38b99361e417a5"
     },
     {
-      "bytes": 4918,
+      "bytes": 3750,
       "path": "pinshu-course/references/apple-silicon-batch-course-transcription.md",
-      "sha256": "5d5e719dfd44cdf27669931ea6a811a1615d13906bbb343acff973633b7ad5d2"
+      "sha256": "f61335f9420febc5d43578a6448d3e09b11b95c9d66ae8deb3b00253b5526c74"
     },
     {
-      "bytes": 3328,
+      "bytes": 2544,
       "path": "pinshu-course/references/approved-course-file-write-and-readback.md",
-      "sha256": "1d7150731686e24f9e4151171993aecad4f0a809b4dc8999f229d678aab2e2df"
+      "sha256": "90946d3dd43e391830fa4dd6b8d8c7f5ee9371fd8b7a3410c577763ec8a4e5cb"
     },
     {
-      "bytes": 6741,
+      "bytes": 5169,
       "path": "pinshu-course/references/audio-course-ingestion-and-series-separation.md",
-      "sha256": "60682c61a4e9b9dbf4c37c5ff7c876f4954062a1260032572752b15203264492"
+      "sha256": "cfd6b0398ed78298a14cdeccb193a9fdd72497ce773958a03fa5e40b2fa9a2a3"
     },
     {
-      "bytes": 9192,
+      "bytes": 7083,
       "path": "pinshu-course/references/companion-course-materials-and-visual-references.md",
-      "sha256": "45d181de7600c6cdb57e26e66471a2ae06ae0bf334b6ae15ea71b35b2b7ee8a5"
+      "sha256": "133eb9032e0f7855e6484af0cb308e314e5f84a7fc45f0285226f016f78241c7"
     },
     {
-      "bytes": 5186,
+      "bytes": 4126,
       "path": "pinshu-course/references/concurrent-course-write-safety.md",
-      "sha256": "dbbf6ea0088fbab514aa32f6562119fa61801e449a16889095e228f3225b777c"
+      "sha256": "d8aaedcc9def3c948670ecfa3f14d8929a3f78de9a0944f49313e810584ed0ff"
     },
     {
       "bytes": 1827,
@@ -227,9 +262,9 @@
       "sha256": "8f16585a83c7e7d650401fdcd32a50d55eeb0c62e284e7059f02aa66cde0a200"
     },
     {
-      "bytes": 2229,
+      "bytes": 2736,
       "path": "pinshu-course/references/course-to-social-content-reuse.md",
-      "sha256": "4fd5d908ce0fe179eddb02bb51cd6ceba9ccc3ae5c1f543390e44fe3a6e3affe"
+      "sha256": "55d03c864648aa632f93c3864f619d810292356f366ecb989383619d7bd9cdad"
     },
     {
       "bytes": 6029,
@@ -237,99 +272,99 @@
       "sha256": "ec6daa9fbee30f2401284a9e607849f0840be0e5e5e142c7a92c306084619d70"
     },
     {
-      "bytes": 7055,
+      "bytes": 5538,
       "path": "pinshu-course/references/cross-course-horizontal-synthesis.md",
-      "sha256": "2e02731724a3dc93a224d0e881c7c0f7e594c64660b5e086f39156606753f346"
+      "sha256": "52986a85592345661c1de2ad21643b770a892b31a2885f462d3f86ce26fa6634"
     },
     {
-      "bytes": 8964,
+      "bytes": 6758,
       "path": "pinshu-course/references/dual-draft-semantic-coverage-and-promotion-qa.md",
-      "sha256": "cd6f1ee50f56661c09297fd5e757e6de3227a65d2e12b145d805fe869becdca6"
+      "sha256": "9f5c98d3068aaf20a794b8bfe79efd9342094dc0cea4ef021703beb9117dd818"
     },
     {
-      "bytes": 4048,
+      "bytes": 2855,
       "path": "pinshu-course/references/formal-course-packaging-and-cleanup.md",
-      "sha256": "2f601ec9eb16ab14b6d077d7656c121eccada9793148f2ae7b823dd01886a26c"
+      "sha256": "e93a5844325e2e667f79f87b80ef5aa4cbc71d29bd76cb7b2a01a6eecb84aff7"
     },
     {
-      "bytes": 9435,
+      "bytes": 7162,
       "path": "pinshu-course/references/high-density-platform-course-processing.md",
-      "sha256": "ab2d2fd8cdc7207b97bb12a3f1eec5290b58f2ba37b1314bcfa6e9bc6d4d2cc6"
+      "sha256": "08017d1acf15df38ac0d7ae72a5f65cb284b7815432d9768c183ed44c3531bb5"
     },
     {
-      "bytes": 5874,
+      "bytes": 4473,
       "path": "pinshu-course/references/horizontal-knowledge-base-final-qa.md",
-      "sha256": "411c83225af07dc4c0a613e02618df51976a099e874456f0a6ceb5561a311436"
+      "sha256": "954b966cdd166be34791dce79ae5e2f2e9def96ffd061ea057aca3ba0880520a"
     },
     {
-      "bytes": 4922,
+      "bytes": 3685,
       "path": "pinshu-course/references/identity-and-persona-course-processing.md",
-      "sha256": "e1078d367177cfaa5134e283352620011baba1622cdb2f063a0f2051de08069b"
+      "sha256": "0064840ce1b319e3322dc7d6a8b074fc5eee16bf488310d8f384b20fac547b21"
     },
     {
-      "bytes": 8474,
+      "bytes": 6551,
       "path": "pinshu-course/references/late-gap-closure-and-module-finalization.md",
-      "sha256": "293ea9c1996dbfca8d02ae82507fd11d7036439e021035023500f15659ec5c5d"
+      "sha256": "70168ae11a91b89b66df964e62c0488072cc793010d979a38613cc97fc454110"
     },
     {
-      "bytes": 7924,
+      "bytes": 6069,
       "path": "pinshu-course/references/lesson-asset-attribution-and-recovery.md",
-      "sha256": "0006f2b5db26d1f56c90bd93abc0ad540458a7d2cbba570b0f8c5807f0eac798"
+      "sha256": "90a0a6c305deb49a554f9b9b5e8cdbdc3c7b76f91ca8665d2a7e24ab512ce404"
     },
     {
-      "bytes": 10290,
+      "bytes": 7504,
       "path": "pinshu-course/references/long-course-series-workflow.md",
-      "sha256": "c12c893d0a8c08ce4531a5f11d711074edd6ecdce2328248c7601ad5513574fc"
+      "sha256": "98667a9e9a230ed224405dc70faee46e99afe5948cd7a6f3b6513be8254a8d84"
     },
     {
-      "bytes": 5028,
+      "bytes": 3832,
       "path": "pinshu-course/references/long-lesson-chunked-write-map-and-sequence-qa.md",
-      "sha256": "8522d1243d71c9d8798bd117902c844b49077bab534af5f2d5c701b8fcb456e0"
+      "sha256": "8150825df6567727e30ab3f9f22a4f4f73cdb07d5b0ceb0699436e8187b8ddae"
     },
     {
-      "bytes": 3174,
+      "bytes": 2474,
       "path": "pinshu-course/references/markdown-spacing-and-late-agent-output-control.md",
-      "sha256": "b6a677600ca28c968d51ecec7536addd9f7d67a52e0eb84819372c75e9fd3c58"
+      "sha256": "4a8664cacfa11de744876f7bf02293d995131fc52574fe8c44df3a4f5811e7c7"
     },
     {
-      "bytes": 6598,
+      "bytes": 4967,
       "path": "pinshu-course/references/mixed-recording-order-and-overlap-dedup.md",
-      "sha256": "66b0792a31e004d18bb79946a72c6296703634ca7768d72b4e5c35e2884b2763"
+      "sha256": "751ea1ce3b0ccf34cace656ca915cf773691ff27864f9abcaf45e99925e38878"
     },
     {
-      "bytes": 6815,
+      "bytes": 5170,
       "path": "pinshu-course/references/module-closure-package-and-ai-course-normalization.md",
-      "sha256": "32b4973fe3a4b3f447b4e484a1ad48e53ae9471f32e3a955ad9552958004126c"
+      "sha256": "a8788de32727bf8e7063e1973599299391df32880419e98871f1885b0ee97561"
     },
     {
-      "bytes": 7953,
+      "bytes": 6020,
       "path": "pinshu-course/references/module-entry-and-irreversible-framework-lessons.md",
-      "sha256": "c5ffb6901aa5946d70554d03f14d4de91e94d734307fe166953be0ba841089ce"
+      "sha256": "46b9d193ebc63e5a20b0e44d26f950be624312a10fb9819a1d295d67cbf06b99"
     },
     {
-      "bytes": 4681,
+      "bytes": 3564,
       "path": "pinshu-course/references/multi-conversation-course-identity-gate.md",
-      "sha256": "6fa2d3cbc92f662930d14f3c1569bfe63f4a302c6594a6d1691ecd85d499ff9c"
+      "sha256": "e0be6665010849b5595608be32d7a33ce83326d6cc3b875167b35c343016d809"
     },
     {
-      "bytes": 7208,
+      "bytes": 5556,
       "path": "pinshu-course/references/multi-event-course-archive-taxonomy-and-safe-move.md",
-      "sha256": "3230a0056f4548bcc125e912f938df715ee14907edca7fccb343bbd0bfef85ee"
+      "sha256": "e476ca4bded16cf7272073ccc3539b37e66d1204ce5e57c5a82e88d7d42801fe"
     },
     {
-      "bytes": 5051,
+      "bytes": 3910,
       "path": "pinshu-course/references/multi-image-ingestion-and-final-verification.md",
-      "sha256": "5ca4875d1434d89445404ccf6f2a80ff8b09ce1f69d1b33a0439a22af35a4d74"
+      "sha256": "d7298b6b0df1c553ef9236c9ccbe2500cbf984055b570d128f50e8d1571baf43"
     },
     {
-      "bytes": 7101,
+      "bytes": 5514,
       "path": "pinshu-course/references/multi-lesson-live-transcript-boundary-and-sales-noise.md",
-      "sha256": "425806bbeca9c1d6e5c087d0d0e70972c4cb62e06c8f7fbb6bd64e3f89b389dd"
+      "sha256": "55b89289cc31ae8e7ad49a26cc56d468433c106a9bfd90d47e833eb2b57a8f7f"
     },
     {
-      "bytes": 3782,
+      "bytes": 2975,
       "path": "pinshu-course/references/non-contiguous-lesson-ingestion-and-map-state.md",
-      "sha256": "11a09c900268145d42340401279fbfeb8d2e8063c6a3a42ef151349ce2d0a5ae"
+      "sha256": "a0513bfe27706d985d22b8c0d3f7f546b2c92339c1b37540bb78c3bc0d5a5e9c"
     },
     {
       "bytes": 5318,
@@ -337,14 +372,14 @@
       "sha256": "b31b1a6aa0eced8edf55c707fa47664c9f467b4e9652ef012211a857b53aa519"
     },
     {
-      "bytes": 17940,
+      "bytes": 12660,
       "path": "pinshu-course/references/private-domain-course-compliance-and-permission.md",
-      "sha256": "281656ccf53f6ee35b9f6fcb553ceca583a6cf087be7b1ff451bd07020920abd"
+      "sha256": "8dec514de6f4077cd353c88307bee20c2473e9fa1ce3860ebbd84ef79a87573b"
     },
     {
-      "bytes": 7497,
+      "bytes": 5245,
       "path": "pinshu-course/references/product-marketing-course-risk-and-module-closure.md",
-      "sha256": "827f5348aadd389f7bd832516163e413e32ff7b8f7c6d1115aaeb2f93f3bef86"
+      "sha256": "d3ebea644103077d745e18038af41191a90cd7617aec8cbc097883e5fb97566f"
     },
     {
       "bytes": 5929,
@@ -352,89 +387,104 @@
       "sha256": "314be4af7039bc508e252ff761c142b1c84687e1f185147578142785d2b67a50"
     },
     {
-      "bytes": 16041,
+      "bytes": 12394,
       "path": "pinshu-course/references/pure-text-high-throughput-lesson-processing.md",
-      "sha256": "5b4b99178370b8b9b78765f6dfa8be0db24c6449140a02bd6916b115a454533f"
+      "sha256": "af4400c46c4f52f6e877d9a1c8ab8dc4ad1f3da63b6b7740d18105899309122e"
     },
     {
-      "bytes": 9513,
+      "bytes": 7145,
       "path": "pinshu-course/references/readability-first-long-course-markdown.md",
-      "sha256": "e9e422acada1c01895f82d94c7c464e0203153e014c493fdffcd95b3a050f1e5"
+      "sha256": "faa2fc2be12493cf76f1185e4cb3d67893d6ac16e9894e619e20e8f2b6f10a21"
     },
     {
-      "bytes": 4724,
+      "bytes": 3618,
       "path": "pinshu-course/references/relational-consistency-and-missing-visuals.md",
-      "sha256": "fe8eb6dde702c213ae118b1fb8155ff7330e80468adefbec4bd5690dea9cd47d"
+      "sha256": "15f23f29dadbd7bbfa9e86d2453bc0ed821c7732d4cbda1c0386ee541e225486"
     },
     {
-      "bytes": 7846,
+      "bytes": 6009,
       "path": "pinshu-course/references/relationship-group-public-issue-course-processing.md",
-      "sha256": "2a0ea523e2a89ccce5dd16cb8f39fe6d8576a695c8824461a9f1863fda1082fa"
+      "sha256": "f2bf45312f5c672ae1a63fb1cc7828d0989d6df21dc4cdb7b1f8566aa043171b"
     },
     {
-      "bytes": 5101,
+      "bytes": 4095,
       "path": "pinshu-course/references/repeated-playback-transcript-dedup-and-term-authority.md",
-      "sha256": "bf4b5da16186c2a435aafd8cb1d17c7408d8497ab954b2bd4536a7563d6a6e7d"
+      "sha256": "3b2f66d793e48b0cb4111656527b5da13cad5c5374bdbe01dd68840a0fb2f612"
     },
     {
-      "bytes": 5584,
+      "bytes": 4288,
       "path": "pinshu-course/references/resume-interrupted-batch-course-work.md",
-      "sha256": "e6a8d5a7bc1b7c65e79134b9c20e4f54804f940e842dbcbda3096c6f376ef03a"
+      "sha256": "1af8f8f93972459ec84da0ecc57b25046ea9962ba599929b546d453c12f11bd3"
     },
     {
-      "bytes": 6576,
+      "bytes": 5410,
       "path": "pinshu-course/references/same-name-dual-draft-preview-and-permission-aware-qa.md",
-      "sha256": "52b5030cca5fad896859c00afa8f08214bddd381e4c1f20a4ee957c4073f554b"
+      "sha256": "ce2d399a8a0b746bcfdfbdb94829c8e0752e1a8ecff773db055a439d3fce6721"
     },
     {
-      "bytes": 4366,
+      "bytes": 4309,
       "path": "pinshu-course/references/screenshot-prompt-recovery-and-reversal-corrections.md",
-      "sha256": "c2572f2e5faf11dd1b539147744c4b038aacda2efdec2f49b5132ebed5114ef6"
+      "sha256": "0e2ca4eba377e3e5def6e0d5d8c0b45b033114e3f60aa1346d965f69bc683da6"
     },
     {
-      "bytes": 15220,
+      "bytes": 11840,
       "path": "pinshu-course/references/semantic-fidelity-and-batch-qa.md",
-      "sha256": "5a5a96163adaa0a7bfabbbb33e23c8d15d5a4a6b15db121459290242e099b872"
+      "sha256": "a08660d99f8ffce315d5437c341704344fb22c36d1e1806dad7ea6da8987bfa7"
     },
     {
-      "bytes": 4409,
+      "bytes": 3262,
       "path": "pinshu-course/references/systemized-lecture-provenance-and-reverse-coverage.md",
-      "sha256": "1847a24e7eb0590aa0c4464b9a56f4fe85e0ed5d7c4fb80a9b97cdc2c296f853"
+      "sha256": "b70249786fd08137b021ff94b75f30dffe6c8703e52d57ab001a0814bd4e5d99"
     },
     {
-      "bytes": 9418,
+      "bytes": 7717,
       "path": "pinshu-course/references/term-confirmation-propagation-and-zero-residual-qa.md",
-      "sha256": "667acbfa68ea398d9f8d9d619300f2af6d76b7062d3d91f08e2617c5ac8232a0"
+      "sha256": "ab2197acb46a7a8ef24e41973def9496952a15041e0fd3201dcee2d18ce7f92c"
     },
     {
-      "bytes": 4774,
+      "bytes": 3745,
       "path": "pinshu-course/references/transcript-first-dual-deliverable-order.md",
-      "sha256": "8e712b7452f3166c4985ee2008e3c77492dd97cfd18dddfd7309becb9f86969f"
+      "sha256": "033c78219415545f3e6727598cc9b26943549ac3f708be7e07162f932ce2d380"
     },
     {
-      "bytes": 12332,
+      "bytes": 9525,
       "path": "pinshu-course/references/transcript-visual-integration-and-approval-gates.md",
-      "sha256": "da91423d1f66dcba073b491a2fa42651b3280e305f7191bfb18f2f870e3dd644"
+      "sha256": "4a9dbb3671a38af827ab37c07227476109a563c615c8deeb4798ad398a6f1eb8"
     },
     {
-      "bytes": 5327,
+      "bytes": 4184,
       "path": "pinshu-course/references/two-pass-faithful-editing-and-output-containment.md",
-      "sha256": "8c1a55b6e5c03757ceb1374f550467bb26735c851ef21cc70a890315225375e7"
+      "sha256": "cc514cefc32337db392e6cff59259b98a68478a2793a5cdd5f9b65f6054b009c"
     },
     {
-      "bytes": 6317,
+      "bytes": 4808,
       "path": "pinshu-course/references/type-style-and-growth-positioning-course-processing.md",
-      "sha256": "d81f8ef0b6f56eaf45609cfb44d694f266bbfa19ba73af135b7f7471ac3a563c"
+      "sha256": "9fe4064e8d0ea24ac8d588411d84927b8b6b0dafd3f55c3c7b1b33770357632e"
     },
     {
-      "bytes": 5937,
+      "bytes": 2786,
       "path": "pinshu-course/references/value-first-course-delivery-and-propagation.md",
-      "sha256": "5549017a7e3c6fa042da70b3f4534c82975ee7eb41297328a4738fd9bd0e7e9c"
+      "sha256": "e77a753f2e39a576886bc424f323d500e2f572c3d6c753d494b542983ebff86b"
     },
     {
-      "bytes": 7513,
+      "bytes": 4974,
       "path": "pinshu-course/references/video-production-course-technical-normalization-and-qa.md",
-      "sha256": "02190217279ae29d980bd28c130a15243d3846448617b804b78f15ba2a38329e"
+      "sha256": "ea9143a4702ae23685e094230d4be6f1dc59e75081720736237c70e7e6f483a4"
+    },
+    {
+      "bytes": 3909,
+      "path": "pinshu-course/references/\u4e13\u4e1a\u8bfe\u7a0b\u5b66\u4e60\u8d44\u4ea7\u6d41\u6c34\u7ebf.md",
+      "sha256": "6efb0737dcb61a52622e696fa8b1935a9953eadb70a47e26ca46aed718e646ef"
+    },
+    {
+      "bytes": 3744,
+      "path": "pinshu-course/references/\u8bfe\u7a0b\u5b8c\u6210\u540e\u7684\u5b66\u4e60\u4f20\u64ad\u4e0e\u5e94\u7528\u95ed\u73af.md",
+      "sha256": "6674747818d27a33d41782ce4c370fb4cfeade52f6808a43d7db16a2eb15a45b"
+    },
+    {
+      "bytes": 3908,
+      "path": "pinshu-course/references/\u8de8\u8bfe\u7ebf\u7d22\u4e0e\u72ec\u7acbQA\u89c4\u5219.md",
+      "sha256": "3b9eedde062ef6f93b95ec89d04bdab6561656a8345c8c87f83324b0d3c8a396"
     },
     {
       "bytes": 16027,
@@ -452,9 +502,9 @@
       "sha256": "bee597d3bf6d556d31fdc698ffb36a6e9429522a985ddc25234b2f37d6374774"
     },
     {
-      "bytes": 1680,
+      "bytes": 2398,
       "path": "pinshu-course/tests/self_test_runtime_contracts.py",
-      "sha256": "b82f482fe66e3982d31d8bf6d4f32300709369de4a2d0382edfe1a5ad08c1dac"
+      "sha256": "56c8c829afc6914bd9ce491fde1568da59e85d356a42caebd5bb3bb69a305218"
     },
     {
       "bytes": 4173,
@@ -462,9 +512,9 @@
       "sha256": "9e0abec887559a555b1ff9347dbee93b303c426766730ac4e4205329d3e028b5"
     },
     {
-      "bytes": 13877,
+      "bytes": 23241,
       "path": "pinshu-course-capture/SKILL.md",
-      "sha256": "733b423a139817da456dc00ee2abdd9f0db2d2881ec9762aec4f526125ca5af1"
+      "sha256": "b7aa8c71ec6c616d1341f4cd0c0383a667d64d6edcc9af93d65152e3d2ffbf95"
     },
     {
       "bytes": 366,
@@ -472,64 +522,64 @@
       "sha256": "455e5d1d02d59c6df874cd3a03ffc7296ea84acefcf7a871e8f9a33257f3a97a"
     },
     {
-      "bytes": 1714,
+      "bytes": 1325,
       "path": "pinshu-course-capture/references/aliyun-capture-adapter.md",
-      "sha256": "ad30dbdbe53db353a7434618d9fa3b31aa70b00ce310771f060e0e67aa1a1d88"
+      "sha256": "e40145ec6cd247db3b0b28e7d8cff29a716e4615efd2232b6974fe429a688481"
     },
     {
-      "bytes": 3705,
+      "bytes": 2913,
       "path": "pinshu-course-capture/references/baidu-capture-adapter.md",
-      "sha256": "db4cf265d93257580d63879bad54b2b39c148fa9de2e24349d2f6f3372a4509d"
+      "sha256": "2ffdd153174ccd7972b64ea796b7e32a859730de03a5a35df3b872e64a777e7c"
     },
     {
-      "bytes": 1757,
+      "bytes": 1429,
       "path": "pinshu-course-capture/references/capture-adapter-contract.md",
-      "sha256": "002d444ec510b5decd04fd4f9bf8bfd30c08b0e9a3929ea30d3447a8add50927"
+      "sha256": "c8219144a81376a5f6d7492e207b05eb8badd994eb7299ecd68753b5bfd819ac"
     },
     {
-      "bytes": 5424,
+      "bytes": 5269,
       "path": "pinshu-course-capture/references/core-quality-contract.md",
-      "sha256": "1f50378b61a72af48e1151ac8533afe1267e46f2b271c9567ca41e6d4ab72fa4"
+      "sha256": "58bdc5afac83872356fef510de29ae1a0825fb09ee55ce4e331b02ceedc8d3ae"
     },
     {
-      "bytes": 12485,
+      "bytes": 1789,
       "path": "pinshu-course-capture/references/default-production-workflow.md",
-      "sha256": "bead722c1d2d13e79425d91d9f375f836e1b9dc37e0e80e9193a782387d5c582"
+      "sha256": "26e93740ee101b26419569c43978fdeb659d8147cfbc86c2537078d9cf966e2f"
     },
     {
-      "bytes": 4291,
+      "bytes": 3244,
       "path": "pinshu-course-capture/references/domain-and-content-routing.md",
-      "sha256": "d312652d0354dfe22db669fecd2eee8bc7ae5ddac9756bb4df700e6acafa7d5f"
+      "sha256": "1a13ff943c2f28c3cb2ecf8b0cac1ba586aa86651ba9bcb185e00571c9b824a5"
     },
     {
-      "bytes": 1817,
+      "bytes": 1386,
       "path": "pinshu-course-capture/references/external-use-gate.md",
-      "sha256": "de94444144994cb294847fafa1edec22843938ef2b337ca1317d95ef90865792"
+      "sha256": "4ef43956508ca4660a559098c0ff1d1929716bcc936f27f80fbf1c2c7c6c7b5a"
     },
     {
-      "bytes": 5358,
+      "bytes": 4727,
       "path": "pinshu-course-capture/references/orchestration-and-model-routing.md",
-      "sha256": "26943827639321aaac14c512945c7d0b8c6fa5f18d96f9c5976dd5cc1b6d300a"
+      "sha256": "185e1a35c05ed269349d4991e4344a416d221c61971f21566949c662eef815b2"
     },
     {
-      "bytes": 5365,
+      "bytes": 5761,
       "path": "pinshu-course-capture/references/production-modes-and-budgets.md",
-      "sha256": "cf1ac751806906a43a564230c0e95ee1217c71c384dc0d7a351e0878453b3f82"
+      "sha256": "3a173c54ff1d364411a34e016d568809b6e0fa3e89be6cc523411a3857c17553"
     },
     {
-      "bytes": 4210,
+      "bytes": 3081,
       "path": "pinshu-course-capture/references/quark-capture-adapter.md",
-      "sha256": "6e0ace9f910b24c50e4fd81af20a277dd4c2d29e8f2ab5b8c65680089a387fdb"
+      "sha256": "8ff067db3d0d419fbd82cf72c9ceaa747286d09bf46b22e1bd245966474e5d70"
     },
     {
-      "bytes": 5339,
+      "bytes": 7640,
       "path": "pinshu-course-capture/references/semantic-qa-contract.md",
-      "sha256": "3cae51250bd6b4f61f414abd5849432430b8ba4c8c246ebafc69c09dc0526718"
+      "sha256": "80b7457dc2edb46c8066b9985bedd61883e2defd04dcf33117a8312fc8975399"
     },
     {
-      "bytes": 89260,
+      "bytes": 121981,
       "path": "pinshu-course-capture/scripts/course_pipeline.py",
-      "sha256": "dd60871db279a6e77d485763c926663b0eb9fa8cf325d377097a0a0cd37df95b"
+      "sha256": "f0dc9fc40adb45ea1087e26cfc478acb1ea0361d14d6f2109b78ac4538069818"
     },
     {
       "bytes": 18196,
@@ -552,9 +602,9 @@
       "sha256": "184f9fb4ef81ed50f5dc4bbafd556fba9bd6544050f430369ea98d43aa3d171e"
     },
     {
-      "bytes": 3230,
+      "bytes": 4868,
       "path": "pinshu-course-capture/templates/lesson-work-order.md",
-      "sha256": "72556e3042448ce2acdb02424e362843e6a97bbbbcb00cb76f4de2f90e0c0f2a"
+      "sha256": "2a225e9ba7d7e079b0bb7f8565d16028f42c3602c5b63cdffec04198181445b5"
     },
     {
       "bytes": 1111,
@@ -562,14 +612,14 @@
       "sha256": "3ea1f276249b1d295f6b45f4c14ecba07e431cdd3ba08d9028d4d731fdf787a0"
     },
     {
-      "bytes": 24828,
+      "bytes": 31005,
       "path": "pinshu-course-capture/tests/test_production_foundation.py",
-      "sha256": "eb8e2f231294475d9542caf5aa010d0940b3903a6318f14250406daeb95708e7"
+      "sha256": "3f602654dec0703f900a6f5b58769a0e462e86dfeff0402954fb4c03a0005489"
     },
     {
-      "bytes": 11276,
+      "bytes": 9684,
       "path": "pinshu-distill/SKILL.md",
-      "sha256": "15efffa2458b6b7fcff867f6d1a29d593684f7e7ff6c689defa380d12447e0a8"
+      "sha256": "39ee004a494acee419e3a7e10db112bd0ab3bc695b7f7a99dcf642a4e5d9657c"
     },
     {
       "bytes": 528,
@@ -577,24 +627,24 @@
       "sha256": "2286e504cf8b359f81bc5d9e8a857a7d9406391ae74684ef565a9dbb0b1c9d86"
     },
     {
-      "bytes": 3174,
+      "bytes": 2525,
       "path": "pinshu-distill/references/general-distillation-patterns.md",
-      "sha256": "21cc6e05b0f9e677039e58822121d62223c01234dc255425692499ae512f7b72"
+      "sha256": "86483c669a982002f1a66156e3cc6b4db3997a7a63aef44ebea90b47a0ee0865"
     },
     {
-      "bytes": 5006,
+      "bytes": 3799,
       "path": "pinshu-distill/references/professional-course-source-safety-and-visual-gates.md",
-      "sha256": "e9ec3f8277afb8e5ff7b2ef3ef61c426340104c634a5eb5830b9b67811042d43"
+      "sha256": "de0200f3706eb6f5890cf9554d7b689d0db45a054dae4e0b04bed8b0015928b3"
     },
     {
-      "bytes": 5782,
+      "bytes": 4035,
       "path": "pinshu-distill/references/structured-study-guide-rules.md",
-      "sha256": "bdf812cd821a48ebaa8ab3f87c4513f95f115faf2c52353465a236fec09b3ecb"
+      "sha256": "383e0995038ed3522d44097280b7707f815d21be1a6b0f592ea9d9621dea9abe"
     },
     {
-      "bytes": 10287,
+      "bytes": 9509,
       "path": "pinshu-film-teardown/SKILL.md",
-      "sha256": "0fe0ea1f2cff4f806a8b497d9316d5c91659e2222905eb57d38cb1ac7e020843"
+      "sha256": "536a2a294a23e9187294b7e7e8a7200afc26a55a76d87c25824cb4462ea9bd29"
     },
     {
       "bytes": 375,
@@ -617,24 +667,29 @@
       "sha256": "65c7988ab1b4a1bfab8287625b5969d4e1c0886cef8fbf7f0f1ca3786bd9d431"
     },
     {
-      "bytes": 19025,
+      "bytes": 15263,
       "path": "pinshu-film-teardown/references/pitfalls.md",
-      "sha256": "04fcfd0d774e2f175e1b78f9761788821b6cea4409ad331c8d3674938bc6be91"
+      "sha256": "811beb6eac6b6eff627df9429ea4f3c693394b28eb8f62eacb556e53e2b675b2"
     },
     {
-      "bytes": 6166,
+      "bytes": 4740,
       "path": "pinshu-film-teardown/references/review-prompts.md",
-      "sha256": "e159197453b388513a6f6437a026d539542ecc14874a33dc60a117d80d93a638"
+      "sha256": "4e52a87fe1dd670b45d05482a06d67e0713ae4088689616bab9e68a722d88879"
     },
     {
-      "bytes": 11388,
+      "bytes": 8275,
       "path": "pinshu-film-teardown/references/rules.md",
-      "sha256": "27a9c0627fc3390c93d6503e74d0e894cc42f3c9c8b2ea72def1237631ed5e15"
+      "sha256": "b5ed99885589043ee403357e453ded10e44a6dc4a555c381326fb92fa0a08c5b"
     },
     {
-      "bytes": 6258,
+      "bytes": 5256,
       "path": "pinshu-film-teardown/references/spec-format.md",
-      "sha256": "c86fed9a6ebec23d89450e95a283d4c5e386c59d78292360c6d2f4dda36f1c38"
+      "sha256": "cb452665b98b56c496f39f22875b8f695d70036d702285bab43c174bc144f208"
+    },
+    {
+      "bytes": 1479,
+      "path": "pinshu-film-teardown/scripts/_video_core.py",
+      "sha256": "156b8802138c5ac7e5c92fe264bd35eb73db829a46a0d323fb9b8f100d2b2873"
     },
     {
       "bytes": 33999,
@@ -647,24 +702,24 @@
       "sha256": "4de5b0986939d2db49ade2f688b6f8ba550146356ab175e2af9b3c709fe6431e"
     },
     {
-      "bytes": 5414,
+      "bytes": 365,
       "path": "pinshu-film-teardown/scripts/common.py",
-      "sha256": "f641a6e599738e030ab5bc2c91cbbfc27e360900632ec6a95d1999ca64b2ded8"
+      "sha256": "2414d248af0c9443c93c9377d3f8e43aee1352a2ac3eca346f9f828911b0a59f"
     },
     {
-      "bytes": 3861,
+      "bytes": 1070,
       "path": "pinshu-film-teardown/scripts/doctor.py",
-      "sha256": "8cc9448927d3be5985b0e73ac5b6badf9dc6efd470d231d51e4641dde7cb0a08"
+      "sha256": "d804109d387140ef98f2089dfca97a587c63ef65412c04e9dec58f84c61d7376"
     },
     {
-      "bytes": 7828,
+      "bytes": 141,
       "path": "pinshu-film-teardown/scripts/fit_music.py",
-      "sha256": "2713992bf7da212287d3df67e3003517d54a280e65dd2e78856a03fc2d3a03ca"
+      "sha256": "b13735abb1e206952dcfde157d09d7ec18ed682f52b207db2a496e3be33ce611"
     },
     {
-      "bytes": 7791,
+      "bytes": 141,
       "path": "pinshu-film-teardown/scripts/gen_voice.py",
-      "sha256": "4d5be19ce9aa54519e422e2276a3adc886601502e667eb40235f88459240e695"
+      "sha256": "38b782413ee6c2a8248fa474a2e199c3c28e1d50cfea84236e7b04cc82be09f4"
     },
     {
       "bytes": 6466,
@@ -672,9 +727,9 @@
       "sha256": "0697b141d61eeccdf1bfbc2ee6e23a7242af01ab8e6488b151706a602351438d"
     },
     {
-      "bytes": 4310,
+      "bytes": 135,
       "path": "pinshu-film-teardown/scripts/mix.py",
-      "sha256": "ab1534e59f3a23c5fba213d35b3bacc0be2265d5113a51f7a6fdffaffdbfd97c"
+      "sha256": "20674ced72a155db9ac8a3ff7a6b69fca30f298454a361f4f96a9f149dfbbdea"
     },
     {
       "bytes": 5244,
@@ -682,9 +737,9 @@
       "sha256": "99987a4cc03d1b6f1e029fd176f1cfd41ecf2f027fd79c40e2f7a3b668de8992"
     },
     {
-      "bytes": 2909,
+      "bytes": 143,
       "path": "pinshu-film-teardown/scripts/patch_voice.py",
-      "sha256": "f24b6490b2043e43d5d3a18a07988b18bea870404fece1af4ded6b27a32cf093"
+      "sha256": "6d1a40deeda3282c41c571d3525c08719845f905fe98a224ad6ae66cda36a8b5"
     },
     {
       "bytes": 3016,
@@ -692,14 +747,14 @@
       "sha256": "e2c999b31f97b86f9da803810f2ca999027751c3f197740da592479fc4029f1c"
     },
     {
-      "bytes": 13000,
+      "bytes": 134,
       "path": "pinshu-film-teardown/scripts/qc.py",
-      "sha256": "d41d0e081cd7b0adb572ec825f64e55c0f125a712344bc880dd3191b498e6a6f"
+      "sha256": "2c63e271e6ccc40fb7c674c7dc634240a0938f9ab093cd3b787ba8a9c7b6dcd5"
     },
     {
-      "bytes": 3174,
+      "bytes": 138,
       "path": "pinshu-film-teardown/scripts/render.py",
-      "sha256": "16ae25323c5c8ab54e1542aa3814e4441891c39ddf0688d40ee584d626d5502b"
+      "sha256": "3186dcb8039b3d4697d3823a2bd6127701958862bc56b29868fed622d8aeb8ee"
     },
     {
       "bytes": 11467,
@@ -717,14 +772,14 @@
       "sha256": "dcac1e5649693049b3ea5ac2f4c437d92debe8fd83a4020ddd75826819e45da4"
     },
     {
-      "bytes": 1919,
+      "bytes": 1988,
       "path": "pinshu-infographic/README.md",
-      "sha256": "7f53e30202978eb255c4509fc288432d6ca59dba77249785c0dbb13696f553f7"
+      "sha256": "1a52207a7f4e1b58bb8834dcd9291100c67ccde3a10886fc0cf87470a8096d6a"
     },
     {
-      "bytes": 5534,
+      "bytes": 10924,
       "path": "pinshu-infographic/SKILL.md",
-      "sha256": "dbeb35aa9c5df1c24ca05a1219f4583b7810fe62c2af85e2356f2aa0c4f7956c"
+      "sha256": "e824e3f655d1569af628c4839d87cdaff15f2c9be5afd873b2b7397c54ff0ee3"
     },
     {
       "bytes": 6,
@@ -762,14 +817,14 @@
       "sha256": "1da4574c024902cff2cefe78531ec2ea85c44084d1f07a27a107221bfd942637"
     },
     {
-      "bytes": 1801,
+      "bytes": 1217,
       "path": "pinshu-infographic/references/logic-and-density.md",
-      "sha256": "3781e7ed704326023726f3bbefd3a7229086089973bcf86896a7fb9396c78a6d"
+      "sha256": "7ed0d3eae4dd2f32e11ff67b24f6043da91752f41e7bf4922b40e2ae0e2f1537"
     },
     {
-      "bytes": 1114,
+      "bytes": 3185,
       "path": "pinshu-infographic/references/mode-routing.md",
-      "sha256": "e29039c160575849a349991676a065d269e8896fff116c33bc3e8cc9ba7f7afe"
+      "sha256": "6294f64164cb86128978c38e863f83d65de4c96f7796f00a7b582210c3da8e3b"
     },
     {
       "bytes": 3597,
@@ -777,9 +832,9 @@
       "sha256": "7e5f86d78617cbab2268087073b4cbce052c96fbdfe90c834b6d4975034aaa35"
     },
     {
-      "bytes": 1310,
+      "bytes": 3065,
       "path": "pinshu-infographic/references/visual-qa.md",
-      "sha256": "2f39627100a84d8a3289c29810fbbf1471b909145b9202279d56cb903b58ce61"
+      "sha256": "b156ea127ff088ce1ff608b439ae06647256218b8a4f1c966b65fe6b58c6dcce"
     },
     {
       "bytes": 6053,
@@ -787,14 +842,14 @@
       "sha256": "b963a38a2988c79f7d031220586d303eb3fc5ecf9d282fe6d44253a06624af97"
     },
     {
-      "bytes": 2465,
+      "bytes": 3201,
       "path": "pinshu-manifest.yaml",
-      "sha256": "12074a776b4748ff75d9cdf5d7e84030378194a664d7770137f5ecfe90cd496f"
+      "sha256": "2a184dceed80a0be277a85029284b55c70eae44847249b4fa8396084df42b48d"
     },
     {
-      "bytes": 5335,
+      "bytes": 5008,
       "path": "pinshu-md2pdf/SKILL.md",
-      "sha256": "37b81aad4bd39fe646046bab097cba96278f2911d50df2bc5589f796e3b381b7"
+      "sha256": "2db905f6e624e65fa39f67d0facf1295b12dda289f33bd190edb111735df2d81"
     },
     {
       "bytes": 261,
@@ -802,19 +857,19 @@
       "sha256": "dc3667a7a2121a12edd4e54614a30c8fadefe32768e235494d9a60adfaeecd7b"
     },
     {
-      "bytes": 87363,
+      "bytes": 92711,
       "path": "pinshu-md2pdf/scripts/convert.py",
-      "sha256": "4d950fd01505c53d5783a9265f909936c8787d2b94850ba307f046f6038ac6c2"
+      "sha256": "4ef5371b551611c0f49c7f7794d1a4322f74636db9b8ad26e6884492470bc960"
     },
     {
-      "bytes": 13492,
+      "bytes": 14609,
       "path": "pinshu-md2pdf/tests/test_security.py",
-      "sha256": "8c51ac9c8f83db09c8219fe09fe5a85e31570e3dcf650faf968e80c48f3a7cc8"
+      "sha256": "3f5a536750cccf159da90e3b491b04ed36805ead077fdf8a7484f27f62f8db09"
     },
     {
-      "bytes": 9139,
+      "bytes": 8701,
       "path": "pinshu-study/SKILL.md",
-      "sha256": "74e357e755db634b79f92d8d44283ebde2dbba3d3489dc0e9c480c38eb327a8b"
+      "sha256": "6ee4b45fb902700d974af9a804bc413a3acf68b21e84aef63c1eb88b8efb42b1"
     },
     {
       "bytes": 586,
@@ -822,29 +877,29 @@
       "sha256": "e230eed13952a516ba554f1a8d56f86625c1702600bb8d2ba64fc2b75643038a"
     },
     {
-      "bytes": 6977,
+      "bytes": 6007,
       "path": "pinshu-study/references/active-recall-card-rules.md",
-      "sha256": "456054a58eb69c6f1050d2ac217467b6a471da4ce48819c24c287dbe62bfe15d"
+      "sha256": "938b4f194d174777078bb940974955153aecf398a50714c79d98d45b350e4b10"
     },
     {
-      "bytes": 5133,
+      "bytes": 3651,
       "path": "pinshu-study/references/feynman-explanation-and-sharing-practice.md",
-      "sha256": "c4f74f92284922989e26a9469c9ff396c04dcf5d4492456d5f7987ff510abfcb"
+      "sha256": "604c4087cb6092587a5bc78e7aeabc2cb4eb440e0ce366b23cdd73a74860815f"
     },
     {
-      "bytes": 1653,
+      "bytes": 2138,
       "path": "pinshu-study/references/guided-study-and-training-rules.md",
-      "sha256": "9f63860c8902cf967f82d46b2a07ef2871e8b7f91fadb48a5e9ccb393115f78b"
+      "sha256": "5b2b8b198b970b4b11fe1a360275090d9a3cf4d6f02e581a1fb87cd446ad7b90"
     },
     {
-      "bytes": 2909,
+      "bytes": 3982,
       "path": "pinshu-study/references/markdown-learning-record-specification.md",
-      "sha256": "512de17b79a40cfaf7ad5170b5c4569615f1abafb085b32e7daf20d33d5e6d40"
+      "sha256": "39ad1f560f8469be9bf66d0ebe1c9a27f45382a1a00413e3c7a0375f2ecad130"
     },
     {
-      "bytes": 14003,
+      "bytes": 30539,
       "path": "pinshu-transcript/SKILL.md",
-      "sha256": "818005a349ee8a0a2844126e894d6e236f04ee3c4935fb7c93e6117a6ed4c748"
+      "sha256": "d90ecff9d9ac3d3c53be044e3d1c97a51afefb250b1981b7c334691e07284524"
     },
     {
       "bytes": 542,
@@ -887,6 +942,81 @@
       "sha256": "21835b0bed1bdc1f9b182935f6f6cc8cc09c12dc96d5051dbe7640ea2988de02"
     },
     {
+      "bytes": 7863,
+      "path": "pinshu-video-core/SKILL.md",
+      "sha256": "67b23983bc66e533091118153176f4424313aae37915af7384fc270b553f89a9"
+    },
+    {
+      "bytes": 304,
+      "path": "pinshu-video-core/agents/openai.yaml",
+      "sha256": "fbb5098a5429901458ef167965a6a7c1712e0a12be08b782903f774542adaffd"
+    },
+    {
+      "bytes": 5411,
+      "path": "pinshu-video-core/scripts/common.py",
+      "sha256": "ce838822658f9e567acebc99423f18b11935d8ac6f09a6319f010ea7cf7e8b74"
+    },
+    {
+      "bytes": 3570,
+      "path": "pinshu-video-core/scripts/doctor.py",
+      "sha256": "f56ab761e484ee7c496159da5369191dbe94ea109afbdd716f26098333eb672c"
+    },
+    {
+      "bytes": 7828,
+      "path": "pinshu-video-core/scripts/fit_music.py",
+      "sha256": "2713992bf7da212287d3df67e3003517d54a280e65dd2e78856a03fc2d3a03ca"
+    },
+    {
+      "bytes": 7791,
+      "path": "pinshu-video-core/scripts/gen_voice.py",
+      "sha256": "4d5be19ce9aa54519e422e2276a3adc886601502e667eb40235f88459240e695"
+    },
+    {
+      "bytes": 4310,
+      "path": "pinshu-video-core/scripts/mix.py",
+      "sha256": "ab1534e59f3a23c5fba213d35b3bacc0be2265d5113a51f7a6fdffaffdbfd97c"
+    },
+    {
+      "bytes": 2909,
+      "path": "pinshu-video-core/scripts/patch_voice.py",
+      "sha256": "f24b6490b2043e43d5d3a18a07988b18bea870404fece1af4ded6b27a32cf093"
+    },
+    {
+      "bytes": 13000,
+      "path": "pinshu-video-core/scripts/qc.py",
+      "sha256": "d41d0e081cd7b0adb572ec825f64e55c0f125a712344bc880dd3191b498e6a6f"
+    },
+    {
+      "bytes": 3174,
+      "path": "pinshu-video-core/scripts/render.py",
+      "sha256": "16ae25323c5c8ab54e1542aa3814e4441891c39ddf0688d40ee584d626d5502b"
+    },
+    {
+      "bytes": 11856,
+      "path": "pinshu-video-core/tests/self_test.py",
+      "sha256": "105c2550c7035410cd3dfc5fab92b6c48a9996e64769716f13c53c5ace2542f8"
+    },
+    {
+      "bytes": 8201,
+      "path": "pinshu-visual-learning/SKILL.md",
+      "sha256": "11a589a7c46737a653db9700bfcbd6bd6af1b75359b73189fd64d5e8f8b5b1a1"
+    },
+    {
+      "bytes": 375,
+      "path": "pinshu-visual-learning/agents/openai.yaml",
+      "sha256": "536afff561dbb69942c0ccb7ce464e79aab6bba7008ad8ec11b53c1d538282b8"
+    },
+    {
+      "bytes": 4033,
+      "path": "pinshu-visual-learning/references/\u56fe\u89e3\u9009\u578b\u4e0e\u9a8c\u6536.md",
+      "sha256": "6bf0f5498b95004119d4139bdef9953d0a2b2cd8380c16dc5682a661bc93321b"
+    },
+    {
+      "bytes": 12313,
+      "path": "pinshu-visual-learning/scripts/validate_visual_learning.py",
+      "sha256": "726272505bf2af02d3325bf2000cdf278019e02270a8cb46d7f7dd223ffa3d34"
+    },
+    {
       "bytes": 36,
       "path": "pinshu-visual-system/.public-bundle",
       "sha256": "b180097d4fa8dbcd49e5cf7973dc2d7926c2d583ac50a931d2ddd845e0915598"
@@ -902,9 +1032,9 @@
       "sha256": "95e93d6aa01c9f20c1319b00d7614330c314ef416701f97a4cacd3a4bbdd0ef5"
     },
     {
-      "bytes": 6275,
+      "bytes": 6716,
       "path": "pinshu-visual-system/SKILL.md",
-      "sha256": "843c23116c2d5aceae93f2384facf6e72df429d5879a31a0af295dd1ff62ebe0"
+      "sha256": "0cc8014398a1c336599c57d0a5e9aa7c0e9075e189bc9b0271bc39168e7523d0"
     },
     {
       "bytes": 6,
@@ -1157,19 +1287,89 @@
       "sha256": "74b43f92efd0a90caef91fa5c2e9a4f5ff2284e664fef82ee314feca17bf4d9b"
     },
     {
-      "bytes": 5296,
+      "bytes": 8558,
+      "path": "pinshu-write/SKILL.md",
+      "sha256": "cb6c42ed90e12fb20e9624cfc9f6e860a2a36c40a1a0c6bf5a54368e1c9df64f"
+    },
+    {
+      "bytes": 575,
+      "path": "pinshu-write/agents/openai.yaml",
+      "sha256": "2dda1b2fa3f06a8b7f2c594ae7640505cd9c037f0bd73d39ee9406442b9b530c"
+    },
+    {
+      "bytes": 3027,
+      "path": "pinshu-write/references/article-types.md",
+      "sha256": "ef96726de953e7b5c1d2baf193dc5c0abec5fd260caf1b584b51d5874e2e526a"
+    },
+    {
+      "bytes": 2709,
+      "path": "pinshu-write/references/good-article-standard.md",
+      "sha256": "8b62abd76858000f62dc0ca4c731a40c816361a73210515660b2c988acd8a8ea"
+    },
+    {
+      "bytes": 2206,
+      "path": "pinshu-write/references/model-routing.md",
+      "sha256": "01f0b3c0ad28753de8c98d76f16c9ad9117ee75d22fab5b5599229fc727e6813"
+    },
+    {
+      "bytes": 2676,
+      "path": "pinshu-write/references/plain-writing.md",
+      "sha256": "e513bdd5b614ea368286869ee1c0014988fd033fd8f8a7a682cddbe567c39d54"
+    },
+    {
+      "bytes": 2297,
+      "path": "pinshu-write/references/prompt-kit.md",
+      "sha256": "e2e83485b65f82709d8658bed81ac2b0b6f94732ac9cae05f8fec31279058e2a"
+    },
+    {
+      "bytes": 2486,
+      "path": "pinshu-write/references/review-chain.md",
+      "sha256": "71a517bd328035ae8814f5b245479e37dfde6c355dba2e870d311918eb092f13"
+    },
+    {
+      "bytes": 2270,
+      "path": "pinshu-write/references/topic-and-judgment.md",
+      "sha256": "11c7233370b56cffea62f1175e21804204340f5c54d59fa493d3deecbfb47900"
+    },
+    {
+      "bytes": 2606,
+      "path": "pinshu-write/references/worked-example.md",
+      "sha256": "96eb5e13a55fcfd07f2e4c85af2e28eb85fccee28338f4dfe4edc5213819c53e"
+    },
+    {
+      "bytes": 16902,
+      "path": "pinshu-write/scripts/audit_draft.py",
+      "sha256": "100c9f0a117a474ca8f966c912ef032d6adf64fde54b3f70b043c6ab91d1dccf"
+    },
+    {
+      "bytes": 2418,
+      "path": "pinshu-write/templates/config.example.yaml",
+      "sha256": "3b9e234bc34a5c6366c21b73a813074ab95ac377ba7692f9edc4bcb85fd6ee44"
+    },
+    {
+      "bytes": 8195,
+      "path": "pinshu-write/tests/test_audit_draft.py",
+      "sha256": "09664b0eb78bbbb94a3e957115cb0a7821fad010dbaff2b97838cbabfe776d38"
+    },
+    {
+      "bytes": 8578,
+      "path": "scripts/installer_state.py",
+      "sha256": "7f94d7a338b0d806c75eb694c7f2263b4bcc11af4283ddf67d3a66d6a8194be2"
+    },
+    {
+      "bytes": 5437,
       "path": "scripts/release_check.py",
-      "sha256": "1b92542fcb0f5ff449e227a3910c851e5d33ddb5e17f3f97a89b204b33644028"
+      "sha256": "12661fb98891e0683a54990245a4748dcb5ff9eccc3936109bf538f51ff1ff87"
     },
     {
-      "bytes": 11741,
+      "bytes": 12577,
       "path": "scripts/validate_release.py",
-      "sha256": "924b3a9cccb1785b0b5fcdd0c0988472418a35888cb1ed970f0c4bc7cc50e74b"
+      "sha256": "48a7122d244cf5a5d074053b0c405cb0267a43ca15740052f67a53ba455a9540"
     },
     {
-      "bytes": 36613,
+      "bytes": 51885,
       "path": "tests/test_installer.sh",
-      "sha256": "62a724fcb05933c07f9bd8b4b57e310974fb00c97d01b22eb5171b78ddccd1d7"
+      "sha256": "6617326212e4f5da238a26db83ca246cadd764a7b8e0ad5a9140c636ca51c8b7"
     },
     {
       "bytes": 7253,
@@ -1177,14 +1377,19 @@
       "sha256": "dba0bcc9488437eec27680f711b9df858f3bb1777819cfac95d6c720881f7b50"
     },
     {
-      "bytes": 3062,
+      "bytes": 3764,
       "path": "tests/test_release_validator.py",
-      "sha256": "d5e24f21f1b2a9610ff4450b41610d4e865c1741c2bb0eb393d5c73fbaf180af"
+      "sha256": "a6e68cad52cc7a42a6c0f7310fb296deccee8d2caddac621570fd0afcea945e6"
     },
     {
       "bytes": 15248,
       "path": "tests/test_visual_companions.py",
       "sha256": "fc28914d90a04242d9ac25fec53ad5c364f137359f8f32ef11d1bb8649c7c648"
+    },
+    {
+      "bytes": 2795,
+      "path": "tests/test_visual_learning_validator.py",
+      "sha256": "672e3c8a47047d486e34ca6df8b527029b03db27d7d5103e17b60164bf6a3356"
     },
     {
       "bytes": 29273,

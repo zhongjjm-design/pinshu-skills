@@ -12,6 +12,7 @@ Use for:
 
 Avoid when dense global market data or highly technical system mechanics are primary.
 
+Approved anchor: `../assets/approved-examples/06-chinese-modernism.png`
 
 ## Composition families
 

@@ -23,19 +23,18 @@ EXPECTED_SKILLS = {
     "pinshu-study",
     "pinshu-transcript",
     "pinshu-visual-system",
+    "pinshu-video-core",
     "pinshu-film-teardown",
     "pinshu-infographic",
     "pinshu-business-graphics",
+    "pinshu-visual-learning",
+    "pinshu-write",
 }
 TEXT_SUFFIXES = {
     ".bash", ".cfg", ".css", ".csv", ".html", ".ini", ".js", ".json",
     ".jsonl", ".md", ".markdown", ".py", ".sh", ".toml", ".ts", ".tsv",
     ".txt", ".xml", ".yaml", ".yml",
 }
-EAST_ASIAN_RE = re.compile(
-    "[\u2e80-\u2fff\u3000-\u303f\u3040-\u30ff\u3100-\u312f\u31f0-\u31ff"
-    "\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uac00-\ud7af\uff01-\uff65]"
-)
 PERSONAL_PATH_RES = (
     re.compile("/" + r"Users/[^/\s\"']+/"),
     re.compile("/" + r"home/[^/\s\"']+/"),
@@ -110,8 +109,6 @@ def scan_tree() -> None:
         if ".git" in path.parts or "__pycache__" in path.parts:
             continue
         rel = path.relative_to(ROOT).as_posix()
-        if EAST_ASIAN_RE.search(rel):
-            fail(f"East Asian script in path: {rel}")
         if path.is_symlink():
             fail(f"symlink is not allowed in the release tree: {rel}")
             continue
@@ -137,8 +134,6 @@ def scan_tree() -> None:
         except UnicodeDecodeError:
             fail(f"declared text file is not UTF-8: {rel}")
             continue
-        if EAST_ASIAN_RE.search(text):
-            fail(f"East Asian script in text: {rel}")
         if any(pattern.search(text) for pattern in PERSONAL_PATH_RES):
             fail(f"personal absolute path in text: {rel}")
         if PRIVATE_KEY_RE.search(text):
@@ -197,6 +192,19 @@ def check_skill_contracts() -> None:
                 ref_text = ref_file.read_text(encoding="utf-8")
                 if re.search(r"(?m)\bread\s+`references/[^`]+`", ref_text, re.I):
                     fail(f"{name}: reference routes another reference: {ref_file.name}")
+    required_dependency_files = [
+        "pinshu-video-core/scripts/common.py",
+        "pinshu-video-core/scripts/doctor.py",
+        "pinshu-video-core/tests/self_test.py",
+        "pinshu-visual-learning/scripts/validate_visual_learning.py",
+        "pinshu-visual-learning/references/图解选型与验收.md",
+        "pinshu-film-teardown/scripts/_video_core.py",
+        "pinshu-film-teardown/tests/self_test.py",
+    ]
+    for rel in required_dependency_files:
+        path = ROOT / rel
+        if not path.is_file() or path.is_symlink():
+            fail(f"required cross-package dependency file is missing: {rel}")
 
 
 def run_executable_gates(full: bool) -> None:
@@ -244,6 +252,10 @@ def run_executable_gates(full: bool) -> None:
         "public visual-companion regression",
         [sys.executable, "-m", "unittest", "tests/test_visual_companions.py", "-v"],
     )
+    run_check(
+        "visual-learning validator positive fixture",
+        [sys.executable, "-m", "unittest", "tests/test_visual_learning_validator.py", "-v"],
+    )
     run_check("independent visual-review regressions",
               [sys.executable, "-m", "unittest", "tests/test_visual_review_regressions.py", "-v"])
     run_check("real native PPTX render regressions",
@@ -252,15 +264,26 @@ def run_executable_gates(full: bool) -> None:
         fail("CI requires ImageMagick 7; real export tests must not be skipped")
     # The film-teardown self-test needs ffmpeg and numpy/soundfile/pillow; CI installs them and runs it as a hard step.
     import importlib.util
-    film_deps = all(importlib.util.find_spec(m) for m in ("numpy", "soundfile", "PIL")) and shutil.which("ffmpeg") and shutil.which("ffprobe")
+    video_core = (ROOT / "pinshu-video-core" / "scripts" / "common.py").is_file()
+    film_deps = (
+        video_core
+        and all(importlib.util.find_spec(m) for m in ("numpy", "soundfile", "PIL"))
+        and shutil.which("ffmpeg")
+        and shutil.which("ffprobe")
+    )
     if film_deps:
+        run_check(
+            "video-core offline self-test",
+            [sys.executable, "pinshu-video-core/tests/self_test.py"],
+            timeout=600,
+        )
         run_check(
             "film-teardown offline self-test",
             [sys.executable, "pinshu-film-teardown/tests/self_test.py"],
             timeout=600,
         )
     else:
-        warnings.append("film-teardown self-test skipped: needs ffmpeg, ffprobe, numpy, soundfile and pillow")
+        warnings.append("video offline self-tests skipped: need pinshu-video-core plus ffmpeg, ffprobe, numpy, soundfile and pillow")
     if full:
         run_check("installer negative controls", ["bash", "tests/test_installer.sh"], timeout=240)
 

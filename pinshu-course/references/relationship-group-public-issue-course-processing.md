@@ -1,152 +1,152 @@
-# Dual-Layer Processing and Acceptance for Courses on Relationships, Groups, and Public Issues
+# 关系、群体与公共议题课程的双层整理及验收
 
-Use this reference when a course extensively discusses influence, community, friends and enemies, identity, unheard groups, gender/class/religion/political analogies, medical or public events, responses to hostile followers, or sales boundaries.
+适用于课程中大量出现：影响力、共同体、朋友/敌人、身份认同、沉默人群、性别/阶层/宗教/政治类比、医疗或公共事件、黑粉回应、销售边界等内容。
 
-## 1. Execution Entry: Confirm the Complete Source First
+## 一、执行入口：先确认完整原文
 
-Even with series-level continuing authorization, distinguish:
+在系列级持续授权下也要区分：
 
-- **Advance fragment:** only an opening, truncated sentence, or explicit “not finished sending.” Register it only; do not create both drafts, update the map, or start lesson state;
-- **Complete source:** a clear lesson number, a classroom opening, a close/Q&A/sign-off, and no system truncation marker. Execute directly only then;
-- **Localized gap:** the lesson has a complete beginning and end but a documented missing section. Execution may proceed, but both drafts and the map must record the gap; do not invent it.
+- **预警片段**：只有开头、截断句、明确“还没发完”，仅登记，不建双稿、不改地图、不启动本课状态；
+- **完整原文**：有明确节次，开头进入课堂，结尾包含收束、问答或下播，且中间无系统截断标记，才直接执行；
+- **局部缺口**：整课首尾完整但某处明确缺失，可执行，但必须在双稿和地图登记缺口，禁止补造。
 
-Do not interpret continuing authorization as “start work on any fragment received.”
+不要把持续授权误解成“收到任何片段就开工”。
 
-## 2. Faithful Transcript: Preserve the Argument Without Sanitizing or Amplifying It
+## 二、忠实稿：保留论证，不替讲师洗白或升级
 
-Keep the instructor’s first-person voice and preserve:
+忠实稿继续保持讲师第一人称，保留：
 
-- Original concepts and judgment strength;
-- Full reasoning about groups, relationships, and positions;
-- Controversial political, historical, religious, gender, and medical analogies;
-- Spoken references to specific people, accounts, follower counts, fees, income, and public events;
-- Closing Q&A, rhetorical questions, case demonstrations, and the instructor’s self-review.
+- 原始概念和判断力度；
+- 群体、关系与立场的完整推导；
+- 有争议的政治、历史、宗教、性别和医疗类比；
+- 具体人物、账号、粉丝、报价、收入和公共事件口述；
+- 课末问答、反问、案例演示和讲师自我复盘。
 
-Add a brief editorial boundary outside the body: classroom views and spoken cases are not automatically verified facts; verify independently before public quotation.
+但要在正文外增加简短编辑边界：课堂观点/口述案例不自动等于已核实事实，公开引用前另行核验。
 
-Prohibited:
+禁止：
 
-- Quietly softening the instructor’s “enemy” concept and thereby distorting the faithful transcript;
-- Elevating classroom-reported numbers into objective facts;
-- Deleting essential reasoning in the name of safety;
-- Putting risk language into the instructor’s mouth.
+- 把讲师的“敌人”概念悄悄改成温和版本，导致忠实稿失真；
+- 把课堂口述数字升级为客观事实；
+- 为追求安全删掉关键推导；
+- 把风险提示塞进讲师口中。
 
-## 3. Structured Lecture: Upgrade Conflict Tactics into Relationship Governance
+## 三、系统讲义：从冲突技巧升级为关系治理
 
-The structured lecture may reorganize the course mechanism as:
-
-```text
-Influence objective
-→ user identity and relationship position
-→ shared situation / shared problem
-→ belonging and self-identification
-→ people omitted by the dominant narrative
-→ common frame and differentiation
-→ original intent, mission, and action
-```
-
-### Safe Translation of the “Common Enemy” Concept
-
-Preserve the course’s original concept first, then add application tiers:
-
-1. **Problem target:** false advertising, information opacity, disease, waste, and inefficiency; preferred;
-2. **Mechanism target:** harmful industry practices, unreasonable systems, and platform structures; evidence required;
-3. **People target:** gender, region, class, ethnicity, religion, disease identity, or peer groups; high risk and unsuitable as targets for collective attack.
-
-Recommended formula:
+系统讲义可把课程机制重组为：
 
 ```text
-Parties that might otherwise oppose each other
-+ a real shared problem or mechanism
-= community
+影响目标
+→ 用户身份与关系位置
+→ 共同处境/共同问题
+→ 归属感与自我认同
+→ 被主流叙事遗漏的人
+→ 同屏与突出
+→ 发心、使命和行动
 ```
 
-The lecture must state clearly: understanding group-cohesion mechanisms does not endorse hatred, humiliation, or manipulation.
+### “共同敌人”的安全转译
 
-## 4. “Unheard Groups” Are Not Fixed Labels of Vulnerability
+先保留课程原概念，再增加应用分级：
 
-The course may use “vulnerable groups” or “the silent majority” broadly. The lecture should distinguish:
+1. **问题型**：虚假宣传、信息不透明、疾病、浪费、低效；优先采用；
+2. **机制型**：行业陋习、不合理制度、平台结构；需要证据；
+3. **人群型**：性别、地域、阶层、民族、宗教、疾病身份或同行群体；高风险，不应作为围攻对象。
 
-- Structural social disadvantage;
-- Minority voices in public discourse;
-- People unseen at a particular moment;
-- Underserved user segments.
-
-Four questions for inverse observation of a trend:
-
-1. Whom is everyone discussing?
-2. Who is absent from the discussion?
-3. What does that person actually need?
-4. Can the creator help over time rather than merely exploiting loneliness, anger, or trauma to launch an account?
-
-## 5. Complete “Common Frame—Differentiation” Model
-
-- **Common frame:** shared situation, language, problem, values, interests, and sense of “us”; creates identification;
-- **Differentiation:** distinct perspective, aesthetics, story, vulnerability, expertise, capability, attitude, and mission; provides a reason for continued attention.
-
-A common frame alone may earn only likes. Differentiation alone may create display and distance.
-
-A persona should be perceived through details, not announced through claims such as “I have taste” or “I am professional.” Auditable material includes work choices, vocabulary, objects, personal stories, professional actions, and stable judgments.
-
-## 6. Boundaries for Hostile Followers and Sales
-
-The objective of responding to hostile followers is not to win an argument:
+推荐执行式：
 
 ```text
-Identify the core group or value under attack
-→ stop self-defense
-→ state whom you are protecting and what you defend
-→ speak to the core audience
+原本可能对立的双方
+＋共同面对的真实问题或机制
+＝共同体
 ```
 
-Also observe these boundaries: no doxxing, no incitement to attack, no manufacture of group hatred. Block, report, or leave when appropriate.
+讲义必须明确：看清群体凝聚机制，不等于认可仇恨、羞辱或操纵。
 
-Exclusion language in sales may be used only for genuine fit: explain who is and is not suited. Do not shame non-buyers, create fake scarcity, market through anxiety, or promise certain returns.
+## 四、“沉默人群”不是固定弱势标签
 
-## 7. Public-Fact and Ethical Boundaries
+课程中的“弱势群体/沉默的多数”常是宽泛用法。系统讲义应区分：
 
-Treat all of the following as classroom reports or facts pending verification:
+- 社会结构性弱势；
+- 舆论场中的少数声音；
+- 特定时间点未被看见的人；
+- 未被服务的细分用户。
 
-- Dates, people, legal conclusions, and causal claims about public events;
-- Political, historical, religious, and philosophical quotations;
-- Medical diagnoses, medicines, health risks, and treatment judgments;
-- Followers, views, advertising fees, course sales, and income;
-- Platform algorithms, follower-conversion rates, and recommendation mechanics.
+热点反向观察四问：
 
-Sincerity and original intent do not replace evidence and do not excuse misinformation, commercial exaggeration, or harmful conduct.
+1. 所有人都在谈谁？
+2. 谁没有被谈到？
+3. 他的真实需求是什么？
+4. 创作者是否能长期帮助，而不是只利用孤独、愤怒或创伤起号？
 
-## 8. Long-Lesson Writes and Acceptance State
+## 五、“同屏—突出”完整模型
 
-Use serialized chunks with one unique anchor:
+- **同屏**：共同处境、语言、问题、价值、利益和“我们”；负责认同；
+- **突出**：独特角度、审美、故事、软肋、专业、能力、态度与使命；负责持续关注理由。
 
-1. The first chunk contains complete frontmatter, H1, editorial boundary, and one continuation anchor;
-2. After each chunk write, read the actual file back before replacing the same anchor;
-3. Remove the anchor with the last chunk;
-4. Search for the anchor, `[truncated]`, continuation/additional-input markers, and third-party voice in the faithful transcript;
-5. Verify coverage of critical cases before updating the map.
+只同屏，可能只有点赞；只突出，可能形成炫耀与疏离。
 
-Use three acceptance states:
+人设应通过细节被感知，而不是直接宣布“我有审美/我很专业”。可审计材料包括作品选择、用词、物件、私人故事、专业动作和稳定判断。
 
-- **Source drafts complete:** both drafts and map are written;
-- **Source-side content check passed:** read-only checks for anchors, red lines, structure, and links are complete;
-- **Preview/automated final acceptance passed:** previews exist and required reconciliation is complete.
+## 六、黑粉与销售边界
 
-If runtime permissions block terminal commands, synchronization, automated scans, or counts:
+黑粉回应的目标不是赢辩论：
 
-- Stop immediately; do not retry, rewrite the command, or switch tools to obtain the same result;
-- Do not report “all acceptance passed” from “source drafts complete”;
-- Keep the exact incomplete state in the map;
-- After explicit user authorization, first perform a read-only inventory of possible partial side effects and then complete only missing actions.
+```text
+识别攻击涉及的核心群体或价值
+→ 停止自我防御
+→ 明确保护谁、捍卫什么
+→ 向核心观众表达
+```
 
-## 9. Minimum Final Check
+同时遵守：不人肉、不煽动围攻、不制造群体仇恨，必要时拉黑、举报或退出。
 
-- [ ] The source is complete from beginning to end, or localized gaps are recorded;
-- [ ] The faithful transcript remains first-person;
-- [ ] Every relationship, group, public-event, and business case has a destination;
-- [ ] The lecture separates the common enemy into problem, mechanism, and people-target risk;
-- [ ] Unheard groups are not fixed or stigmatized;
-- [ ] Both common frame and differentiation have supporting material;
-- [ ] Hostile-follower, sales, medical, and public-event content has boundaries;
-- [ ] Continuation anchors, truncation markers, and pending-content residue are zero;
-- [ ] Map state does not run ahead of actual acceptance;
-- [ ] No bypass occurred after permission denial.
+销售中的排除表达只能用于真实适配：说明适合谁、不适合谁；不得羞辱不购买者、制造虚假稀缺、焦虑营销或确定收益承诺。
+
+## 七、公共事实和伦理边界
+
+以下内容必须作为课堂口述/待核验事实分层：
+
+- 公共事件日期、人物、法律结论和因果关系；
+- 政治、历史、宗教与哲学引文；
+- 医疗诊断、药物、健康风险和治疗判断；
+- 粉丝、播放、广告报价、课程销量和收入；
+- 平台算法、转粉率与推荐机制。
+
+真诚与发心不能替代证据，也不能为错误信息、商业夸大或伤害行为免责。
+
+## 八、长课写入与验收状态
+
+长课采用唯一锚点串行分块：
+
+1. 首块包含完整 frontmatter、H1、编辑边界和唯一续写锚点；
+2. 每块写入后回读实际文件，再替换同一锚点；
+3. 最后一块删除锚点；
+4. 搜索锚点、`[truncated]`、待续/待补和忠实稿第三方视角；
+5. 核对关键案例覆盖，再更新地图。
+
+验收采用三层状态：
+
+- **源稿完成**：双稿和地图已写入；
+- **源端内容检查通过**：锚点、红线、结构、链接等只读检查完成；
+- **预览/自动终验通过**：预览真实存在并完成规定对账。
+
+若终端、同步、自动扫描或统计命令被运行时权限拦截：
+
+- 立即停止，不重试、不改写命令、不换工具追求同一结果；
+- 不把“源稿完成”写成“全部验收通过”；
+- 地图保留精确未完成状态；
+- 等用户明确授权后，先只读盘点可能的部分副作用，再补缺失动作。
+
+## 九、最小终检
+
+- [ ] 原文首尾完整或局部缺口已登记；
+- [ ] 忠实稿保持第一人称；
+- [ ] 全部关系、群体、公共事件和商业案例有去处；
+- [ ] 讲义把共同敌人分成问题/机制/人群风险；
+- [ ] 沉默人群没有被固定化、污名化；
+- [ ] 同屏与突出均有材料；
+- [ ] 黑粉、销售、医疗、公共事件有边界；
+- [ ] 续写锚点、截断和待补残留为0；
+- [ ] 地图状态没有领先于真实验收；
+- [ ] 权限拦截后没有绕行。

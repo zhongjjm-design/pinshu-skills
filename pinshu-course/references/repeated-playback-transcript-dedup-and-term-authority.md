@@ -1,90 +1,90 @@
-# Repeated-Playback Transcripts: Deduplication, Increment Preservation, and Terminology Authority
+# 重复回放逐字稿：去重、增量保留与术语权威
 
-Use this reference for livestream, screen-recording, or repeated-listening transcripts in which the same material reappears later while adding numbers, steps, limitations, Q&A, or screen details.
+适用于直播课、录屏课或反复回听生成的逐字稿：同一段内容在后半程再次出现，但重复段中夹有新增数字、步骤、限制、问答或屏幕说明。
 
-## 1. Classify the Repetition First
+## 1. 先判定重复类型
 
-Build an internal matrix for every suspected duplicate group:
+对每组疑似重复片段建立内部矩阵：
 
-| Primary Segment | Repeated Segment | New Information | Treatment |
+| 主片段 | 重复片段 | 新增信息 | 处理 |
 |---|---|---|---|
-| First complete explanation | Later near-restatement | None | Delete the repetition |
-| First complete explanation | Later restatement | New number/exception/step | Merge the increment into the primary segment |
-| Concept explanation | Later case | New case or failure process | Retain as a case; do not treat as repetition |
-| Spoken explanation | Screen demonstration | New interface fields/precise prompt | Merge both sources and label provenance |
+| 首次完整讲解 | 后续近似复述 | 无 | 删除重复 |
+| 首次完整讲解 | 后续复述 | 新数字/例外/步骤 | 把增量合并回主片段 |
+| 概念说明 | 后续案例 | 新案例或失败过程 | 保留为案例，不视为重复 |
+| 口播说明 | 屏幕演示 | 新界面字段/精确Prompt | 双源合并，并标明来源 |
 
-Principle: **remove repeated expression, not new evidence embedded inside repeated segments.** Never delete mechanically based on surface similarity.
+原则：**去掉重复表达，不去掉重复段里的新增证据。** 不按句面相似度机械删段。
 
-## 2. Process the Faithful Transcript and Lecture Differently
+## 2. 忠实稿与讲义分别处理
 
-### Faithfully Edited Transcript
+### 忠实精编稿
 
-- Use the first most complete and coherent explanation as the backbone;
-- Return new information from later duplicate segments to the original topic location;
-- Preserve the instructor’s first-person voice; do not write “the instructor mentioned again”;
-- In the opening editorial note, state only that “repeated playback was merged as backbone + new information.”
+- 以首次最完整、最连贯的讲解作为主干；
+- 后续重复段中的新增信息放回原主题位置；
+- 保持讲师第一人称，不写成“讲师再次提到”；
+- 编辑说明只在文首说明“存在重复回放，按主干＋新增信息合并”。
 
-### Structured Lecture
+### 系统化讲义
 
-- Do not preserve playback order. Reorganize by problem, principle, case, boundary, and execution steps;
-- Define each concept once;
-- Expand new cases, failure-recovery mechanisms, and acceptance methods in full;
-- Label editorially extracted formulas, templates, and models as “organized from the course.”
+- 不保留回放顺序，按问题、原理、案例、边界、执行步骤重组；
+- 相同概念只定义一次；
+- 新增案例、失败恢复机制和验收方法仍完整展开；
+- 编辑提炼的公式、模板和模型必须标明“基于课程整理”。
 
-## 3. Terminology Authority Order
+## 3. 术语权威顺序
 
-When repeated playback and STT produce several homophones, use:
+当重复回放和STT产生多个近音写法时，采用：
 
-1. Formal name explicitly confirmed by the user;
-2. Clear course visuals or official documentation;
-3. A form used consistently multiple times in the same material;
-4. Contextual inference;
-5. If still unresolved, add it to one consolidated confirmation list.
+1. 用户已经明确确认的正式名称；
+2. 清晰课程画面或官方文档；
+3. 同一材料内多次一致写法；
+4. 上下文推断；
+5. 无法确认则进入集中待确认清单。
 
-Do not invent a separate command, mode, or product because STT omitted one syllable. If the user has confirmed the formal name `Goal`, treat “Go” in the transcript first as a missing-syllable STT error. Distinguish a separate `go` command only if a visual or official source explicitly shows it.
+不得因为STT漏掉一个音节，就另造一个命令、模式或产品。例如用户已确认正式名称为 `Goal`，转写中的“Go”默认先按STT漏字处理；只有画面或官方资料明确显示独立的 `go` 命令时，才把两者区分开。
 
-## 4. When Original On-Screen Text Is Missing
+## 4. 画面原文缺失时的处理
 
-A lesson may say that “the full universal prompt is on screen,” while the text-only transcript records only its structure. In that case:
+课程口播可能说明“屏幕上有完整万能提示词”，但纯文本只记录了提示词结构。此时：
 
-- Organize “the instruction structure confirmed by the narration”;
-- State explicitly that it is “not a verbatim transcription of the course screen”;
-- Do not put it in quotation marks as if it were on-screen text;
-- Add the full on-screen wording to pending confirmation;
-- Keep status as draft or pending verification until the visual source is supplied or the user waives verbatim recovery.
+- 可以整理“根据口播可确认的指令结构”；
+- 必须明确“不是课程画面的逐字原文”；
+- 不得加引号冒充屏幕原文；
+- 把完整画面文字列入待确认项；
+- 状态保持草稿或待核验，直到画面来源补齐或用户决定放弃逐字还原。
 
-## 5. Reconcile Numbers and Cases
+## 5. 数字和案例对账
 
-After deduplication, verify each of the following:
+去重后仍需逐项核对：
 
-- Time: runtime and development duration;
-- Scale: number of accounts, quantity per account, total quantity;
-- Cost: tokens, price, quota;
-- Filtering criteria: replies, reposts, time window;
-- Boundary validation: for example, whether Top N retains N+1 as sorting evidence;
-- Exception recovery: parse failure, rate limits, sharding, batch saves;
-- Final acceptance: counts, table structure, links, sampling, and charts.
+- 时间：执行多久、开发几天；
+- 规模：账号数、每个账号数量、总量；
+- 成本：Token、价格、额度；
+- 过滤口径：回复、转帖、时间窗口；
+- 边界验证：例如Top N是否保留N+1作为排序证据；
+- 异常恢复：解析失败、限流、分片、分批保存；
+- 最终验收：数量、表结构、链接、抽样、图表。
 
-Every new number or boundary from a repeated segment must have a destination.
+重复段中任何一个新数字或新边界都必须有去处。
 
-## 6. QA Layers and State Gates
+## 6. QA分层与状态门控
 
-Split acceptance into three levels to avoid overclaiming when one script did not run:
+把验收拆成三层，避免单一脚本未运行时过度宣称：
 
-1. **Content acceptance:** first-person voice, cases, numbers, steps, and boundaries are complete;
-2. **Targeted-search acceptance:** zero residual old STT terms, coverage of new terminology, and zero residual third-party voice;
-3. **Automated comprehensive acceptance:** H1, frontmatter, code fences, duplicate long sentences, internal links, and pending-item counts.
+1. **内容验收**：第一人称、案例、数字、步骤和边界完整；
+2. **定向搜索验收**：旧STT词零残留、新术语覆盖、第三方视角零残留；
+3. **自动化综合验收**：H1、Frontmatter、代码围栏、重复长句、内部链接和待确认数量。
 
-Report only the levels actually completed as passed. If automated comprehensive acceptance did not run, report that the first two passed without equating them to full automated acceptance.
+只有实际完成的层级才能写“通过”。自动化综合验收未执行时，可以报告前两层已完成，但不得把它等同于全量自动验收通过。
 
-## 7. Minimum Delivery Checklist
+## 7. 最小交付检查表
 
-- [ ] A backbone–increment matrix exists for suspected duplicate blocks;
-- [ ] New numbers, steps, and limitations from later repetitions were merged;
-- [ ] The faithful transcript preserves the instructor’s first-person voice;
-- [ ] User-confirmed terminology overrides homophone STT;
-- [ ] Missing on-screen prompts were not fabricated;
-- [ ] Both drafts and the course map use the same formal title;
-- [ ] Pending items agree across both drafts and the map;
-- [ ] Draft/final state matches whether confirmations are cleared;
-- [ ] Content acceptance, search acceptance, and automated comprehensive acceptance are distinguished explicitly.
+- [ ] 疑似重复块已建立主干—增量矩阵；
+- [ ] 后续重复中的新增数字、步骤和限制已合并；
+- [ ] 忠实稿保持讲师第一人称；
+- [ ] 用户确认术语优先于近音STT；
+- [ ] 未展示的Prompt没有被补造；
+- [ ] 双稿和课程地图使用同一正式标题；
+- [ ] 待确认项在双稿与地图中一致；
+- [ ] 草稿/定稿状态与确认清零情况一致；
+- [ ] 已明确区分内容验收、搜索验收和自动化综合验收。

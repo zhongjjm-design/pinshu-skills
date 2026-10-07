@@ -1,95 +1,91 @@
-# Rules for Structured Study Guides and Formal Cross-Course Topic Syntheses
+# 结构化讲义与正式横向专题规则
 
-## Structured guide for one lesson
+## 单课结构化讲义
 
-### Required functions
+### 固定核心
 
-1. Learning position: what the lesson solves, prerequisites, and what learners should be able to answer afterward.
-2. One knowledge map: a taxonomy, relationship map, decision tree, or reasoning path.
-3. Core modules organized by knowledge relationships.
-4. Distinctive contributions from the instructor or author.
-5. Real connections to preceding and subsequent lessons.
-6. Sources, verification status, and unresolved items.
+1. 本课学习定位：解决什么、前置知识、学完能回答什么；
+2. 一张知识地图：分类、关系、决策树或推演路径；
+3. 按知识关系组织的核心模块；
+4. 老师或作者独有增值；
+5. 与前后课程的真实连接；
+6. 来源、核验和待确认。
 
-These functions are fixed; the number of sections is not. Let the content determine the structure.
+固定的是任务，不是章节数。不同课型按内容生长。
 
-### Preferred sequence
+### 组织顺序
+
+优先使用：
 
 ```text
-Establish the problem
--> State the core judgment
--> Explain why it holds
--> Expand comparisons and branches
--> Ground it in a case
--> State its limits
+先建立问题
+→ 给核心判断
+→ 解释为什么
+→ 展开比较和分叉
+→ 用案例落地
+→ 说明适用边界
 ```
 
-When the instructor explains one concept in several places, consolidate those passages. `pinshu-transcript` remains responsible for preserving the original speaking order.
+老师在多个位置讲同一知识点时可以收拢；原讲述顺序仍由忠实精编稿保存。
 
-### Lesson types
+### 课型
 
-- Concept lesson: definition, components, relationships, common confusions, and examples.
-- Classification or comparison lesson: taxonomy, representative items, strengths, selection conditions, and counterexamples.
-- Analytical reasoning lesson: inputs, observations, conditional branches, exclusions actually discussed in class, and conclusion.
-- Case or chart-reading lesson: bind people and evidence first, then organize only the inquiry, reasoning, correction, intervention, outcome, and non-transferable details that actually occurred. State when a stage was absent; do not invent it.
-- Practical or visual lesson: separate conceptual review from demonstration indexing. Record the required visual, limits of text, replay location, and safety stop conditions for each action.
-- Source-text lesson: authoritative source wording, instructor interpretation, application, and disputes.
+- 概念课：定义、构成、关系、混淆和示例；
+- 分类比较课：分类总表、代表项、特长、选择条件和反例；
+- 判断推演课：输入、观察点、条件分叉、课堂真实出现的排除项和结论；
+- 病案／例盘课：先绑定人物与证据，再按课堂真实发生的问诊、推导、纠偏、处置、反馈和不可照搬处组织；没有的阶段如实说明，不补造；
+- 实操／视觉课：理论复习与示范索引分层，逐项登记动作画面、文字边界、回看位置和安全停止条件；
+- 经典课：权威原文、老师解释、应用与争议。
 
-A lesson may combine several types. Choose one primary structure from the main learning task and embed the others as submodules instead of stacking several templates.
+一节课可以混合多种课型。先按主要学习任务选一个主骨架，其他课型作为子模块嵌入，不把多个模板机械相加。
 
-### Source anchors
+### 来源锚点
 
-Frontmatter must use a parseable `source_transcript` value: a valid relative path from the current file or a plain absolute path when the current project requires one. Public examples should use relative paths, never a publisher's private machine path. Never mix explanatory prose into the path field.
+Frontmatter使用可解析的`source_transcript`，值为纯绝对路径或从当前文件出发的合法相对路径，不能把说明文字和路径混在同一字段。每个大模块标对应章节；数字、安全、口诀、个案和独有判断再保留可搜索原句。病案字段还要绑定人物；跨课补充必须列出实际第二来源。不要用会随编辑变化的段落编号给全部旧稿制造返工。
 
-Anchor each major module to the corresponding source section. For numbers, safety guidance, mnemonics, cases, and distinctive claims, also retain wording that can be searched in the source. Case fields must identify the person. Cross-lesson additions must cite the actual second source. Avoid assigning paragraph numbers to every legacy draft when routine editing would make them unstable and create unnecessary maintenance.
+### 语义去向
 
-### Semantic routing
+生成前在后台按权威来源列出独立语义单元。每项必须进入讲义正文、降级区或明确排除区；讲义明显压缩时，至少反查核心主线、旁支案例、数字、老师判断、结尾和安全内容。删掉的只能是已在忠实稿层清理过的机械重复，或明确说明不再承担学习作用的内容。标题数、篇幅和生成者自评不能代替反向覆盖。
 
-Before drafting, create an internal inventory of distinct semantic units from the authoritative source. Every unit must enter the guide body, a lower-priority section, or an explicit exclusion list. When the guide compresses heavily, audit at least the main line, side cases, numbers, instructor judgments, closing material, and safety content against the source.
+### 高风险专业内容
 
-Omit only mechanical repetition already removed during transcript editing or content explicitly determined to have no learning value. Heading count, document length, and the writer's self-rating do not prove source coverage.
+方剂、方法或流程存在原型与课堂改法时，拆分原始组成、课堂推导、条件变化、讲师个人优化和安全提示。医疗、药物、危重症和实操内容不得因表格化而升级成现实建议。具体执行以主文件已选定的专业课程来源、安全与视觉闸门为准。
 
-### High-risk professional content
+## 正式横向专题
 
-When a formula, method, or process has both a prototype and classroom adaptations, separate the original composition, classroom reasoning, conditional changes, instructor-specific optimization, and safety guidance. Tables must not turn medical guidance, medication, emergency material, or procedures into real-world recommendations. Follow the professional-course gates selected by `SKILL.md`.
+### 输入
 
-## Formal cross-course topic synthesis
+- 一个模块或整门课的已验收讲义；
+- 必要时回查忠实精编稿；
+- 待归并知识线索；
+- 领域标准和术语表；
+- 已存在的同一对象主条目。
 
-### Inputs
+### 生产
 
-- Accepted guides for a complete module or course.
-- Faithful edited transcripts when source review is necessary.
-- Pending synthesis leads.
-- Domain standards and terminology lists.
-- Any existing authoritative entry for the same knowledge object.
+1. 按知识对象收集多课内容；
+2. 选择讲得最完整的主来源；
+3. 合并重复；
+4. 保留后课新增条件、案例和边界；
+5. 不同期和不同流派保留来源；
+6. 建立方法、案例、卡片和训练入口；
+7. 形成Aidan可读的专题，而不是候选字段汇总。
 
-### Process
+### 最低内容
 
-1. Collect material about one knowledge object across lessons.
-2. Choose the most complete lesson as the primary source.
-3. Merge repetition.
-4. Preserve conditions, cases, and limits added in later lessons.
-5. Retain provenance for different editions and schools of thought.
-6. Link methods, cases, cards, and training entry points.
-7. Produce a reader-ready topic entry, not a dump of candidate fields. Link to cards or training only where those optional resources actually exist; creating them belongs to `pinshu-study`.
+- 定义和适用范围；
+- 判断或使用顺序；
+- 关键分叉和比较；
+- 完整案例；
+- 易混淆与反例；
+- 分歧和版本变化；
+- 安全、事实和待核验；
+- 所有来源课次。
 
-### Minimum content
+### 不晋升
 
-- Definition and scope.
-- Judgment or usage sequence.
-- Important branches and comparisons.
-- Complete cases.
-- Common confusions and counterexamples.
-- Disagreements and version changes.
-- Safety, factual status, and open verification.
-- Every source lesson.
+只有一课普通提及、没有跨课增量、没有强混淆或安全价值时，不建立正式专题，只保留课程索引。
 
-### Do not promote weak candidates
+## 已验证样本经验
 
-When a topic receives only an ordinary mention in one lesson and has no cross-lesson addition, major confusion risk, or safety value, retain only a course index pointer. Do not create a formal topic entry.
-
-## Validated sample lessons
-
-Validated examples show that a structured guide must route every distinct semantic unit without restoring conversational length. Uncertain material must not be converted into a definite explanation from general knowledge. High-risk material may remain as course content only when it is separated from current real-world guidance.
-
-An initial human review scored the sample at roughly 80/100 and explicitly favored better emphasis and organization over fixed length or a contrived perfect score.
+已验证样本证明：结构化讲义必须给全部独立语义安排去向，但不需要恢复口语篇幅；待确认内容不得被常识补成确定解释；高风险信息可以保留为课程内容，但要与现实规范分开。Aidan初评约80分，明确要求不纠结固定长度和100分，继续改善重点与组织。

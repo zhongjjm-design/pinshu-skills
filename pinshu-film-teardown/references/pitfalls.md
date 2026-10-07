@@ -1,87 +1,86 @@
-# Pitfalls and Fixes (lessons from brand film teardowns)
+# 坑与修法（品牌片拆解的经验库）
 
-Record every change made while producing a film: picture, caption format, copy, transitions and effects, sound, rendering. Each entry follows "symptom, cause, fix, prevention." It records where things tend to go wrong, what the problem looks like, how to fix it, and how to prevent it. It is not a template to copy next time.
-Add an entry for every change, with the reviewer's feedback in the symptom. If the problem can become an automatic check, name the check. Once a lesson is confirmed as a rule, update `rules.md` as well.
-Methods validated through outside study (sessions spent breaking down other films) are recorded here too.
+记做片时每一处改动：画面、字幕格式、文案、转场特效、声音、渲染。记法是"现象、原因、修法、以后怎么防"，记的是"这里容易出毛病、出了长这样、怎么修、怎么防"，不是"下次照抄这个样式"。
+每改一处就加一条，Aidan 的原话照录进"现象"。能做成自动检查的，写明是哪一项。确认成规矩的，同步改 `rules.md`。
+外学（拆片对话）验证过的做法，也记在这里。
 
-Unless stated otherwise, the entries below come from the pilot film (a retail brand's anniversary film).
+## 一、画面
 
-## 1. Picture
-
-| # | Symptom | Cause | Fix | Prevention |
+| # | 现象 | 原因 | 修法 | 以后怎么防 |
 |---|---|---|---|---|
-| 1 | Feedback: static still montages holding for several seconds look bad, especially with a person frozen mid-sentence with an open mouth | Story endings used the brand's greeting posters as freeze cards held for 4 to 8 seconds, and the person happened to have an open mouth | Replace them with a shot of that person moving in the original film. Each story in the original film already ended with a shot of the person moving, with a number and a greeting printed on screen; prefer that shot | `qc.py` check 7 flags any picture frozen for more than 2 seconds. A still stays on screen for at most 2 seconds at a time, except when the narration is about that very image |
-| 2 | Feedback: dark screens lasting many seconds look ugly | Posters were shrunk into cards on a black background, leaving a black border all round | Images always fill the whole screen (`"full": True` in the scene list) | No "card on a black background" layout |
-| 3 | Feedback: the recap felt rigid, its scale looked messy, and the black background felt oppressive | After the stories, a black-background "numbers plus scale ruler" recap card was held for 7 seconds | Replaced with a fast cut of real people in motion, a little over 1 second each, using people who had not yet appeared in the film | Recaps and summaries use real footage, not black-background infographics |
-| 4 | Feedback: black-and-white footage appeared, which to Chinese viewers suggests a death | The intent was to express "this has nothing to do with you, it is dull" by fading color to black and white | Kept the color and pulled back, blurred, and darkened instead; in the end the whole card was removed and replaced with a shot of real people | **No black-and-white or desaturated footage**: Chinese audiences read black and white as mourning. Recorded in the rules |
-| 5 | Feedback: a blurred picture stayed on screen too long | The same "this brand is impressive" card was held 2.8 s in color and then 3.7 s blurred, 6.5 s in total | Removed the blurred part and used stock footage instead (an overhead shot of someone absorbed in their own work) | The same picture is never held for more than 3 seconds in a row |
-| 6 | A key story moment was cut to a dark car window | Shots were chosen only for content, not for brightness | Switched to a close-up from the same sequence in which the face is lit | Prefer bright shots in which people are recognizable |
-| 7 | Overall: "dark and oppressive" came up again and again | Black-background cards, blurred dark backgrounds, and full-width black bands were stacked on top of each other | Removed or lightened each of them | The picture is mainly bright real footage; any dark element needs a reason |
-| 8 | While discussing other companies' anniversary films, generic stock footage was used, and the reviewer suggested switching to footage from the brand's own film | (none) | Not switched: the rule is "when discussing other companies' practices, do not use this brand's footage" | Check reviewer suggestions against the rules before changing anything |
-| 8a | When the user asked whether a cut was ready to publish, checking it against that day's rules found two more violations in the first 40 seconds: a comment screenshot held 7.4 s and a dark-background large-text question card held 7.2 s | Only the shots the user had pointed out had been fixed; the whole film had not been checked against the rules | Split the comment segment in two: the first half of the sentence (about the like count on WeChat Channels) got opening footage from the original film plus a small likes-count label, and the comment screenshot kept only the second half (4.7 s). The dark text card was replaced entirely with a shot from the original film | The first 40 seconds decide whether viewers swipe away; before release, check each segment against "same picture no longer than 3 seconds, no dark text cards" |
-| 8b | The blurred backgrounds of comment pages and chapter cards were too dark | Blurred background brightness was set to 52% | Raised it to 70% | (none) |
-| 8c | The first chapter card's background was a night cityscape, so the whole card looked dark | Night-scene stock footage was chosen | Replaced it with a sunset city skyline | Prefer bright stock footage |
+| 1 | Aidan 10-02："静态的组图持续好几秒，好难看，张个嘴在那里，这到底什么意思" | 故事结尾用品牌的祝福海报当定格卡，停 4–8 秒，人物恰好张着嘴 | 换成原片里这个人在动的镜头。原片每个故事结尾本来就有"人物在动 + 印着数字和祝福语"的镜头，优先用它（好想来：张靓 123.55、罗总 243.7、冯总 410–415） | `qc.py` 第 7 项：画面静止超过 2 秒就报。静态图单次最多停 2 秒，只有"讲的就是这张图"时例外 |
+| 2 | Aidan 10-02："黑乎乎的画面要出现好多秒……丑死了" | 海报缩成卡片放在黑底上，四周一圈黑边 | 图片一律铺满全屏（内容表片段写 `"full": True`） | 不用"卡片 + 黑底"的版式 |
+| 3 | Aidan 10-02："死板……刻度乱七八糟……黑黑背景……很压抑" | 故事讲完后做了一张黑底的"数字 + 刻度尺"回顾卡，停 7 秒 | 换成真人动态快剪，每人 1 秒多，用片中还没出现过的人物（刘芳"78 分到 90 分"、周宁"他乡变故乡"、刘杨工牌"店员→管培生→店长"） | 回顾、总结段落用真实画面，不用黑底信息图 |
+| 4 | Aidan 10-02："怎么还会出现黑白的画面？……死人了吗？" | 想用"彩色褪成黑白"表达"跟你没关系、索然无味" | 改成保留颜色、往后退、变虚、变暗；最后整张卡拿掉，换成真人镜头 | **禁止黑白、去色画面**：中国观众看黑白就是丧事。已记进教训表 |
+| 5 | Aidan 10-02："这个画面虚化……持续的时间也过长" | 同一张"这个品牌挺厉害"卡，彩色停 2.8 秒，再虚化停 3.7 秒，共 6.5 秒 | 虚化段拿掉，换外部素材（俯拍一个人自顾自忙手里的事） | 同一个画面不连续挂超过 3 秒 |
+| 6 | "暴雨里那通电话"截到黑乎乎的车窗 | 选镜头只看内容对不对，没看亮度 | 换成同一段里人脸被照亮的特写 | 选镜头优先亮的、认得出人的 |
+| 7 | 总体："黑乎乎、压抑"反复出现 | 黑底卡片、模糊黑底、整宽黑带叠在一起 | 逐一去掉或改浅 | 画面以亮的真实画面为主，暗底元素要有理由 |
+| 8 | 讲"别人家的周年片"时用了通用外部素材，审片员建议换成 TVC 画面 | — | 不换：教训表规矩是"讲别人家的做法，画面不能用本品牌素材" | 审片员的建议先对教训表再改 |
+| 8a | Aidan 问整篇9"能不能达到发布水平"，按当天定的规矩一查，开头 40 秒还有两处犯规：0:15 评论截图挂 7.4 秒、0:31 暗底大字"怎么做到的？"挂 7.2 秒 | 之前只改 Aidan 指到的画面，没拿规矩把全片过一遍 | 评论段拆成两段：前半句"视频号拿了四万多个赞"用原片开头小女孩够零食 + "视频号 · 赞 4.1万"小标签，评论截图只留后半句（4.7 秒）；暗底字卡整个换成原片开头店员陪小女孩的镜头 | 开头 40 秒决定会不会被划走，出片前逐段对照"同一画面不超过 3 秒、不用暗底字卡" |
+| 8b | 评论页、章节卡的模糊底偏暗 | 模糊背景亮度压到 52% | 提到 70% | — |
+| 8c | 第一章章节卡底是夜景城市，整张发黑 | 外部素材选了夜景 | 换成日落城市天际线（30468） | 外部素材优先选亮的 |
 
-## 2. Caption format
+## 二、字幕格式
 
-| # | Symptom | Cause | Fix | Prevention |
+| # | 现象 | 原因 | 修法 | 以后怎么防 |
 |---|---|---|---|---|
-| 9 | Feedback: the black caption background was very wide and tall and did not look like any standard practice | A full-width band, 240 pixels tall, blurred and darkened to 55%, sat under the captions | Replaced it with a light frosted bar of about 200 pixels (not darkened, 85% brightness) whose only job is to blur out the original film's burned-in captions. The captions became white text with a thin black outline and a soft shadow | The common practice for online commentary videos is outlined text, not a full black band |
-| 10 | Removing the bar entirely exposed the original film's burned-in captions, which overlapped ours | The original film's captions are burned into the picture; after a 1.12x enlargement they still sat at about 930 to 965 pixels in the output frame | Put the top edge of the frosted bar at 878 pixels | With a new original film, grab a few frames first to measure where its captions sit in the output frame, then set the bar's top edge |
-| 11 | The original film's closing title card was half covered by the bar and shifted right by about 140 pixels | The original film is always enlarged from the top-left corner (to avoid the channel logo), and the bar runs throughout | The original film's own title cards are not enlarged, are centered, and get no bar during those seconds (`"card": True` in the scene list) | (none) |
+| 9 | Aidan 10-02："字幕的黑色背景这么宽这么高……符不符合规范……我好像没见过这种" | 字幕下垫了一条整宽、240 像素高、模糊并压暗到 55% 的黑带 | 改成约 200 像素的浅磨砂条（不压黑，亮度 85%），只为糊掉原片自带字幕；字幕本身改白字加细黑描边加柔和投影 | 网上解说片通行做法是描边字，不铺整条黑带 |
+| 10 | 试着把底条整个去掉，原片自带的字幕露出来，和我们的字幕叠在一起 | 原片字幕烧在画面里，放大 1.12 倍后仍在输出画面约 930–965 像素 | 磨砂条上沿放在 878 像素 | 换新原片时，先截几帧量原片字幕在输出画面里的高度，再定磨砂条上沿 |
+| 11 | 片尾原片字卡"同行16年 与你再向前"被底条压住半截、整体偏右约 140 像素 | 原片一律从左上角放大（为了避开台标）；底条全程铺着 | 原片自己的字卡不放大、居中，这几秒不铺底条（内容表写 `"card": True`） | — |
 
-## 3. Transitions and effects
+## 三、转场和特效
 
-| # | Symptom | Cause | Fix | Prevention |
+| # | 现象 | 原因 | 修法 | 以后怎么防 |
 |---|---|---|---|---|
-| 12 | Review finding: at cuts the picture went "dark, then bright again," like a blink, 19 times in the film | Every video segment faded in from full black over 0.3 s | Video-to-video transitions became hard cuts | QC scans for "dark, then bright again" |
-| 13 | After the switch to hard cuts, the first frame at a cut had the wrong scale, lost the channel logo, and showed the original film's captions | The renderer draws a video at the wrong scale on the frame where it first appears (the old fade had hidden this) | The previous segment runs 2 extra frames underneath (about 0.07 s), and the next segment comes in with a very short 2-frame transition; its first frame is transparent | `qc.py` check 8, "broken first frame at a cut." **Do not revert to plain hard cuts** |
-| 14 | A whole black frame showed when an image, poster, or animated card cut to video | The fix in entry 13 gave only videos the 2 extra frames | Images, poster flips, and animated cards also run 2 extra frames | Same as entry 13 |
-| 15 | As a comment page cut away, 1 frame of dim blurred background showed | The comment screenshot left on time, while the blurred background beneath it ran 2 extra frames | The comment page content also stays 2 extra frames (`sec(..., tail)` in `build.py`), covering the first frame of the next video | Every new card-type scene must carry these 2 frames |
-| 16 | The story number and the number printed on a poster overlapped for 5 frames | The number's exit and the poster's entrance happened at the same moment | The number starts leaving 0.4 s before the new picture appears, staggered last in, first out | (none) |
-| 17 | The first 0.3 s of the end card was an empty red background | The end-card text only came in at 0.3 s | The first line now enters at 0.05 s | (none) |
-| 18 | A numeral printed in the original film appeared at the same time as our story number, putting two identical numbers on screen | (none) | Such original-film segments get `"hideover": True` in the scene list, and our number is hidden there | (none) |
+| 12 | 审片：切换时"先暗一下再亮"，像眨眼，全片 19 处 | 每段视频进场都从全黑淡入 0.3 秒 | 视频接视频改硬切 | 体检扫"暗了再亮回来" |
+| 13 | 改硬切后，切点第一帧放大比例错、少了台标、露出原片字幕 | 渲染器在视频刚出现的那一帧放大比例会错（原来的淡入把它藏住了） | 上一段多放 2 帧垫底，下一段用 2 帧极短过渡进来；第一帧是透明的 | `qc.py` 第 8 项"切点第一帧异常"。**不要改回直接硬切** |
+| 14 | 图片、海报、动画卡接视频时露出一整帧黑 | 第 13 条只给视频多放了 2 帧 | 图片、海报翻页、动画卡也多放 2 帧 | 同上 |
+| 15 | 0:22 评论页切走时露 1 帧偏暗的模糊底 | 评论截图准时消失，底下模糊背景多放了 2 帧 | 评论页内容也多留 2 帧（`build.py` 的 `sec(..., tail)`），盖住下一段视频进场的第一帧 | 以后新加的卡片类场景都要带这 2 帧 |
+| 16 | 故事编号和海报上的数字叠了 5 帧 | 编号退场和海报进场同时发生 | 编号在新画面出现前 0.4 秒开始退，按"后进先走"错开 | — |
+| 17 | 片尾卡开头 0.3 秒空红底 | 片尾字从 0.3 秒才进 | 第一行字 0.05 秒就进 | — |
+| 18 | 原片自带数字字样（如"3 是重启"）和我们的故事编号同时出现，屏上两个"3" | — | 这类原片段在内容表写 `"hideover": True`，我们的编号在这里收起 | — |
 
-## 4. Pitfalls of using the original film
+## 四、用原片的坑
 
-| # | Symptom | Cause | Fix | Prevention |
+| # | 现象 | 原因 | 修法 | 以后怎么防 |
 |---|---|---|---|---|
-| 19 | A store sign flashed for 2 frames at a cut; there were 4 similar cases elsewhere | The start or end of a clip taken from the original film touched one of the original film's own edit points | Move the clip's start away from the edit point | `build.py` warns automatically while building (cached in `wide/assets/tvc_cuts.json`) |
-| 20 | Near the end, a few frames of a store showed before a flash of white covered them | The clip was cut in the middle of a flash-to-white transition in the original film; the edit-point warning detects only hard cuts | Moved the start to after the flash | Keep clip boundaries at least 0.3 s away from flashes and dissolves |
-| 21 | When a still poster was replaced, a clip from the original film ran into the next person's story | Each story in the original film is only a dozen or so seconds long | When choosing clips, check the original film's edit-point table and work out how long each clip can run; even after adding the 2 extra frames (entry 13), a clip must not cross an edit point | Make the one-frame-per-second contact sheet of the original film first, then set each clip's in and out points |
-| 22 | The same original footage appeared twice | Reuse creeps in easily when material runs short | Switch to unused segments where possible; repetition in recaps or key-point moments should be a deliberate callback | Once the scene list is written, list every range of the original film that has been used |
+| 19 | 4:15 闪 2 帧"好想来济南"门店；另有 4 处类似 | 截的原片片段首尾碰到原片自己的剪辑点 | 截取起点挪开剪辑点 | `build.py` 生成时自动报警（缓存 `wide/assets/tvc_cuts.json`） |
+| 20 | 片尾原片露几帧门店再被白光盖掉 | 截在原片一次"闪白"过渡中间；剪辑点报警只认硬切 | 起点挪到闪白之后 | 截取点离闪白、叠化要留 0.3 秒以上 |
+| 21 | 换静止海报时，一段原片接下去会跨进下一个人的故事 | 原片每个故事只有十几秒 | 选段时对照原片剪辑点表，算好每段能放多久，片段结尾加 2 帧（第 13 条）后也不能跨剪辑点 | 先拉"每格 1 秒"的原片总览图，再定每段起止 |
+| 22 | 同一段原片前后重复出现 | 素材不够长时容易重复用 | 尽量换没用过的段；回顾、点题时的重复要是"有意的回指" | 内容表写完后列一遍"已用原片区间" |
 
-## 5. Sound
+## 五、声音
 
-| # | Symptom | Cause | Fix | Prevention |
+| # | 现象 | 原因 | 修法 | 以后怎么防 |
 |---|---|---|---|---|
-| 23 | Review finding: nearly 4 seconds of near-silence close to the end, and the end card played the beginning of the music track | The music's loop seam had been computed for an earlier, shorter cut; after commentary was added, the film grew by about 30 seconds and the seam was not updated, so the music was too short and looped from the start during mixing | Music fitting now computes the number of loops from the end-card position and finds a seam for the remainder automatically | `fit_music.py` prints the second at which the closing cadence lands and warns when the music is shorter than the film |
-| 24 | The speakers' original audio was 2 to 3 dB louder than the narration | The original audio was left out of the level matching | The build now automatically caps the original audio at 1 dB above the narration | (none) |
+| 23 | 审片：3:47 将近 4 秒几乎没声；片尾卡上放的是曲子开头 | 配乐接缝只按 3:57 的片长做过，v7 加点评后片长 4:27，没跟着改；配乐太短，混音时被从头循环 | 配乐对齐改成按片尾卡位置自动算接几次，零头自动找接缝 | `fit_music.py` 会打印收尾和弦落在第几秒，配乐比成片短会报警 |
+| 24 | 当事人原声比旁白响 2–3 分贝 | 原声没参与找平 | 生成时自动把原声压到最多比旁白响 1 分贝 | — |
+| 38 | （解说片，2026-10）一条 2.5 分钟旁白用 Gemini 一次生成，用户听后反馈：大约两分钟后“声音变了，像两个人” | 长音频会漂移：按 5 秒窗口测，尾部 30% 亮度变高、音高下降；两次整段重生成仍然同样漂移，尾部 30% 分别低约 12 Hz 和 23 Hz，所以重摇整段不能解决 | 保留好的开头，只把漂移尾段切出来短句重生成；用接缝前两句作为 `--warm`，风格提示加“保持开头的音高和力度”。没有热身的冷启动短句比接缝前低约 30 Hz，会明显换人；加热身后，用户按耳朵选中的版本接缝约 10 Hz | 超过 2 分钟的旁白，做片前先把最后一分钟和开头对听。要换尾段时，用前文句子热身，交给用户听“原尾 + 新尾”的接缝来决定，不只看测量值 |
 
-## 5.5 Covers
+## 五点五、封面
 
-| # | Symptom | Cause | Fix | Prevention |
+| # | 现象 | 原因 | 修法 | 以后怎么防 |
 |---|---|---|---|---|
-| 24a | Feedback: the text-only title cover was disliked, was not the best option, and did not attract viewers | The old cover was a blurred, darkened store background with a block of text: no people, no emotion | Used the most arresting frame of the original film as the main image (a face, emotion, brightness) with one hook line. Version A put a question built on a number over a frame of a child; version B put a line about giving the spotlight to frontline staff over a group of cheering employees | Covers need a face and emotion; hooks use a number or a question; use bold type (Hiragino Sans GB W6, the third face in the .ttc, index 2), because thin weights cannot hold up against the picture |
-| 24c | Feedback: on the first horizontal cover, the text covered a child's face | It was assumed that the face was on the left, so the text went on the right, without measuring; in that frame the face was in the center | Enlarged the frame 1.15x and cropped toward the top-left so the face moved to the right; the text went into the empty floor area on the left, with its right edge at 788 pixels and the face starting at about 1100 pixels | Establish the face position before making a cover; the text area and the face area must not overlap; after export, look at the image at full size, not only the thumbnail |
-| 24d | At publishing time, feedback: titles cannot contain symbols, so the comma had to be removed by hand | WeChat Channels short titles do not support punctuation, and every candidate provided contained a comma | The user removed it manually when publishing | Short-title candidates never contain punctuation (no commas, question marks, or quotation marks); self-check before handing them over |
-| 24b | The vertical 3:4 cover cropped out the child's face and cut the channel logo in half | The horizontal image was cropped directly at the center or the left | Crop the vertical cover separately around the face; the logo is either complete or cropped out entirely | Every time, check first that the face is present in the vertical cover |
+| 24a | Aidan 10-02：封面"纯文字的标题……不喜欢、不是最好的、没有吸引力" | 旧封面是虚化压暗的门店底 + 一大段文字，没人、没情绪 | 用原片里最抓人的一帧当主图（有脸、有情绪、亮），配一句钩子：A"8分多钟 没有明星 凭什么4万赞？"（小女孩够零食）；B"把聚光灯，让给同行的人"（一群员工欢呼） | 封面要有人脸和情绪；钩子用数据或疑问；字用粗体（冬青黑体 W6，ttc 第 3 档），细体压不住画面 |
+| 24c | Aidan 10-02："第一张那个横版直接把小孩子脸盖住了，好难看" | 我以为脸在左边、字放右边，没量脸到底在哪；那一帧脸在画面正中 | 原帧放大 1.15 倍、靠左上裁，脸挪到右侧；字放左边空地板上，字的右边界 788 像素，脸从约 1100 像素开始 | 出封面先确定脸的位置，字的区域和脸的区域不许重叠；出图后看一眼原尺寸，不只看缩略图 |
+| 24d | Aidan 10-02 发布时："标题不能出现符号，所以我把逗号去掉了" | 视频号短标题不支持标点，我给的候选都带逗号 | 发布时 Aidan 手动去掉 | 短标题候选一律不带标点（逗号、问号、引号都不要），出稿前自查 |
+| 24b | 竖版 3:4 封面把小女孩的脸裁掉了、台标切掉半个 | 横版素材直接居中或靠左裁 | 竖版单独按脸的位置裁；台标要么完整、要么完全裁掉 | 每次出封面先看竖版的脸在不在 |
 
-## 6. Rendering and process
+## 六、渲染和流程
 
-| # | Symptom | Cause | Fix | Prevention |
+| # | 现象 | 原因 | 修法 | 以后怎么防 |
 |---|---|---|---|---|
-| 25 | The mix used an old picture that was mistaken for the new version | The hyperframes check and render commands can exit with code 0 even when they fail | After rendering, confirm that the output file is newer than the project | `render.py` checks the timestamp and frame count automatically and reports a failure otherwise |
-| 26 | Rendering repeatedly crashed midway ("Target closed") | The computer was short of memory, swap was full, and too many applications were open | Use `--low-memory-mode` (single process, about 9 minutes); close applications you do not need before rendering | `render.py` uses the low-memory profile by default and retries up to 3 times automatically |
-| 27a | The problems pointed out screenshot by screenshot (still posters, black cards, black and white, blur held too long, black caption band) were all the same kind: dark, static, held too long | Each fix waited for the issue to be pointed out; nobody proactively checked the whole film for the same kind of problem | Whenever one issue is pointed out, immediately scan the whole film for the same kind and fix them all at once | `qc.py` check 7 covers "static"; "dark" has no automatic check yet, so look at a full-film contact sheet before release |
-| 27 | Feedback: four hours of work had changed only four shots, and little had been learned | Rules and documents were written and single frames polished before any film was shown; every small fix triggered a new render | Show a film first and change what is pointed out; batch small fixes and render once | On big jobs, deliver something watchable every 30 to 60 minutes |
-| 28 | Each mix run differs slightly from the previous one (the decoded audio differs by -94 to -112 dB) | The audio encoder and multithreaded filters have a tiny inherent nondeterminism | Not a problem | Compare two mixes by the energy of their difference, not by file bytes: below -80 dB means they are the same result (verified on 2026-10-05 while building the skill) |
-| 29 | One pipeline used three different Python installations, each missing something | Environments installed at different times each had their own packages | Use a single Python with numpy, soundfile, pillow, and librosa installed | `doctor.py` checks everything at once and reports what is missing |
-| 30 | The QR code image for the end card did not exist; rendering finished anyway, and the image was simply missing from the film | The renderer silently skips missing images | Stop when the pre-render check reports missing files | `render.py` refuses to render when files are missing; add `--force` if you really need to render anyway |
-| 31 | The cover's "text over face" check blocked cases with no visible overlap | The face was treated as one big rectangle, and text touching its empty corners counted as an overlap | The face is treated as an ellipse, and each line of text is checked separately | Built into `make_cover.py` |
-| 32 | When the speaker bites were cut, the original film's music was still playing under the voice | The original film's audio has voice and music mixed together | Separate the vocals with Demucs before cutting | `prep_bites.py` separates by default and warns when Demucs is not installed |
-| 33 | While the public skill was being prepared, Chinese comments, Chinese punctuation, and hard-coded local paths in the code failed the release check | The public repository requires all-English content with no local paths or keys | The code is written once, entirely in English; Chinese punctuation is written as escape codes; paths are found automatically at runtime; Chinese documentation stays in the private edition | After changing code, run `tests/self_test.py` and the repository's release check |
-| 34 | Acceptance review: deleting the last scene from the config, or a whole section's scenes, still built OK, and the film shrank from 35 s to 24 s | `build.py` checked that each scene's text could be found in order, but not that every character of each section had been used | The build now checks each section and stops, naming the section and the first missing words | Self-test: "build.py refuses a scene list that leaves narration out" |
-| 35 | Acceptance review: several errors were bare code assertions, so a colleague could not tell which scene or field was wrong | `assert` used as error reporting | Plain errors naming the scene, the field and the fix (a cue word not in the narration, stock footage too short, an original-film shot running past the end) | Self-test: "build.py names a cue word that the scene never says" |
-| 36 | Acceptance review: the rules say to measure a new film's subtitle position, but the frosted strip was fixed at 878 px and the film was always scaled 1.12x from the top-left, so there was nowhere to put the measurement | The pilot film's values were written straight into the styles and animation | Moved into `spec.py` as `FRAME` (scale, corner, strip position or off). Defaults equal the pilot's values; rebuilding the pilot gave a byte-identical timeline and narration | Self-test: "spec.FRAME sets the film's scaling and turns off the subtitle strip" |
-| 37 | Acceptance review: step 4 said to cut speaker bites before step 5 wrote the config, but `prep_bites.py` reads the bite times from the config, so following the steps cut the template's placeholder seconds | The step table grouped work by kind ("narration") instead of by what each step reads | Step 4 now says to fill the bite words and times into `spec.py` first, then cut | Order steps by data dependency: what this step reads, and which step produces it |
+| 25 | 混音用了旧画面，以为是新版 | hyperframes 检查、渲染失败时退出码也可能是 0 | 渲染完核对成片文件时间比工程新 | `render.py` 自动核对时间和帧数，不对就报失败 |
+| 26 | 渲染中途反复崩（"Target closed"） | 电脑内存紧，交换空间满；同时开的应用太多 | 用 `--low-memory-mode`（单进程，约 9 分钟）；渲染前关掉暂时不用的应用 | `render.py` 默认省内存模式、自动重试 3 次 |
+| 27a | Aidan 一张张截图指出的问题（静止海报、黑底卡、黑白、虚化太久、字幕黑带）都是同一类：暗、静止、挂太久 | 我等他指出来才改，没有主动按同一类去查全片 | 每次被指出一处，立刻按同一类把全片扫一遍，一次改完 | `qc.py` 第 7 项管"静止"；"暗"还没有自动检查，出片前截全片总览图看 |
+| 27 | Aidan 10-02："花了 4 个小时只改了四个画面……学了个屁" | 我先去建规则、写文档、抠单帧，没先给他看片；每修一处小毛病就重渲一次 | 先出片给他看，他指哪改哪；小毛病攒一批一起改，只渲一次 | 大活每 30–60 分钟交一个能看的东西 |
+| 28 | 混音结果每跑一次都和上次不完全一样（解码后的声音差 -94 到 -112 分贝） | 音频编码器和多线程滤镜本身有极小的不确定性 | 不算问题 | 比较两次混音不比文件字节，比差异能量：低于 -80 分贝就是同一个结果（2026-10-05 做 Skill 时核出） |
+| 29 | 同一条流水线用了三个不同的 Python，各缺一样东西 | 不同时期装的环境各装各的 | 统一用一个装齐 numpy、soundfile、pillow、librosa 的 Python | `doctor.py` 一次查全，缺什么说什么 |
+| 30 | 片尾卡要用的二维码图片不存在，渲染照样完成，成片里直接缺图 | 渲染器遇到缺失的图片会悄悄跳过 | 渲染前检查报"缺文件"就停下 | `render.py` 遇到"缺文件"拒绝渲染，确实要渲染加 `--force` |
+| 31 | 封面"字压脸"检查把肉眼没压到的情况也拦下 | 把脸当成一个大方框，方框的空角碰到字就算压脸 | 脸按椭圆算，每一行字单独比 | `make_cover.py` 内置 |
+| 32 | 截当事人原声时，原片配乐还垫在人声底下 | 原片的声音是人声加配乐混在一起的 | 先用 Demucs 做人声分离再截 | `prep_bites.py` 默认分离，没装 Demucs 会提示 |
+| 33 | 做公开版 Skill 时，代码里的中文注释、中文标点、写死的本机路径过不了发版检查 | 公开仓库要求全英文、不出现本机路径和钥匙 | 代码只写一份全英文，中文标点用编码写法，路径运行时自动查找；中文说明放本机版文档 | 改代码后跑 `tests/self_test.py` 和仓库发版检查 |
+| 34 | Hermes 验收（2026-10-06）：删掉配置里最后一个场景，甚至删掉整段场景，生成照样报 OK，片子从 35 秒变 24 秒 | `build.py` 只查"每个场景的字能不能在段落里按顺序找到"，没查"段落的字有没有全部用完" | 生成时逐段核对：段落里还有字没分给任何场景就停下，报第几段、从哪个字开始漏 | 自测加了"漏稿必须报错"一项 |
+| 35 | Hermes 验收：几处报错只甩出一行代码断言，同事看了不知道是哪个场景、该改什么 | 用 `assert` 当报错 | 改成说人话的报错：哪个场景、哪个字段、怎么改（提示词不在稿子里、素材不够长、原片截到片尾之后） | 自测加了"提示词不在稿子里必须报错"一项 |
+| 36 | Hermes 验收：规矩说"换原片先量字幕位置"，可磨砂条写死在 878 像素、原片写死从左上角放大 1.12 倍，量了也没地方填 | 第一条片子的数值直接写进了样式和动画 | 放进 `spec.py` 的 `FRAME`（放大倍数、放大起点、磨砂条位置或关掉）；默认值等于好想来，好想来重新生成后时间线和配音逐字节一致 | 自测加了"FRAME 生效"一项 |
+| 37 | Hermes 验收：说明第 4 步就让截当事人原声，第 5 步才写配置，可 `prep_bites.py` 要读配置里的原声起止秒数，照做会按模板里的秒数剪错 | 步骤表按"配音类"归堆，没按数据依赖排 | 第 4 步改成"先把原话和起止秒数填进 `spec.py`，再截" | 写步骤时按"这一步要读什么、那东西哪一步产生"排 |

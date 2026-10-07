@@ -12,6 +12,7 @@ Use for:
 
 Do not use when no trustworthy dataset exists. Route a conceptual claim to another mother.
 
+Approved anchor: `../assets/approved-examples/07-data-journalism.png`
 
 ## Composition families
 

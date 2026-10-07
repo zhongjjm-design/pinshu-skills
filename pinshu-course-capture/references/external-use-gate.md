@@ -1,30 +1,30 @@
-# External-Use Gate
+# 外部使用闸门
 
-This is the shared conditional gate for public release, formal reports, academic work, paid courses, client deliverables, consulting, teaching materials, real-world decisions, and public quotation. Internal course assets may enter `ACCEPTED` after basic acceptance. Failure at this gate blocks external use only; it does not retroactively invalidate an internal asset unless the review discovers core semantic distortion.
+这是对外发布、正式报告、论文、付费课程、客户方案、咨询、教材、实际决策和公开引用的统一条件门。内部课程资产通过基础验收后可以 `ACCEPTED`；外部闸门失败只阻止外部使用，不倒推内部资产不合格，除非发现核心语义失真。
 
-## One integrated review
+## 一次综合核验
 
-Run the following checks when their content triggers apply, and emit only one `external-use-review-record.json`:
+按内容触发以下检查，并只输出一份 `外部使用核验记录.json`：
 
-1. external facts, numbers, timeliness, and source hierarchy;
-2. medical, legal, financial, safety, and platform-compliance boundaries;
-3. privacy, subject authorization, and client confidentiality;
-4. rights in images, slides, source text, code, and third-party content;
-5. attribution of quotations, paraphrases, lecturer views, and editorial additions; and
-6. whether external claims exceed the evidence or applicable scope.
+1. 外部事实、数字、时效与来源层级；
+2. 医疗、法律、财务、安全和平台合规边界；
+3. 隐私、人物授权和客户保密；
+4. 图片、课件、原文、代码与第三方内容权利；
+5. 引用、改写、讲师观点与编辑补充的归因；
+6. 对外表达是否超出证据与适用范围。
 
-Mark categories that do not apply as `not_applicable`. Do not create several sequential gates.
+未命中的类别标记 `not_applicable`，不另建多个串行闸门。
 
-## Pass conditions
+## 通过条件
 
-- Every triggered item is `pass` or has an explicit, acceptable restricted-use scope.
-- No unresolved `blocker` remains.
-- The record binds the source transcript, faithful edit, structured lecture, and course map by SHA-256.
-- The record identifies the reviewer, review time, intended use, evidence sources, and remaining limitations.
+- 所有触发项均为 `pass` 或有明确、可接受的降级使用范围；
+- 无未解决 `blocker`；
+- 记录绑定原始转写、忠实稿、讲义和课程地图的 SHA-256；
+- 说明核验人、核验时间、拟使用场景、证据来源和剩余限制。
 
-## Safeguards
+## 禁止
 
-- A disclaimer never replaces claim-adjacent facts and risk boundaries.
-- Spoken course content does not automatically become objective fact.
-- The existence of an external-use gate never lowers the quality required for the four internal assets.
-- Do not split review categories into a serial sequence that repeatedly starts new agents.
+- 不用免责声明替代近邻事实与风险边界；
+- 不把课程口述自动升级为客观事实；
+- 不因外部闸门存在而降低内部四项资产质量；
+- 不把多个检查项拆成反复启动 Agent 的串行流程。

@@ -1,13 +1,32 @@
-# Guided Study and Training Rules
+# 带学与学习训练规则
 
-Decide first: if the user has not studied the material or their mind is blank, use guided study; if they just finished reading, use basic recall; if they have reviewed it before, use derivation, comparison, and mixed practice; if they have known errors, run a targeted retest. Stop testing immediately when the user says they cannot answer, have not started studying, or their mind is blank.
+## 先判断学习阶段
 
-## Guided study
+- 没学过或脑中空白：先带学，不出测试题；
+- 刚读完：使用主动回忆卡检查基础提取；
+- 已复习：使用训练题检查比较、推导和迁移；
+- 有真实错题：按错因回源并复测。
 
-Explain the main throughline first. Cover one module at a time. Explain the problem, relationships, and decision sequence before details. Use examples, mnemonics, and counterexamples. At the end of the module, ask only one low-pressure question about material just covered. If the user is still blank, explain it again and do not record a missed question. Save progress, but do not automatically mark the material as mastered.
+用户说回答不出、还没开始学或脑子空白时，立即退出测试。
 
-## Training
+## 带学
 
-Ask one question at a time and show only the question. Wait for a complete answer. List what the answer covered before listing omissions. Each follow-up addresses only one omission. At the end, provide the reference answer and source, diagnose the error cause, identify the exact source location to review, ask for a fresh answer, and write the session to the record.
+先说明主轴；一次处理一个模块；先讲问题、关系和判断顺序，再讲细节、案例、口诀与反例。模块结束只问一个刚学过的低压力问题；仍空白就重讲，不记错题。保存真实进度，但不因“听过”自动标记掌握。
 
-Classify question provenance as authentic question, classroom question, adapted question, or AI-generated gap-fill question. Show the learner natural prose in the resolved output language; do not expose JSON, English type codes, or pipeline status fields. Stop when the agreed time ends, the target module is complete, every critical omission has been answered again, or the user becomes fatigued.
+## 主动回忆
+
+使用 `03_复习与训练/01_主动回忆卡`。一次只显示一张卡和问题；等待学习者回答后再展开答案、解释和来源。主动回忆主要检查核心知识能否从脑中取出，不与训练题库重复堆放复杂题。
+
+## 训练
+
+使用 `03_复习与训练/02_训练题库`。一次一道题，只给问题；等完整回答；先列已覆盖，再列遗漏；每次只针对一个遗漏追问；结束后给参考答案和来源；判断错因；指定回源位置；让学习者重答；写入 `04_学习记录/01_训练记录`。
+
+题目身份分真题、教材题、课堂题、典型错答题和 AI 补缺题。用户只看到中文，不显示 JSON、英文类型名或流水线状态。达到约定时间、目标模块、关键遗漏已重答，或用户疲劳时停止。
+
+## 错题与复测
+
+只有真实错答才进入 `04_学习记录/02_错题与复测.md`。记录错误属于记忆缺失、概念混淆、推导跳步、条件遗漏、表达不完整、题意误读、来源身份混淆还是安全边界错误，并写明回看哪里、何时重答和复测结果。
+
+## 课程地图入口
+
+学习型课程的 `00_课程地图.md` 必须说明：第一次学习先读结构化讲义；刚学完进入主动回忆；需要检验理解进入训练题库；真实学习后查看学习记录；出现薄弱点按错题与复测继续。课程地图显示当前状态与下一步，不让学习者靠猜目录操作。

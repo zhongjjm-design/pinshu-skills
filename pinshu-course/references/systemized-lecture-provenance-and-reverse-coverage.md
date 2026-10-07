@@ -1,88 +1,88 @@
-# Provenance Layers in Systemized Lectures and Reverse-Coverage Checks for Cross-Lesson Libraries
+# 系统化讲义来源分层与横向库反向覆盖
 
-## When to Use
+## 适用场景
 
-Use this reference for final acceptance across “faithfully edited transcript → systemized lecture → cross-lesson knowledge base,” especially for independent QA after parallel generation by multiple agents.
+用于“忠实精编稿 → 系统化讲义 → 横向知识库”的终验，尤其适合多Agent并行生成后做独立QA。
 
-## 1. A Systemized Lecture Must Separate Provenance Layers
+## 一、系统化讲义必须做来源分层
 
-A systemized lecture may reorganize, synthesize, and add teaching aids, but it must not present editorial design as original instruction from the instructor.
+系统化讲义可以重组、归纳和增加教学辅助，但不能把编辑者设计伪装成讲师原授。
 
-### Original Course Instruction
+### 课程原授
 
-The following may enter the body directly:
+可直接写入正文：
 
-- Methods, steps, exercises, and acceptance conditions the instructor states explicitly;
-- Commands, prompt intent, cases, numbers, and failure processes actually demonstrated in class;
-- Judgments traceable to the faithful master transcript.
+- 讲师明确提出的方法、步骤、练习和验收条件；
+- 课堂实际演示的命令、Prompt意图、案例、数字与失败过程；
+- 能在忠实精编母本中定位的判断。
 
-### Editorial Reorganization
+### 编辑者重组
 
-If the master transcript does not explicitly teach the following, declare at the section heading or opening paragraph:
+以下内容若母本没有明确原授，必须在节标题或首段声明：
 
-> The following material was organized editorially from the course. It was not presented by the instructor as an original classroom assignment, fixed sequence, or standard SOP.
+> 以下为编辑者依据课程整理，并非讲师现场原授作业、固定步骤或标准SOP。
 
-This includes:
+包括：
 
-- New homework, exercise counts, or required consecutive days;
-- Naming an exploratory process an “N-step method,” “SOP,” or “acceptance standard”;
-- Single-variable controls, stop conditions, or scoring rules added for teaching convenience;
-- Tool-selection recommendations absent from the master transcript.
+- 新增课后作业、练习数量、连续执行天数；
+- 将探索式过程命名为“N步法”“SOP”“验收标准”；
+- 为方便教学新增的单变量、停止条件或评分规则；
+- 母本未明确给出的工具选型建议。
 
-Keep editorial safety recommendations separate from “conclusions confirmable from the course up to the truncation point.” After source audio cuts off, never complete an ethical position on the instructor’s behalf and call it “the lesson conclusion.”
+编辑安全建议必须与“课程截至截断处可确认的结论”分开。原声截断后，禁止用“本课结论”替讲师补出完整伦理立场。
 
-## 2. Audit Identity and Pronouns
+## 二、人物身份与代词审计
 
-- If the master transcript confirms only “Teacher Li,” “guest,” or “student,” do not infer gender.
-- Do not use unconfirmed gendered pronouns. Use names, titles, “the speaker,” or gender-neutral syntax.
-- In multi-speaker Q&A, identify the respondent at section or paragraph level; never merge two people’s first-person statements into one “I.”
-- Attribute numbers, credentials, products, and judgments to the person who actually said them.
+- 母本只确认“李老师/嘉宾/学员”时，不得推断性别。
+- 不使用未经确认的“他/她/他的/她的”；改用姓名、称谓、“这位分享者”或无性别句式。
+- 多人问答必须在板块或段落级标注回答者，不能把两人的“我”合并。
+- 数字、履历、产品和判断必须归到实际讲者名下。
 
-## 3. Sample Final Acceptance of the Systemized Lecture
+## 三、系统讲义终验抽样
 
-For every lesson, sample the beginning, middle, and end plus five critical anchors. Check that:
+每课至少抽：开头、中段、结尾，以及5个关键锚点。检查：
 
-1. Core cases, numbers, relationships, tools, and qualifiers remain;
-2. The result is not a conclusion-only summary;
-3. Items requiring relistening were not completed without evidence;
-4. Editorial additions are clearly layered;
-5. There is exactly one H1;
-6. `source_transcript` is a resolvable path relative to the current file.
+1. 核心案例、数字、人物关系、工具和限定条件仍在；
+2. 不是只保留结论的摘要；
+3. 待回听项没有硬补；
+4. 编辑新增内容已明确分层；
+5. 只有一个H1；
+6. `source_transcript` 使用从当前文件出发可解析的相对路径。
 
-Recommended field:
+建议统一字段：
 
 ```yaml
-source_transcript: ../02_Segmented-Faithful-Transcripts/Lesson-XX·Title.md
+source_transcript: ../02_分段忠实精编/第XX课·标题.md
 ```
 
-## 4. Cross-Lesson Knowledge Bases Require Reverse Coverage
+## 四、横向知识库必须反向覆盖
 
-“Sequential numbering, correct item totals, and complete fields” prove only mechanical structure. They do not prove complete knowledge coverage.
+“编号连续、条目总数正确、字段齐全”只证明机械结构存在，不证明知识覆盖完整。
 
-### Methodology Library
+### 方法论库
 
-Scan backward from every systemized lecture’s core models and confirm that each has an independent searchable entry. In particular, check:
+从每份系统讲义反向扫描核心模型，确认都有独立可检索入口。尤其检查：
 
-- Whether an independent model from the course’s main chain is buried inside another entry;
-- Whether a method present in an assignment template is missing from the methodology library;
-- Whether adjacent models were merged incorrectly, erasing applicable conditions.
+- 课程主链中的独立模型是否被埋进其他条目；
+- 某方法虽出现在作业模板中，是否遗漏于方法库；
+- 相邻模型是否被错误合并，导致适用条件消失。
 
-### Fact-Verification Register
+### 事实核验表
 
-Scan backward from the systemized lectures, case library, and tool library for:
+从系统讲义、案例库、工具库反向扫描：
 
-- Proper nouns and tool relationships;
-- Amounts, income, followers, views, conversions, and effects;
-- Platform rules and current features;
-- Medical, health, copyright, and sensitive-industry claims;
-- Account IDs, people’s names, and product names.
+- 专名及工具关系；
+- 金额、收入、粉丝、播放、转化与效果；
+- 平台规则和现行功能；
+- 医疗、健康、版权与敏感行业声明；
+- 账号ID、人物名和产品名。
 
-Sequential numbering in the register does not prove coverage. When omissions are found, append new numbers and update the record-count statement.
+表中连续编号不等于覆盖完整。发现漏项时追加编号，并更新记录数说明。
 
-## 5. Mechanical Final Checks
+## 五、机械终检
 
-- Every Markdown file has exactly one H1; category headings use H2;
-- All relative links and source fields resolve to existing targets;
-- Frontmatter field names are consistent;
-- Status may change to “accepted” only after independent QA passes;
-- A generator’s self-check does not replace independent read-only QA.
+- 每份Markdown唯一H1；分类标题使用H2；
+- 所有相对链接和source字段均真实存在；
+- Frontmatter字段命名统一；
+- 状态只能在独立QA通过后改为“已验收”；
+- 生成者自检不能替代独立只读QA。

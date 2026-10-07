@@ -1,147 +1,147 @@
-# Taxonomy Governance and Safe Migration for Multi-Event Course Libraries
+# 多活动课程库的栏目治理与安全迁移
 
-## When to Use
+## 适用场景
 
-Use this reference when a course or institution directory has been flat for a long time and now mixes in-person classes, summits or festivals, special livestreams, private advisory-board Q&A, and other sources—or when the user asks to reclassify material or correct a category name.
+一个课程或机构目录长期平铺后，混入线下课、峰会/嘉年华、专题直播、私董会答疑等不同来源；用户要求重新分类，或纠正某个栏目名称。
 
-The goal is not to “put files into more folders.” It is to establish a small number of stable retrieval entry points while preserving source traceability and every relative link.
+目标不是“把文件放进更多文件夹”，而是建立少而稳定的检索入口，同时保留来源可追溯性和全部相对链接。
 
-## 1. Distinguish Two Kinds of Names
+## 一、先分清两种名字
 
-### 1. Knowledge-Base Category Name
+### 1. 知识库栏目名
 
-This name supports current navigation and classification. The user’s latest explicit name is authoritative. For example, if the user says a group belongs under “In-Person Classes,” do not retain an editor-inferred category such as “Anniversary Masterclass.”
+用于当前导航和分类，以用户最新明确命名为最高权威。例如用户说某批内容应归“线下课”，就不要继续沿用编辑者推断出的“周年大课”。
 
-### 2. Historical Source Name
+### 2. 历史来源名
 
-This name records which event, livestream, or batch originally produced the course. A source name may preserve the old event wording; category restructuring must not rewrite historical context.
+用于说明课程当时来自哪个活动、直播或批次。来源名可以保留旧活动称谓，不应因为栏目调整而篡改历史语境。
 
-Recommended separation:
+推荐分离：
 
 ```yaml
-course: current knowledge-base category name
-source: original event or recording source name
+course: 当前知识库栏目名
+source: 原始活动或录制来源名
 ```
 
-By default, preserve old wording when it appears as factual context in body text. Correct only directory names, index headings, and fields such as `course`, `category`, or their project-specific equivalents when those fields perform a classification function.
+正文中作为事实语境出现的旧称谓默认保留；只修正明确承担分类功能的目录名、索引标题和 `course/category/栏目` 字段。
 
-## 2. Keep the Directory Hierarchy Small and Stable
+## 二、目录层级保持少而稳定
 
-Do not impose a translated default tree. Inventory the existing hierarchy, then record or confirm semantic targets in the manifest or explicit path map. A multi-event library typically needs these roles:
+默认结构：
 
 ```text
-{archive_root}/
-├── {master_index}
-├── {in_person_category}/{instructor}/
-├── {event_category}/{event_id}/
-├── {special_livestream_category}/
-└── {private_qa_category}/
+课程机构根目录/
+├── 00_课程总索引.md
+├── 01_线下课/
+│   ├── 讲师甲/
+│   └── 讲师乙/
+├── 02_峰会或嘉年华_日期/
+├── 03_专题直播/
+└── 04_私董会与答疑/
 ```
 
-These are semantic roles, not literal names. Existing course structure wins; for a new library, confirm the rendered values before any move.
+规则：
 
-Rules:
+- 第一层按活动栏目或内容批次；
+- 内容较多的栏目，第二层按讲师；
+- 不再机械增加“逐字稿/讲义/案例/图片”多层目录，除非同一讲师文件数量已经明显失控；
+- 同一讲师的忠实稿、讲义和素材放在可互相引用的稳定相对位置；
+- 不创建空栏目。
 
-- Use event category or content batch at the first level;
-- For high-volume categories, group by instructor at the second level;
-- Do not mechanically add multiple layers such as “transcripts / lectures / cases / images” unless one instructor’s file count is demonstrably unmanageable;
-- Keep an instructor’s faithful transcripts, lectures, and assets at stable relative locations that can reference one another;
-- Do not create empty categories.
+## 三、移动前必须做只读盘点
 
-## 3. Perform a Read-Only Inventory Before Moving Anything
-
-Create a migration map:
+建立迁移映射：
 
 ```json
 {
-  "old-relative-path": "new-relative-path"
+  "旧相对路径": "新相对路径"
 }
 ```
 
-The inventory must include at least:
+盘点至少包括：
 
-1. Counts of all Markdown files, images, and attachments;
-2. Current event batch, instructor, document type, and asset attribution;
-3. Destination name collisions, existing destinations, and case-sensitivity conflicts;
-4. Wikilinks, ordinary relative links, and image links in Markdown;
-5. Whether an image directory serves only one instructor or is shared across documents in multiple directories;
-6. Whether unclassified files remain at the root.
+1. 全部 Markdown、图片和附件数量；
+2. 当前活动批次、讲师、文稿类型和素材归属；
+3. 重名目标、已存在目标和大小写冲突；
+4. Markdown 内的 Wikilink、普通相对链接与图片链接；
+5. 图片目录是否只服务一个讲师，还是被多篇跨目录文档共享；
+6. 根目录是否仍有未归类文件。
 
-Stop if any source file is missing or a destination already exists. Do not perform a partial overwrite.
+任何源文件缺失或目标已存在时停止，不做部分覆盖。
 
-## 4. Move Instructor Directories with Their Assets
+## 四、含素材的讲师目录整体迁移
 
-Do not move only `.md` files:
+移动文档时不能只移动 `.md`：
 
-- If a document and its rendered `{asset_relative_path}` belong together, move them together into the confirmed destination so the relative path remains valid;
-- If multiple categories share assets, do not duplicate them blindly. Retain a shared asset directory or first design an explicit new relative-reference scheme;
-- Verify Wikilinks between the two drafts as well as image links.
+- 如果正文使用 `assets/讲师或主题/图片.png`，将文档与对应 `assets/` 一起迁到同一讲师目录，使相对路径保持不变；
+- 若素材被多个栏目共享，不盲目复制。保留公共素材目录，或先建立明确的新相对引用方案；
+- 双稿之间的 Wikilink 同样要验证，不能只检查图片。
 
-Prefer a layout that preserves links after the move. Rewrite body links in bulk only when necessary.
+优先选择“移动后不改链接”的目录布局；只有确有必要时才批量改正文链接。
 
-## 5. Make the Master Index the Primary Entry Point
+## 五、总索引承担主入口
 
-Create or update the confirmed `{master_index}` target at the root:
+根目录新增或更新 `00_课程总索引.md`：
 
-- Display content by category;
-- Group high-volume categories by instructor;
-- Give distinguishable aliases to the faithful transcript and structured lecture on the same topic;
-- Use stable relative paths;
-- Keep course summaries out of the index; it is navigation only.
+- 按栏目展示；
+- 多讲师栏目再按讲师分组；
+- 同一主题的忠实稿与系统讲义使用可辨识别名；
+- 链接使用稳定相对路径；
+- 索引不堆课程摘要，只负责导航。
 
-Example:
+示例：
 
 ```markdown
-## {category_label}
+## 01｜线下课
 
-### Instructor A
+### 讲师甲
 
-- [[{faithful_relative_path}|{faithful_alias}]]
-- [[{lecture_relative_path}|{lecture_alias}]]
+- [[01_线下课/讲师甲/主题-忠实精编逐字稿|主题｜忠实精编逐字稿]]
+- [[01_线下课/讲师甲/主题-系统讲义与传播素材卡|主题｜系统讲义与传播素材卡]]
 ```
 
-## 6. Use a Rollback-Safe Single-Writer Migration
+## 六、执行采用可回滚的单写者迁移
 
-1. The main agent locks the final mapping; subagents must not write to the formal library.
-2. Create all destination parent directories.
-3. Move items one by one according to the mapping; record every completed source and destination.
-4. If any step fails, roll back completed moves in reverse order.
-5. Correct only explicit category metadata after migration succeeds.
-6. Write the master index last so it never points prematurely to nonexistent files.
-7. Do not use fuzzy bulk overwrites or rewrite course body text merely for classification.
+1. 主Agent锁定最终映射；子Agent不得写正式库。
+2. 创建全部目标父目录。
+3. 按映射逐项移动；记录已经移动的源和目标。
+4. 任一步失败时，按相反顺序回滚已经完成的移动。
+5. 迁移完成后再修正明确的栏目元数据。
+6. 最后写总索引，避免索引提前指向不存在的文件。
+7. 不使用模糊批量覆盖，也不因分类而改写课程正文。
 
-If the environment requires approval for writes, list moves, directory creation, index creation, and metadata edits in one concise acceptance request. After the user says “organize it according to this plan,” execute immediately rather than asking for synonymous confirmation again.
+若环境要求写操作审批，移动、新建目录、新建索引和元数据修改应在一次最短验收中列明；用户明确说“按这个方案整理”后立即执行，不重复索要同义确认。
 
-## 7. Final Acceptance After Migration
+## 七、迁移后终验
 
-Verify the actual result:
+必须真实检查：
 
-- [ ] The course-file count before and after migration matches; count the new index separately
-- [ ] Every mapped destination exists and every old source path is empty
-- [ ] The root contains only the master index, category directories, and permitted hidden system files
-- [ ] Every Markdown link in the master index resolves
-- [ ] Every cross-link between paired drafts resolves
-- [ ] Every relative image and attachment link resolves
-- [ ] Course category fields use the user-confirmed names
-- [ ] Historical source fields and historical context in the body were not altered accidentally
-- [ ] No file was overwritten, lost, or silently duplicated
+- [ ] 原课程文件总数与迁移后总数一致（新增索引单独计算）
+- [ ] 所有映射目标存在，旧源路径已清空
+- [ ] 根目录只保留总索引、栏目目录及允许的系统隐藏文件
+- [ ] 总索引中的 Markdown 链接全部可解析
+- [ ] 双稿互链全部可解析
+- [ ] 相对图片和附件链接全部可解析
+- [ ] 课程栏目字段采用用户确认的名称
+- [ ] 历史来源字段和正文历史语境未被误改
+- [ ] 未覆盖、未丢失、未静默复制重复文件
 
-The completion report should contain only: what was organized, the absolute path to the master index, and file/link acceptance results. Do not replay the migration process.
+完成汇报只给：已整理、总索引绝对路径、文件/链接验收结果。不要复述迁移过程。
 
-## Common Failures
+## 常见失败
 
-### Treating a Source Name as a Category Name
+### 把来源名误当栏目名
 
-An editor invents a category from an event year or promotional title, while the user thinks in terms of “in-person class / livestream / private advisory board.” Resolution: category names follow the user’s current information architecture; source names remain separate.
+编辑者根据活动年份或宣传名自创新栏目，用户实际按“线下课/直播/私董会”理解。解决：栏目名服从用户当前信息架构，来源名独立保留。
 
-### Moving Markdown Without Assets
+### 只移动 Markdown，不移动素材
 
-The body remains but every image breaks. Resolution: migration mappings must include asset directories, followed by final link-resolution checks.
+结果是正文还在，但图片全部失效。解决：迁移映射必须覆盖素材目录，并做链接解析终验。
 
-### Rewriting Historical Body Text for Consistency
+### 为了统一而改写历史正文
 
-Directory classification is information architecture, not factual rewriting. Modify only fields that serve classification; preserve event context in the body by default.
+目录归类属于信息架构，不是事实重写。只改承担分类功能的字段；正文中的活动语境默认不动。
 
-### Excessive Depth
+### 层级过深
 
-“Event → instructor → transcript → year → assets” raises retrieval cost. Start with event and instructor plus a master index. Add layers only when file volume proves they are needed.
+“活动→讲师→逐字稿→年份→assets”会增加寻找成本。先用活动与讲师两级，加总索引；只有文件量证明需要时再分层。

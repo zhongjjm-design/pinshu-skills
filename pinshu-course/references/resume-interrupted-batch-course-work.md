@@ -1,83 +1,81 @@
-# Resuming Interrupted Batch Course Processing
+# 中断后的批量课程整理恢复与续作
 
-Use this reference when audio has been partly or fully transcribed, status files may be stale, and final products may already exist in editing directories. The objective is to reconstruct actual state before continuing from the incomplete point, avoiding retranscription, overwrite of finished work, or treating recording chunks as lesson boundaries.
+适用于“音频已部分或全部转写、状态文件可能过期、精编目录可能已有成品”的接续任务。目标是先重建真实状态，再从未完成处继续，避免重复转写、覆盖成品或把录音切片误当课次。
 
-## Authority Order for State
+## 权威状态优先级
 
-Do not trust the task-status document first. Reconstruct facts in this order:
+恢复时不要先相信任务状态文档。按以下顺序重建事实：
 
-1. Actual raw audio files;
-2. Actual raw transcript outputs: TXT, JSON, SRT, VTT, and TSV;
-3. `START`, `DONE`, and `FAIL` entries plus final statistics in batch logs;
-4. Actual edited transcripts, lectures, maps, and other output files;
-5. Written claims in task-status files.
+1. 原始音频实际文件；
+2. 原始转写实际产物（TXT、JSON、SRT、VTT、TSV）；
+3. 批处理日志的 START／DONE／FAIL 与最终统计；
+4. 精编、讲义、地图等实际输出文件；
+5. 任务状态文件中的文字说明。
 
-A status file is a handoff aid and cannot override file evidence. If it says “transcription about to start” while logs show `total=N failed=0` and each output format has N files, treat the actual products as authoritative and mark the status stale.
+状态文件只用于交接，不得覆盖真实文件证据。若状态写“即将转写”，但日志显示 `total=N failed=0` 且每种输出均为N份，应以真实产物为准，并把状态标为过期。
 
-## Begin with a Four-Way Inventory
+## 先做四向盘点
 
-After resumption, enumerate state before rerunning anything:
+恢复后先列清单，不立即重跑：
 
 ```text
-Raw audio
-↔ five transcript outputs per audio file
-↔ existing edited transcripts / lectures
-↔ status files and logs
+原始音频
+↔ 每音频的转写五件套
+↔ 已有精编／讲义
+↔ 状态文件与日志
 ```
 
-At minimum, verify total audio count, dates and numbers, counts for each transcript format, log success/failure totals, whether finished products already exist, and the presence of empty text, unusually short text, dispersal recordings, and duplicates. Rerun only when the source exists and an output is missing; skip audio with complete TXT and JSON by default.
+至少核对音频总数、日期和编号、每种转写格式数量、日志成功／失败数、精编目录是否已有成品，以及空文本、异常短文本、散场录音和重复文件。只有确认“源存在、产物缺失”时才补跑；已有完整TXT+JSON的音频默认跳过。
 
-## Perform Read-Only Semantic Inventory in Parallel by Day
+## 分日并行做只读语义盘点
 
-For dozens of audio files, inventory by teaching day or module in parallel, but keep this phase read-only. Each group returns the same fields:
+几十个音频可按授课日或模块并行盘点，但此阶段只读，不直接写精编稿。每组统一输出：
 
-| File | Non-Whitespace Characters | Empty? | Opening/Closing Topic Anchors | Silence/Low-Audio Hallucination | Frequent STT Errors | Suggested Natural Boundary |
+| 文件 | 非空白字符数 | 是否为空 | 首尾主题锚点 | 静音／弱音幻觉 | 高频STT错误 | 自然边界建议 |
 |---|---:|---|---|---|---|---|
 
-Focus on continuations across files; breaks, lunch, Q&A, and dismissal; speaker or topic changes inside recordings; silence loops; recognition degradation caused by played videos; systematic terminology drift; and names, amounts, ratios, or case data requiring relistening. Subagent boundaries are candidates only. The main agent must read the full synthesis and create one unified lesson map.
+重点识别跨文件续接、课间／午休／答疑／散场、录音内部换讲师或换主题、静音循环、播放视频导致的识别退化、系统性术语漂移，以及待回听的人名／金额／比例／案例数据。子Agent边界只是候选，主Agent必须读取完整汇总后形成统一课次地图。
 
-## Natural Lesson Boundaries Take Priority Over Recording Chunks
+## 自然课次优先于录音切片
 
-1. Split by explicit instructor transitions, break announcements, topic closure, and contextual continuation;
-2. Do not treat every MP3 as a lesson mechanically;
-3. Do not merge every recording from one day into one lesson mechanically;
-4. Exclude coffee breaks and dismissal from the main lesson body;
-5. Label product promotion, live discussion, and Q&A separately when they have standalone value; do not mix them into methodology prose;
-6. If a truncated final sentence has no continuation source, put it in the relisten register rather than completing it.
+1. 以讲师明确转场、休息口令、主题收束和上下文续接划课；
+2. 不把每个MP3机械当一课；
+3. 不把一天所有音频粗暴合成一课；
+4. 茶歇和散场不进主课正文；
+5. 产品推介、现场交流和答疑有独立价值时明确标注，不与方法正文混写；
+6. 截断尾句没有后续来源时进入待回听表，不补写。
 
-## Lock the Batch Manifest Before Writing
+## 写入前锁定批次清单
 
-When the user’s environment requires approval for writes, keep inventory and boundary decisions read-only. After boundaries are settled, list once: operation types, file types, full absolute path for every target file, whether parent directories exist, whether anything will be overwritten, source files and formal knowledge bases excluded from the current run, and the naming and validation standard. Do not precreate empty files with placeholder titles before natural lesson boundaries are known.
+在用户环境有文件写入验收时，盘点和边界判断保持只读。边界确定后，一次列出操作类型、文件类型、每个目标文件的完整绝对路径、目录是否存在及是否覆盖、本轮不触碰的原始文件和正式知识库，以及采用的命名与验证规范。自然课次尚未确定时，不要用占位标题提前批量建空文件。
 
-## Three Control-Plane Files
+## 三个控制面文件
 
-When batch editing begins, maintain:
+开始批量精编时维护：
 
-1. `{course_map}`: natural lesson boundaries, dates, knowledge titles, source ranges, and status;
-2. `{terminology_review}`: normalized terms, common misrecognitions, names/numbers requiring relistening, and locations degraded by silence;
-3. `{task_status}`: actual completed work, next step, and formal destination.
+1. `课程地图.md`：自然课次、日期、知识标题、原始范围、状态；
+2. `术语与待回听表.md`：统一术语、常见误识、待回听数字／人名、静音退化位置；
+3. `任务状态.md`：真实完成项、下一步、正式沉淀位置。
 
-Resolve each placeholder from the manifest or confirmed path map; do not use it as a literal filename.
+控制面不替代正文。状态更新必须以真实文件数量、非空字符数和实际读取结果复验，不能因子Agent自报“完成”就判绿。
 
-The control plane does not replace the body. Reverify status updates through actual file counts, non-whitespace character counts, and file reads. A subagent’s self-reported “complete” is not sufficient for green status.
+## 批量写作后的主Agent验收
 
-## Main-Agent Acceptance After Batch Writing
+1. 确认每个批准路径真实存在；
+2. 统计非空字符数，识别异常短稿；
+3. 扫描第三方视角、占位符、口语填充词、未闭合代码块和疑似截断；
+4. 对照术语表检查系统性STT残留；
+5. 从每课开头、中段案例和结尾抽样对照权威原文；
+6. 核验录音范围无重叠、无漏段、无串课；
+7. 将“待回听”与“已确认”严格分开；
+8. 验收后再更新课程地图状态。
 
-1. Confirm that every approved path exists;
-2. Count non-whitespace characters and identify anomalously short drafts;
-3. Scan for third-party voice, placeholders, filler speech, unclosed code fences, and suspected truncation;
-4. Compare systematic STT residue against the terminology register;
-5. Sample the opening, a middle case, and the ending of each lesson against the authoritative source;
-6. Verify that recording ranges have no overlap, omissions, or cross-lesson contamination;
-7. Keep “requires relistening” strictly separate from “confirmed”;
-8. Update course-map status only after acceptance.
+## 常见失败
 
-## Common Failures
-
-- Rerunning an entire audio batch after reading only a stale status file;
-- Assuming a finished-product directory contains deliverables without enumerating actual files;
-- Treating `DONE` in a log as proof of transcript quality;
-- Allowing parallel agents to define lessons independently without main-agent reconciliation;
-- Compressing a long course into a dozen summaries for speed;
-- Creating a formal knowledge base before confirming course identity or overall title;
-- Entering computed totals manually. Use a calculation tool for addition and read files back to verify totals.
+- 只读状态文件就重新跑整批音频；
+- 看到精编目录名就假设已有成品，没有实际列文件；
+- 用日志“DONE”代替文本质量检查；
+- 并行Agent各自划课，主Agent不统一复核；
+- 为了快速建库，把长课程压成十几篇摘要；
+- 先建正式知识库，再发现课程身份或总标题不对；
+- 统计数字手填出错；涉及加总时应使用计算工具并回读文件验证。

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pinshu Video Core"
+  short_description: "Shared offline video tooling for Pinshu video-type Skills; usually invoked by a caller Skill"
+  default_prompt: "Use $pinshu-video-core only when maintaining shared video scripts or checking the video runtime base for a caller Skill."

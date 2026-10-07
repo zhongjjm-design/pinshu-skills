@@ -1,200 +1,200 @@
-# High-Throughput Text-Only Lesson Processing Mode
+# 纯文本高速逐课整理模式
 
-Use this mode for long course projects where the user already knows the course material and wants to preserve it in a knowledge base quickly, rather than study while listening or wait for screenshots.
+用于用户已经熟悉课程内容、目标是尽快沉淀到知识库，而非边听边学或等待截图的长课程项目。
 
-## Trigger Signals
+## 触发信号
 
-Enable this mode when the user says anything equivalent to:
+出现以下任一表达时启用：
 
-- “Starting with this lesson, do not capture screenshots”;
-- “I will send the text directly; organize it lesson by lesson”;
-- “I want to preserve, analyze, and apply the material, not listen to the course”;
-- An explicit request to increase speed and stop repeated confirmation.
+- “从这一课开始不做截图了”；
+- “直接把文本发给你，一节一节整理”；
+- “我要沉淀、拆解和应用，不是听课”；
+- 用户明确要求提高速度、停止重复确认。
 
-## Mode Switch
+## 模式切换
 
-After the user explicitly switches to text-only mode, each later lesson requires only:
-
-```text
-Lesson XX:
-[complete transcript]
-```
-
-If the lesson number is clear and the text is complete from opening to close, treat the lesson assets as complete and enter execution state. Do not ask again:
-
-- Whether screenshots exist;
-- Whether all images have been sent;
-- Whether both drafts are required;
-- Whether to retain the existing directory and naming scheme;
-- Whether to update the course map.
-
-Once established, these conventions carry forward until the user changes them.
-
-## Fixed Output for Each Lesson
-
-1. Write the manifest/path-map target `official_faithful`.
-2. Write the manifest/path-map target `official_lecture`.
-3. Update the manifest/path-map target `course_map`.
-4. Verify files, titles, state, STT residue, and risk boundaries
-
-Do not create empty image directories for text-only lessons. If frontmatter requires asset status, use `images: none` or the project’s existing equivalent.
-
-## Speed First Without Lowering Quality
-
-### Faithfully Edited Transcript
-
-- Preserve the instructor’s first-person voice and original speaking sequence;
-- Delete greetings, verbal noise, and non-informative repetition;
-- Correct STT errors;
-- Preserve people, cases, scenarios, numbers, products, causality, and judgment strength;
-- Do not compress the result into a summary.
-
-### Structured Lecture
-
-- Reorganize the material into a self-contained learning resource;
-- Extract models, diagnostic worksheets, execution templates, and relationships to earlier and later lessons;
-- Distinguish original course viewpoints, editorial inference, experience-based thresholds, and facts pending verification;
-- Preserve gray-area methods only as course context, not optimized prohibited tutorials; provide compliant alternatives.
-
-## Four Additional Gates for Continuous Lesson Processing
-
-### 1. The Official Outline Is the Naming Authority
-
-When the user has already supplied an official syllabus, screenshot outline, or confirmed course map, continue from that authority:
-
-- Filename, H1, `lesson`, `original_title`, map title, and bidirectional links must use the same official title;
-- Section prefixes attached to a lesson name in the official entry—such as “Cognitive Preparation:”, “Direction:”, or “Fundamentals:” — are part of the title and must not be omitted merely because the course map already has grouping headings. The entire string following the lesson number is the `original_title`;
-- A temporary phrase spoken at the beginning, a historical title, or an approximate STT rendering must not override the official outline;
-- When the official outline includes small distinctions such as “and” versus “with,” variant spellings, full-width parentheses, or full-width colons, the filename should follow the official title. Use the knowledge title for search friendliness;
-- After each lesson, verify both “the current title matches” and “the next lesson number is correct” to prevent drift during continuous processing.
-
-Title consistency must cover five locations: formal filename, H1, `original_title`, map link, and preview-copy filename. Before correcting old titles in bulk, reread the map and outline. If a parallel task has added lessons, merge the latest state; never use an old snapshot to overwrite “organized” with “awaiting input.” After correction, scan for old filenames, H1 headings without the prefix, and `original_title` values without the prefix. Each expected count is zero.
-
-### 2. Classify Pre-Class Material by Information Value
-
-Long livestream lessons often begin with lateness explanations, waiting, microphone setup, eating, comment interaction, and valid course updates. Do not delete the whole segment mechanically or retain everything:
-
-1. **Delete pure noise:** apologies for being late, waiting for participants, volume adjustment, moving avatars, eating and drinking, and irrelevant comments;
-2. **Briefly note valid previews:** previews of later topic lessons, course-version changes, which version to learn first, and course-update direction;
-3. **Preserve teaching rules:** changes in the role of AI, class objectives, intended audiences, and logical relationships between lessons.
-
-The faithful transcript should still enter the formal lesson in source order, but each preview should retain its complete meaning only once, without excited repetition or self-justification.
-
-### 3. Final First-Person Check Uses Pattern Scanning Plus Contextual Judgment
-
-Do not search only for “the instructor believes.” In dense business courses, also scan for phrases equivalent to:
-
-- “the course judges,” “the course provides,” “the course emphasizes,” “the course also points out”;
-- “the course uses … to explain,” “the course does not …,” “the course’s judgment about the trend”;
-- “the author believes,” “this lesson proposes,” “Mr. An believes.”
-
-Read context for every hit:
-
-- Convert instructor body text to “I judge / I provide / I emphasize / I use … to explain”;
-- Move editorial additions into a separate blockquote: `> Editorial note: ...`;
-- Normal noun phrases such as “short-video course user segmentation” or “my course” are not third-party voice and must not be replaced blindly.
-
-### 4. Formal Files and Delivery Previews Must Be the Same Version
-
-If the project copies formal drafts to a temporary preview or delivery directory, synchronize **after all targeted revisions are complete**. Then verify both drafts, the map, filenames, and content versions. Never copy a preview first and then change only the formal file, leaving the user to download an obsolete version.
-
-## When Narration References a Missing Chart, Book Title, or Unexpanded Acronym
-
-A text-only transcript may say “look at the chart on the right,” “use this price range,” “I recommend this book,” or “use the AIGPACT model,” without including chart values, the exact book title, or the acronym’s English expansion. Do not pause the whole lesson to request screenshots, and do not guess from general knowledge:
-
-1. **Recover only what the narration states explicitly:** organize confirmed model steps, case relationships, and instructor conclusions. Never invent chart values, table fields, titles, or authors that were not spoken;
-2. **Mark the smallest gap at the relevant location in the faithful transcript:** for example, “the original lesson references a pricing chart, but the text-only source does not contain the ranges” or “the recommended title is absent from the transcript.” When preserving first-person voice, keep editorial notes separate from the instructor’s body;
-3. **Provide an executable alternative in the lecture that does not depend on the missing visual:** if price ranges are missing, use a framework covering value, alternatives, trust, cost, and willingness-to-pay testing. If a chart is missing, extract only relationships that were spoken and do not fabricate precise data;
-4. **Retain the original label for an unexpanded acronym:** organize the Chinese-named steps actually explained by the instructor, but state that “the source does not provide the English expansion.” Never invent an expansion and then present it as the course’s original model;
-5. **Not asking again does not mean concealing the gap:** state in one sentence in the final report which source information was absent and how it was handled. Mark an item as pending only if the missing information prevents recovery of the core method; do not block the rest of the lesson.
-
-## Two-Layer Treatment of Strong Outcome Promises, Earnings Cases, and Marketing Methods
-
-Product, marketing, and growth courses often include claims such as “profit in 24 hours,” “mastery in seven days,” “10,000 followers in 30 days,” or “0 to one million”; user-income screenshots; limited-time or limited-quantity offers; testimonials; and “no refunds for virtual products.” Apply these rules:
-
-- The **faithfully edited transcript** preserves course cases, numbers, and judgment strength without silent sanitization. Add a nearby independent editorial boundary explaining evidence status, applicable conditions, and why the claim cannot be treated as a universal promise.
-- The **structured lecture** must not optimize strong claims into higher-converting copy. Add measurable learning and behavioral outcomes, permission and privacy requirements for cases, selection bias, genuine scarcity, platform rules, consumer rights, and refund compliance.
-- Upgrade “packaging increases conversion” into the complete chain: `informed user → fit-based conversion → successful delivery → user action → outcome → authentic reputation`. Evaluate refund rate, complaints, completion, and user outcomes—not only conversion.
-- “High sales,” “many positive reviews,” and income screenshots are evidence pending verification. They do not automatically prove product effectiveness and cannot constitute income guarantees.
-
-## Minimum Necessary File-Operation Acceptance
-
-If the environment requires acceptance before writes, provide one concise notice and execute immediately rather than turning approval into a long process:
+用户明确切换为纯文本后，后续每节只需提供：
 
 ```text
-[File-operation acceptance]
-- Create: faithfully edited transcript
-- Create: structured lecture
-- Modify: course map
-- No image directory; the instruction “organize Lesson XX” is explicit approval. Execute directly.
+第XX课：
+[完整逐字稿]
 ```
 
-When the user has explicitly said “organize Lesson XX,” do not require a second “confirm execution” response.
+只要节次清楚、文本从开场到结尾完整，即视为该课素材齐全并进入执行态。不要再问：
 
-## High-Throughput Verification Checklist
+- 有没有截图；
+- 图片是否发完；
+- 是否需要双稿；
+- 是否沿用原目录和命名；
+- 是否更新课程地图。
 
-After each lesson, confirm at minimum:
+这些约定一旦建立，后续自动继承，直到用户改变规则。
 
-- Both draft files exist, with matching lesson number and title;
-- The faithful transcript is not a third-person course summary;
-- The structured lecture is not a pile of lists;
-- Course-map status and current progress are updated;
-- Lesson-specific frequent STT residue has been searched;
-- Text-only lessons contain no meaningless image placeholders;
-- The next lesson number is correct.
+## 每课固定产出
 
-### Final Scans Must Cover Both Formal Files and Preview Copies
+1. `01_忠实精编稿/第XX课·[官方标题].md`
+2. `02_结构化讲义/第XX课·[官方标题].md`
+3. 更新 `00_课程地图.md`
+4. 完成文件、标题、状态、STT残留和风险边界核验
 
-After all revisions are complete and previews synchronized, run each of the following against both the formal and preview directories:
+纯文本课不创建空图片目录。若frontmatter需要素材状态，使用 `images: 无` 或项目已有等价字段。
 
-1. **First-person red-line scan:** include patterns equivalent to “the course believes / emphasizes / uses / provides / judges,” “the instructor believes,” “the author believes,” “this lesson proposes,” and “Mr. An believes.” Read context for each hit. Convert instructor body text to first person; keep editorial content in separate blockquotes.
-2. **STT-residue scan:** search known misrecognitions for the lesson, `TODO`, `body pending`, and similar placeholders. To obtain a meaningful zero count, do not repeat the incorrect term verbatim in editorial verification notes; write instead, “the original transcript contained a homophone error, now normalized to X.”
-3. **Title and link scan:** verify `original_title`, H1, lecture `source`, both map links, and preview filenames.
-4. **Map-anchor scan:** verify `current_progress`, `next_lesson`, lesson-catalog status, knowledge navigation, and the next-lesson notice at the end.
-5. **Risk-anchor scan:** when the course covers health, copyright, privacy, stereotypes, time-sensitive platform behavior, earnings, or misleading editing, confirm that synchronization did not drop editorial boundaries from either draft.
-6. **Same-version check:** compare content or SHA-256 values for each formal draft, the map, and its preview copy.
+## 速度优先但不降质
 
-Keep search expressions compatible. The default content-search engine may not support lookahead or lookbehind, so do not use `(?!...)` or `(?<=...)`. Use simple alternations or separate searches and then exclude legitimate hits by context.
+### 忠实精编稿
 
-### Read Full State Before Updating the Course Map
+- 保持讲师第一人称与原讲述顺序；
+- 删除寒暄、口头噪声、无信息重复；
+- 修正STT错误；
+- 保留人物、案例、场景、数字、产品、因果和判断力度；
+- 不能压成摘要。
 
-The course map is the shared file most vulnerable to parallel overwrite. Even for a targeted patch, read the complete file—or at least confirm total lines and page through every relevant section—before writing. If a tool reports “based only on a paginated snapshot” or “file changed since last read,” reread before modifying it. Afterward, verify all three state layers: received, dual drafts generated, and accepted.
+### 系统化讲义
 
-## High Throughput Does Not Mean Parallel Writes to the Formal Library
+- 重组为独立可学的教材；
+- 提炼模型、诊断表、执行模板和前后课关系；
+- 区分课程原观点、编辑推导、经验阈值与待核验事实；
+- 灰度方法只保留课程语境，不优化成违规教程；提供合规替代。
 
-For speed, subagents may perform read-only analysis, drafting, or QA in parallel, but the formal course tree remains single-writer:
+## 连续逐课处理的四个新增门控
 
-- Subagents write only to exclusive temporary directories and do not modify both drafts, the course map, official titles, or cross-lesson libraries;
-- Before promoting drafts, the main agent rereads the latest formal-library state;
-- If another task modified a file after the last read, stop applying patches from the stale snapshot;
-- Freeze official titles as an authoritative list. No execution unit may add or remove section prefixes independently;
-- Keep one writer for the formal library: subagents write only to exclusive temporary directories, and the main agent verifies and promotes serially.
+### 1. 官方目录是命名权威源
 
-## Separate Status Terms; Never Treat “File Exists” as “Accepted”
+用户已经提供官方课表、截图目录或确认后的课程地图时，后续必须按该目录顺延：
 
-The most common high-throughput state error is to announce that an entire module is “complete” merely because both files exist, even though early lessons remain `pending acceptance` in the map. Before every map update and final report, distinguish:
+- 文件名、H1、`lesson`、`original_title`、地图标题和双向链接使用同一官方标题；
+- 官方条目中与单课名称写在一起的篇章前缀（如“认知准备篇：”“方向篇：”“基本功篇：”）是标题正文，不得因为课程地图已有分组标题就省略；编号后的完整字符串才是 `original_title`；
+- 口播开头临时说法、历史版本标题和STT识别出的近似标题不能覆盖官方目录；
+- 官方目录出现“和/与”“模板/模版”、全角括号、全角冒号等细小差异时，文件名优先忠于官方标题，知识标题再负责检索友好；
+- 每课完成后同时检查“本课标题一致＋下一课编号正确”，避免连续处理时发生节次漂移。
 
-1. **Received:** the authoritative transcript has entered the project;
-2. **Dual drafts generated:** the faithful transcript and structured lecture exist;
-3. **Accepted:** title, content, STT, map, assets, and risk boundaries passed final inspection, and the map is explicitly marked `organized` or the project’s equivalent passing state.
+标题一致性必须覆盖五处：正式文件名、H1、`original_title`、地图链接、预览副本名。批量纠正旧标题前先重读地图和目录，发现并行任务新增课程时合并最新状态，禁止用旧快照把“已整理”覆盖成“待输入”；纠正后扫描旧文件名、无前缀H1和无前缀`original_title`，预期结果均为0。
 
-Determine module completion by scanning every lesson-status row. If any row remains `pending organization`, `pending acceptance`, `blocked`, or otherwise not passed, do not say “the entire module has passed acceptance.” State precisely, for example: “Dual drafts exist for Lessons XX–XX; Lesson YY remains pending acceptance.”
+### 2. 课前内容按信息价值三分
 
-When reporting progress, also reconcile:
+长直播课开头常混有迟到说明、等候、调麦、吃饭、弹幕和有效的课程更新。不要整段机械删除，也不要全部保留：
 
-- Whether the new lesson completed both drafts and its map update;
-- Whether the module contains historical lessons still pending acceptance;
-- Whether “next lesson” matches the earliest lesson awaiting input in the map;
-- Whether the current-progress section conflates “received,” “generated,” and “accepted.”
+1. **纯噪声删除**：迟到道歉、等人、调音量、移动头像、吃饭喝水、无关弹幕；
+2. **有效预告简注**：后续选题课预告、课程版本变化、先学哪一版、课程更新方向；
+3. **教学规则保留**：AI角色变化、课堂目标、适用人群和课程之间的逻辑关系。
 
-## Milestone Cross-Lesson Synthesis
+忠实稿仍按原顺序进入正课，但预告只保留一次完整语义，不保留兴奋重复和自我辩解。
 
-The purpose of high-throughput lesson processing is not to create 30 isolated documents. Every three to five lessons, or at module close, register cross-lesson candidates for:
+### 3. 第一人称终检采用“模式扫描＋上下文判定”
 
-- Methodology;
-- Case patterns;
-- Tools and templates;
-- Factual risk;
-- Decision processes that may become a Skill.
+不要只搜“讲师认为”。高密度商业课程还要扫描：
 
-If the user says, “Organize all 30 lessons quickly first, then extract Skills together,” do not create a formal methodology Skill mid-course. At module close, the structured lecture may include a concise “unified module chain / future Skill candidates” section, and the course map may record the module boundary. Create a formal Skill only after full-course deduplication, applicable-condition analysis, counterexamples, and factual and compliance audits. Never turn a stitched course summary directly into a Skill.
+- `课程判断`、`课程给出`、`课程强调`、`课程同时指出`；
+- `课程用……说明`、`课程没有……`、`课程对趋势的判断`；
+- `作者认为`、`本课提出`、`安先生认为`。
+
+命中后必须读上下文：
+
+- 讲师正文改为“我判断／我给出／我强调／我用……说明”；
+- 编辑补充改成独立引用块 `> 编辑提示：……`；
+- “短视频课程用户分层”“我的课程”等正常名词不是第三方视角，不能盲目替换。
+
+### 4. 正式稿与交付预览必须同版
+
+项目若约定将正式稿复制到临时预览或交付目录，必须在**所有定点修订完成后**再同步；同步后核对双稿、地图、文件名和内容版本一致。不要先复制预览、再只修改正式稿，造成用户下载到旧版。
+
+## 口播引用了缺失图表、书名或未展开缩写时
+
+纯文本高速模式下，逐字稿可能出现“看右边这张图”“按这个价格区间”“推荐这本书”“使用AIGPACT模型”等表述，但文本没有携带图中数值、准确书名或缩写英文全称。此时不要为了补截图而暂停整课，也不要根据常识猜测：
+
+1. **只恢复口播明确给出的信息**：模型步骤、案例关系和讲师结论可以整理；图中未口播的数字、表格字段、书名作者不得补造。
+2. **在忠实稿就地标注最小缺口**：例如“原课引用定价图，但纯文本未包含具体区间”“推荐书名未在文本中出现”。保持第一人称正文时，编辑说明必须与讲师正文分离。
+3. **系统讲义提供不依赖缺图的可执行替代**：缺定价区间时改写为价值、替代方案、信任、成本和付费测试框架；缺图表时提炼已口播的关系，不伪造精确数据。
+4. **未展开缩写保留原标签**：可按讲师实际讲述的中文环节整理，但明确“原文未提供英文全称”，禁止自行扩写后再当作课程原模型。
+5. **不追问不等于隐瞒**：最终汇报用一句话说明哪些源信息缺失及如何处理；只有缺失导致核心方法无法恢复时，才把该点列为待补，不阻塞其他部分。
+
+## 强结果承诺、收益案例与营销方法的双层处理
+
+产品、营销和增长课程常包含“24小时盈利”“七天精通”“30天万粉”“0—100万”、用户收入截图、限时限量、好评背书和“虚拟产品不退款”等高风险表达。处理规则：
+
+- **忠实精编稿**保留课程案例、数字和判断力度，不暗中净化；紧邻增加独立编辑边界，说明证据状态、适用条件和不可视为普遍承诺。
+- **系统化讲义**不得把强承诺优化成更高转化话术；应补充可验收学习/行为结果、案例授权与隐私、选择偏差、真实稀缺、平台规则、消费者权益和退款合规。
+- 把“包装促进成交”升级为完整链路：`充分知情 → 适配成交 → 顺利交付 → 用户行动 → 结果 → 真实口碑`，同时检查退款率、投诉、完成率和用户结果，不能只优化成交率。
+- 课程中的“销量高、好评多、收入截图”只能作为待核验证据，不能自动推导产品有效，更不能构成收益保证。
+
+## 最短必要文件验收
+
+如果环境要求写入前进行文件操作验收，只做一次紧凑说明并立即执行，不把验收变成长篇流程：
+
+```text
+【文件操作验收】
+- 创建：忠实精编稿
+- 创建：系统化讲义
+- 修改：课程地图
+- 无图片目录；本条“整理第XX课”视为明确批准，直接执行。
+```
+
+用户已经明确说“整理第XX课”时，不再要求他回复第二次“确认执行”。
+
+## 高速验证清单
+
+每课写完后至少确认：
+
+- 双稿文件存在，节次与标题一致；
+- 忠实稿不是第三人称课程摘要；
+- 系统讲义不是清单堆砌；
+- 课程地图状态和当前进度已更新；
+- 搜索本课高频STT残留词；
+- 纯文本课没有无意义的图片占位；
+- 下一课编号正确。
+
+### 终检搜索必须覆盖正式稿与预览副本
+
+不要只检查正式库。完成所有修订并同步预览后，再对正式稿和预览目录各执行一次：
+
+1. **第一人称红线扫描**：至少覆盖“课程认为／课程强调／课程用／课程给出／课程判断／讲师认为／作者认为／本课提出／安先生认为”等模式；命中后读取上下文，讲师正文改回第一人称，编辑内容必须放进独立引用块。
+2. **STT残留扫描**：扫描本课已知误识别词、`TODO`、`待补充正文`等占位。为了让残留扫描真正得到0，不要在编辑核验说明里再次原样抄写错误词；改写为“原转写曾误识别为近音词，已统一修正为X”。
+3. **标题与链接扫描**：核对`original_title`、H1、讲义`source`、地图双链及预览文件名。
+4. **地图锚点扫描**：同时核对`current_progress`、`next_lesson`、本课目录状态、知识导航和文末下一课。
+5. **风险锚点扫描**：确认课程涉及健康、版权、隐私、刻板印象、平台时效、收益或误导剪辑时，双稿中的编辑边界没有在同步时丢失。
+6. **同版校验**：用内容比较或SHA-256确认正式双稿、地图与预览副本逐文件一致。
+
+搜索表达式应保持兼容：默认内容搜索底层可能不支持正向/反向预查，不要写`(?!...)`或`(?<=...)`；改用简单交替词表，必要时拆成两次搜索再按上下文排除合法命中。
+
+### 更新课程地图前先读全量状态
+
+课程地图属于并行任务最容易覆盖的共享文件。即使只是定点补丁，也要在写入前读取完整文件或至少确认文件总行数并分页读完关键区段；若工具提示“仅基于分页快照”或“文件自上次读取后已变化”，先重读再写，不能用旧快照继续覆盖。更新后必须同时检查三层状态：已收到、已生成双稿、已验收。
+
+## 高速模式不等于并行写正式库
+
+为了提速，可以让子Agent并行做只读分析、草稿或QA，但正式课程树必须保持单写者：
+
+- 子Agent只写独占临时目录，不修改双稿、课程地图、官方标题或横向库；
+- 主Agent在提升草稿前重新读取正式库最新状态；
+- 检测到其他任务在上次读取后修改了文件，立即停止基于旧快照补丁；
+- 官方标题先冻结为权威清单，任何执行单元不得自行增删篇章前缀；
+- 正式库始终采用单写者：子Agent只写独占临时目录，主Agent核验后串行提升。
+
+## 状态词必须分层，禁止把“有文件”说成“已验收”
+
+高速批处理最容易出现的状态错误，是双稿文件已经存在，就对外宣布整个模块“全部完成”，但课程地图中仍有早期课标为 `待验收`。每次更新地图和最终汇报前，必须区分三层：
+
+1. **已收到**：权威逐字稿已进入项目；
+2. **已生成双稿**：忠实精编稿与系统化讲义真实存在；
+3. **已验收**：标题、内容、STT、地图、素材和风险边界均完成终检，地图明确标为 `已整理` 或项目约定的通过状态。
+
+模块完成判定必须逐行扫描该模块的地图状态：只要仍有 `待整理`、`待验收`、`阻塞` 或其他未通过状态，就不能说“模块已全部验收完成”。可以准确表述为“第XX—XX课双稿均已生成，其中第YY课仍待验收”。
+
+汇报进度时同时核对：
+
+- 本轮新课是否已完成双稿和地图更新；
+- 模块内是否存在历史遗留的待验收课；
+- “下一课”是否与地图中的首个待输入节次一致；
+- 当前进度区是否把“已收到”“已生成”“已验收”混为一谈。
+
+## 阶段性横向提炼
+
+高速逐课整理的目的不是生产30份孤立文档。每3—5课或模块结束时记录跨课候选：
+
+- 方法论；
+- 案例模式；
+- 工具与模板；
+- 事实风险；
+- 可转化为Skill的决策流程。
+
+用户明确“先把30课快速整理完，再统一提炼Skill”时，不要在中途创建正式方法论Skill。模块结束可先在系统化讲义中加入一段简洁的“模块统一链路 / 未来Skill候选”，并在课程地图记录模块边界；正式Skill必须等全课完成后，再做跨课去重、适用条件、反例、事实与合规审计。不得直接把课程摘要拼成Skill。

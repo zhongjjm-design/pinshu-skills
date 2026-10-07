@@ -1,67 +1,67 @@
-# Review Loop: Rules and Prompts
+# 审片循环：规矩和提示词
 
-Source: adapted from the Gauntlet review loop in echris6/motion-video-kit (MIT) for the brand film teardown genre. In round 1 on the pilot film (a retail brand's anniversary film), all 3 hard defects the reviewer reported were real, but one of its suggestions conflicted with the rules ("replace the generic stock footage with the brand's original footage") and was not adopted. So **verify the reviewer's findings by measurement before changing anything**.
+来源：echris6/motion-video-kit 的 Gauntlet 审片循环（MIT），按"品牌片拆解"片种改写。好想来第 1 轮实跑：审片员报的 3 处硬伤全部属实，但它的一条建议和规矩冲突（"通用素材换成品牌原片"），没采纳。所以**审片员的结论要先实测核对再改**。
 
-## Rules
+## 规矩
 
-1. **The maker never reviews their own film.** For every round, spawn a brand-new subagent as the reviewer.
-2. **The reviewer gets only four things**: the path of the final film, a one-sentence brief, the rules file (this skill's `rules.md`, given as an absolute path), and the previous round's review report (verification rounds only). **Do not give it the maker's reasoning or any "here is what I think I fixed."**
-3. **Watch only the final film, never the project**: no code, no timeline, no narration script.
-4. **For sound, report only what can be measured**: the reviewer cannot hear, so it measures only loudness, silent stretches, and whether sound effects land on picture events. Voice timbre and music quality are judged by a human listening.
-5. **No scores**: report only problems, timestamps, and fixes, and end with a verdict: "ready to publish" or "one more round."
-6. **Each round fixes the biggest problems.** The next round uses a new reviewer to verify item by item. Stop at "ready to publish" or when only minor details remain; this usually takes 2 to 3 rounds.
-7. **Keep a log**: `review/log.md` in the project directory, one row per round: the film, the reviewer's top findings, the verification result, what was changed, and the measurement after the change.
+1. **做片的不审自己。** 每一轮另起一个全新的子代理当审片员。
+2. **审片员只拿四样**：成片路径、一句话简报、规矩文件（本 Skill 的 `references/rules.md`，用绝对路径给）、上一轮审片报告（复核轮才给）。**不给做片方的思路，也不给"我觉得改好了什么"**。
+3. **只看成片，不读工程**：不读代码、时间线、旁白稿。
+4. **声音只报测得出的**：审片员听不到，只测响度、静音段、音效是否落在画面事件上；音色和配乐好坏由人听。
+5. **不打分**：只报问题、时间点、怎么改，最后给结论"可以外发 / 再改一轮"。
+6. **一轮改最大的问题**，下一轮换新审片员逐条复核；到"可以外发"或只剩细枝末节就停，一般 2 到 3 轮。
+7. **记台账**：项目目录 `审片/台账.md`，一行一轮：成片、审片员找到的前几条、核对结果、改了什么、改后实测。
 
-## Full-film review (round 1)
-
-```
-You are an independent film reviewer. You did not make this film. Judge only from the film's picture and the sound you can measure, regardless of what the makers meant to say.
-
-Film: <absolute path to the mp4> (<duration>, 1920x1080, with audio).
-What it is: <one-sentence brief: the account, which brand film is being broken down, which article it accompanies, who the audience is, which platform, and which device they watch on>.
-Standard (must be met): the whole of <absolute path to this skill's rules.md>.
-Do not read the project's code, timeline, or narration script.
-
-Method:
-- Use ffmpeg to extract one frame every 0.5 s and tile them into contact sheets with timestamps, saved to <temporary directory>. Around each cut, extract dense frames at 30 fps for 0.3 s before and after, and inspect them closely.
-- Also make a contact sheet 360 pixels wide (the size of a horizontal film on a phone held upright) to judge whether captions and overlaid text are legible.
-- Use frame differencing to find near-static stretches (10 fps; luma difference between adjacent frames below 0.35) and list any longer than 2 s.
-- Use ebur128 to measure integrated loudness and true peak, and silencedetect to find silences longer than 1.5 s.
-- You cannot hear the audio: do not judge the timbre of the narration or the music; report only what you can measure.
-
-Check each item:
-- First 3 seconds: is the first frame a complete picture, and is there something within 3 seconds that makes a viewer stop?
-- Things the narration names (people, stores, numbers, objects): is each one on screen within 1.5 s?
-- Does the same person, or the same footage from the original film, appear more than once?
-- Do overlaid text, labels, and numbers appear when the narration mentions them? Do they cover captions, faces, or the original film's own text?
-- At cuts: any flash frames, black frames, or glimpses of the previous or next shot?
-- Any violation of the rules file: black-and-white footage, still images over 2 s, the same picture held over 3 s, black-background cards, a full-width black caption band?
-
-Write the report in the user's language (at most 900 characters if Chinese, about 500 words otherwise) to <report path>:
-1. By segment: time range, what is on screen, and problems ranked by severity.
-2. Layout and transition problems, with timestamps and screen positions.
-3. The 6 to 8 most important fixes, ranked by impact, each with a clear description of the fix.
-4. Verdict: ready to publish / one more round.
-Be direct: no pleasantries and no scores. When you are done, move the extracted frames in the temporary directory to the Trash.
-```
-
-## Verification review (round 2 onward)
+## 全片审片（第 1 轮）
 
 ```
-You are an independent film reviewer. You did not make this film. New film: <path>. Previous review report: <path>. <If segment timings have moved, state the mapping from old to new times.>
-Standard: <absolute path to this skill's rules.md>.
+你是独立审片员，这条片子不是你做的。只根据成片的画面和能测量的声音判断，不管做片方想表达什么。
 
-For each item in the previous report's "most important fixes," state: fixed / partly fixed / still present, with timestamps and evidence. Then look for new problems introduced by the changes (skipped frames, text overlapping text, clipped text, odd frames inside transitions). Use the same method as the full-film review; you may extract frames only around the changed segments.
-Write the report in the user's language (at most 500 characters if Chinese, about 300 words otherwise) to <path>. The last line must read "ready to publish" or "one more round (at most 3 items)." When you are done, move the extracted frames to the Trash.
+成片：<mp4 绝对路径>（<时长>，1920×1080，带声音）。
+是什么：<一句话简报：账号、拆哪支片、配哪篇文章、观众是谁、在哪个平台、用什么设备看>。
+标准（必须满足）：读 <本 Skill 目录>/references/rules.md 全文。
+不要读项目里的代码、时间线、旁白稿。
+
+方法：
+- 用 ffmpeg 每 0.5 秒抽一帧，拼成带时间戳的总览图，存到 <临时目录>；画面切换前后各 0.3 秒按每秒 30 帧抽密帧细看。
+- 另出一张 360 像素宽的总览图（手机竖握看横屏片的大小），判断字幕和叠字看不看得清。
+- 用帧差找画面几乎静止的段落（每秒 10 帧，相邻帧亮度差低于 0.35），超过 2 秒的列出来。
+- 用 ebur128 测整体响度和真峰值，用 silencedetect 找超过 1.5 秒的静音。
+- 你听不到声音：不评价配音和配乐的音色，只报测得出的。
+
+逐项查：
+- 开头 3 秒：第一帧是不是完整画面，3 秒内有没有让人停下来的东西。
+- 旁白点名的东西（人、店、数字、物件），1.5 秒内画面上有没有它。
+- 同一个人物、同一段原片画面有没有重复出现。
+- 叠字、标签、编号是不是在旁白点到它时出现，有没有压住字幕、人脸、原片自己的字。
+- 画面切换处有没有闪帧、黑场、露出上一个或下一个镜头。
+- 有没有违反规矩文件的地方：黑白画面、静止超过 2 秒的图、挂超过 3 秒的同一画面、黑底卡片、整宽黑字幕带。
+
+报告（900 字以内，中文）写到 <报告路径>：
+1. 按段落：时间范围、画面是什么、问题按严重程度排。
+2. 版面和转场问题：带时间点和画面位置。
+3. 最该改的 6 到 8 处，按影响排序，每处写清怎么改。
+4. 结论：可以外发 / 再改一轮。
+直说，不客套，不打分。看完把临时目录里的抽帧移进废纸篓。
 ```
 
-## Script review (after the narration script is written, before synthesis)
+## 复核审片（第 2 轮起）
 
 ```
-Review the narration script for a <duration> brand film teardown: <script path>. You did not write this script. Standard: section 1 of <absolute path to this skill's rules.md>. Check:
-- Facts: can every claim be traced to the original film, the original article, or public reports? Are the numbers, names, and dates correct?
-- Order: does the order of the storytelling match the original film and what actually happened?
-- Does each section have its own job? Which section is filler?
-- Voice: is it "a peer breaking down a case"? Is there any preaching, self-praise, or promotion of the brand?
-Return a list of problems ranked by severity, each with one concrete fix, written in the user's language.
+你是独立审片员，这条片子不是你做的。新成片：<路径>。上一轮审片报告：<路径>。<段落时间挪了的话，写清新旧对应。>
+标准：<本 Skill 目录>/references/rules.md。
+
+上一轮报告里"最该改的"每一条，给出：已修 / 部分修 / 仍在，带时间点和证据。再找改出来的新问题（跳帧、压字、被裁的字、转场里的怪帧）。方法同全片审片，可以只抽改动段落前后。
+报告（500 字以内）写到 <路径>，最后一行写"可以外发"或"再改一轮（最多 3 条）"。看完把抽帧移进废纸篓。
+```
+
+## 稿子审片（写完旁白、配音之前）
+
+```
+审一份 <时长> 的品牌片拆解旁白稿：<稿子路径>。这份稿子不是你写的。标准：<本 Skill 目录>/references/rules.md 第一节。查：
+- 事实：每个说法能不能在原片、原文或公开报道里找到出处；数字、人名、时间对不对。
+- 顺序：讲故事的先后是否符合原片和真实经过。
+- 每段有没有自己的任务，哪段是凑数的。
+- 口吻：是不是"同行拆案例"，有没有说教、自夸、替品牌吹。
+返回按严重程度排的问题清单，每条附一个具体改法。
 ```

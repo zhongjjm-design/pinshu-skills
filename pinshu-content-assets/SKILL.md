@@ -1,52 +1,51 @@
 ---
 name: pinshu-content-assets
-description: "Turn faithfully edited course, livestream, or interview transcripts and study guides into accurate, reusable content sourcebooks. Use when a writer needs traceable ideas, methods, cases, figures, quotations, and story angles—not an automatically drafted article."
+description: "用于把课程、直播或访谈的已校订材料整理为准确、完整、可供写稿取用的内容母体；English keywords: content assets, sourcebook, reusable course material, writing sourcebook, session source notes."
 ---
 
-# Pinshu Content Assets
+# 品叔内容资产
 
-## Purpose and source material
+## 来源与职责
 
-Original method by Aidan (Pinshu), who maintains this skill. A faithful edited transcript preserves corrected language and context; a structured study guide clarifies the argument and methods. This skill turns both into a **content sourcebook** that a writer can use without replaying the event. It is neither a second transcript nor another study guide, and it does not write an article by default. A transcript-editing or study-guide skill can prepare the inputs, but neither is required to run this package.
+- 品叔原创，归属与维护：Aidan（品叔）。
+- 上游：`pinshu-transcript` 负责忠实精编，`pinshu-distill` 负责学习讲义；系列课程由 `pinshu-course` 管理。
+- 本 Skill 把两份材料里所有值得长期取用的内容整理成**内容母体**：以后写文章、做传播或方案的人不用重听整场，也能找到具体、准确、有来路的观点、方法、故事、数字和表达。它不是第二份精编稿，不是另一篇讲义，更不是自动写稿。
+- 内容资产只有在课程用途明确启用时才生产，不属于每课四项基础交付。它读取已验收材料，不反向修改忠实稿、讲义或课程状态；上游正式稿发生修订后，先由课程总控完成修订闭环，再按新基线更新内容资产。
 
-## Default workflow
+## 正常处理路径
 
-1. **Read the whole edited transcript and guide.** Use the approved correction dictionary, course map, slides, and recording when available. The edited transcript is the starting point for correct names, context, and detail; the guide helps locate the through-line. Do not generate reader-facing text afresh from uncorrected speech-to-text (STT). Return to the immutable raw transcript for a disputed passage or direct quote. Resolve raw STT errors with the dictionary, audio, or user confirmation; if still uncertain, mark the item for checking rather than guessing.
-2. **Understand the event before extracting snippets.** Explain who is speaking, which question they answer, the central claim, the steps of the argument, and where it lands. Attribute a speaker's claims to the speaker instead of presenting them as externally proven facts. A vivid example need not be the event's main argument. Explain specialist abbreviations the first time they appear in this context.
-3. **Walk through every section of the edited transcript.** Capture worthwhile judgments, mechanisms, instructions, stories, numbers, phrasing, tensions, and unanswered questions from the main talk, digressions, and Q&A. Group by how a future writer would use them, with nearby cross-references for repeated material. Preserve the reasoning and telling details; no per-lesson quota or forced A/B/C topics.
-4. **Make each item useful outside the event.** For a claim, give the speaker's reasons, support, and limits. For a method, give actionable steps, prerequisites, and gaps. For a case, distinguish context, actions, observed result, and the speaker's interpretation; if no result was given, say so. Put a short “The session did not cover …” beside material where a reader would otherwise assume the cost, failed attempt, subsequent risk, or outcome was established. Distinguish **previously completed work**, **a pre-existing demo shown live**, **work created during the session**, and **work actually deployed or used**. State whose figures they are, their source, verification status, and whether they generalize. Keep pricing arithmetic, conditions, mistakes, and unresolved tensions. Mark new editorial inferences and topic ideas as editorial, not the speaker's or Aidan's words.
-5. **Review the actual sourcebook before approving reuse.** Check every edited-transcript section against the finished document and justify any significant omission. Check the final visible text—including headings, quote lists, and indexes—for confirmed STT corrections. Select only lines worth citing repeatedly as memorable expressions, then check every displayed direct quote against its reliable source for **words, punctuation, cut points, and speaker**. A punctuation edit is not a verbatim quote. Check figures, demo/outcome status, first-use terminology, and advice that could be unsafe. Have someone unfamiliar with the session answer from the sourcebook: What happened? How does this method work? Which case supports this angle? What remains unverified or unstated? Revise against the sources if they cannot. A passing script, a complete table of contents, or a generated article does not replace this review. Until the user approves it, mark the asset **pending review** and do not offer it as approved material for formal writing.
+1. **先读已经整理好的材料。**同场的忠实精编稿和结构化讲义都要通读，术语与纠错词典、课程地图、课件按该课程实际情况补充。精编稿提供已经校正的文字、情境和细节；讲义帮助看清主线、方法与关系。**交付正文采用已确认的正确名称和写法**，不能重新从未经校订的原始转写生产正文。两份材料不一致，或要核对直接引语时，再回不可变原始转写；若原始转写本身有错，依据词典、录音或用户确认解决，仍不确定则写明待核，不凭猜测补齐。
+2. **先把整场听明白。**用自然的短段落说清讲者是谁、在回答什么问题、中心主张是什么、如何一步步论证、最后落在哪里。讲者观点保留原来的力度，但说明这是讲者立场，不能写成已经被外部证实的事实。小例子即使适合写文章，也不能冒充整场主线。AIBP、FDE 这类专有缩写第一次出现时，紧接着用当前情境说清各自做什么。
+3. **逐节捞料，再按用途归拢。**沿精编稿从头到尾逐节过，每一节都问“这里哪些具体判断、机制、做法、故事、数字、好表达、冲突或问题值得留下”；主线、支线和答疑都要过，不因某节不适合独立写稿就漏掉。把材料放到最适合取用的位置，重复处用近邻指回，不把多段鲜活论证压成半句话。不按课次平均产出，也不设置 A/B/C 主题配额。
+4. **把每条写到离开课程也能使用。**观点写明讲者为何这样判断、用什么支持、何时不成立；方法写到有人能照做，缺步骤就指出缺口；案例交代背景、动作、结果与讲者的解释，没讲结果就写没讲。读者自然会追问但课里没回答的关键问题，在相关观点、方法或案例旁用一句“课里没讲……”点明缺什么，例如实际成本、失败经过或后续风险，而不是让写手误以为已经核实。明确区分**此前做成、直播现场展示、直播中当场制作、已经发布使用**四种状态：只展示已有演示品，不得说直播现场从零做完或据此证明经营效果。数字写清对象、来源和可否外推。保留报价算法、条件、失误和前后张力，不用体面的套话替换具体细节。编辑的新判断和选题想法明确标为编辑建议，不冒充讲者或原创者。
+5. **先检查成品，再开放使用。**拿精编稿每节标题与正文逐节回查：值钱的料是否进入可读资产，没收的理由是否成立；核对已确认的纠错词在前台是否全部采用正确写法。金句先按“是否值得反复引用”选，再在后台逐句核**字词、标点、截句位置和说话人**；改过一个标点也不能报“逐字全部通过”，但核对分档、截点、改字依据不摆在金句正文。再查数字、演示／真实成果、专有词首次解释及潜在安全建议。让没听课的人只读资产，回答“这场讲什么”“这条方法怎么做”“哪个案例能用于这个选题”“哪些说法还待核、课里没讲什么”。失败则回原材料修资产，不能拿生成文章、目录齐全或脚本通过替代验收。未经用户或维护者审阅，标为待审，不供正式写稿台取料。
 
-## One readable sourcebook per session or lesson
+## 交付给用户看的样子
 
-These **eight parts are content responsibilities**, not mandatory empty headings, equal-length sections, or database fields. Leave out parts with no source material; expand those with rich material in readable prose.
+一场直播或一节课默认**一份可直接阅读的内容资产文档**，保留以下内容职责。材料没有相应内容时不填空栏目；材料多时充分展开，不用表格或字段把正文压薄。
 
-1. **What the session covered.** Explain the argument in one or two paragraphs; give navigable entry points to the most valuable material rather than a long timestamp list.
-2. **Views and judgments.** Each industry observation, speaker claim, criticism, or forecast has its reasoning, evidence, and conditions; each stands on its own.
-3. **Methods and practices.** State the problem, when to use the method, steps, tools and inputs, how it was demonstrated, and likely mistakes. Include calculations, division of labor, questions to ask, and AI instructions when they can be traced back to a source.
-4. **Cases and stories.** Separate actual projects and personal experience from second-hand reports, hypotheticals, and demonstrations. Supply context, sequence, telling detail, outcome if known, and what the case can support. Merely showing an old demo is not proof of making it live or of business impact.
-5. **Data and figures.** Give a central lookup while keeping figures beside their related claims or cases. Identify the speaker, situation, independent-verification status, and limits of extrapolation.
-6. **Memorable lines and useful phrasing.** Select only lines worth repeated quotation, with a sentence of context for each. Put anecdotes under cases and label editorial wording as editorial. Keep quote verification and correction details in source notes or working records, not as a parade of forensic categories in the reader-facing section.
-7. **Questions, tensions, topics, and publication angles.** For a supported angle, say who it serves, what it would establish, which exact parts of this sourcebook support it, what is missing, whether it offers something new, suitable form and why, and a fact-grounded opening question or contrast. The hook is not a finished article. Label opposing editorial hypotheses as such. Without enough material, leave a question rather than manufacture headlines.
-8. **Source notes.** At the end, record speaker, date if known, documents used, outstanding checks, and intentionally excluded scope. Summarize quote, cut-point, and correction policy here; keep raw STT mistakes and line-by-line work in the correction dictionary or private working records. Note relevant conflicts of interest here, and beside an item only when omission would mislead a reader.
+1. **这场讲了什么**：一两段讲透主线；再给最值钱的要点入口，点击能找到正文，不拿长时间轴替代讲述。
+2. **观点和判断**：行业判断、讲者主张、反常识批评、趋势预判及各自的理由、证据与条件。每条单独拿出也读得懂。
+3. **方法和做法**：解决什么、何时用、步骤、所需工具与材料、讲者怎样演示、易错点。包括算账方法、分工、提问清单和可回源的 AI 指令。
+4. **案例和故事**：真实项目、亲历、转述、假设与现场演示分别写明；有背景、经过、细节、结果和可说明的问题。只展示旧演示品，不写成直播现场从零完成并投入经营。
+5. **数据和数字**：集中便于查找，也留在对应观点与案例中；注明是谁的口述、来自什么情境、有没有独立核实、可否外推。
+6. **金句和好表达**：入选标准只有**值得反复引用**。每句带一句上下文，让人知道它在说什么；不因字面与原稿对得上就收凑数残句。人物花絮回案例，编辑表达注明身份。逐字、截句与校订依据供内部核对，不在前台按这些类别排队展示。
+7. **好问题、冲突、选题和传播角度**：每个值得写的角度说明**给谁看、要证明什么、调用正文哪几条料、缺什么、新不新、适合做成什么形式、为什么，以及一个有事实支撑的开头钩子**。钩子只提出问题或事实反差，不冒充已经写成的文章；有反向看法时标为编辑假设，不能倒写成讲者结论。没有料支撑就留问题，不靠一排标题装作可写。
+8. **来源说明**：讲者、日期、所用稿件、关键待核点和有意未收的范围，放文末。逐字、截句、校订及纠错的核对口径也在此集中说明；原始错转与逐条截点留术语词典或后台回源，不塞进前台金句。利益相关身份在需要处简述、文末汇总，只有不写就会误用的边界才放在内容近邻。
 
-## Whole courses, location, and writing handoff
+单篇正本落在用户批准的 `65_课程库/<课程>/04_内容资产/`，文件名沿用课程命名惯例。**完整课程两层都要**：每节各有一份完整母体；整门课另有一份课程级母体，把课程主线、跨节反复出现的核心问题、方法、案例、数字与分歧组织成能直接取料的内容，并链接回各节细节。它既不是几十节正文拼接成巨文，也不是只有目录的薄总览；有多个大主题时可从课程级入口链接专题页，但仍有唯一可读入口。`30_内容工厂/03_弹药库/05_课程资产/` 只需按问题指回这些正本具体部分的索引与真实使用记录，不再抄一套互相漂移的弹药卡。旧待审三页包不覆盖、不当新材料的依据；迁移或替换须另获批准。已有作品可链接回资产；只有另有明确写作请求才写新作品。
 
-For a completed course, retain a full sourcebook **for every lesson** and a separate **course-level sourcebook**. The latter organizes cross-lesson questions, recurring ideas, methods, cases, figures, and disagreements into material a writer can use directly, with links back to lesson detail. It is neither a concatenation of all lessons nor a thin directory of links; large themes may have linked topic pages under a single readable course entry. For a course archive, place the authoritative files only in a **user-approved course content-assets folder** and follow its existing naming convention. The downstream writing index should point to precise sections by actual question and record genuine reuse, not duplicate the sourcebook into a parallel card library. Do not overwrite an old pending-review package, treat it as verified input, or migrate it without separate approval. Existing published work may link back to the sourcebook; draft a new article only on an explicit writing request.
+## 引用呈现与事实边界
 
-A public installation contains **no private course or publishing paths**. If downstream drafting or handoff is requested, take the destination from an explicit argument, the current project's configuration, or a user-supplied private configuration; never discover private config automatically or create a guessed destination. `scripts/resolve-content-route.py --role draft --config <explicit-config.yaml>` resolves a route without creating directories. If none is provided, keep `route_resolution_status: unresolved` and do not claim a draft, handoff, or platform delivery. An approved course sourcebook and an unresolved downstream route are different states.
+**读者看到的是校订后的正确文本，不是 STT 错字的取证现场。**交付正文、标题、表格、引用清单与写稿索引统一用词典里已确认的名称和术语；错转形态及原片段只留在不可变原始转写、术语词典映射或后台回源说明，不能放进前台逐字引文再叫读者自行替换。每条已确认映射都要检查前台残留；无法确认的名称不得按发音猜。
 
-## Quotation and fact boundaries
+- 真正的直接原话：与可靠来源**字词、标点、前后截取均逐字相符**且没有已知 STT 错误，才用「」标“原话”；查的是最终显示的整句，不是只找一句里某段相似的字。原始转写的字面命中不等于转写正确；“”仅用于叫法，不拿它给校订句冒充原话。
+- 改过错字、名称、大小写、标点、口头语或重复的引文：若纠错有词典、录音或用户确认依据，前台只显示**校订后**的句子，可用无引号的“编辑校订引文”文字块标身份与依据；不计为逐字原话。若校订使句子意义不稳，改为不加引号的讲者大意。
+- 压缩、重组、跨段拼接或不确定说话人的话：转述其意，不加引号；只有 `Speaker 1/2` 标签而无可靠的人名映射时，不把校订句制作成可直接署名的讲师引文，改用正确术语转述并保留身份待核。讲者转述客户的话不是客户原话。
+- 讲者预测、亲身经历、假设例子、演示数据和编辑判断各守身份；涉及收益、监管、产品版本、隐私与高后果数字时，课程只能证明讲者说过，不能证明现行事实成立。讲者个人“某类资料可以交给 AI 平台”的说法只能作为其有争议的观点留存，不能在资产的“方法”里变成面向企业的安全操作建议。原创者第一人称经历只用其本人核实的材料。未讲结果不补写。
 
-The reader sees **corrected text, never a known STT mistake presented as a quote**. Use confirmed names and terms consistently across the sourcebook, tables, quotation lists, and writing index; scan each confirmed correction for visible remnants. Do not guess an uncertain name from sound alone.
+以上是成品的底线，不是让前台反复展示取证表。更细的高风险核对按需读 `references/source-verification-risk-and-handoff.md`；系列整理及跨课复用按需读 `references/single-session-and-series-workflow.md`。旧机器注册表、结构化交接或路由合同不属于本公开候选的默认生产路径；脚本 PASS 不能代替内容验收。
 
-- Label a line **verbatim** only when the entire final displayed sentence, including punctuation and cut points, matches a reliable source without a known STT error and the speaker is known. Matching an uncorrected transcript is not proof that the words were spoken correctly.
-- If an approved dictionary, audio, or user confirmation supports a changed name, word, capitalization, punctuation, filler, or repetition, show only the **corrected** line. Label it an **edited quotation** with its correction basis, not a verbatim quote. If correction makes the meaning uncertain, paraphrase without quotation marks.
-- Paraphrase compressed or stitched passages, uncertain speakers, and a speaker's retelling of a customer's words; do not attribute them as that customer's direct quote. Anonymous `Speaker 1/2` labels alone do not support a named instructor quote.
-- Distinguish forecast, firsthand account, hypothetical, demonstration data, and editorial inference. Classroom material can establish that someone made a claim, not that a return, regulation, software version, privacy practice, or high-stakes number is currently true. A speaker's contested view that company data may be uploaded to an AI service must not turn into operational security advice. Use Aidan's first-person experience only when verified in Aidan's own material. Never invent an unreported result.
+## 何时算完成
 
-For detailed high-stakes review, read `references/source-verification-risk-and-handoff.md`; for series and cross-course reuse, read `references/single-session-and-series-workflow.md`. Older structured registries or machine handoffs are **not** this package's default workflow or evidence of content quality; this release does not ship the legacy registry validator. A genuinely required legacy migration needs its own reviewed tooling and explicit scope.
-
-## Done means
-
-The user can open a session sourcebook and understand its whole argument. A writer can draw a specific claim, method, case, or angle and see its usable support or the exact gap. Important material from every edited-transcript section and the guide has a home. Confirmed STT mistakes do not leak into visible quotes; literal quotes, figures, and speakers are traceable. A completed course also has a useful cross-lesson entry and links to lesson-level detail. An index can locate the authoritative files, but pending-review material stays unavailable as approved writing input. Judge completeness and readability from the actual document, not its page count or a mechanical PASS.
+用户随手打开能明白整场讲了什么；任意抽一条观点、方法、案例或选题，都能看到可用的具体材料或明确缺口；对照精编稿和讲义，重要信息没漏；已确认错转不出现在前台引用位，逐字原话、数字和身份能核。完整课程同时能从课程级母体找到跨节关系并回到单节细节。写稿入口能找到正本，但待审资产未被当作已批准底料。成果的完整度与可读性由真实成品审阅决定，不由页数、分类数或机械测试决定。

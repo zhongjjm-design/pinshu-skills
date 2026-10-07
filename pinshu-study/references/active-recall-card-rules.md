@@ -1,86 +1,117 @@
-# Active-Recall Card Rules
+# 主动回忆卡规则
 
-Active-recall cards prompt the learner to retrieve knowledge from memory after closing the lesson notes. They are not fragments cut from the notes or shorter summaries.
+主动回忆卡用于合上讲义后从脑中提取知识，不是把讲义切碎，也不是更短的摘要。
 
-## Reading body, frontmatter, and separate index
+## 正文、Frontmatter 与后台索引
 
-Each card has a heading, a question line, and an Obsidian-style `> [!question]- Answer` collapsible callout with the answer, explanation, and source in the learner's language. Do not put `%%`, HTML, per-item IDs, classifications, or pipeline fields in the body. Frontmatter holds only a few file-level properties: `document_type`, `card_count_total`, `source_lecture`, `source_transcript`, and `metadata_index`. Put each card's ID, sequence, atomic/integrative classification, cognitive operation, and core/optional status in a separate JSON index under the course's production-control area. Its `asset_type` is `active_recall_cards`, its array is `items`, and each entry has a unique `card_id` and sequential `position`. A training bank has a separate `training_questions` index using `q_id`, not card fields.
+卡片正文只保留四个元素：卡标题、`**问题**：`行、`> [!question]- 答案`折叠呼出块，以及块内的答案、解释和中文来源。正文不得出现 `%%`、HTML 标签、逐项 ID、属性、类型、状态或英文流水线字段。
 
-Every card file must contain a parseable `source_lecture`. Cards containing mnemonics, numbers, safety guidance, instructor opinions, cases, or unresolved material must also retain `source_transcript`. A path must be either a plain absolute path or a valid relative path resolved from the current file.
+Frontmatter 只保留少量文件级属性和后台索引指针：
 
-## Two card classes; report them separately
+```markdown
+---
+document_type: 主动回忆卡
+card_count_total: 2
+source_lecture: ../../02_结构化讲义/第03课.md
+source_transcript: ../../01_忠实精编稿/第03课.md
+metadata_index: ../../99_生产控制/学习资产索引/第03课·主动回忆卡.index.json
+---
 
-### Atomic recall card
+# 第03课·主动回忆卡
 
-Test only one target that can be scored independently. A definition plus a necessary qualifier, a two-item comparison along one axis, or tightly coupled steps on one path may count as one target. A list of multiple medications combined with effects, exceptions, reasons, and safety constraints does not.
+### 卡1·问题主题短语
 
-### Integrative retelling card
+**问题**：……
 
-Use this class to retell a complete model, case-reasoning chain, meridian pathway, formula derivation, or comprehensive safety review. It may contain multiple retrieval units, but it must be explicitly labeled `integrative card` and must not be represented in self-evaluation as "one target per card."
+> [!question]- 答案
+> 答案正文。
+>
+> 解释：为什么、易错点、边界。
+>
+> 来源：第03课结构化讲义『小标题』；忠实稿『原句关键词』
+```
 
-Candidate sets may contain both classes. Reports must count atomic cards, integrative cards, core cards, and optional cards separately. Do not use "avoiding excessive fragmentation" to conceal a compound cognitive load.
+每张卡的 `card_id`、顺序、原子／综合身份、认知动作和核心／按需属性写入独立 JSON 索引，不进入 Markdown 正文或逐项 Frontmatter。索引位于 `99_生产控制/学习资产索引/`，使用 `asset_type: active_recall_cards`，条目数组使用 `items` 和 `card_id`。
 
-## Cognitive operations and attributes
+训练题库使用另一份索引：`asset_type: training_questions`，条目使用 `q_id`。卡片与题库不得共用 `cards` 字段或混用 ID。具体格式读取 `Markdown学习记录规范.md`。
 
-Cognitive operations include basic recall, comparison and discrimination, causal derivation, ordered pathway, conditional branching, error or counterexample analysis, and visual identification or simulated chart analysis.
+## 前台与后台
 
-Mnemonics, memory aids, safety, core status, and optional use are attributes, not question types. Do not create an artificial difficulty hierarchy.
+用户正文只显示中文问题、可折叠答案、必要解释和中文来源。文件级来源路径和索引指针留在简短 Frontmatter；逐项机器数据进入独立后台索引。代表性文件必须在目标阅读界面真实打开验收，机器结构校验不能代替视觉检查。
 
-## Card selection
+## 两类卡，不混报
 
-Cards are required for core definitions, classifications, decision sequences, compatibility or safety boundaries, easily confused distinctions, and mnemonics the instructor repeatedly emphasized.
+### 原子回忆卡
 
-Create cards as needed for complete derivations, turning points in cases, representative errors, and cross-module integration.
+一次只判断一个可独立判对错的目标。定义加必要限定、同一比较轴的两项对比、同一路径中的紧密步骤，可以算一个目标；多个药物列表再叠加功效、例外、原因和安全，不算一个目标。
 
-Do not create cards from equipment noise, social chatter, unverified fragments, mechanical repetition, or unresolved items in the faithful transcript presented as definitive answers.
+### 综合复述卡
 
-Do not impose a fixed number of cards per lesson. Extract candidate cards for each lesson first. At the end of a module, `pinshu-course` merges cards about the same knowledge object across lessons. `pinshu-study` produces and uses cards for learning; it does not make cross-lesson consolidation decisions.
+用于复述完整模型、病案链、经脉循行、组方推导或安全总检。它可以包含多个检索单元，但必须明确标为“综合卡”，不能在自评中写成“一卡一目标”。
 
-## High-risk cards
+每课卡与模块综合卡都可以包含原子卡和综合卡。报告分别统计原子卡、综合卡、核心卡和按需卡，不用“拆开太碎”掩盖复合负荷。
 
-For medical care, medication, dosage, toxicity, critical illness, acupuncture, and other hands-on content that could cause harm, train only:
+## 认知动作与属性
 
-- how to distinguish the recorded course statement from real-world standards;
-- applicability conditions, stopping conditions, and boundaries that require a qualified professional;
-- why a case cannot be generalized directly;
-- which authoritative source must be consulted.
+认知动作包括：基础回忆、比较辨析、因果推导、顺序路径、条件分叉、错误反例、视觉识别或例盘。
 
-Do not turn self-diagnosis, self-performed procedures, specific dosages, household substitutes, or unverified classroom experience into a single canonical answer. Every high-risk card must state within its own answer: "Course record; not externally verified; do not use this card to self-treat, self-medicate, or perform the procedure." Do not rely on one disclaimer at the end of the file.
+口诀、记忆法、安全、核心程度、按需使用是属性，不是题型，也不建立人为难度体系。
 
-When strongly visual hands-on material lacks action footage, create cards only for recognition principles, visual dependencies, and safety boundaries. Do not create a procedural card that implies the operation can be completed from text alone.
+## 选卡
 
-## Source strength
+必须出卡：核心定义、分类、判断顺序、配伍或安全边界、易混淆差异、老师反复强调的口诀。
 
-Every card must trace back to the structured lesson notes. Mnemonics, numbers, safety claims, instructor opinions, and cases must also trace back to the faithfully edited transcript. Do not label an editorial synthesis as the instructor's own words. Cross-lesson additions must cite a second source. Direct quotations must be findable word for word.
+按需出卡：完整推导、案例转折、典型错误、跨模块综合。
 
-Write learner-visible citations naturally in the resolved output language. Preserve actual paths and searchable anchors internally.
+不出卡：设备噪声、纯寒暄、无法确认碎片、机械重复，以及忠实稿中的待确认项所对应的确定答案。
 
-## Count metadata
+不规定每课固定数量。每课先生成主动回忆卡；模块结束由 `pinshu-course` 按同一知识对象跨课去重并形成模块综合卡。`pinshu-study` 负责卡片生产和学习使用，不负责跨课归并裁决。
 
-A real card unit exists only when all four elements are present: card title, unique index ID, question, and answer. File-level frontmatter holds only the total and index pointer:
+## 高风险卡
+
+医疗、药物、剂量、毒性、危重症、针刺和其他可伤人的实操内容，只训练：
+
+- 如何识别课程原话与现实规范的差别；
+- 适用前提、停止条件和需要专业人员处理的边界；
+- 为什么不能从个案直接推广；
+- 应回到哪一份权威来源。
+
+不把自行诊断、自行操作、具体剂量、家庭替代方案或未经核验的课堂经验做成唯一标准答案。高风险卡必须在单卡答案内就地写清“课程记录、未经外部核验、不可据此自行操作或用药”；不能依赖文件末尾统一免责声明。
+
+强视觉实操缺少动作画面时，只能出识别原理、视觉依赖和安全边界卡，不出“仅凭文字完成操作”的步骤卡。
+
+## 来源强度
+
+每张卡必须回到结构化讲义；口诀、数字、安全、老师观点和个案还要回到忠实精编稿。编辑归纳不能标成老师原话；跨课补充必须列第二来源；直接引语必须能逐字找到。
+
+用户可见来源用自然中文，例如“来源：第56课结构化讲义‘四方辨治’；忠实稿‘九味羌活饮’”。后台保存真实路径和可搜索锚点。
+
+## 数量元数据
+
+真实卡片单元以“卡片标题＋后台唯一 ID＋问题＋答案”四项同时存在为准。Frontmatter 只保存文件级总数：
 
 ```yaml
 card_count_total: 23
-metadata_index: ../../99_Production_Control/Learning_Asset_Index/lesson-03.index.json
+metadata_index: ../../99_生产控制/学习资产索引/第03课·主动回忆卡.index.json
 ```
 
-Compute category totals from the index, not redundant frontmatter lists. The file total must match its body headings, questions, answers, and index items. Check index uniqueness and order programmatically, not by assertion alone.
+核心／按需、原子／综合等分类计数由独立索引的 `items` 解析生成，不在 Frontmatter 重复保存逐项清单。总数必须等于索引条目数，也必须等于正文卡片标题、问题和答案的数量。
 
-## Learning presentation
+## 学习呈现
 
-Display only one card at a time during an actual review. Show the question first. Reveal the answer, explanation, and source only after the learner responds. An integrative card may use stepwise follow-up questions, but the record must preserve the learner's first complete answer.
+实际复习一次只显示一张。先显示问题，用户回答后再展示答案、解释与来源。综合卡允许分步追问，但记录中要保留第一次完整回答。
 
-## Card QA
+## 卡片QA
 
-Before promotion, check all of the following together:
+提升前同时检查：
 
-1. The counts of card titles, indexed unique IDs, questions, and answers match.
-2. The file-level frontmatter total matches the actual cards and separate index.
-3. Each atomic card contains only one independently scorable target.
-4. Every integrative card is explicitly identified and does not masquerade as an atomic card.
-5. The learner-facing body contains no HTML, hidden comments, IDs, internal attributes, English type codes, or pipeline status fields.
-6. Source paths resolve, and every high-risk card traces directly to the faithful transcript.
-7. No unresolved item has been converted into a definitive answer.
-8. High-risk content cannot become real-world advice when a card is viewed outside its original context.
+1. 卡片标题、后台唯一 ID、问题、答案四项数量一致；
+2. Frontmatter 总数、正文单元数与后台索引条目数一致；
+3. 原子卡只有一个可独立评分目标；
+4. 综合卡已明确身份，没有冒充原子卡；
+5. 用户正文没有属性、英文类型和流水线状态；
+6. 来源路径可解析，高风险卡能直接回忠实稿；
+7. 待确认项没有被做成确定答案；
+8. 高风险内容没有因卡片脱离上下文而变成现实建议。
 
-A generator's self-evaluation is only a diagnostic clue. Risk-triggered or sampled independent QA and actual rendering/learning checks provide different evidence; do not claim them from a structural PASS.
+生成者自评只作检查线索，不能替代独立QA和真实学习测试。

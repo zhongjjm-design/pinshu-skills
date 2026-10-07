@@ -2,7 +2,7 @@
 
 Create readable source-faithful knowledge diagrams with one main relationship: processes, comparisons, hierarchy, components or genuine feedback loops. This independent companion adds diagram-specific source anchors, density and visual checks while reusing the public visual core.
 
-Use with public pinshu-visual-system 0.2.4 or later installed beside this folder. baoyu-infographic is an optional separately installed workflow, not a hidden prerequisite or bundled dependency. Personal character images are excluded. Repository instructions are English; output follows the user's language.
+Use with public pinshu-visual-system 0.2.4 or later installed beside this folder. baoyu-infographic is an optional separately installed workflow, not a hidden prerequisite or bundled dependency. Personal character images are excluded. Skill rules are maintained in Chinese; stable command names and file paths remain English where required. Output follows the user's language.
 
 Tell your image-capable agent:
 

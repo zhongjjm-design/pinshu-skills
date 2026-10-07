@@ -27,7 +27,7 @@ Do not merge prompts merely because they appear in the same lesson.
 
 - **Case prompt**: concrete task inputs, accounts, URLs, quantities, time range, and desired output.
 - **Universal startup prompt**: reusable instructions for restating the task, asking questions, drafting acceptance evidence and boundaries, generating a `/goal` prompt, waiting for confirmation, then starting Goal.
-- **Commentary/analysis text**: explanations such as “Restate the task first so Codex does not misunderstand it”; useful in the lecture, but not part of the prompt unless visibly included in the prompt block.
+- **Commentary/analysis text**: explanations such as “先复述，避免Codex理解错任务”; useful in the lecture, but not part of the prompt unless visibly included in the prompt block.
 
 Track each item independently as `confirmed`, `partial screenshot`, or `missing`.
 
@@ -48,17 +48,17 @@ Chat surfaces may turn the last URL plus following Chinese requirement into one 
 - Separate trailing natural-language requirements from the URL;
 - Normalize link presentation, capitalization, spacing, and punctuation only;
 - Do not add requirements or treat automatically attached web-page content as part of the course prompt;
-- Label the result “Original text; link boundaries and formatting corrected” rather than claiming byte-for-byte transcription.
+- Label the result “原文，链接边界与排版已校正” rather than claiming byte-for-byte transcription.
 
 ## 5. Status bookkeeping
 
 When some items are confirmed and others remain missing:
 
-- Change headings from `Pending Confirmation` to `Confirmed and Pending Supplement`;
+- Change headings from `待确认` to `已确认与待补充`;
 - Reduce the pending count in the course map atomically;
 - Explicitly separate “case prompt confirmed” from “universal prompt still missing”;
 - Keep the lesson in draft status until the remaining source-dependent items are resolved;
-- Do not claim “Pending items: 0” until screenshot completeness and terminology zero-residual checks both pass.
+- Do not claim “待确认项：0” until screenshot completeness and terminology zero-residual checks both pass.
 
 ## 6. Minimum QA
 

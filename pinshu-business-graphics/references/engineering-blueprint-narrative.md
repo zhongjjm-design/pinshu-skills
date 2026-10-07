@@ -12,6 +12,7 @@ Use for:
 
 Avoid when the content is only a slogan or when no components and interfaces can be named.
 
+Approved anchor: `../assets/approved-examples/05-engineering-blueprint-narrative.png`
 
 ## Composition families
 
@@ -36,7 +37,7 @@ Avoid when the content is only a slogan or when no components and interfaces can
 
 ## Prompt kernel
 
-> Create an engineering-blueprint narrative for “[system]”. Use [composition family] to show system boundary, [inputs], [modules], [interfaces], human checkpoints, exception path, and [outputs]. Encode data, action, feedback, and risk with consistent line styles. Use exact labels in the requested output language and a restrained technical palette. No sci-fi glow, no robot head, no meaningless code, no decorative circuit board, no invented interface labels.
+> Create an engineering-blueprint narrative for “[system]”. Use [composition family] to show system boundary, [inputs], [modules], [interfaces], human checkpoints, exception path, and [outputs]. Encode data, action, feedback, and risk with consistent line styles. Use exact Chinese labels and a restrained technical palette. No sci-fi glow, no robot head, no meaningless code, no decorative circuit board, no invented interface labels.
 
 ## Failure boundaries
 

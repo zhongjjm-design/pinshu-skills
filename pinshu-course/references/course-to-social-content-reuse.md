@@ -1,9 +1,51 @@
-# Course Material to Content Sourcebooks
+# 课程传播资产兼容与分流
 
-Use this route only when the course purpose includes content reuse or the owner asks for it. `pinshu-content-assets` reads the accepted faithful edit and structured guide in full; it never changes either upstream document and never writes a post or article by default. The sourcebook makes the session's main argument, useful judgments, methods, cases, figures, memorable expressions, unanswered questions, and source boundaries independently readable. Do not promote an attractive side example to the course's main claim, enforce a topic quota, or treat a raw STT error as a quotation.
+## 核心原则
 
-Create one complete sourcebook per lesson or session. For a whole course, create a separate course-level sourcebook that connects recurring questions, methods, cases, figures, and disagreements, with links to the lesson sourcebooks. This is not a concatenation of every lesson and not a bare link index. A lesson with little material still needs an honest readable account of what was taught; do not pad it with invented experiences or unsupported medical, earnings, compliance, or case-effect claims. Mark editorial angles as editorial rather than instructor claims.
+课程知识整理与传播资产生产是两条并行但独立的流水线。忠实稿和讲义保持学习用途的完整与纯净；传播候选、母题、核验和下游 handoff 由 `pinshu-content-assets` 负责。
 
-The course map points to these sourcebooks and their actual review state. Every new sourcebook remains **pending review** until the owner reads and approves it; the core lesson's accepted status, presence of a file, or passing script is not approval of the derivative content. Formal writing must not use pending sourcebooks as approved input. Do not copy approved sourcebooks into a second card library; a writing index, when requested, points back to exact sections and records real reuse.
+过去附在每课末尾的“金句、可传播观点、用户连接点、朋友圈文案”不再是逐课强制合同。历史文件不批量删除；再次使用时再迁移有价值内容。
 
-A sourcebook can be delivered at the user's approved project path even if a downstream platform route is not configured. Keep `route_resolution_status: unresolved` in that case and do not claim a platform handoff or publication. Posts, articles, and platform drafts are separate writing requests with their own evidence and approval. Sourcebook acceptance requires human reading, source comparison, corrected terminology, and faithful quotations; the portable route resolver or learning-asset validator cannot certify editorial quality.
+## 系列课程
+
+```text
+逐课忠实稿／讲义
+→ 有增量才捕捉传播候选
+→ 模块结束去重精选
+→ 按已完成范围交付阶段编号化内容资产
+→ 完课后跨课归并，交付课程级编号化内容资产
+→ 有明确配置时再交给下游内容生产
+```
+
+逐课不设固定数量。没有合格候选时写“本课无足够独立传播增量”，不制造伪金句、伪经历或平台稿。
+
+课程地图只保留：
+
+- 已覆盖课次；
+- 当前可用资产的范围与入口；
+- 待核验和高风险数量；
+- 阶段／课程内容资产的交付状态；
+- 独立传播层入口。
+
+课程地图不复制传播正文。
+
+## 单篇直播、访谈与演讲
+
+单篇稳定来源可直接形成篇级编号化内容资产，无须伪装成“逐课”。默认交付可直接使用的表达、选题、内容任务卡与导航；候选、母资产及机器记录保留在生产控制位置。篇级资产仍须区分原话、编辑提炼、用户延伸和外部补充，并保留来源锚点、核验状态与风险等级。
+
+## 内容生产边界
+
+传播母资产不是公众号、朋友圈、小红书、X 或短视频的通用终稿。平台稿由下游工作流在明确账号、受众、平台、真实经历和目标后生成。
+
+公共 Skill 只使用 `content_draft_destination`、`content_final_destination` 和 `content_workflow_handoff`。下游目标未配置时标记 `destination_unresolved`，不猜私人路径，也不声称已交给下游；仍可在本次已批准项目位置完成编号化内容资产。
+
+## 验收
+
+- [ ] 逐课忠实稿和讲义没有传播字段必填要求；
+- [ ] 每个候选都有来源身份和来源锚点；
+- [ ] 系列未完课时只生成阶段资产；
+- [ ] 课程地图只提供状态与入口；
+- [ ] 平台成品没有混入课程学习资产；
+- [ ] 默认完整交付具有导航、可直接使用资产、选题与待生产任务卡；仅有候选、母资产或 handoff 不算完成；
+- [ ] 按 `pinshu-content-assets` 当前成品合同复核风险、来源和逐文件 SHA-256，并通过项目级 `full-delivery` 验证；脚本通过不能替代实际阅读；
+- [ ] 下游目标未配置时明确为待交接，但本地资产交付状态单独记录。

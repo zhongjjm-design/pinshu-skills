@@ -1,157 +1,157 @@
-# Semantic Coverage and Formal-Promotion Acceptance for Paired Drafts
+# 双稿语义覆盖与正式提升验收
 
-## When to Use
+## 适用场景
 
-Use this workflow when a long lesson's `faithful-edited-transcript` and `systematized-lecture` were generated in parallel by the primary Agent, subagents, or batch scripts, and then must be promoted from a temporary area into the formal course library with the index updated.
+一节长课程由主Agent、子Agent或批量脚本并行生成“忠实精编稿＋系统讲义”，随后需要从临时区提升到正式课程库并更新索引。
 
-This reference addresses four risks beyond mechanical Markdown validation:
+本参考补足机械Markdown校验之外的四类风险：
 
-1. A subtask reports completion, but the file was never written or was only partially modified.
-2. Both drafts satisfy formatting rules but independently omit a critical case, number, person, or quotation.
-3. STT drops digits or produces conflicting values, and an editor infers a missing ten-thousand unit, fills in an ending value, or selects one figure from context.
-4. Formal files are written successfully, but the course index, Wikilinks, or preview still points to an old path.
+1. 子任务声称完成，但实际文件未写入或仅部分修改；
+2. 两份稿件格式合格，却分别漏掉关键案例、数字、人物或原话；
+3. STT数字缺字或互相冲突，编辑者根据语境擅自补“万”、补终值或选定单一数字；
+4. 正式文件写入成功，但课程索引、Wikilink或预览仍指向旧路径。
 
 ---
 
-## 1. Build a Semantic-Coverage Checklist Before Running Format Checks
+## 一、先建“语义覆盖清单”，不要只跑格式检查
 
-Extract a short checklist from the authoritative source containing at least:
+从权威原文提取一份短清单，至少包含：
 
-- instructor, course, and event track;
-- three core judgments;
-- critical people and account names;
-- core methods and stage order;
-- critical numbers, amounts, ratios, times, and counts;
-- important case names, cities, industries, and outcomes;
-- explicit STT corrections;
-- removable material: device setup, applause, purchase prompts, and no-information interaction;
-- conflicting figures and proper nouns that must enter the end-of-document verification section.
+- 讲师、课程、活动栏目；
+- 3条核心判断；
+- 关键人物与账号名；
+- 核心方法及阶段顺序；
+- 关键数字、金额、比例、时间和数量；
+- 重要案例名、城市、行业与结果；
+- 明确的STT纠错词；
+- 删除项：设备调试、鼓掌、促单、无信息互动；
+- 需要进入文末核验的冲突数字与专名。
 
-Because the paired drafts have different responsibilities, divide the checklist into two columns:
+双稿职责不同，因此清单必须分成两列：
 
-| Acceptance item | Faithful edited transcript | Systematized lecture |
+| 验收项 | 忠实精编稿 | 系统讲义 |
 |---|---|---|
-| First-person voice and speaking order | Required | Not required |
-| Complete argument and case process | Required | May be reorganized |
-| Method models, case cards, and execution checklists | May be consolidated at the end | Required |
-| Verbatim quotations | Must come from the source | Must remain separate from editorial distillation |
-| Critical people, figures, and cases | Each must have a destination | Must appear in the body or a case card |
-| Editorially added SOPs | Must not enter the instructor's voice | Must be labeled `editorial-distillation` / `execution-guidance` |
+| 第一人称与讲述顺序 | 必须 | 不要求 |
+| 完整论述与案例过程 | 必须 | 允许重组 |
+| 方法模型、案例卡、执行清单 | 可集中附后 | 必须 |
+| 原话金句 | 必须来自原文 | 必须与编辑提炼分开 |
+| 关键人物、数字和案例 | 必须有对应去处 | 必须进入正文或案例卡 |
+| 编辑新增SOP | 不得混入讲师口吻 | 必须标“编辑提炼／执行建议” |
 
-Do not use one set of `--require` arguments to force both files to contain exactly the same literal text. Mechanical checks govern formatting; the semantic checklist governs role-specific content coverage.
+不要用同一组 `--require` 强行要求两份文件出现完全相同的字面形式。机械检查负责格式；语义清单负责各自职责和内容覆盖。
 
-### Literal-Matching Cautions
+### 字面匹配注意
 
-- Search normalization may remove spaces, commas, and full-width/half-width differences.
-- Do not automatically treat Chinese numerals and Arabic numerals as the same fact, especially for amounts, ratios, and view counts.
-- Match person, brand, and course names exactly against the authoritative spelling.
-- Cases may be merged into one card, but the people, actions, figures, and boundaries must not disappear through merging.
-
----
-
-## 2. Order for Handling Conflicting Numbers
-
-When `110 yuan` may be missing a ten-thousand unit, the live speech contains both `4.57 million` and `4.67 million`, or an ending value is incomplete:
-
-1. Preserve the visible form in the raw transcript.
-2. Inspect surrounding context and conclude only that a conflict or omission exists; do not fill a definitive value from context.
-3. In the faithful transcript, state that the exact amount/value cannot be confirmed or retain both spoken variants.
-4. In the systematized lecture, use a range or parallel values labeled `course-spoken` / `pending-verification`.
-5. Consolidate the original conflict in the end-of-document verification section.
-6. Replace a pending value with a definitive one only after reviewing slides, visuals, or another authoritative source.
-
-Never:
-
-- change `110 yuan` to `1.1 million yuan` because that scale appears more plausible;
-- choose one of two spoken variants and present it as settled;
-- describe an unverified inserted number as “conservative editing”;
-- present instructor revenue, follower, sales, or platform-mechanism claims as externally verified facts.
+- 可以为搜索移除空格、逗号和全半角差异；
+- 不要自动把中文数字与阿拉伯数字视为同一事实，尤其涉及金额、比例和播放量；
+- 人名、品牌名和课程名必须用权威写法精确匹配；
+- 案例可合并成一张卡，但人物、动作、数字与边界不能因合并而消失。
 
 ---
 
-## 3. Read Subtask Deliverables; Do Not Trust Self-Reports
+## 二、冲突数字的处理顺序
 
-A subagent's `file-written`, `completed`, or `self-checked` status is only a lead. The primary Agent verifies in this order:
+遇到 `110元` 疑似漏“万”、`457万／467万` 两种现场表述、终值缺字等情况：
 
-1. Confirm that the temporary path exists.
-2. Read the actual file as UTF-8 and confirm byte count, character count, line count, and zero NUL bytes.
-3. Count the unique H1, H2/H3 structure, blank lines after headings, overlong lines, and residual timestamps.
-4. Sample the opening, main method throughline, 3–5 case cards, and end-of-document verification section.
-5. Run the lesson-specific STT forbidden-term list and critical semantic checklist.
-6. Run `scripts/validate-course-markdown.py`.
-7. Make targeted corrections only; do not redelegate an entire slow refinement pass for a small number of residual issues.
+1. 保留原转写中的可见形式；
+2. 查看前后语境，判断“存在冲突或缺字”，但不据此补成确定值；
+3. 忠实稿正文写“准确金额／数字不能确认”或同时保留两种口述；
+4. 系统讲义写成范围或并列值，并标“课程口述／待核”；
+5. 文末核验集中列出原始冲突；
+6. 只有回看课件、画面或权威资料后，才能把待核值改为确定值。
 
-If a normal text reader misclassifies UTF-8 Chinese Markdown as binary, use Python `Path.read_text(encoding="utf-8")` as a read-only fallback, then continue checking NUL bytes, line count, and heading structure. Record the reliable readback result; do not generalize one classification error into “the tool is unusable.”
+禁止：
 
----
-
-## 4. Formal Promotion Uses a Single-Writer, No-Overwrite Protocol
-
-Only the primary Agent writes to the formal course library:
-
-1. Subagents write only to exclusive temporary directories.
-2. The primary Agent completes content and mechanical acceptance.
-3. Before writing a formal file, confirm that the target does not exist; reject overwrites by default.
-4. Write the paired drafts serially to the formal instructor directory.
-5. Update the master course index.
-6. Reread from the formal paths; do not reuse results from the temporary area.
-7. Resolve every Wikilink in the index; broken-link count must be zero.
-8. Open the primary reading draft in the preview area and inspect its low-density layout and navigation.
-9. In the completion report, provide only absolute paths, primary outcomes, and critical acceptance results.
-
-Minimum readback fields after the formal write:
-
-- file existence, byte count, character count, and line count;
-- exactly one H1;
-- number of fixed sections;
-- zero missing blank lines after headings;
-- zero lines longer than 160 characters;
-- zero forbidden STT terms;
-- case-card count;
-- count of end-of-document verification items;
-- number of new index entries;
-- zero broken links across the entire index.
-
-### Frontmatter and Lossless-Promotion Reconciliation
-
-Before promoting paired drafts, complete traceability metadata rather than retaining only `tags`:
-
-- The faithful transcript includes at least `speaker`, `course`, `document_type`, and `source_message_id`; add `source_ppt` when companion slides exist.
-- The systematized lecture includes at least `title`, `speaker`, `course`, `content_type`, and `source_message_id`; add `source_ppt` when companion slides exist.
-- `source_message_id`, slide names, and event tracks must come from the current authoritative source, never from an old draft or adjacent course.
-
-After the formal write, calculate SHA-256 for each temporary accepted draft and its formal copy; require exact equality. If hashes differ, compare content before deciding whether promotion was lossless. Two readable files are not sufficient evidence. After writing the index, check not only the new entry but **every** Wikilink so that adding a section cannot silently break an existing link.
-
-Treat any late subtask result as a stale snapshot. After formal promotion, it may only be reconciled and absorbed through targeted edits; never overwrite the whole file with it.
+- 因为业务规模看起来合理，就把`110元`改成`110万元`；
+- 在两种口述里擅自挑一个写成定论；
+- 用“保守整理”包装未经证实的补数；
+- 把讲师收入、粉丝、成交或平台机制写成已外部核实事实。
 
 ---
 
-## 5. Applying the Fixed Nine-Part Structure to Paired Drafts
+## 三、子任务产物必须实读，不相信自报
 
-When the course series uses a value-first structure, both drafts keep the same top-level order:
+子Agent的“已写入／已完成／已自检”只是线索。主Agent按以下顺序核验：
 
-1. `big-watermelons` (at most three);
-2. faithful edited transcript / systematized lecture;
-3. methods and execution checklist;
-4. cases, figures, and tools;
-5. verbatim quotations;
-6. editorially distilled insights;
-7. connections to the user's business;
-8. zero or one WeChat Moments topic;
-9. editorial verification at the end, with at most four items.
+1. 检查临时路径真实存在；
+2. 以UTF-8读取实际文件，确认字节数、字符数、行数和NUL为0；
+3. 统计唯一H1、H2/H3结构、标题后空行、超长行和时间戳残留；
+4. 抽读文首、方法主线、3—5张案例卡和文末核验；
+5. 运行本课专属的STT禁词与关键语义清单；
+6. 再运行 `scripts/validate-course-markdown.py`；
+7. 只做定点修正，不因少量残留重新派整篇慢速精修任务。
 
-Within Part 2, the faithful transcript may use H3 headings in the original speaking order. The systematized lecture may reorganize by method module and separate cases into case cards. Do not turn the faithful transcript into a third-person summary merely to standardize the structure.
+如果常规文本读取器把UTF-8中文Markdown误判为二进制，可以使用Python `Path.read_text(encoding="utf-8")`做只读回退，并继续检查NUL、行数和标题结构。记录可靠回读结果，不把一次识别误差固化为“该工具不可用”。
 
 ---
 
-## 6. Low-Density Completion Report
+## 四、正式提升采用单写者、无覆盖协议
 
-When the user is submitting lessons continuously, the default completion report contains only:
+正式课程库只有主Agent写入：
 
-- `persisted-and-accepted`;
-- the two absolute paths;
-- confirmation that the primary reading draft was opened;
-- three to five critical acceptance results;
-- any figures or factual boundaries still pending verification.
+1. 子Agent仅写独占临时目录；
+2. 主Agent完成内容与机械验收；
+3. 写正式文件前检查目标不存在，默认拒绝覆盖；
+4. 双稿串行写入正式讲师目录；
+5. 更新课程总索引；
+6. 从正式路径重新读取，不复用临时区结果；
+7. 解析索引中的全部Wikilink，失效链接必须为0；
+8. 在预览区打开主阅读稿，确认低密度排版与导航；
+9. 完成汇报只给绝对路径、主结果和关键验收项。
 
-Do not replay the complete process or expand every check into a wall of text.
+正式写入后的最小回读字段：
+
+- 文件存在、字节数、字符数、行数；
+- 唯一H1；
+- 固定章节数；
+- 标题后空行违规0；
+- 超160字单行0；
+- STT禁词0；
+- 案例卡数量；
+- 文末核验条数；
+- 索引新增条目数量；
+- 全索引失效链接0。
+
+### Frontmatter 与无损提升对账
+
+双稿提升前必须补齐可追溯元数据，不能只保留 `tags`：
+
+- 忠实稿至少包含 `speaker`、`course`、`document_type`、`source_message_id`；有配套课件时增加 `source_ppt`；
+- 系统讲义至少包含 `title`、`speaker`、`course`、`content_type`、`source_message_id`；有配套课件时增加 `source_ppt`；
+- `source_message_id`、课件名和活动栏目必须来自本次权威源，不从旧稿或相邻课程复制。
+
+正式写入后，对临时审定稿与正式稿逐文件计算SHA-256并要求完全一致。若哈希不一致，先比较内容差异，不能只因两边都能打开就判定“无损提升”。索引写入后除检查新增条目，还要解析**全部**Wikilink，防止新增栏目时破坏既有链接。
+
+任何迟到的子任务结果都视为旧快照。正式稿已提升后，只能重新对账并定点吸收，禁止整篇覆盖。
+
+---
+
+## 五、固定九段的双稿落地
+
+当课程系列已采用价值优先结构时，两份稿件都保持同一顶层顺序：
+
+1. 大西瓜（最多3条）；
+2. 忠实精编逐字稿／系统讲义；
+3. 方法与执行清单；
+4. 案例数字工具；
+5. 原话金句；
+6. 编辑提炼观点；
+7. 用户业务连接点；
+8. 朋友圈选题0—1条；
+9. 编辑核验（文末，最多4条）。
+
+忠实稿可在第2段内按原讲述顺序使用H3；系统讲义可按方法模块重组，并把案例拆成独立案例卡。不要为了统一结构把忠实稿改成第三方总结。
+
+---
+
+## 六、完成汇报的低密度标准
+
+用户已经连续提交课程时，完成汇报默认只保留：
+
+- “已落盘并验收”；
+- 两份绝对路径；
+- 主阅读稿已打开；
+- 3—5项关键验收结果；
+- 仍待核的数字或事实边界。
+
+不要复述完整工作过程，不要把所有检查项逐条展开成文字墙。

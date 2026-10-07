@@ -1,11 +1,86 @@
-# Diagram review
+# 品叔信息图验收清单
 
-After viewing the actual full image and thumbnail, record the five core checks and these additional checks in the same hash-bound QA record:
+原创归属：Aidan（品叔）
 
-- information-relationships: units preserve source meaning; each visible arrow has the intended verb/direction; no invented causation; the loop truly returns where claimed;
-- density-and-reading: essential labels and the main relationship remain readable at the intended viewing distance; one focal point and no crossing or noisy structure;
-- text-delivery: exact names, numbers, quotations and labels are correct; any required editable text layer is completed in the candidate under review.
+更新：2026-07-26
 
-Use pass only with concrete observations. A generated background without required text fails text-delivery. A literal source match does not prove semantic fidelity. Verify source-supported claim and paraphrase separately. Keep failed candidates, revise the actual defect and generate a new version; do not paint over lettering.
+把结果写入 `qa.md`。缩略图和原图都必须实际查看。
 
-Core checks remain source-faithfulness, visible-text, mode-and-composition, identity-and-actions and thumbnail-and-crop. The shared preparation tool enforces these plus the three diagram checks for plans emitted by this package. Its enforcement verifies declared results and hashes; it does not inspect the image automatically.
+## 1. 信息真实性
+
+- [ ] 已记录并读取注册表指定的视觉模式卡路径和版本。
+- [ ] 主标题、主结论、数字、引语和专有名词与源内容一致。
+- [ ] 没有补造事实、案例、效率、比例或承诺。
+- [ ] 没有凭证、令牌、隐私或内部敏感信息。
+
+## 2. 三秒焦点
+
+- [ ] 缩略到约 420 像素宽时，仍能看见标题、主结构和结论。
+- [ ] 第一眼只有一个焦点。
+- [ ] 标题、主图和结论的字号与视觉重量有明显差异。
+- [ ] 标题区与主体区没有挤在一起。
+
+## 3. 信息逻辑
+
+- [ ] 图形关系可以用一句话解释。
+- [ ] 每条箭头都有明确动作和方向。
+- [ ] 循环确实闭合，不是抽象装饰。
+- [ ] 每个信息单元只表达一个主要概念。
+- [ ] 不需要读完一堆字才能理解主结构。
+
+## 4. 密度与排版
+
+- [ ] 信息单元未超过所选密度上限。
+- [ ] 没有密集小字或三层以上说明。
+- [ ] 外边距、模块间距、行距和段距有明显层级。
+- [ ] 该大的足够大，该弱的没有抢注意力。
+- [ ] 字体有性格，但正文仍清楚。
+
+## 5. 模式命中
+
+### `warm-paper`
+
+- [ ] 背景浅暖但不黄暗、不纯白。
+- [ ] 深海军蓝和陶土橙分工明确。
+- [ ] 手绘感存在，但不像儿童涂鸦。
+- [ ] 胶带、纸片和涂鸦没有变成视觉噪声。
+
+### `lively-vector`
+
+- [ ] 蓝色低饱和、不过亮、不过冷。
+- [ ] 几何形状和流动曲线形成节奏。
+- [ ] 不全是等宽卡片或咨询图表。
+- [ ] 活泼来自构图，不来自堆装饰。
+
+### `character-presenter`
+
+- [ ] 人物符合身份母版。
+- [ ] 角色 ID、称谓、年龄感、服装与气质没有串台。
+- [ ] 角色在当前模式的 `tested_characters` 中。
+- [ ] 若角色为候选，已使用 `--candidate-test`，交付状态明确写为候选而非正式生产。
+- [ ] 人物手势或视线引导到第一节点。
+- [ ] 人物和信息板比例平衡。
+- [ ] 场景温暖真实，不像商业舞台或通用素材。
+
+## 6. 反模板检查
+
+- [ ] 不像普通企业 PPT。
+- [ ] 不像通用 SaaS 卡片墙。
+- [ ] 不像廉价宣传海报。
+- [ ] 不像咨询公司数字图表。
+- [ ] 不像素材库人物加流程图。
+- [ ] 没有用机器人、芯片、大脑、火箭或灯泡等泛化 AI 图标冒充真实业务含义。
+- [ ] 不含播放键、手指、鼠标、窗口边框、字幕、水印或屏摄偏色。
+
+## 7. 技术与交付
+
+- [ ] 完整提示词在生成前已保存。
+- [ ] 最终图在工作目录，不只存在临时缓存。
+- [ ] 候选稿未覆盖旧版本。
+- [ ] 没有用程序覆盖、擦除或重写位图文字。
+- [ ] 已报告参考图、后端、图片和 QA 的绝对路径。
+- [ ] 未经用户确认的图片仍标为候选稿。
+
+任何关键项失败时，修改结构或提示词后重生成；不要宣称通过。
+
+署名：Codex

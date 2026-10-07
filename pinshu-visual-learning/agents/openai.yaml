@@ -1,0 +1,4 @@
+interface:
+  display_name: "品叔图解学习"
+  short_description: "把已验收讲义变成可在Obsidian阅读的图文学习稿，图形解释关系，保留来源与边界"
+  default_prompt: "使用 $pinshu-visual-learning 将已验收讲义制作成图解学习版，先交付Markdown与分模块图片，再提供同源HTML辅助版；未经样稿批准不批量。"

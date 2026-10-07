@@ -1,51 +1,86 @@
-# Source verification, risk, and handoff
+# 来源核验、风险与交接协议
 
-Use this reference when speaker identity, consequential facts, first-person experience, or automated handoff could affect the result. Normal sourcebooks start from a corrected faithful transcript and structured guide. Check raw transcripts for direct quotes and conflicts, not as a fresh source of uncorrected reader-facing text.
+本协议只在来源身份、高风险事实、个人经历或自动交接会影响结果时进入。内容资产默认从已校订的忠实精编稿与结构化讲义整理，按意思忠实检查；原始转写用于引文及冲突仲裁，不把其中已确认的 STT 错转带回交付正文。
 
-## Three kinds of accuracy
+## 一、三种准确度
 
-**Faithfulness of meaning** applies to ordinary claims, explanations, methods, and cases. Condense, organize, and polish only while preserving subject, conditions, causal direction, strength, and uncertainty. A course opinion is not an independently proven fact.
+### 意思忠实
 
-**Verbatim accuracy** applies only when a line is explicitly attributed as the speaker's exact words. Matching a raw STT line does not establish that it was transcribed correctly. After a well-supported change to a name, word, punctuation mark, capitalization, filler, or repetition, show only the corrected line and label it **edited quotation** with a source note; it is not verbatim. Paraphrase when the correction leaves meaning uncertain. Keep known misrecognitions in the raw transcript, dictionary mapping, or working notes rather than visible quotation text.
+适用于普通观点、知识解释、方法归纳和案例提炼。允许压缩、重组和润色，但必须保留原判断的主体、条件、因果、程度和不确定性，不能把课程观点升级成已证实事实。
 
-**External verification** applies to medicine, law, finance, earnings, regulation, privacy, current platform rules, product versions, consequential numbers, and similar real-world claims. A course can establish only that someone said something; check external evidence before treating such claims as current facts or recommendations.
+### 逐字准确
 
-## People and personal experience
+只适用于明确标为“讲师原话／嘉宾原话”且无已知转写错误的内容。原始转写字面命中不能证明 STT 准确；改过错转、标点、大小写、口头语或重复的句子若有可靠依据，前台只显示正确形态，标为“编辑校订引文”并留回源，不能算逐字原话。含义不稳时转述、不加引号。已确认错转只留在不可变原稿、词典映射与后台说明，不能在前台引文位显示再叫读者自行校订。
 
-Keep an instructor's first-person experience with that instructor. Use Aidan's first person only when Aidan's own material or explicit confirmation establishes it. Do not invent outcomes, numbers, or details missing from the source. If the speaker cannot reliably be named, use “the instructor” or “a guest”; do not guess. A speaker recounting a client's remarks does not turn those remarks into a verified client quotation.
+### 外部核验
 
-## How the reader sees sources
+适用于医疗、法律、金融、收益、监管、隐私、平台现行规则、产品版本、现实决策数字和其它高后果事实。课程原话只能证明讲师说过，不能证明外部事实成立。
 
-Ordinary assets end with concise, natural-language source notes, for example: “Source: lesson 8, discussion of building a company knowledge base; full context in the faithfully edited transcript.” When literal quotes, consequential checks, or automated readback require exact documents, headings, excerpts, and identifiers, keep those details in working records. Do not expose machine fields and review receipts by default.
+## 二、人物和经历
 
-## Let risk affect the relevant item, not every item
+- 讲师或嘉宾的第一人称经历保持其真实主体；
+- Aidan 第一人称只能来自 Aidan 的真实材料或明确确认；
+- 来源没有结果、数字或细节时不补写；
+- 不确定讲者时写“课程讲师／现场嘉宾”，不猜姓名。
 
-- For ordinary ideas and practices, check faithful meaning.
-- Where an item is misleading outside context, add its necessary condition nearby.
-- Verify current prices, platform mechanics, generalized outcomes, financial recommendations, returns, and decision-critical numbers before using them as established facts.
-- A classroom case number may remain when its exact scale matters to the causal explanation. Identify its speaker, classroom context, and inability to prove a general effect. Lack of external verification alone does not require deleting every such number.
-- For medical, legal, financial, earnings, regulatory, privacy, or unidentified high-consequence figures, have a person decide whether to anonymize, generalize, keep in working notes, or exclude.
+## 三、来源在前台怎样出现
 
-Deleting a number, anonymizing a person, or softening adjectives does not automatically remove a risky claim. If only a safe derivative remains, rewrite it as an independent, supported knowledge unit rather than laundering the original assertion.
+普通资产末尾保留简短的自然语言来源即可，例如：
 
-A risk log can exist in private working records when needed. A high-risk item alone does not require JSON. Use a machine registry only if a real reader needs it for bulk automation, structured audit, a legacy migration, or an explicit user request. The reader should not have to wade through a comprehensive risk ledger to use a safe entry; put a brief restriction beside the item only when it changes how it may be used.
+> 来源：第 8 课“企业知识库搭建”相关论述；完整上下文见忠实精编稿。
 
-## When a second reviewer is necessary
+需要逐字引用、高风险核验或自动化回读时，后台再保留精确文件、章节、摘录和 ID。前台不展示机器字段和审核记录。
 
-Use a reviewer other than the producer or obtain user confirmation before putting a high-consequence fact into an approved asset, combining distant course passages into a new causal claim, publishing first-person experience, approving automated bulk production, or taking a step whose failure would not be caught by ordinary reading. Ordinary low-risk knowledge still needs real reading and use testing, but not a hash and review receipt for every item. In all cases, the sourcebook remains pending until the user approves formal writing use.
+## 四、风险只影响相关内容
 
-## Downstream route resolution
+- 一般思想和方法：按意思忠实处理；
+- 离开上下文易误读：在正文近邻补一句必要条件；
+- 当前行情、平台现行机制、普遍效果、报价建议、收益承诺和现实决策依据：确认后使用，未确认则不作为已成立事实进入可用资产；
+- 可回源的讲师个人经历或课堂案例数字：若具体数值对理解反差、量级或因果机制不可替代，可以保留真实主体、课堂来源和“不可外推”边界；课程来源证明的是讲师这样讲过，不证明普遍有效；
+- 医疗、法律、金融、收益、监管、隐私和主体不明的高后果数字：还需人工判断是否匿名化、概括、移入后台或完全排除。
 
-Only after the sourcebook exists, consider a downstream destination if the user explicitly requests more production. Optional portable roles are:
+未经外部核验本身不是删除课堂案例数字的充分理由；能否保留取决于它在资产里承担什么证明责任。反过来，删除数字、匿名化人物或换一种温和说法，也不会自动消除原主张的风险。真正保留安全部分时，应重新写成一个完整、独立且不再携带原风险的知识单元。
+
+## 五、后台风险视图
+
+后台可以保留完整风险台账、证据和处理记录，供核验者使用。高风险内容本身不自动要求建立 JSON；只有存在机器读取者、批量自动化、结构化审计交接、旧包迁移或用户明确要求时，才建立机器注册表。前台不建立三四百行的禁用全集，也不要求用户使用安全资产前先通读风险仓库。
+
+只有用户确实需要知道某项内容为什么不能使用或怎样解除时，才在相应资产附近给出简短说明或链接到后台记录。
+
+## 六、独立复核何时必要
+
+以下情况需要不同于生产者的复核者或用户确认：
+
+- 高后果事实准备进入正式资产；
+- 课程观点被跨段合并成新的因果主张；
+- 第一人称经历准备对外使用；
+- 自动化批量生产后要正式入库；
+- 失败代价高，且普通阅读无法可靠发现问题。
+
+普通低风险知识资产可以由生产者完成后直接做真实阅读与再创作测试，不为每项建立 SHA、批准回执和完整审核状态。
+
+## 七、交接与路由
+
+内容资产本身完成后才考虑下游。用户明确要求继续生产时，可以解析：
 
 ```yaml
-content_draft_destination: /absolute/path/to/drafts
-content_final_destination: /absolute/path/to/approved-work
-content_workflow_handoff: workflow-name-or-identifier
+content_draft_destination:
+content_final_destination:
+content_workflow_handoff:
 ```
 
-Provide a configuration path **explicitly** with `--config`; this public skill never looks for local private files or invents directories. Precedence is an explicit per-call destination over an explicitly supplied project or user config; without either, the route is `unresolved`. A resolved route is only a proposed handoff, not a written draft, a sent message, or delivery. The route helper reports `created: false`; verify any later external delivery by reading its real target.
+路由优先级：本次显式参数 → 当前项目配置 → 用户主动提供的私有配置 → 已注册 handoff → `unresolved`。
 
-## Limits of machine checks
+公共 Skill 不保存私人绝对路径，不搜索私人配置，不创建猜测目标。路由未解析只表示下游未交接，不影响稳定内容资产在用户批准的课程位置完成。
 
-The original internal legacy registry validator was tied to an old multi-file packaging contract and is not included in this public edition. Its mechanical PASS would not establish that a sourcebook captured the valuable material, kept enough explanation, handled omissions, or supported real reuse. Confirm these outcomes by reading the finished document against the sources and using it for a real retrieval question.
+## 八、机械验证的边界
+
+`validate-propagation-assets.py` 继续用于旧后台注册表、来源锚点、风险继承、路由和交付回执。它只能证明相应机械条件，不能判断：
+
+- 是否抓住课程真正有价值的内容；
+- 资产是否完整、有解释力；
+- 信息密度是否足够；
+- 是否值得长期保存；
+- 是否能支撑真实再创作。
+
+这些必须通过成品阅读和真实使用判断。

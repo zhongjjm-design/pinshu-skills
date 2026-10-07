@@ -6,17 +6,21 @@ Multi-theme Markdown-to-PDF converter
 Usage:
   python convert.py input.md
   python convert.py input.md --theme business -o output.pdf
+  python convert.py input.md --theme business --brand-config brand.json -o output.pdf
   python convert.py input.md --theme manual --title "Title"
 
 Themes: kunlun / business / manual / manual-orange / manual-blue
 """
 
 import argparse
+import base64
 import html as html_lib
 import importlib.util
+import json
 import os
 import re
 import shutil
+import stat
 import subprocess
 import tempfile
 import unicodedata
@@ -281,6 +285,76 @@ def escape_metadata(metadata):
         key: html_lib.escape(str(value), quote=True) if value is not None else None
         for key, value in metadata.items()
     }
+
+
+def _is_png(data):
+    return (
+        len(data) >= 33
+        and data.startswith(b'\x89PNG\r\n\x1a\n')
+        and data[12:16] == b'IHDR'
+    )
+
+
+def load_brand_config(brand_config):
+    """Load an explicit, local-only brand configuration for the business theme."""
+    if brand_config is None:
+        return None
+    config_path = Path(brand_config).expanduser().resolve()
+    if not config_path.exists():
+        raise FileNotFoundError(f"Brand config does not exist: {config_path}")
+    if not config_path.is_file():
+        raise RuntimeError(f"Brand config is not a regular file: {config_path}")
+    try:
+        raw_config = json.loads(config_path.read_text(encoding='utf-8'))
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"Brand config is not valid JSON: {config_path}") from exc
+    if not isinstance(raw_config, dict):
+        raise RuntimeError("Brand config root must be a JSON object")
+    if raw_config.get('schema_version') != 1:
+        raise RuntimeError("Brand config schema_version must be 1")
+    allowed_keys = {'schema_version', 'brand_name', 'logo'}
+    unknown = sorted(set(raw_config) - allowed_keys)
+    if unknown:
+        raise RuntimeError(f"Unsupported brand config fields: {', '.join(unknown)}")
+
+    result = {}
+    brand_name = raw_config.get('brand_name')
+    if brand_name is not None:
+        if not isinstance(brand_name, str):
+            raise RuntimeError("brand_name must be a string")
+        result['brand_name'] = html_lib.escape(brand_name.strip(), quote=True)
+
+    logo_value = raw_config.get('logo')
+    if logo_value is not None:
+        if not isinstance(logo_value, str) or not logo_value.strip():
+            raise RuntimeError("logo must be a non-empty relative PNG path")
+        logo_value = logo_value.strip()
+        parts = urlsplit(logo_value)
+        if parts.scheme or parts.netloc:
+            raise RuntimeError("Brand logo must be a local relative PNG path, not a URL")
+        logo_path = Path(logo_value)
+        if logo_path.is_absolute() or any(part == '..' for part in logo_path.parts):
+            raise RuntimeError("Brand logo path must stay inside the brand config directory")
+        if logo_path.suffix.lower() != '.png':
+            raise RuntimeError("Brand logo must be a PNG file")
+        config_dir = config_path.parent.resolve()
+        logo_file = (config_dir / logo_path).resolve()
+        try:
+            logo_file.relative_to(config_dir)
+        except ValueError as exc:
+            raise RuntimeError("Brand logo path escapes the brand config directory") from exc
+        if not logo_file.exists():
+            raise FileNotFoundError(f"Brand logo does not exist: {logo_file}")
+        logo_stat = logo_file.stat()
+        if not stat.S_ISREG(logo_stat.st_mode):
+            raise RuntimeError(f"Brand logo is not a regular file: {logo_file}")
+        if logo_stat.st_size > 2 * 1024 * 1024:
+            raise RuntimeError(f"Brand logo is too large: {logo_stat.st_size} bytes")
+        data = logo_file.read_bytes()
+        if not _is_png(data):
+            raise RuntimeError("Brand logo is not a valid PNG file")
+        result['logo_data_uri'] = 'data:image/png;base64,' + base64.b64encode(data).decode('ascii')
+    return result
 
 
 def make_heading_id(text, fallback='section'):
@@ -1603,6 +1677,29 @@ def get_business_css():
         color: rgba(255,255,255,0.45);
         margin-top: 4mm;
     }
+    .cover-brand {
+        position: absolute;
+        left: 16mm;
+        top: 16mm;
+        max-width: 46mm;
+        display: flex;
+        flex-direction: column;
+        gap: 3mm;
+        align-items: flex-start;
+        z-index: 2;
+    }
+    .cover-brand-logo {
+        max-width: 44mm;
+        max-height: 18mm;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+    }
+    .cover-brand-name {
+        font-size: 8pt;
+        color: rgba(255,255,255,0.78);
+        letter-spacing: 0.12em;
+    }
     .cover-footer-bar {
         position: absolute;
         left: 16mm; right: 16mm; bottom: 9mm;
@@ -1748,7 +1845,7 @@ def get_business_chrome_css():
     css = re.sub(r'@font-face\s*\{[^}]+\}', '', css, flags=re.DOTALL)
     chrome_fixes = """
     body, h1, h2, h3, h4, p, li, td, th, .toc-link, .cover-title,
-    .cover-label, .cover-subtitle, .cover-footer-text {
+    .cover-label, .cover-subtitle, .cover-footer-text, .cover-brand-name {
         font-family: 'STXihei', 'STHeiti', sans-serif !important;
     }
     body { line-height: 2.2 !important; }
@@ -1764,7 +1861,7 @@ def get_business_chrome_css():
     return css + chrome_fixes
 
 
-def create_business_cover_and_toc(metadata, toc_html):
+def create_business_cover_and_toc(metadata, toc_html, brand=None):
     title    = metadata.get('title') or 'Brand Proposal'
     label    = metadata.get('eyebrow') or 'PROPOSAL'
     subtitle = metadata.get('subtitle') or ''
@@ -1782,9 +1879,20 @@ def create_business_cover_and_toc(metadata, toc_html):
         </div>"""
 
     subtitle_html = f'<p class="cover-subtitle">{subtitle}</p>' if subtitle else ''
+    brand_html = ''
+    if brand:
+        logo_html = ''
+        name_html = ''
+        if brand.get('logo_data_uri'):
+            logo_html = f'<img class="cover-brand-logo" src="{brand["logo_data_uri"]}" alt="Brand logo">'
+        if brand.get('brand_name'):
+            name_html = f'<div class="cover-brand-name">{brand["brand_name"]}</div>'
+        if logo_html or name_html:
+            brand_html = f'<div class="cover-brand">{logo_html}{name_html}</div>'
 
     return f"""
     <div class="cover">
+    {brand_html}
     <div class="cover-ring"></div>
     <div class="cover-circle"></div>
     <div class="cover-spacer"></div>
@@ -2238,6 +2346,23 @@ def find_chrome():
     return None
 
 
+def chrome_can_render():
+    """Return whether Chrome can run headless without unsafe sandbox flags."""
+    chrome = find_chrome()
+    if not chrome:
+        return False
+    try:
+        result = subprocess.run(
+            [chrome, '--headless=new', '--disable-gpu', '--dump-dom', 'data:text/html,ok'],
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return result.returncode == 0 and 'ok' in result.stdout
+
+
 def verify_pdf_file(path):
     """Verify that a newly rendered file is a non-empty PDF."""
     pdf_path = Path(path)
@@ -2488,6 +2613,7 @@ def convert_markdown_to_pdf(
     no_toc=False,
     theme='default',
     force=False,
+    brand_config=None,
 ):
     """Convert one Markdown file to PDF."""
 
@@ -2511,6 +2637,9 @@ def convert_markdown_to_pdf(
         raise FileExistsError(
             f"Output file already exists: {output_path}. Re-run with --force only after confirming replacement."
         )
+    brand = load_brand_config(brand_config)
+    if brand and theme != 'business':
+        raise RuntimeError("--brand-config is only supported with --theme business")
 
     # Read the input file.
     print(f"📖 Reading: {input_path}")
@@ -2556,7 +2685,7 @@ def convert_markdown_to_pdf(
     elif theme in MANUAL_PALETTES:
         cover_html = create_manual_cover_and_toc(metadata, toc_html, theme)
     elif theme == 'business':
-        cover_html = create_business_cover_and_toc(metadata, toc_html)
+        cover_html = create_business_cover_and_toc(metadata, toc_html, brand=brand)
     else:
         cover_html = create_cover_and_toc(metadata, toc_html)
 
@@ -2640,8 +2769,8 @@ def main():
     parser.add_argument(
         '--engine',
         choices=['weasyprint', 'chrome'],
-        default='chrome',
-        help='PDF rendering engine (default: chrome)'
+        default='weasyprint',
+        help='PDF rendering engine (default: weasyprint; Chrome requires explicit selection)'
     )
     parser.add_argument(
         '--check',
@@ -2669,6 +2798,10 @@ def main():
         default='default',
         help='Theme: default / kunlun / business / manual / manual-orange / manual-blue'
     )
+    parser.add_argument(
+        '--brand-config',
+        help='Explicit schema_version=1 JSON brand config for the business theme'
+    )
 
     args = parser.parse_args()
 
@@ -2688,6 +2821,7 @@ def main():
             args.no_toc,
             args.theme,
             args.force,
+            args.brand_config,
         )
     except Exception as e:
         print(f"❌ Conversion failed: {e}")

@@ -1,92 +1,102 @@
-# Assurance Modes and Evidence Budgets
+# 保障模式与证据预算
 
-Purpose: every course uses the same quality floor and the same four core results. Only evidence density, independent-QA sampling, and budgets vary by risk and use. `fast | standard | strict` remain internal manifest values for compatibility; they do not mean low-, medium-, and high-quality deliverables.
+目标：所有课程使用同一质量底线和四项核心结果，只让证据密度、独立 QA 抽样率与预算随风险和用途变化。`fast | standard | strict` 是为兼容现有 manifest 保留的内部值，不代表低、中、高三种成品质量。
 
-## 1. Three assurance modes
+## 一、三种保障模式
 
-### `fast`: lightweight evidence
+### fast：轻量证据
 
-Use when sources are clear, content is text-based, the lesson presents ordinary viewpoints, or the user wants readable assets quickly.
+适用：来源清楚、纯文本、普通观点课或短课，用户目标是尽快得到可读资产。
 
-- Generate the final faithful edit and structured lecture in one pass.
-- Check people, numbers, key cases, methods, constraints, and opening/middle/ending anchors.
-- Run full QA on the sample lesson. In a batch, run full QA on at least one in every five lessons and automatically route anomalous lessons to full QA.
-- Ordinary lessons do not require block-by-block coverage or a second full read.
-- Allow at most one targeted rework pass for ordinary issues.
+- 一次生成最终忠实稿与讲义；
+- 使用人物、数字、关键案例、方法、限制条件及首中尾锚点检查；
+- 样课完整 QA；批量后每 5 课至少抽 1 课完整 QA，异常课自动进入完整 QA；
+- 普通课不做逐块 coverage，不做全文第二次重读；
+- 一般问题最多一次定点返工。
 
-Recommended budget per lesson: up to 300,000 tokens, 20 wall-clock minutes, one rework, and two QA decisions. When a platform does not report tokens, enforce at least wall-clock and agent-call budgets.
+建议预算：每课最多 300,000 tokens、20 分钟墙钟、1 次返工、2 次 QA 判断。平台不提供 Token 数据时，至少执行墙钟和调用次数预算。
 
-### `standard`: standard evidence
+### standard：标准证据
 
-Use for professional learning courses that are long or terminology-dense but have complete sources and no high-risk procedures.
+适用：专业学习课程、内容较长、术语密集，但来源完整且没有高风险实操。
 
-- Run full QA on the sample lesson.
-- Run full independent QA on every critical lesson and every lesson selected by a risk trigger.
-- Use stable sampling for ordinary lessons, targeting about 50% full independent QA.
-- Check every number, proper noun, key case, constraint, and high-risk passage.
-- If a systemic deviation appears, stop scaling and fix the system rather than repeating lesson-level repairs.
+- 样课完整 QA；
+- 关键课与命中风险触发器的课程 100% 完整独立 QA；
+- 普通课使用稳定抽样，目标约 50% 完整独立 QA；
+- 数字、专名、关键案例、限制条件和高风险段全部检查；
+- 发现系统性偏差时暂停放量，不逐课重复修复。
 
-Recommended budget per lesson: up to 800,000 tokens, 60 wall-clock minutes, one rework, and two QA decisions.
+建议预算：每课最多 800,000 tokens、60 分钟墙钟、1 次返工、2 次 QA 判断。
 
-### `strict`: full evidence
+### strict：完整证据
 
-Use when sources are disordered; cases or real high-risk operations are dense; broad omissions or fabrication have already been found; or the user explicitly requires block-level evidence. Formal external use still goes through the shared external-use gate, which is independent of assurance mode.
+适用：来源混乱、病案或真实高风险操作密集、已发现大面积漏写或编造，或用户明确要求逐块可举证。外部正式使用另走统一外部使用闸门；该闸门与保障模式正交。
 
-- Produce block-by-block coverage for every lesson.
-- Run full independent QA on every lesson.
-- Still allow only one rework and one targeted recheck.
-- Strict does not mean an unlimited loop.
+- 每课逐块 coverage；
+- 每课完整独立 QA；
+- 仍然只允许一次返工和一次定点复验；
+- 严格不等于无限循环。
 
-Recommended budget per lesson: up to 1,500,000 tokens, 120 wall-clock minutes, one rework, and two QA decisions.
+建议预算：每课最多 1,500,000 tokens、120 分钟墙钟、1 次返工、2 次 QA 判断。
 
-## 2. Selection rules
+## 二、选择规则
 
-- Clear-source, low-consequence lessons may use `fast`.
-- Professional courses default to `standard`; escalate individual lessons containing critical procedures, contraindications or doses, complex reasoning chains, or module summaries.
-- Use `strict` only when the actual content has high-risk judgments, source ambiguity, severe STT errors, real operational consequences, or a block-level evidence requirement.
-- Formal external use must pass the external-use gate; a mode name cannot replace factual, compliance, copyright, or privacy review.
-- The user may override a mode explicitly. Record a reason for every escalation or reduction. No mode may omit substantive prose, cases, reasoning, or constraints.
+- 来源清楚、低后果普通课可用 `fast`；
+- 专业课程默认 `standard`，关键实操、禁忌剂量、复杂判断链和模块总结单课升级；
+- 只有具体内容含高风险判断、来源歧义、严重 STT、真实操作后果或逐块举证要求时使用 `strict`；
+- 外部正式使用必须通过统一外部使用闸门，不靠模式名称替代事实、合规、版权和隐私核验；
+- 用户可显式覆盖模式；升级或降档必须记录原因；任何模式都不能删减正文、案例、论证或限制条件。
 
-## 3. Hard sample gate
+## 三、样稿硬闸门
 
-For batches larger than three lessons:
+批量超过 3 课：
 
-1. Complete only one representative lesson in its final form.
-2. Have the user approve detail level, layout, reading experience, and asset scope.
-3. Record the approved sample in state with `approve-sample`.
-4. Only then allow later lessons to enter `DRAFTED`.
+1. 只完成代表性第 1 课最终形态；
+2. 用户确认详略、版式、阅读感和资产范围；
+3. 用 `approve-sample` 把批准样稿登记到状态文件；
+4. 才允许后续课进入 `DRAFTED`。
 
-A machine PASS or agent self-assessment cannot replace user approval.
+机器 PASS 和 Agent 自评不能替代用户批准。
 
-## 4. QA convergence
+## 四、QA收敛
 
-- Only `high` can trigger `FIX_REQUIRED`.
-- Deliver `note` items with the artifact; do not rework them.
-- The first QA round may discover issues. The second round checks only previously identified issues.
-- If a `high` remains after one rework, allow one strong-model adjudication or stop the line.
-- Never start a third stylistic rework round.
+- `high` 才能触发 `FIX_REQUIRED`；
+- `note` 随成品交付，不返工；
+- 首轮 QA 可以发现问题；第二轮只核旧问题；
+- 一次返工后仍有 `high`：强模型裁决一次或停线；
+- 禁止第三轮润色式返工。
 
-## 5. Lean inputs
+## 五、输入瘦身
 
-Every worker must still read the complete core quality contract. QA must also read the semantic-QA contract. To avoid repeatedly loading the whole Skill and unrelated references, an ordinary batch worker reads only:
+完整核心质量合同仍是所有 Worker 的必读真源；QA 还必须读取语义 QA 合同。为避免重复灌入整套 Skill 和无关参考，普通批量 Worker 默认只额外读取：
 
-1. the core quality contract;
-2. the current lesson source;
-3. the user-approved sample;
-4. the current assurance-mode production card;
-5. the lesson work package; and
-6. any terminology list required for the current task.
+1. 核心质量合同；
+2. 当前课原文；
+3. 用户批准样稿；
+4. 当前档位生产卡；
+5. 单课工作包；
+6. 当前任务必需的术语表。
 
-A QA task also reads the semantic-QA contract. The production card must record the full contract version or hash, but a hash never replaces the contract text. Load the complete Skill and additional references only for the sample lesson, `strict`, source ambiguity, or disputed adjudication. The orchestrator must never improvise a compressed version of the quality floor.
+QA任务再读取语义QA合同。生产卡必须标记完整合同版本或哈希，但哈希不能代替合同正文。只有样课、strict、来源歧义和争议裁决才扩展读取整套 Skill 与其他参考文件；禁止总控临场口头压缩质量底线。
 
-## 6. Stop conditions
+## 六、图解扩展与调用预算
 
-Stop the line and report immediately when any condition applies:
+新课程示例采用标准档已有预算 800,000 tokens／60 分钟，不抬高所有档位 Token 上限。图解启用时每课最多 6 次 Agent 调用：写稿、首轮独立 QA、一次返工、定点复验、图解生产、图解语义／阅读验收各一次；未命中 QA 或无返工不虚报调用。机械脚本不算 Agent，同一任务内写稿自检不另开 Agent。旧状态既有预算保持不变；新增默认无图解 4 次、有图解 6 次，所有实际调用、失败调用与图解重试都计入累计预算。
 
-- token, wall-clock, QA-round, or rework budget is exhausted;
-- the user has not approved the sample;
-- two consecutive lessons show the same `high` issue;
-- source identity or lesson number conflicts;
-- concurrent official writes or state overwrites appear.
+超限不能让真实用量消失：触发超限的命令先把本次 Token、墙钟和调用数写入状态，再把课程标为 `BLOCKED` 并保存 `budget_block`。经用户批准后用 `set-budget` 调整单课上限，随后用 `resume-budget` 恢复到超限前阶段；必须原样重试被阻塞的命令，系统用事件信用抵扣已登记用量，避免重复计费。不得手改 state、把 Token 填 0 或无感抬高额度。
 
-Stopping is not failure. Deliver completed assets, actual state, and the smallest clear blocker. Never rerun an artifact that already exists automatically.
+图解由单独 `visual_learning` 配置启用，不改变四项底座、已有用途分流或原样稿闸门。先完成讲义语义判定，再制图；`batch_approved=false` 时只做指定图解样课。用户亲眼批准已验收图解后才记录 `approve-visual-sample`，原双稿 `approve-sample` 仍独立生效。旧清单缺字段时不补图解；已有状态不重建。
+
+第二轮 QA 只传修改块、必要前后文和原问题，报告仍绑定完整文件 SHA-256；不得把复验变成全文第二次重读。
+
+## 七、停止条件
+
+命中任一项立即停线并汇报：
+
+- Token、墙钟、QA次数或返工次数达到预算；
+- 用户尚未批准样稿；
+- 连续两课出现同一种 high；
+- 来源身份或课次冲突；
+- 正式目录出现并发写入或状态覆盖。
+
+停线不是失败。先交付已完成资产、真实状态和最小阻塞，不得自动重跑已经存在的稿件。

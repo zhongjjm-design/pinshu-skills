@@ -1,125 +1,423 @@
 ---
 name: pinshu-transcript
-description: "Faithful transcript editing and reconstruction of hands-on course demonstrations. Use for transcripts produced from spoken presentations, classroom recordings, livestream recordings, and software demonstration courses; correct STT errors and terminology, remove meaningless speech fillers, rebuild paragraphs, and fully preserve examples, numbers, procedures, prompts, code, commands, parameters, file paths, AI exchanges, and on-screen demonstrations. Do not rewrite the main text as a summary; use pinshu-distill for knowledge distillation."
+description: "逐字稿忠实整理与课程实操还原。用于整理从口播、课堂录音、直播录屏和软件演示课得到的逐字稿；修正STT错字与术语、去除无效口头语、重建段落，并完整保留案例、数字、操作步骤、Prompt、代码、命令、参数、文件路径、AI问答和屏幕演示。正文不做摘要化改写；知识提炼改用 pinshu-distill。"
 ---
 
-# Faithful Transcript Editing and Hands-On Reconstruction
+# 逐字稿忠实清洗与实操还原
 
-## Origin and Maintenance
+## 来源与维护
 
-- Original work: Pinshu original (`original`)
-- Owner: Aidan (Pinshu)
-- Maintainer: Aidan (Pinshu)
-- Optional upstream skill: `pinshu-data-cleaning` (not bundled; useful only when the input spans PDFs, images, web pages, audio/video, or multiple versions)
-- Distribution status: `bundled` in this English skill collection; installable as a standalone skill
+- 原创身份：品叔原创（original）
+- 原创归属：Aidan（品叔）
+- 维护者：Aidan（品叔）
+- 可选上游：`pinshu-data-cleaning`（仅当输入跨 PDF、图片、网页、音视频或多个版本时）
+- 分发状态：公开候选；不声明正式发布或外部安装验证
 
-Turn speech-to-text output into a complete, well-structured, readable document that remains faithful to the source. Restore the main text first, then create any derivative content at the end. Never turn “editing” into summarization.
 
-In a course pipeline, this skill edits an immutable raw transcript into the faithful draft. `pinshu-distill` produces the structured guide and `pinshu-course` maintains the series map. Those are distinct required course results, not additional outputs this skill must produce on its own.
+把语音转文字稿整理成结构清晰、忠于原意、可直接阅读的完整文稿。先恢复正文，再在文末制作派生内容。不得把“整理”做成摘要。
 
-## Core Principles
+在课程流水线中，本 Skill 只负责把不可变原始转写加工为忠实精编稿。原始转写由采集层保存，结构化讲义由 `pinshu-distill` 生成，课程地图由 `pinshu-course` 更新。每课四项核心结果缺一不可，但不要求本 Skill 单独生成其余三项。
 
-1. **Fidelity first**: Preserve the speaker's views, sequence, tone, and argumentative relationships. Clean only textual noise.
-2. **Completeness first**: When in doubt, retain material. Never delete examples, numbers, constraints, procedural details, or emotional expression merely because they appear secondary.
-3. **Hands-on work is main-text content**: Software operations, entered instructions, code, parameters, navigation paths, AI outputs, and correction sequences are reproducible knowledge, not incidental classroom chatter.
-4. **Separate the main text from derivative content**: A reading guide, key ideas, quotable lines, or social-media copy must not be mixed into or substitute for the main text.
-5. **Do not guess through uncertainty**: When a term or on-screen text cannot be confirmed, preserve the context and mark it `[To confirm]`. Never fabricate exact instructions or code.
-6. **Name the lesson by its central point**: Read the whole source before naming it. Keep a lesson number only when needed; identify its central question or judgment and a distinctive case, method, or result. If the directory already identifies the document type, keep type labels out of both filename and H1. A title must distinguish this lesson from its neighbors and tell a reader why to open it. An established course timetable title takes precedence where the library requires it.
-7. **The raw source is immutable**: Permanently retain the raw transcript. Every deletion in the edited version must remain traceable to the original source. Never modify, overwrite, or delete the raw transcript file.
-8. **Respect accepted-file revision control**: When `pinshu-course-capture` state exists, write drafts only to its rendered runtime scope. Never silently edit an `ACCEPTED` official transcript; use the capture pipeline's typed revision commands and evidence gates.
+课程已正式验收后，本 Skill 不直接覆盖正式忠实稿；任何元数据、排版或内容改动都交回课程总控的验收后修订通道，由总控保存旧版、绑定差异并决定确定性复验或独立 QA。某个项目验证过的段落长度、表格行数、专用词典和版式只作为该项目配置，不自动升级为所有课程的默认门槛。
 
-## Input Boundary: First Decide Whether This Is a Transcript Task
+## 核心原则
 
-- Use this skill directly when the input is an existing course, interview, livestream, or speech-to-text transcript and the user asks to “preserve the original wording” or “edit the transcript.”
-- When the input also includes PDFs, scanned images, web pages, audio/video, multiple versions, or a batch of disorganized sources, use `pinshu-data-cleaning` first if it is installed. It is optional and is not provided by this repository. If unavailable, ask for pre-cleaned Markdown or a transcript, or process only an already clean text subset that this Skill supports; state the excluded material instead of silently skipping heterogeneous-source cleaning.
-- This skill may use screenshots, slides, and screen recordings to correct a transcript, but it does not perform batch OCR, format conversion, deduplication, or source-inventory construction for heterogeneous materials.
-- Do not invoke the general cleaning workflow merely because the user says “clean up” conversationally. If the intended result is still a faithful main text, this skill remains the primary workflow.
-- Route systematic notes, methods, case libraries, and knowledge distillation to `pinshu-distill`; never substitute them for the faithful draft.
-- When a course series also requires a catalog, state gates, slide evidence, batch rework, or a cross-course knowledge base, load `pinshu-course` as well.
+1. **忠实优先**：保持讲者观点、顺序、语气和论证关系，只清洗文字层面的噪声。
+2. **完整优先**：宁可多留，不因“看起来次要”而删掉案例、数字、限制条件、操作细节或情绪表达。
+3. **实操即正文**：软件操作、输入指令、代码、参数、页面路径、AI返回结果和纠错过程，都是可复现知识，不是现场废话。
+4. **正文与派生内容分开**：导读、核心观点、金句和朋友圈文案不得混进正文，也不能替代正文。
+5. **不确定不硬猜**：术语或屏幕文字无法确认时，保留上下文并标记“待确认”；不得伪造精确指令或代码。
+6. **题眼标题优先**：通读全文后再命名。标题不是稿件标签，而是本课最重要信息的提炼；仅看标题就应知道“本课主要讲什么、与相邻课有何区别、为什么值得打开”。文件所在目录已表达文档类型时，文件名和 H1 禁止重复“逐字稿、忠实精编稿、校对精编稿、结构化讲义、清洗稿、整理稿、阅读版、完整版、总稿”等类型词；这些信息只放目录或 Frontmatter。标题保留必要课次，再使用“主问题／核心判断＋最有辨识度的案例、方法或结果”，每个短语都必须贡献内容信息。
+7. **原始底稿不可变**：原始转写永久保留，精编稿的任何删减必须可回溯到原始来源。不得修改、覆盖或删除原始转写文件。
 
-For course production with an existing manifest, follow its `output_language` for learner-facing prose and use its rendered path keys when course-capture state exists. This English edition does not require a manifest, course-capture, or an English-only learner output: without those tools, honor the user's language and the existing confirmed project paths; confirm the destination before writing a new course. Keep established program identifiers intact.
+## 输入边界：先判断是不是逐字稿问题
 
-## Required Reference Loading
+- 输入是一份已经得到的课程、访谈、直播或语音转文字稿，用户要“保留原话、整理逐字稿”时，直接使用本 Skill。
+- 输入同时包含 PDF、扫描图、网页、音视频、多个版本或一批来源混乱的材料，先用 `pinshu-data-cleaning` 完成来源、提取、格式、结构和语义清洗，再把其中的逐字稿分支交给本 Skill。
+- 本 Skill 可以结合截图、PPT和屏幕画面校正逐字稿，但不承担整批异构资料的 OCR、格式转换、去重和来源清单建设。
+- 不要因为用户口语里说了“清洗”就误触发总清洗流程；结果仍是忠实正文时，以本 Skill 为主。
 
-Read every applicable reference before editing; references execute the route selected here and never choose a different route.
+## 第一步：识别内容类型
 
-- **Every transcript**: [`references/editing-rules.md`](references/editing-rules.md) for content typing, terminology priority, STT correction, speech-noise removal, timestamps, and live-session chatter.
-- **Course, tutorial, instructor narration, faithfully edited article, or long livestream**: [`references/course-article-editing.md`](references/course-article-editing.md) for first-person authorship, meaningful-content fidelity, structural segments, specialist resolution, semantic anchors, risk notes, article hierarchy, order preservation, reconciliation, retention warnings, and the confirmation loop.
-- **Operations, prompts, code, commands, files, parameters, tool feedback, or AI collaboration**: [`references/hands-on-reconstruction.md`](references/hands-on-reconstruction.md) for evidence types, the complete formatting example, incomplete-instruction handling, multi-turn sequences, and the optional recap.
-- **Any formal Markdown transcript**: [`references/structure-and-output.md`](references/structure-and-output.md) for searchable titles, paragraph rules, series conventions, the default deliverable, and the complete output example.
-- **Every delivery**: [`references/quality-review.md`](references/quality-review.md) for paragraph-level completeness, fidelity, reproducibility, layout, removed-block, visual, terminology, and prohibited-action checks.
-- **Formal course-library or batch production**: [`references/course-production-guardrails.md`](references/course-production-guardrails.md) for written numbers, applied corrections, Markdown hygiene, punctuation, library overrides, event-photo use, emphasis, and provenance of experience write-backs.
+通读所有输入，判断主要类型。混合内容可以同时命中多类。
 
-## Main Workflow
+| 类型 | 重点保留 |
+|---|---|
+| 演讲 / 观点课 | 论点、论据、案例、反驳、数据、情绪表达 |
+| 访谈 / 多人对谈 | 发言人、追问、观点冲突、上下文承接 |
+| 实操演示课 | 操作步骤、输入内容、工具反馈、参数、文件、异常与修正 |
+| 代码 / 技术课 | 代码、命令、配置、依赖、报错、版本、运行结果 |
+| 个人语音笔记 | 思路顺序、待办、判断、未完成但有价值的线索 |
 
-### 1. Read and classify all evidence
+如果包含截图、PPT、屏幕录制画面或附件，同时把视觉内容视为来源证据。不要只依赖口播STT。
 
-Read the complete input, including available visuals and attachments. Identify every applicable content type and reference branch. Completion criterion: the content type, source set, and required references are explicit before editing begins.
+## 第二步：建立术语与人物表
 
-### 2. Build the internal proofreading table
+整理前先列出内部校对表，不必原样输出：
 
-Record people, organizations, products, tools, models, abbreviations, capitalization, lesson numbers, numeric facts, user corrections, recurring STT errors, and supporting evidence. **This skill owns the course terminology and correction glossary**: on the first lesson, create `00_Terminology-and-Corrections.md` in the course root, or follow an established local name. Reuse an existing synonymous glossary instead of creating a second one. Before each later lesson, load it; after editing, write back newly confirmed raw-to-correct mappings. A downstream publication or content workflow displays the confirmed spelling, not an STT error.
+- 人名、团队、品牌、产品、工具和模型名称；
+- 英文术语、缩写和正确大小写；
+- 课程节次、时间、价格、比例、版本号等数字；
+- 用户已经纠正过的固定写法；
+- 同音误识别候选及其上下文证据。
 
-Apply this priority: explicit user correction > course glossary > clearly legible on-screen text > repeated consistent usage in the same material > contextual inference. Flag changing external facts for separate verification instead of expanding the transcript with web research.
+**术语纠错词典由本 Skill 建立和维护。**系列课程整理第一课时，在课程根目录建 `00_术语与纠错词典.md`（已有同义词典就沿用，不另建）；之后每课整理前先加载，整理后把新发现的错转和已确认写法回写。同一门课的STT错转高度重复（如讲师名字的多种错写、专业术语的固定错转），词典跟课程走，越整理越准，跨课复用；下游 `pinshu-content-assets` 前台统一采用词典里已确认的写法。
 
-Completion criterion: each correction has evidence and one canonical spelling; the table itself need not appear in the output.
+优先级：用户明确纠正 > 课程术语词典 > 画面中的清晰文字 > 同一材料内多次一致写法 > 上下文推断。涉及可能变化的外部事实，不为纠错而擅自联网扩写；需要核实时另行说明。
 
-### 3. Restore the faithful main text
+## 第三步：清洗正文
 
-Correct STT errors, sentence boundaries, duplicated recognition, slips, capitalization, and units. Remove only content-free fillers, mechanical repetitions, abandoned verbal versions, and pure equipment or administration chatter. Preserve logic, tone, rhetorical force, speaker labels where needed, and every reproducible operation. Remove timestamps unless the user requests a timeline.
+### 修正STT错误
 
-Completion criterion: every meaningful unit remains in original order and every deletion is traceable to pure noise in the raw source.
+- 修正同音字、多音字、断句、重复识别和语序口误。
+- 恢复专业名称，如 Claude Code、Codex、Agent、MCP、Prompt、Token、RAG、API、Skill、Obsidian 等。
+- 修正英文大小写、数字单位和中英文间的明显错配。
+- 同一术语全文统一，但不得把讲者本来区分的不同对象合并。
 
-### 4. Apply every active branch
+### 清理口语噪声
 
-For course prose, keep the instructor's first-person voice and apply the course article rules. For hands-on material, preserve spoken instructions, on-screen text, operations, software or AI output, errors, follow-up instructions, and final results as distinct evidence types in their actual sequence. Apply both branches when both are present.
+- 删除不承载意义的“嗯、啊、呃、那个、就是说”等。
+- 删除机械重复、卡顿和口误后的废弃版本，保留最终表达。
+- 保留有语气作用的口语、反问、停顿感和人物特色。
+- “然后、所以、对吧”等如果承担逻辑衔接或说话风格，不要机械全删。
 
-Completion criterion: no applicable branch is skipped, and no branch rewrites the main text into a summary or systematic notes.
+### 处理时间戳与现场话术
 
-### 5. Structure without reorganizing
+- 默认删除时间戳；用户要求时间轴时保留关键时间点。
+- 删除纯设备噪声，例如“能看到屏幕吗”“我调一下麦克风”。
+- **不得删除可复现操作**，例如“打开哪个页面”“点击哪个按钮”“把这段内容粘贴进去”“回车后出现什么”。
+- 多人内容保留发言人标注；单人内容可去掉重复身份标签。
 
-Create a searchable semantic filename and heading, then divide the text at the speaker's natural topic boundaries. Improve paragraphs and headings without moving topics, merging dispersed explanations into a new system, or replacing specifics with abstractions. Follow established course-library conventions when they exist.
+## 课程专用模块：忠实精编文章
 
-Completion criterion: headings reveal the speaker's reasoning, while full reading preserves every argument, case, operation, qualifier, and return from a digression in source order.
+当输入是课程、教程或讲师口播，并且用户要求“忠实精编稿、课程精编、把讲课整理成文章、保留讲师表达但提高可读性”时，启用本模块。普通会议、访谈、演讲和实操转写继续使用通用规则。
 
-### 6. Reconcile, confirm, and audit
+### 输出定位
 
-Compare the draft with the raw source paragraph by paragraph. Resolve uncertainty from source materials first; then give the user one consolidated confirmation list. Apply each confirmed correction immediately throughout the main text and search until the old form is gone. Review every omitted block with: “Would deleting this cause the student to learn less?” Restore it when the answer is yes.
+忠实精编稿不是字幕断句、第三方课程解读或内容摘要，而是：
 
-For formal course text, emphasize short key phrases rather than whole sentences; close each `**` pair within its paragraph. Run `references/audit_md.py` for structural checks, then review the opening, a substantive middle passage, and the ending in the actual reading view. Its `PASS` cannot establish semantic fidelity.
+> **把讲师的口头课程编辑成一篇仍由讲师本人讲述的第一人称文章。**
 
-For formal course output, run:
+编辑者必须隐身。正文沿用讲师的“我、我们”，不得改成“课程中提到、讲师认为、作者指出、某讲师有一位朋友、她如何”等旁观者口吻。风险提示、事实核验与来源说明必须使用独立编辑注，不得混入讲师声音。
 
-```bash
-python3 references/audit_md.py <edited-file.md> [--dict <glossary.md>]
+课程流水线中的正式忠实精编稿必须在来源说明中使用可点击的 Markdown 相对链接回链本课原始转写，并按正式文件最终位置计算路径。正式稿不得保留 `runtime/`、`lesson-*` 或其他临时生产目录；Worker 临时稿可以先按 `paths` 提供的正式目标目录计算回链，由提交者在提升前复核解析结果。
+
+### 忠实对象：全部有效语义，而非每个口头句式
+
+必须保留：
+
+- 人物、关系、产品、品牌、工具、场景、时间、价格、比例和其他数字；
+- 完整观点、推导、反问、类比、案例过程、转折、顾虑、调整和结果；
+- 因果关系、限定词、判断力度和品类特有表达；
+- “当时怎么想、为什么这样做、后来发现什么”等过程性信息。
+
+可以删除或合并：
+
+- “嗯、啊、哈、对吧、大家看、OK”等无信息口头语；
+- 设备与课程流程话术；
+- 口误后的废弃版本；
+- 没有新增信息的机械重复；
+- 不改变原意的绕行口语和同义句。
+
+原则是：**删噪声，不删信息；改句式，不改语义。**
+
+### 长直播课的结构性环节
+
+长课程（直播课、系列录播）常包含非教学但不全是噪声的结构性环节，逐类处理：
+
+- **宣传片/片头循环**：多次重复的相同内容合并为一次，标注"此处宣传片循环N遍，内容相同"；
+- **开班仪式/学员自我介绍**：学员提到的职业背景、病史、学习动机等信息是活的学员群画像，有参考价值，保留要点；纯寒暄、客套和重复的"大家好我是某某"可以压缩；
+- **课间答疑**：涉及知识点的问答必须保留并标注为答疑环节（这类内容最容易被当杂谈误删）；纯流程性问答（"老师能听到吗""可以了"）删除；
+- **课间休息/广告**：删除，标注"此处课间休息X分钟"。
+
+判断标准不变：删掉会少学吗？会就留，不会就删。
+
+### 专业判定授权
+
+提示词要求不确定时标 `[待确认]`，但大规模课程整理中，如果逢疑必标会积压成百上千条，其中绝大多数是模型能够查教材确认的。规则：
+
+- **通行教材、经典原文、标准解剖/方剂组成、朝代年号**等可查证的专业知识，模型有把握的直接定，不标待确认；
+- **待确认只留给**：无法从通行教材判定的人名、商业产品名、严重碎片化听不清的内容；
+- **大课（单课＞1万字原始稿）的待确认项控制在10条以内**，超过说明判定授权用得不够；
+- 直接定了的术语仍须全文统一，且在术语校对表中记录"原转写→修正为"的对应关系。
+
+### 语义锚点：禁止抽象替换
+
+具体词、数字和场景不能被更安全、更概括或更“专业”的上位词替代。例如：
+
+| 原文语义锚点 | 禁止替换为 |
+|---|---|
+| 转运效果 | 期待获得的效果 |
+| 69元诊断、999元陪跑 | 低价与高价产品 |
+| 晚上失眠、辞职后在家躺着 | 职业迷茫 |
+| 53篇行动指南、64篇案例 | 内容丰富 |
+| 一天卖出几千元，客服消息回不过来 | 销量增加后交付压力变大 |
+| 东北大乱炖 | 产品结构比较混乱 |
+
+可以在保留具体信息后进一步总结，但不能用总结替代原文。不得为了安全、专业、文风统一或避免争议，暗中弱化、放大、净化或改写作者观点。
+
+### 风险和事实纪律
+
+课程涉及收入保证、健康功效、转运、财运、灰度获客或平台规避时：
+
+1. 讲师正文按原意保留；
+2. 不把模糊说法强化成更精确的功效或绕过指南；
+3. 使用独立的“编辑提示/事实核验”说明证据、合规和适用边界；
+4. 不得通过改写讲师正文消除风险，也不得把课程口述当成已核实事实。
+
+### 文章化与阅读层级
+
+文章化改变表达形式，不改变作者身份和信息内容：
+
+- 按讲师自然话题增加小标题，不改变整体讲述顺序。**小标题要写出讲师的思路走向，不只是话题标签**——"为什么X方案不如Y"比"X方案讨论"好，"从A到B到C的升级链"比"几种方案"好。小节标题串起来，就是这节课讲师的思维路线图；
+- 折扣牛课程库的忠实稿采用一个H1加H3章节标题，不使用H2。当前 Obsidian Nord 主题把H2显示为大号黄色、H3显示为绿色，而正文粗体也为黄色；统一H3可避免标题与重点粗体满篇争色，并继承第1、7、8课的既有样式；
+- 一个自然段表达一个完整意思，避免字幕式一两句一段，也避免超长文字墙；
+- 自然段按语义而不是按标点切分。通常让2至4个相互承接的句子共同完成一个意思；禁止使用“遇到句号就空一行”的自动拆段结果作为正式稿；
+- 段首不得出现逗号、句号、分号、冒号、顿号或右引号；12字以内的孤立残句、以逗号或冒号收尾的段落必须回并上下文；
+- 中文正文不得插入多个半角空格模拟字距。连续5个不足45字的段落视为字幕式碎段，需要按语义重新合并；
+- **标题密度**：每讲完一个完整的知识点、案例或方法就切一个小标题。宁可标题多一点，不要一个大段落涵盖三四个知识点。读者扫一眼左侧目录就能定位到想复习的位置；
+- **视觉锚点要密**：每隔几行就要有一个让眼睛能"抓住"的元素——加粗的关键词、一个小标题、一个引用块。读者快速翻阅时，这些锚点就是导航标记；
+- 对核心判断、关键定义、重要数字和决定性动作适度加粗；
+- 有代表性的讲师原话可用引用块突出，禁止把编者总结伪装成原话；
+- 讲师明确列举时可用列表，连续论述不能为了“结构化”被强拆成清单；
+- 案例可以增加标题，但必须保留背景、过程、顾虑、调整和结果。
+
+成稿应支持三种阅读速度：只看标题知道话题，扫粗体与引用抓住骨架，完整阅读获得全部论证和案例。
+
+**结构忠实（禁止重排）**：段落顺序严格按原始叙述顺序，不重排、不合并。讲师"先简单提一句，再岔开讲别的，后面再回来详细展开"的叙述节奏保留原样。如果讲师在讲话题A时插入了一段话题B，忠实稿中话题B就放在它被讲到的位置，不能挪到"更合理"的地方。把分散内容重新组织成系统结构是 pinshu-distill（系统化讲义）的职责，不是忠实稿的。
+
+这里的“不合并”指不能跨主题重组或压缩有效语义，不代表每个口头句都必须独立成段。同一语义单元内的连续句应编辑成自然段，避免字幕式排版。
+
+### 强制语义对账
+
+完成后从开头、中段重要案例和结尾抽样逐句核对：
+
+- 原文的人物、场景、数字、价格和关键名词是否都有去处；
+- 判断力度、因果关系和限定条件是否发生变化；
+- 是否用抽象词替换了具体表达；
+- 是否把多轮有新增信息的解释压成一句空泛总结；
+- 是否混入第三方叙述或作者未表达的新判断；
+- 篇幅明显缩短时，删掉的是否确实只有噪声。
+
+任一项不合格，必须回到原始来源返工，不能在摘要或结构化讲义上反向补写。
+
+### 长课程正文体量对照
+
+**编排失败防护：**“忠实精编稿”默认是知识库底层语料母本，不是总结稿。任何批量任务都必须在提示中重复这一定位，并把系统化讲义的压缩、重组、案例卡和方法提炼明确排除在忠实稿正文之外。子Agent只能写临时稿，主控取得模型语义判定后才可提升正式库；普通、来源清楚且未命中抽样的课程，可使用写稿任务内的语义自检，只有命中风险触发器或自适应抽样时才启动不同上下文的独立 QA。脚本 PASS 只能证明确定性检查通过；生成、验收、地图更新不得由同一自报结果一次性完成。
+
+体量只能作为完整性预警，不能代替语义对账。计算时必须比较“原始正文”与“忠实正文”，排除 Frontmatter、本课核心、金句、传播观点、用户连接点、朋友圈文案和其他派生内容。
+
+- 60%只作为立即淘汰线，不是合格目标；
+- 正文保留率只用于触发复查，不能证明忠实，也不能替代逐段语义对账；
+- 不得从一个未经用户验收的稿件反推通用保留率，不得把“可作参照”升级为“金牌样板”；
+- 忠实稿的合格条件是全部有效语义有明确去处。每个案例、数字、判断、推导、转折、限定条件和重复强调都必须逐段定位；
+- 任何明显缩短都必须逐段列出删去的纯噪声并完成覆盖审计；不能仅凭比例或校验脚本晋升；
+- 派生内容增加的字数不得用于抬高忠实稿体量；
+- STT原稿长行、重复标点和口头填充较多时，可以明显缩短，但所有有效语义仍必须有明确去处。
+
+### 确认闭环与定稿清场
+
+逐字稿完成首轮整理后，不得只在正文里散落“待确认”就交付。必须执行以下闭环：
+
+1. **来源校正**：若有配套教学文档、PPT、截图或课程页面，先据此校正人名、英文名、产品名、模型名、版本号、提示词和实操细节；文末附原始资料链接。
+2. **集中交付清单**：明确告诉用户：“全文已经整理完毕，以下项目仍需您确认。”按人名、英文/产品名、专业术语、数字/事实、画面内容分类列出，不让用户自行在正文里找。
+3. **逐项核实**：记录用户给出的正确写法，**当场**回写正文并统一全文，随后用全文检索验证该旧写法归零；禁止只在校对表里记账而不改正文。无法确认的项目由用户决定保留上位表述、删除细节或继续查源，不得硬猜。
+4. **定稿清场**：用户确认完毕后，全文搜索并处理 `待确认`、`待核验`、`原转写`、`按原转写`、`无法确认`、`无法仅凭`、`具体名称待`、`未另行核验` 等草稿痕迹。已经确认的内容直接保留正式表述，不得留下括号式编辑说明。
+5. **风险提示分流**：隐私、安全、健康、合规、心理诊断等实质性边界可以保留；它们不是待确认占位。事实尚未核验时必须完成核验、降低表述强度或明确归因，不得用一串草稿括号代替编辑判断。
+6. **最终交付句**：只有全文复查且草稿式确认痕迹清零后，才能报告：“全文整理与校正完成；待用户确认项：0。”
+
+系列课程还需要目录、状态门控、PPT留证、批量返工和横向知识库时，同时加载 `pinshu-course`。
+
+## 第四步：还原实操内容
+
+只要原文包含操作、Prompt、代码或AI协作，就执行本步骤。
+
+### 区分四类信息
+
+1. **讲者原话中的指令**：尽量逐字恢复，放入引用块或代码块。
+2. **屏幕上展示的指令 / 代码**：以清晰画面为准，标注“屏幕展示”。
+3. **操作动作**：按真实发生顺序写成步骤，不改变先后关系。
+4. **AI或软件返回结果**：保留关键回应、判断、报错和讲者的二次修正。
+
+### 指令整理格式
+
+指令不要统一堆到文章最上方。先在正文对应情境中完整呈现，再在正文之后按需增加“实操复盘”或“指令与操作清单”。
+
+正文中使用：
+
+```markdown
+### [该操作解决的问题]
+
+讲者先说明为什么要这样做，以及需要准备什么。
+
+**操作步骤**
+
+1. 打开……
+2. 选择……
+3. 粘贴以下指令：
+
+> [能够确认的原始指令]
+
+**工具返回与讲者修正**
+
+- AI返回：……
+- 讲者发现的问题：……
+- 补充指令：……
+- 最终结果：……
 ```
 
-A `PASS` supplements rather than replaces semantic reconciliation and manual review of three screenfuls in the actual reading view.
+代码、命令、JSON、配置、文件路径必须使用代码块并保留换行、缩进、符号和大小写。不要为了“好读”改写可执行内容。
 
-## Hard Gate: Frontmatter and Heading Layout
+### 不完整指令的处理
 
-Every formal Markdown file must meet all requirements below:
+- 能从连续口播和清晰截图拼合时，可以合并，并注明“根据口播与画面合并还原”。
+- 只能确认意图、不能确认原句时，写成“指令意图”，不能加引号冒充原文。
+- 截图遮挡、模糊或视频未展示的部分标记“待确认”，不得自行补成完整Prompt。
+- 如果讲者多轮追加要求，按“初始指令 → AI反馈 → 补充指令 → 最终确认”呈现，不要压缩成一条万能Prompt。
 
-1. Frontmatter begins on line 1 with `---` and ends with a second standalone `---`. Never leave `tags:`, `course:`, `lesson:`, `title:`, `source:`, or `status:` bare before the body.
-2. Include exactly one frontmatter block. When copying content from another draft, remove any old frontmatter copied into the body.
-3. Leave one blank line after frontmatter, then add exactly one Markdown H1. The H1 is the document heading and is distinct from a `title` property.
-4. Do not repeat frontmatter fields in the body. Update property changes only in the opening frontmatter.
-5. After a batch course write, check all four rules in every file. Do not inspect only Lesson 1 or rely on a rendered screenshot.
+### 实操复盘的推荐位置
 
-A course library's explicit convention overrides this default, including a verified no-H1 convention. Apply that exception consistently across the batch.
+放在正文主体之后、核心观点之前。按材料实际包含的内容选择：
 
-## Completion Gate
+- 指令原文与补充指令；
+- 操作步骤速查；
+- 代码 / 参数 / 路径清单；
+- 输入材料清单；
+- 常见错误与讲者修正；
+- 可复现工作流。
 
-Delivery is complete only when all applicable checks in `references/quality-review.md` pass and:
+## 第五步：结构编辑
 
-- the raw source remains unchanged and retained;
-- every case, number, judgment, inference, reversal, qualifier, repeated emphasis, instruction, code block, command, parameter, path, tool output, error, correction, and relevant visual detail has an explicit destination;
-- the opening, an important middle case, the ending, and the longest middle section have been reconciled with the source, and the opening, middle, and ending have been read in the actual reading view;
-- every omitted block is confirmed as pure noise; substantial shortening has a paragraph-by-paragraph removed-noise list and coverage audit;
-- executable content preserves line breaks, indentation, symbols, case, and sequence;
-- main text and requested derivative sections remain visibly separate, and derivative words never inflate retention measurements;
-- all proofreading mappings have reached the main text and user-facing derivative pages; old forms have zero remaining display matches (they may remain in immutable raw sources, glossary mappings, and internal source-trace notes). Edited wording in a quotation is labeled an edited quotation, not passed off as verbatim speech;
-- no draft-style confirmation artifact remains after confirmation; substantive risk notices remain separate and attributed claims retain their evidence status;
-- `audit_md.py` passes when required, all local links resolve, and manual semantic, visual, and terminology review also passes.
+### 先提炼题眼标题
 
-Only after the full text satisfies this gate may you report: “Transcript editing and correction complete; items awaiting user confirmation: 0.” If confirmation items remain, deliver the consolidated list and state the exact unresolved count instead.
+通读全部材料后再命名。标题必须让未来的读者不打开文件，也能判断本课主要讲什么、与相邻课有何区别、为什么值得找。
+
+- 在系列课程中，文件名和 H1 采用“必要课次＋题眼”。题眼优先选择本课的主问题或核心判断，再补一个最有辨识度的案例、方法或结果；不把全部目录塞进标题。
+- 上级目录已经表达“原始转写、忠实精编稿、校对精编稿、结构化讲义”等文档类型时，文件名和 H1 禁止重复“逐字稿、忠实精编稿、校对精编稿、结构化讲义、清洗稿、整理稿、阅读版、完整版、总稿”等类型词。
+- 课程名、讲者、日期、来源、版本和状态已有目录或 Frontmatter 承载时，不再机械重复到标题；只有脱离当前目录后会失去必要身份时才保留。
+- 每个标题短语都必须贡献新的内容信息。删去某个短语后读者对本课内容没有少知道任何东西，该短语就是冗余。
+- 单篇、脱离系列保存的材料可以使用：`讲者·核心判断或方法.md`；是否带讲者取决于脱离目录后的辨识需要，不是固定模板。
+- 禁止使用 `第X课忠实精编稿.md`、`第X课结构化讲义.md`、`2026-07-18逐字稿.md`、`课程清洗稿.md` 等类型占位标题。
+
+标题提炼完成后做“隐去目录”验收：只看标题，能否说出本课讲什么、为什么值得打开；再做“放回目录”验收：是否重复了上级目录已经提供的信息。任一项不通过就继续改标题。
+
+- 按原讲述逻辑分主题，不能为了标题工整打乱顺序。
+- 每个主题配7–16字的小标题；实操段优先使用动作型标题。
+- 普通逐字稿段落建议120–220字；代码、Prompt和表格不受段落字数限制。
+- 长课程、用户明确投诉“文字墙”或同时加载 `pinshu-course/references/readability-first-long-course-markdown.md` 时，以该参考的可读性门槛覆盖本条：正文段落尽量不超过120个中文字符，超过180字符必须为0。
+- 同一话题合并，转换话题时分节。
+- 标题规范在同一系列内保持统一：课程名、节次和本节主题使用固定顺序，不把“第X节”随意放到标题末尾。
+
+## Frontmatter与标题版式硬闸门
+
+每个正式 Markdown 文件都必须满足：
+
+1. Frontmatter 从第1行开始，以 `---` 开始并由下一条独立的 `---` 结束；不能把 `tags:`、`course:`、`lesson:`、`title:`、`source:` 或 `status:` 裸放在正文前面。
+2. Frontmatter 只能出现一组；如果从其他稿件复制内容，必须删除被带入正文的旧 Frontmatter。
+3. Frontmatter 结束后空一行，再放唯一一个 Markdown H1；H1 是文内标题，不等于 `title` 属性。
+4. 正文中不得重复出现 Frontmatter 字段；属性变化只修改开头的 Frontmatter。
+5. 批量课程写入后逐文件检查这四项，不能只抽查第1课或凭渲染截图判断。
+
+## 第六步：输出结构
+
+默认只交付来源说明与忠实整理后的完整正文。用户明确要求实操复盘时增加对应清单；用户明确要求导读、金句或社交文案时才增加派生栏目。方法论、案例库和系统讲义交给 `pinshu-distill`，不得默认混进本稿。用户已有系列规范时优先沿用既有规范。
+
+```markdown
+# [讲者 / 课程]：[核心判断、方法与高价值主题]
+
+（来源：课程名称；讲者 / 分享者：姓名）
+
+---
+
+### 一、[主题标题]
+
+[忠实清洗后的完整正文]
+
+### 二、[主题标题]
+
+[正文]
+
+### 实操复盘（仅原文含实操且用户需要时）
+
+#### 指令与补充指令
+#### 操作步骤
+#### 参数、代码与文件
+#### 错误与修正
+```
+
+导读、核心观点、金句、朋友圈文案和延伸思考不属于默认模板；只有用户明确点名时才在正文之后单独生成。系统性知识提炼继续使用 `pinshu-distill`。
+
+## 第七步：完整性校验
+
+必须对照原始输入逐段核查，重点检查：
+
+- 自我介绍、履历、团队背景和业务数据；
+- 旁支案例、反例、质疑与回应；
+- 价格、比例、时间、版本号、文件名和路径；
+- 高情绪浓度、个人感悟和立场表达；
+- 每条原始指令、补充指令、代码、命令和参数；
+- 操作顺序、软件反馈、报错、讲者查漏补缺；
+- 截图中存在、但口播没有完整念出的关键信息。
+
+材料很长时可以分块核查，但最终必须合并去重。未经校验，不得宣称“完整整理”。
+
+## 第八步：质量检查
+
+### 忠实性
+
+- [ ] 正文没有变成摘要或方法论笔记
+- [ ] 没有新增讲者未表达的判断和事实
+- [ ] 人名、工具名、模型名、节次和数字一致
+- [ ] 不确定内容已明确标识，没有假装精确
+
+### 实操可复现性
+
+- [ ] 指令放在发生语境中，而非突兀堆在最前面
+- [ ] 初始指令与多轮补充指令没有被合并丢失
+- [ ] 代码、命令、参数、路径格式保持准确
+- [ ] 操作动作与工具返回结果一一对应
+- [ ] 纯设备噪声已删，可复现操作未删
+
+### 版式
+
+- [ ] 文件名和一级标题包含可检索的核心主题，不以“逐字稿 / 清洗稿 / 日期”代替内容标题
+- [ ] 文件名与文内标题语义一致，日期、状态和文档类型已退回元数据或辅助位置
+- [ ] 时间戳按需求处理
+- [ ] 小标题清楚且同系列规范统一
+- [ ] 无省略号或占位符代替内容
+- [ ] 正文与总结、清单、注释明确分开
+- [ ] 课程正式稿以 Markdown 相对链接回链原始转写，按最终位置解析为真实文件，且不含 `runtime/`、`lesson-*` 临时路径
+- [ ] 段首标点、逗号收尾残句、12字以内孤立正文均为0
+- [ ] 没有连续5个短段落形成字幕式碎段，没有用半角空格制造中文字距
+- [ ] 已在实际阅读视图检查文首、中段最长章节和文末三屏
+
+### 被删块复核
+
+- [ ] 交付前对照原始转写，逐一回读所有被舍弃的段落/块，用"删掉这段，学生会少学到东西吗"复核——答案为"会"的立即恢复
+
+### 视觉与术语
+
+- [ ] 视觉检验：在阅读视图快速翻三屏，眼睛是顺着往下滑的，还是碰到文字墙就想跳过？想跳过说明段落太长或锚点太少
+- [ ] 术语检验：全文搜索该领域STT常见错字，确认为零；同一术语全文只有一种写法
+
+## 课程整理工艺红线（2026-09 混沌实战营复盘增补）
+
+1. **口语数字书面化**：口语日期（"九一四"→"9月14日"）、含数字的产品名（"iPhone 十七"→"iPhone 17"）、"百分之X"→"X%"、数据语境的中文数量（"一百五十八个客户"→"158 个客户"）一律改为书面写法；修辞性数量（"一个亿""第一百个人""三次五次"）保留。每处替换同步回写术语校对表。
+2. **确认必须落地**：校对表每记录一条映射，当场在正文执行替换并检索验证旧写法归零；交付前对全部映射逐条检索复核。禁止"只记不改"。台账、金句、引用清单等派生页也要显示纠错后的正确写法，逐条检查旧写法残留；错转原形只保存在不可变原稿、词典映射或后台回源说明，不得占据前台引用位。改过字词、标点或口头语的引文标为编辑校订引文，不冒充逐字原话。
+3. **拆段与 frontmatter 工艺**：Markdown 单换行不分段，拆分或删改段落后必须保证段间空行；frontmatter 字段之间禁止空行；frontmatter 结束线后不得紧跟 `---` 分隔线；表格单元格内的 wiki 链接竖线必须转义 `\|`。
+4. **标点偏好**：用户拒绝密集破折号。破折号按语境改写为冒号（列举引导）或逗号（补充说明），改后全文复查不得残留 `，，`、`：，` 等标点事故和以标点开头的段落。
+5. **库规范优先**：进入某个课程库前，先读课程地图并检查已有目录和稿件，沿用其编号、命名与版式，覆盖本 Skill 的默认示例。禁止因为模板写着 `05_横向知识库`，就在已经存在 `03_横向知识库` 的课程里重复建目录。已知混沌课程库约定：文件名使用课程表官方标题；类型由文件夹与 frontmatter 表达；正文不写 H1 与来源段。
+6. **现场照片必须选用**：现场 PPT 照片入库后，先用缩略图墙通览全部照片并记录每页主题，再挑选信息密度高的关键页（框架图、模型图、对比表、数据页），按内容对应关系内嵌到忠实精编稿相应章节。禁止只入库不选用；讲义放课件超链即可。
+7. **加粗纪律**：加粗只用于 16 字以内的关键短语；整句、整段加粗一律解除。段落内 `**` 必须配对，禁止跨段加粗。交付前用 `references/audit_md.py` 检查。
+8. **交付前机器审计**：定稿前运行 `references/audit_md.py` 检查结构、空行、标点、超长段落、表格、链接、图片和词典残留；脚本 PASS 后仍需人工抽读三屏，不得等用户抽查才返工。
+9. **经验写回要有来源与验证范围**：课程特例上升为通用规则时，写清触发课程、纠正现象和已经验证的样本范围。文件修改时间不能证明贡献者身份；没有提交记录或操作日志时，不给某个 Agent 署名。
+
+## 禁止事项
+
+- 禁止把实操演示简化为几条抽象方法。
+- 禁止把自己改写的Prompt标成讲者原始指令。
+- 禁止因不懂技术而删代码、参数或工具反馈。
+- 禁止擅自补齐被遮挡、听不清或未展示的内容。
+- 禁止改变讲者立场、人物关系或课程节次。
+- 禁止用朋友圈文案、核心观点或延伸思考替代正文。
+- 禁止用“日期 + 逐字稿 / 清洗稿 / 整理稿 / 总稿”作为最终文件名或主标题。

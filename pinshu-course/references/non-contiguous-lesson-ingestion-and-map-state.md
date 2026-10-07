@@ -1,93 +1,93 @@
-# Non-Contiguous Lesson Input and Course-Map State Governance
+# 非连续课次输入与课程地图状态治理
 
-Use this reference when a long-running course receives a complete later lesson before an earlier one. For example, Lesson 14 is missing while the user explicitly submits the full transcript for Lesson 15.
+适用于长期课程中出现“前一课尚未收到、用户却明确提交后续完整课次”的情况。例如第14课缺失，但用户明确发送完整第15课。
 
-## 1. Distinguish Skipped-Number Input from Cross-Conversation Contamination
+## 1. 先区分“跳号输入”与“串线污染”
 
-Continue processing only if all of the following are true:
+可以继续处理，必须同时满足：
 
-1. The user states the lesson number explicitly;
-2. The instructor, course name, official outline, and current `write_root` agree;
-3. The text is complete from beginning to end, and the user has not said “I have not finished sending it”;
-4. Valid series-level continuing authorization exists for this course;
-5. The user has not required earlier gaps to be filled first.
+1. 用户明确标出课次；
+2. 讲师、课程名、官方目录和当前 `write_root` 一致；
+3. 文本首尾完整，用户未说“还没发完”；
+4. 该课程存在有效的系列级持续执行授权；
+5. 用户没有要求必须补齐前课后再处理。
 
-If course identity conflicts, the lesson cannot be mapped to the official outline, or the text clearly belongs to another project, pause under the cross-conversation identity gate. A skipped number is not permission to ignore identity conflict.
+若课程身份不一致、课次无法对应官方目录、文本明显属于另一项目，则使用跨会话身份闸门暂停，不得把“跳号”当成继续执行理由。
 
-## 2. Explicit Lesson Number Overrides Default Sequence but Does Not Erase the Gap
+## 2. 用户明确课次高于默认顺序，但不抹掉缺口
 
-When the user explicitly submits a later lesson, generate both drafts, knowledge navigation, and preview for that lesson, but preserve the earlier gap:
-
-```text
-Transcripts received: Lessons 01–13 and 15; Lesson 14 not yet received
-Dual drafts generated: Lessons 01–13 and 15
-Next lesson: Lesson 14 awaiting input
-```
-
-Do not write:
+用户明确提交后续课次时，可以为该课生成双稿、知识导航和预览；但必须保留前序缺口：
 
 ```text
-Lessons 01–15 completed
+已收到转写：第01—13课、第15课；第14课尚未收到
+已生成双稿：第01—13课、第15课
+下一课：第14课待输入
 ```
 
-unless Lesson 14 actually exists and has been completed.
-
-## 3. Count Set Cardinality, Not the Maximum Lesson Number
-
-Count completion by the lessons actually organized:
+禁止写成：
 
 ```text
-{01,02,...,13,15} = 14 lessons organized
+第01—15课已完成
 ```
 
-The maximum lesson number being 15 does not justify “15 lessons organized.”
+除非第14课确实存在并已完成。
 
-Apply the same rule to module ratios. If Lessons 10, 11, 12, 13, and 15 are complete in a seven-lesson module, write:
+## 3. 计数使用集合基数，不使用最大课号
+
+完成数应按实际已整理课次计数：
 
 ```text
-5/7 completed (gap at Lesson 14)
+{01,02,...,13,15} = 14课已整理
 ```
 
-## 4. Fields in an Atomic Map Update
+不能因为最大课号是15，就写“15课已整理”。
 
-When a non-contiguous lesson is completed, update in one operation:
+模块比例同理。若7课模块中完成10、11、12、13、15，则写：
 
-1. Frontmatter `current_progress`;
-2. `next_lesson`, which still points to the earliest gap;
-3. Lessons with transcripts received;
-4. Lessons with dual drafts generated;
-5. Lessons accepted;
-6. Module ratio;
-7. Actual total number of completed lessons;
-8. The corresponding official catalog row;
-9. The current lesson’s knowledge navigation;
-10. Gap description and acceptance boundary.
+```text
+5/7已完成（第14课缺口）
+```
 
-## 5. Preview and Acceptance Still Use a Two-Stage Commit
+## 4. 地图原子更新字段
 
-A skipped number does not change acceptance rules:
+非连续课次完成时，一次更新：
 
-- After source-side dual drafts are generated, mark only “generated; preview pending synchronization”;
-- Mark “non-restricted acceptance passed” only after the preview exists and readback reconciliation completes;
-- If the user requests no SHA execution, write “SHA not executed at user request,” not “failed” or “passed”;
-- After final map state changes, synchronize the map copy again and read it back for consistency.
+1. frontmatter `current_progress`；
+2. `next_lesson`（仍指向最早缺口）；
+3. 已收到转写课次；
+4. 已生成双稿课次；
+5. 已验收课次；
+6. 模块比例；
+7. 全课实际完成总数；
+8. 官方目录对应行；
+9. 本课知识导航；
+10. 缺口说明与验收边界。
 
-## 6. Report Template
+## 5. 预览与验收仍采用两阶段提交
+
+跳号不改变验收规则：
+
+- 源端双稿生成后，只能标记“已生成、预览待同步”；
+- 预览真实存在并完成回读对账后，才标记“非受限验收通过”；
+- 用户要求不执行SHA时，写“按用户要求未执行SHA”，不要写成失败或通过；
+- 最终地图状态变更后，必须重新同步地图副本并回读一致性。
+
+## 6. 报告模板
 
 ```markdown
-This lesson is complete, but an earlier gap remains in the course:
+本课已完成，但课程仍存在前序缺口：
 
-- Generated: Lessons 01–13 and 15
-- Awaiting input: Lesson 14
-- Actual completion: 14 lessons, not 15
-- Next processing entry point: Lesson 14
+- 已生成：第01—13课、第15课
+- 待输入：第14课
+- 实际完成：14课，不是15课
+- 下一处理入口：第14课
 ```
 
-## 7. Prohibited Actions
+## 7. 禁止事项
 
-- Do not use the maximum lesson number as the completion count;
-- Do not fabricate the state of a missing lesson to make the outline look tidy;
-- Do not advance `next_lesson` past the earliest gap automatically;
-- Do not ignore complete, identity-unambiguous later input merely because default sequencing expects the earlier lesson first;
-- Do not misclassify explicit skipped-number input as contamination from another course;
-- Do not mark acceptance passed before preview synchronization.
+- 禁止用最大课号代替完成数量；
+- 禁止为了目录整齐虚构缺失课状态；
+- 禁止自动把 `next_lesson` 推到更后课次；
+- 禁止因默认顺序纪律而忽略用户明确提交的、身份无歧义的完整后续课；
+- 禁止把“用户明确跳号输入”误判成另一课程串线；
+- 禁止在预览未同步前提前写验收通过。

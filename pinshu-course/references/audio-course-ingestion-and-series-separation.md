@@ -1,68 +1,68 @@
-# Batch Intake, Transcription, and Series Separation for Audio Courses
+# 音频课程批量接收、转写与系列分流
 
-Use this workflow when one instructor has multiple online and in-person courses delivered as dozens of long audio files, attachments, and scattered Skill files.
+适用于同一讲师拥有多门线上课、线下课，素材以数十个长音频、附件和零散 Skill 文件交付的场景。
 
-## 1. Apply the Course Identity Gate First
+## 1. 先做课程身份闸门
 
-Do not assume that materials belong to the same course merely because of the download-folder name, recording-file dates, or nearby course context.
+不要因下载文件夹名、录音文件日期或相邻课程上下文，自动认定素材属于同一门课。
 
-Before writing a batch to the formal course library, verify at least:
+在批量写入正式课程库前，至少核对：
 
-- the instructor;
-- the course format: online warm-up, formal online course, in-person course, or bonus course;
-- the actual teaching dates and location;
-- whether the materials are chapters of one course or separate products from the same instructor;
-- whether the formal course title is known.
+- 讲师；
+- 课程形态：线上预热课、正式线上课、线下课、赠课；
+- 实际授课日期和地点；
+- 课程之间是同一课的章节，还是同一讲师的不同产品；
+- 正式课程名是否已知。
 
-User-confirmed information outranks recording filenames. A date in a filename may represent only a save date, export date, or automatically assigned date.
+用户确认的信息优先于录音文件名。文件名日期可以只代表保存、导出或自动编号日期。
 
-When one instructor has multiple courses, prefer a two-level structure:
+若同一讲师有多门课，推荐两级结构：
 
 ```text
-[instructor-course-series]/
-├── 01_online-courses/
-│   └── [course-title]/
-└── 02_in-person-courses/
-    └── [course-title-derived-after-complete-analysis]/
+[讲师系列课程]/
+├── 01_线上课/
+│   └── [课程名]/
+└── 02_线下课/
+    └── [完整分析后提炼的课程名]/
 ```
 
-If the course title is unknown, transcribe and analyze the material in a temporary workspace first. Do not use names such as “Three-Day Course by X” or “Course Pending Organization” as the long-term formal title.
+课程名未知时，先在临时工作区转写和分析，不要用“某某三日课”“待整理课程”作为长期正式名称。
 
-## 2. Inventory Source Audio Before Renaming Anything
+## 2. 原始音频先盘点，不急着改名
 
-Keep the downloaded filenames and first create an asset ledger covering:
+保留下载原名，先生成素材台账：
 
-- file count, total size, and total duration;
-- continuity of dates and sequence numbers;
-- `ffprobe`/media readability;
-- SHA-256 content hashes and duplicate groups;
-- suffixes such as “autosaved”;
-- unusually short, unusually long, or anomalous-duration files.
+- 文件数量、容量、总时长；
+- 日期和编号连续性；
+- ffprobe/媒体可读性；
+- SHA-256内容哈希与重复组；
+- “自动保存”等后缀；
+- 短文件、超长文件和异常时长。
 
-Do not deduplicate based only on matching sequence numbers; the same number on different dates may represent different recordings. Only identical content hashes establish byte-for-byte duplication.
+不要仅凭同号文件判重；跨日期同编号可能是不同录音。只有内容哈希相同，才能判定字节级重复。
 
-## 3. Run Trial Transcriptions Before the Full Batch
+## 3. 先试转，再跑全量
 
-Sample one segment from each of these categories:
+从两类片段各抽一段试转：
 
-- a clear middle section containing substantive instruction;
-- an ending, interactive, or noisy segment.
+- 清晰的课程正文中段；
+- 结尾、互动或嘈杂片段。
 
-Do not judge model quality using only the shortest audio file. It may happen to contain post-session conversation, silence, or non-course content.
+不要只用最短音频判断模型质量，最短音频可能恰好是散场对话、静音或非课程内容。
 
-Compare:
+比较维度：
 
-- completeness of continuous Chinese speech;
-- names, brands, numbers, and domain terminology;
-- hallucinations such as repeated “thank you” during silence;
-- speed and total cost;
-- whether a paid API is required.
+- 中文连续语句完整度；
+- 人名、品牌、数字和专业词；
+- 静音段是否重复“谢谢”等幻觉；
+- 速度与总成本；
+- 是否需要付费API。
 
-Prefer a local option unless the user has explicitly approved usage-based charges. On Apple Silicon, evaluate MLX Whisper first; use standard Whisper only as a fallback or for small-scale testing.
+用户未明确同意按量计费时，优先本地方案。Apple Silicon 可优先评估 MLX Whisper；普通 Whisper 仅作为备选或小样测试。
 
-## 4. Stable Parameters for Local MLX Whisper
+## 4. 本地 MLX Whisper 的稳定参数
 
-Begin testing with a high-quality Chinese model, such as an MLX build of `whisper-large-v3-turbo`. Recommended settings for long courses:
+推荐从高质量中文模型开始测试，例如 `whisper-large-v3-turbo` 的 MLX 版本。长课转写建议：
 
 ```text
 language=zh
@@ -72,81 +72,81 @@ hallucination_silence_threshold≈1.5
 output_format=all
 ```
 
-Rationale:
+说明：
 
-- Disabling forced continuation from previous text reduces error loops and repeated passages.
-- Word-level timestamps support later review and correction.
-- The silence-hallucination threshold suppresses repeated text during dismissal, pauses, and ambient noise.
-- `all` must retain at least TXT, JSON, SRT, VTT, and TSV; a single cleaned Markdown file is insufficient.
+- 关闭前文强制续写，可降低错误循环和整段重复；
+- 词级时间戳用于后续回听和纠错；
+- 静音幻觉阈值用于抑制散场、停顿和环境音中的重复文本；
+- `all` 至少保留 TXT、JSON、SRT、VTT、TSV，不能只留一个清洗后的Markdown。
 
-Include only high-confidence terminology in the initial prompt. Do not insert an unconfirmed course title, person name, or product name, because an incorrect prompt can bias the model.
+初始提示词只放高置信度术语。不要塞入尚未确认的课程名、人名和产品名，避免模型被错误提示词带偏。
 
-## 5. Batch Jobs Must Be Recoverable
+## 5. 批量任务必须可恢复
 
-For long-running batch transcription, create:
+为长时间批量转写建立：
 
-- a task-state file;
-- per-file START/DONE/FAIL logs;
-- automatic skipping when complete TXT and JSON outputs already exist;
-- isolation so that one failed file does not overwrite other results;
-- read-only handling of the source-audio directory;
-- transcription output in the runtime workspace first, with promotion to the formal knowledge base only after course identity and titles are confirmed.
+- 任务状态文件；
+- 按文件记录 START/DONE/FAIL 的日志；
+- 已有完整 TXT+JSON 时自动跳过；
+- 单文件失败不覆盖其他结果；
+- 原始音频目录保持只读；
+- 转写先放运行工作区，课程身份和标题确认后再沉淀到正式知识库。
 
-The task state must record at least the asset path, model, parameters, completed steps, next action, and formal output parent directory.
+任务状态至少记录素材路径、模型、参数、已完成步骤、下一步和正式输出父目录。
 
-## 6. Three-Layer QA After Transcription
+## 6. 转写完成后的三层质检
 
-### File Layer
+### 文件层
 
-- TXT, JSON, and subtitle files exist for every audio file.
-- Output count matches audio-file count.
-- There are no empty texts, zero-byte files, or anomalously short texts.
-- Timestamp coverage approaches the source-audio duration.
+- 每个音频对应的TXT、JSON和字幕文件都存在；
+- 输出数量与音频数量一致；
+- 没有空文本、零字节文件或异常短文本；
+- 时间戳覆盖接近原音频时长。
 
-### Text Layer
+### 文本层
 
-- Scan for silence hallucinations and consecutively repeated sentences.
-- Normalize frequent STT errors.
-- Add names, brands, book titles, prices, percentages, and platform terms to a pending-confirmation glossary.
-- Do not guess unclear proper nouns from machine transcription alone.
+- 扫描静音幻觉和连续重复句；
+- 统一高频STT错误；
+- 人名、品牌、书名、价格、百分比和平台术语进入待确认词表；
+- 不从机器转写直接猜测不清楚的专名。
 
-### Course Layer
+### 课程层
 
-- Reconstruct course boundaries from actual teaching dates, natural topic boundaries, and instructor transitions.
-- Do not mechanically treat every MP3 as one lesson.
-- Do not collapse every audio file from the same day into one lesson.
-- Build a day/module map before creating paired drafts for each lesson.
+- 按实际授课日期、自然话题和讲师转场重建课程边界；
+- 不把每个MP3机械当成一节课；
+- 不把同一天所有音频粗暴合成一节；
+- 先形成三天/模块地图，再制作逐课双稿。
 
-## 7. Detailed Organization Standard for Scarce In-Person Courses
+## 7. 稀缺线下课的精细整理标准
 
-When the user states that the in-person material is scarce and information-dense, add the following beyond the paired drafts for each lesson:
+当用户明确线下资料稀缺、干货密度高时，除“一课双稿”外，建议增加：
 
-- source transcript and audio-timestamp index;
-- master course map;
-- methodology and model library;
-- complete case library;
-- tool/platform/Skill resource library;
-- assignments and execution templates;
-- verification table for facts, platform rules, and revenue claims;
-- index of original course attachments, including PPT, DOCX, and Skill files.
+- 原始转写与音频时间戳索引；
+- 课程总地图；
+- 方法论与模型库；
+- 完整案例库；
+- 工具/平台/Skill资料库；
+- 作业和执行模板；
+- 事实、平台规则与收入声明核验表；
+- 原课附件索引（PPT、DOCX、Skill文件等）。
 
-Do not install an attached Skill automatically. Read every file first, then evaluate it against four stable criteria: `fit`, `readiness`, `direct-output-value`, and `parsimony`.
+附件中的 Skill 不自动安装。先逐份读取，再从“对口、上膛、出活、精”评估：
 
-- Does it solve a real, recurring scenario?
-- Does it depend on missing files or obsolete paths?
-- Does it duplicate an existing Skill?
-- Does it contain fabricated references, outdated platform rules, or unsafe hard rules?
-- Should it be installed directly, absorbed into an existing Skill, or retained only as course evidence?
+- 是否解决真实高频场景；
+- 是否依赖缺失文件或旧路径；
+- 是否与现有Skill重复；
+- 是否存在虚构引用、过时平台规则或不安全硬规则；
+- 更适合直接安装、吸收到现有Skill，还是只作课程证据归档。
 
-## 8. Final Four-Way Reconciliation
+## 8. 最终四向对账
 
-Before delivery, reconcile:
+交付前核对：
 
 ```text
-actual course dates/modules
-↔ source audio and attachments
-↔ raw transcripts and timestamps
-↔ faithful edited transcripts, systematized lectures, and cross-topic knowledge library
+实际课程日期/模块
+↔ 原始音频与附件
+↔ 原始转写和时间戳
+↔ 忠实精编稿、系统化讲义与横向知识库
 ```
 
-Do not declare completion if any layer has an unknown identity, mismatched counts, broken links, or a title that cannot be traced to its source.
+任何一层身份不明、数量不一致、链接失效或标题无法溯源，都不能宣布完成。

@@ -1,105 +1,105 @@
-# Single-Writer and Safe-Commit Protocol for Concurrent Course Work
+# 并行课程整理的单写者与安全提交协议
 
-Use this protocol when a primary Agent, background subagents, batch scripts, or other sessions operate concurrently within the same course tree.
+适用于同一课程树中同时使用主Agent、后台子Agent、批量脚本或其他会话的场景。
 
-## Core Rule: One Writer Only in the Formal Course Library
+## 核心规则：正式课程库只能有一个写入者
 
-Parallelism is allowed for reading, analysis, drafting, and QA, but **two execution units must never modify the same formal course directory concurrently**. In particular, never modify these concurrently:
+并行可以用于读取、分析、起草和质检，但**不得让两个执行单元同时修改同一正式课程目录**。尤其禁止并行修改：
 
-- the manifest/path-map target `course_map`;
-- official titles, filenames, and frontmatter;
-- paired drafts for the same lesson;
-- cross-topic methodology, case, tool, fact, and assignment libraries;
-- synchronized copies of formal drafts and delivery previews.
+- `00_课程地图.md`；
+- 官方标题、文件名和Frontmatter；
+- 同一课的双稿；
+- 横向方法论、案例、工具、事实与作业库；
+- 正式稿与交付预览的同步副本。
 
-The primary Agent is the sole committer by default. Each subagent writes only to its own exclusive temporary directory, for example:
-
-```text
-{runtime_dir}/drafts/{course_id}/{task_id}/
-```
-
-A subagent must not rename, overwrite, clean up, or update the map in the formal library.
-
-## Before Starting Concurrent Tasks
-
-1. **Freeze the authoritative naming manifest:** read `lesson → official title → target filename` from the user-confirmed official directory or course map. Do not let subagents infer section prefixes, parentheses, full-width punctuation, or labels such as “Part 1/2/3.”
-2. **Define read/write boundaries:** each task specification must list read-only inputs, the one temporary output location, and formal paths that must not be written.
-3. **Prevent overlapping tasks:** one subagent owns one clearly defined deliverable. The primary Agent serially handles the map, formal renames, and cross-lesson state updates.
-4. **Record a baseline:** save the formal directory's file manifest. For a high-risk batch, also record modification times or hashes to detect concurrent changes.
-
-## Safe Commit Workflow
+主Agent是默认唯一提交者。子Agent只写自己独占的临时目录，例如：
 
 ```text
-read-only inventory of formal library
-→ subagent writes to one exclusive temporary directory
-→ primary Agent verifies temporary output
-→ primary Agent rereads current formal-library state
-→ check for external modifications
-→ primary Agent merges/promotes serially
-→ update course map
-→ final full validation of links, titles, duplicate files, and state
+<workspace>/outputs/[课程]/drafts/[任务ID]/
 ```
 
-### Verification After a Subagent Finishes
+子Agent不得在正式库中重命名、覆盖、清理或更新地图。
 
-A subagent's “complete” status is only a self-report. The primary Agent must verify that:
+## 启动并行任务前
 
-- the temporary file actually exists;
-- its content matches the assigned source file;
-- nothing was written outside the boundary into the formal directory;
-- the title matches the frozen official title;
-- no duplicate file or unintended directory was created;
-- no existing course state was regressed to `awaiting-input`.
+1. **冻结权威命名清单**：从用户确认的官方目录或课程地图读取 `节次→官方标题→目标文件名`，不要让子Agent自行推断篇章前缀、括号、全角标点或“上/中/下”。
+2. **划分读写边界**：任务说明必须列出只读输入、唯一临时输出、禁止写入的正式路径。
+3. **避免重叠任务**：一个子Agent只负责一个明确产物；地图、正式重命名和跨课状态更新由主Agent串行完成。
+4. **记录基线**：保存正式目录的文件清单；高风险批次可记录修改时间或哈希，便于识别并发变更。
 
-## When a Concurrent Modification Is Detected
-
-If a tool reports that a file changed after the last read, stop patching from the stale snapshot immediately:
-
-1. Reread the complete current file.
-2. List each side's additions and conflicting fields.
-3. Merge against the authoritative title manifest and actual file state.
-4. Never overwrite the entire file with the stale version.
-5. Never batch-rename while a background writer remains active.
-6. After establishing the sole writer, perform one serial repair pass.
-
-## Precedence for Official-Title Conflicts
+## 安全提交流程
 
 ```text
-user-confirmed official directory/screenshot
-> confirmed title in the course map
-> instructor's self-announced opening title
-> old filename or subagent inference
+正式库只读盘点
+→ 子Agent写唯一临时目录
+→ 主Agent核验临时产物
+→ 重新读取正式库最新状态
+→ 检查是否出现外部修改
+→ 主Agent串行合并/提升
+→ 更新课程地图
+→ 全量链接、标题、重复文件与状态终验
 ```
 
-Only an authoritative source can determine whether a section prefix belongs to the official title. Do not add a prefix because a directory grouping resembles one, and do not remove one merely for brevity.
+### 子Agent完成后的核验
 
-## Recovering from Duplicate Files
+子Agent的“已完成”只能视为自报。主Agent必须验证：
 
-If one lesson has two title variants or duplicate lectures:
+- 临时文件真实存在；
+- 内容与指定源文件一致；
+- 没有越界写入正式目录；
+- 标题使用冻结的官方标题；
+- 没有生成重复文件或意外目录；
+- 没有把已有课程状态回退为“待输入”。
 
-1. Compare the authoritative title, content completeness, provenance, and latest modifications.
-2. Select the single formal version.
-3. Repair internal links, frontmatter, and the course map first.
-4. Then move the non-formal copy out of the formal library or to the Trash.
-5. Finally, search for the old title, old H1, old Wikilink, and duplicate lesson number; all counts must be zero.
+## 检测到并发修改时
 
-Do not determine authority merely from longer content or a newer modification time.
+若工具提示“文件在上次读取后被其他任务修改”，立即停止基于旧快照继续补丁：
 
-## Authorization Boundary for Automated Batch Operations
+1. 重读完整最新文件；
+2. 列出双方新增内容和冲突字段；
+3. 以权威标题清单和真实文件状态为准合并；
+4. 禁止用旧文件整篇覆盖；
+5. 禁止在仍有后台写入者时批量重命名；
+6. 等唯一写入者确定后，再执行一次串行修复。
 
-When a batch script, code runner, or security guard requires additional authorization:
+## 官方标题冲突的裁决顺序
 
-- Do not reinterpret existing business authorization as permission for that tool to run.
-- Do not bypass a block by using another tool to create the same batch side effects.
-- State the file scope, replacement rule, and rollback method before obtaining explicit authorization.
-- After authorization, reread the latest state and execute once.
+```text
+用户明确确认的官方目录/截图
+> 课程地图中的已确认标题
+> 讲师开场口述
+> 旧文件名或子Agent推断
+```
 
-## Final Acceptance
+篇章前缀是否属于官方标题，只能由权威源决定。不能因为目录分组看起来像前缀就自行增加，也不能为了简洁自行删除。
 
-- The formal course tree has no duplicate files for the same lesson.
-- Filenames, H1s, `original_title`, map titles, and Wikilinks match exactly.
-- Map states such as `received`, `paired-drafts-complete`, and `accepted` match actual files.
-- The next lesson number is correct.
-- Temporary drafts were not mistaken for formal drafts.
-- Subagents left no out-of-scope modifications.
-- The formal draft and delivery preview contain the same version.
+## 重复文件恢复
+
+发现同课出现两个标题版本或双份讲义时：
+
+1. 对照权威标题、内容完整度、来源和最新修改；
+2. 选定唯一正式版本；
+3. 先修复内部链接、Frontmatter和课程地图；
+4. 再将非正式副本移出正式库或放入废纸篓；
+5. 最后搜索旧标题、旧H1、旧Wikilink和重复节次，必须为零。
+
+不得仅凭“文件更长”或“修改时间更新”判断哪份是权威版本。
+
+## 自动批处理的授权边界
+
+当批量脚本、代码执行器或安全守卫要求额外授权时：
+
+- 不把既有业务授权自动解释为该工具的运行许可；
+- 不绕过拦截改用另一工具完成同一批量副作用；
+- 先说明要修改的文件范围、替换规则和回滚方式，再取得明确授权；
+- 获得授权后重新读取最新状态，再执行一次。
+
+## 最终验收
+
+- 正式课程树不存在同节次重复文件；
+- 文件名、H1、`original_title`、地图标题和Wikilink完全一致；
+- 地图“已收到／双稿完成／已验收”与真实文件一致；
+- 下一课编号正确；
+- 临时草稿没有被误当正式稿；
+- 子Agent没有留下越界修改；
+- 正式稿与交付预览为同一版本。

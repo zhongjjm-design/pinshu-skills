@@ -1,11 +1,45 @@
-# Information logic and viewing distance
+# 信息密度配置
 
-Choose a structure supported by the selected mode. The core defines seven structure IDs, but this package's three modes do not currently execute timelines. For a timeline, use pinshu-business-graphics with mother=strategic-map and structure=timeline. Process diagrams and timelines need source-supported sequential relationships. Comparisons need comparable dimensions. Hierarchies need actual containment or dependency. Components need membership, not decorative arrows. True loops need a supported last-to-first return, not only a circle drawn around steps.
+原创归属：Aidan（品叔）
 
-Document density permits up to seven principal units and two annotation levels. Slide density permits up to five and one conclusion. Three units can be enough; lower density is not a failure. Intersect these limits with the selected core mode's own maximum. Presentation surfaces use slide density; vertical media require the core's dedicated vertical layouts.
+更新：2026-07-26
 
-As useful starting points, document labels are often under 28 Chinese characters and slide labels under 16. These are reading heuristics, not counts that prove readability. Never compress Chinese character width or shrink essential information merely to pass a count.
+视觉模式回答“长什么样”，密度配置回答“一张图放多少内容”。二者独立组合。
 
-At thumbnail size identify the main claim and relationship. At reading size check every label, arrow and source term. At presentation distance check the main labels again. Remove redundant decoration; generic robots, chips, bulbs or funnels cannot stand in for a real business relationship.
+## `document`
 
-The planner matches source excerpts and checks graph endpoints and closed loops. It cannot determine whether a proposed paraphrase, inference or causal relationship is faithful. Reviewing agents and the user must make that judgment from the actual source and rendered image.
+适用：文章正文、知识库、公众号、课程讲义。
+
+- 4–7 个主要信息单元；
+- 最多两级说明；
+- 标题占画面高度约 12%–18%；
+- 单个说明建议不超过 28 个汉字；
+- 允许近读，但缩略图仍应看出标题、主结构和结论；
+- 常用画幅：16:9、3:2、4:3。
+
+## `slide`
+
+适用：PPT、直播、演讲、投屏课程。
+
+- 固定优先 16:9；
+- 一页一个结论；
+- 3–5 个主要信息单元；
+- 标题占画面高度约 16%–24%；
+- 单个说明建议不超过 16 个汉字；
+- 标题与主体之间保留明显呼吸间距；
+- 底部只保留一句总结，不再堆解释段落。
+
+## 超限处理
+
+满足任一条件就拆图：
+
+- 主要信息单元超过 7 个；
+- 出现三层以上层级；
+- 同一节点需要两句以上解释；
+- 箭头交叉；
+- 为了塞下内容必须缩小主标题或结论；
+- 缩略到屏幕宽 420 像素时，主结构无法辨认。
+
+不要用“减小字号”解决结构过载。
+
+署名：Codex

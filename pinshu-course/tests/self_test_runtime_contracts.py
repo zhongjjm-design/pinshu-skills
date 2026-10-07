@@ -23,12 +23,26 @@ def main() -> int:
                 errors.append(f"private machine path: {path.relative_to(ROOT)}")
     c = (COURSE / "SKILL.md").read_text()
     s = (STUDY / "SKILL.md").read_text()
-    for requirement in ("immutable raw transcript", "faithful edit", "structured notes", "shared-map entry", "pinshu-content-assets", "adaptive sampling"):
-        if requirement not in c:
-            errors.append(f"course missing core release rule: {requirement}")
-    for requirement in ("separate JSON indices", "real study", "not studied", "metadata_index"):
-        if requirement not in s:
-            errors.append(f"study missing core release rule: {requirement}")
+    course_requirements = {
+        "immutable raw transcript": ("不可变原始转写", "immutable raw transcript"),
+        "faithful edit": ("忠实精编稿", "faithful edit"),
+        "structured notes": ("结构化讲义", "structured notes"),
+        "shared-map entry": ("共享课程地图", "课程地图", "shared-map entry"),
+        "pinshu-content-assets": ("pinshu-content-assets",),
+        "adaptive sampling": ("自适应抽样", "adaptive sampling"),
+    }
+    for label, alternatives in course_requirements.items():
+        if not any(requirement in c for requirement in alternatives):
+            errors.append(f"course missing core release rule: {label}")
+    study_requirements = {
+        "separate JSON indices": ("独立 JSON 索引", "separate JSON indices"),
+        "real study": ("真实学习", "真实作答", "real study"),
+        "not studied": ("未学习", "没学过", "not studied"),
+        "metadata_index": ("索引指针", "metadata_index"),
+    }
+    for label, alternatives in study_requirements.items():
+        if not any(requirement in s for requirement in alternatives):
+            errors.append(f"study missing core release rule: {label}")
     if errors:
         print("runtime_contracts self-test: FAIL\n" + "\n".join(errors))
         return 1

@@ -1,13 +1,53 @@
-# Business visual review
+# Visual and Content QA
 
-Actually inspect the full image, thumbnail and target crop. Reopen the source and structured brief. Record the five core checks and:
+## Content truth
 
-- mother-integrity: the actual composition, typography and image language belong to the selected family, not only its palette;
-- metaphor-source-fit: the proposed metaphor expresses the claim without adding unsupported facts or mixing unrelated mechanisms;
-- data-accuracy: every visible value, unit, baseline, date, source and proportion matches the actual dataset; for a genuinely non-data image record that this check is not applicable and pass after inspection;
-- series-consistency: shared palette, type, spacing and line semantics hold across the delivered set; for one image record the single-image scope;
-- text-delivery: all essential text and exact labels are present and accurate; an editable-layer requirement has been fulfilled in the candidate under review.
+- Verify title, names, terms, dates, and units against the source.
+- Separate fact, inference, and visual metaphor.
+- Reject unsupported percentages, forecasts, rankings, and case claims.
+- For current or high-stakes data, verify with primary sources before rendering.
 
-Data Journalism always requires an editable chart final and value/proportion review, not only an image-generation result. The preparation wrapper accepts the reviewed final-platform PNG preview only with its hash-bound native-text SVG/PPTX. It copies that editable source with the preview, checks native labels and values, and stops raster-only delivery. Compare every value and proportion through the chosen chart tool, then obtain human acceptance. File and label checks do not validate chart geometry or factual truth.
+## Chinese text
 
-A source anchor, declared verification or technical PASS does not prove factual truth. Report source claims, inference and proposed design metaphors separately. Reject invented statistics and pseudo-sources. Use actual review notes, not unexplained numeric scores. Revise one defect at a time and preserve original files.
+- Preserve natural Chinese character width.
+- Reject horizontal compression, fake condensed Chinese,乱码, missing punctuation, and altered core terms.
+- Keep long titles in a wide area or split them deliberately.
+- Do not hide essential meaning in tiny text.
+- Reject invented English labels, interface codes, legends, and pseudo-copy.
+
+## Visual hierarchy
+
+- At thumbnail size, identify one first focal point and one reading direction.
+- Keep three to six principal modules.
+- Remove decorations that do not support the argument.
+- Ensure title, main structure, annotations, and conclusion do not compete equally.
+
+## Mother integrity
+
+- Confirm the image uses the selected mother’s structure, typography, and image language.
+- Reject a result that merely changes palette or keywords while retaining another mother’s composition.
+- Reject multiple unrelated metaphors.
+
+## Data graphics
+
+- Match values, ordering, units, baselines, dates, and visual proportions.
+- Preserve approximate values as approximate.
+- Include a readable source and methodology note.
+- Use editable chart production for dense or audit-critical finals.
+
+## Raster policy
+
+- Inspect the generated output at original resolution.
+- Preserve flawed candidates for comparison.
+- Regenerate text or data errors from a revised prompt.
+- Never repair labels by painting over a bitmap.
+- State that bitmap output is not an editable analytical final when relevant.
+
+## Final decision
+
+Label the result:
+
+- `approved-anchor`: user-approved and reusable
+- `candidate`: visually promising, awaiting confirmation
+- `direction-only`: suitable as a concept, not final
+- `rejected`: keep only as a failure example

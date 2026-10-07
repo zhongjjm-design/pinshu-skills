@@ -1,10 +1,10 @@
 # Pinshu Skills
 
-Aidan (Pinshu) maintains this suite of eleven skills for faithful transcript editing, course production, learning, reusable content assets, visuals, and brand-film teardown videos. It works with Claude Code and other compatible agents.
+Aidan (Pinshu) maintains this suite of fourteen candidate skills for faithful transcript editing, course production, learning, reusable content assets, writing, visuals, visual-learning notes, shared video tooling, and brand-film teardown videos. It works with Claude Code and other compatible agents.
 
 ## Quick install
 
-On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. Use the same command for a first install, a partial older installation or an update. A fresh computer gets all eleven Skills; existing public packages are backed up and replaced, and missing packages are added. Before replacement, the installer moves the complete old directory and any previous repository clone to recoverable backups; unrelated or unsafe paths are refused. Inspect the installer before executing a remote script on your computer.
+On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. Use the same command for a first install or an update of packages already managed by this installer. A fresh computer gets all fourteen Skills. After installation, the installer records the source repository, Git revision, active package type, effective file tree, file hashes, relevant permissions, and supported public links. Future updates replace only packages that still match that ownership record; added, modified, deleted, permission-changed, unmarked, or otherwise customized same-name directories are refused before any active package is changed. Inspect the installer before executing a remote script on your computer.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/install.sh | bash
@@ -12,9 +12,13 @@ curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/
 
 Restart your Agent client after installation.
 
-If a visual package is private or locally managed (no public-bundle marker), that package is retained. An existing core is also retained when local companions may depend on it. Missing or public companions still install/update automatically: their shared entry points link to the complete public suite in the managed repository clone, and use that suite's public core rather than the private global core. No extra command or destination choice is needed. With only a private core already installed, the result is ten updated public Skills plus the retained private core: all eleven Skill names are available. Repeated updates accept only these installer-managed visual links; arbitrary destination links remain refused. Updating the private packages themselves requires a source-aware migration.
+To preview local conflicts without writes, run the installer with `--dry-run`. Dry runs do not create locks, home subdirectories, clones, caches, staging trees, backups, links, receipts, or Git metadata refreshes; repository download and full remote validation are not performed during preview. When the installer is piped through stdin, dry-run ownership checks use only the already installed trusted helper from the managed clone, never a helper from the current working directory.
 
-Existing public/local edits are preserved in the reported backup directories, not automatically merged into the new public package. Re-run the same command whenever you want the latest published version; there is no background auto-update. Claude's existing shared-directory link is reused. In an existing real Claude skills directory, missing package links are added while conflicting copies/links are kept and reported.
+Unmarked legacy public packages are not adopted by default, even when their directory name, `SKILL.md` name, repository origin, or `.public-bundle` marker looks correct. If you intentionally want the installer to take over an older public installation, run it with `--adopt-legacy`; adoption succeeds only when the complete active effective tree exactly matches the existing known Pinshu clone and the relevant package plus installer metadata are clean against that clone's committed `HEAD`. If the existing clone is missing, dirty, partial in a way that cannot be proven, or the active package differs, the installer refuses the migration. Keep any refused local package as a separate private package or migrate it manually after review.
+
+If a visual package is private or locally managed (no public-bundle marker), that package is retained. An existing core is also retained when local companions may depend on it. Missing or public companions still install/update automatically: their shared entry points link to the complete public suite in the managed repository clone, and use that suite's public core rather than the private global core. No extra command or destination choice is needed. With only a private visual core already installed, the result is thirteen updated public Skills plus the retained private core: all fourteen Skill names are available. Repeated updates accept only these installer-managed visual links; arbitrary destination links remain refused. Updating the private packages themselves requires a source-aware migration.
+
+For managed packages that still match the installer record, the old active package tree and previous repository clone are moved to recoverable backup directories during an update. If an update fails after mutation starts, the installer rolls back the clone, package directories, ownership receipt, and any newly created Claude links; failed new paths are quarantined under the reported backup area. Re-run the same command whenever you want the latest published version; there is no background auto-update. Claude's existing shared-directory link is reused. In an existing real Claude skills directory, missing package links are added while conflicting copies/links are kept and reported.
 
 ## Get started
 
@@ -58,13 +62,17 @@ The core also has two experimental cultural-poster method cards. These are candi
 
 ## Brand-film teardown videos
 
-[`pinshu-film-teardown`](pinshu-film-teardown/SKILL.md) is a public preview (0.1.0) that makes a peer-to-peer breakdown video (about four minutes) of a brand film, in a horizontal edition for WeChat Channels and a vertical edition for Douyin, with covers. A film is a project folder (footage, voice), a `spec.py` describing what the film says, and the skill's scripts. Captions, cuts and labels are anchored to the moment each word is actually spoken; the narration is synthesized in one pass and cut only at measured silences; the music is fitted so its own ending chord lands on the end card; an independent critic reviews every cut before it ships.
+[`pinshu-video-core`](pinshu-video-core/SKILL.md) is the shared public video base used by video-type Skills. [`pinshu-film-teardown`](pinshu-film-teardown/SKILL.md) is a public preview (0.1.0) that makes a peer-to-peer breakdown video (about four minutes) of a brand film, in a horizontal edition for WeChat Channels and a vertical edition for Douyin, with covers. A film is a project folder (footage, voice), a `spec.py` describing what the film says, and the skill's scripts. Captions, cuts and labels are anchored to the moment each word is actually spoken; the narration is synthesized in one pass and cut only at measured silences; the music is fitted so its own ending chord lands on the end card; an independent critic reviews every cut before it ships.
 
 It is tested on macOS (on Linux, also install a CJK font such as Noto Sans CJK SC). It needs FFmpeg, Node.js and the HyperFrames CLI, a Python with numpy, soundfile, pillow and librosa, the BaoCut transcription CLI, and your own Gemini API key for the voice (optional: Demucs for vocal separation). Tell your Agent:
 
 > Use pinshu-film-teardown to turn this brand film into a teardown video. Read its rules first, run the environment check, and show me the script and a 30-second preview before producing the whole film.
 
-The skill ships no fonts, music, footage or keys. `scripts/new_project.py` copies the sound effects bundled with HyperFrames (Pixabay Content License) and, on macOS, the Hiragino Sans GB system font into the project and downloads Source Han Serif (SIL OFL) from Adobe's repository. `tests/self_test.py` runs the pipeline offline on synthetic material. It has been proven on one film so far; expect updates as more brands go through it.
+The skill ships no fonts, music, footage or keys. `scripts/new_project.py` copies the sound effects bundled with HyperFrames (Pixabay Content License) and, on macOS, the Hiragino Sans GB system font into the project and downloads Source Han Serif (SIL OFL) from Adobe's repository. `pinshu-video-core/tests/self_test.py` and `pinshu-film-teardown/tests/self_test.py` run offline on synthetic material with stand-ins for paid or platform services; they do not prove real paid narration or real platform rendering. It has been proven on one film so far; expect updates as more brands go through it.
+
+## Visual Learning
+
+[`pinshu-visual-learning`](pinshu-visual-learning/SKILL.md) turns an already semantically accepted lecture guide into a Markdown-first illustrated learning note, per-module PNG images with editable SVG sources, and a same-source self-contained HTML companion. It preserves source boundaries and does not replace the original transcript, faithful edit, structured lecture, recall training, or real learning record. The validator checks links, frontmatter, SVG parseability, offline HTML and measurable mobile readability, but semantic correctness and real Obsidian reading still need separate evidence.
 
 ## Core course-asset pipeline
 
@@ -120,6 +128,8 @@ For batches larger than three lessons, deliver one representative lesson first. 
 | `pinshu-visual-system` | Plan, generate with an image-capable agent, visually inspect and export source-faithful content visuals |
 | `pinshu-infographic` | Plan source-anchored knowledge diagrams with explicit relationships, density and diagram review |
 | `pinshu-business-graphics` | Select seven business-visual method families, distinguish metaphor from fact and prepare source-faithful concept graphics |
+| `pinshu-visual-learning` | Convert an accepted course lecture into Markdown-first illustrated learning notes with PNG/SVG assets and same-source HTML |
+| `pinshu-video-core` | Provide shared offline video scripts for narration, pacing, music fitting, rendering, mixing, QC and environment checks |
 | `pinshu-film-teardown` | Turn a brand film (TVC, anniversary film, ad) into a teardown explainer video: real footage, AI narration, speaker bites, code-built motion and music, horizontal and vertical editions, covers, QC and an independent review loop |
 | `pinshu-transcript` | Turn raw transcripts into faithful edited transcripts while preserving substantive meaning and source boundaries |
 | `pinshu-distill` | Produce clear, self-contained structured study guides and approved cross-cutting topics from faithful transcripts |
@@ -128,6 +138,7 @@ For batches larger than three lessons, deliver one representative lesson first. 
 | `pinshu-course` | Orchestrate multi-lesson courses, manage progress and checkpoints, track cross-lesson leads, run independent QA, and promote accepted assets |
 | `pinshu-md2pdf` | Convert Markdown into a professionally typeset PDF |
 | `pinshu-course-capture` | Capture source material from supported course video or transcript platforms and route it into the production pipeline |
+| `pinshu-write` | Grow a Chinese business-writing idea into a sourced judgment, title, outline, draft, review sheet and final article candidate |
 
 ## Quality boundaries
 
@@ -143,4 +154,4 @@ For batches larger than three lessons, deliver one representative lesson first. 
 python3 scripts/validate_release.py
 ```
 
-Aidan (Pinshu) created and maintains this repository. It does not grant general open-source redistribution rights. Contact the maintainer before modifying, redistributing, or incorporating its contents into another product.
+Aidan (Pinshu) created and maintains this repository. This is a unified public candidate, not a formal release. It does not grant general open-source redistribution rights. Contact the maintainer before modifying, redistributing, or incorporating its contents into another product.

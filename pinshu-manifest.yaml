@@ -57,8 +57,16 @@ skills:
     present_in_repository: true
     version: 0.1.0
     status: public-preview
-    depends_on: []
+    depends_on: [pinshu-video-core]
     runtime_dependencies: [python3, ffmpeg, nodejs, hyperframes-cli, baocut-cli, gemini-api-key]
+  - name: pinshu-video-core
+    origin: original
+    distribution: bundled
+    present_in_repository: true
+    version: 0.1.0
+    status: public-preview
+    depends_on: []
+    runtime_dependencies: [python3, ffmpeg, numpy, soundfile, pillow, librosa]
   - name: pinshu-infographic
     origin: original
     distribution: bundled-sanitized
@@ -77,3 +85,19 @@ skills:
     depends_on: [pinshu-visual-system]
     minimum_core_version: 0.2.4
     runtime_dependencies: [python3, imagemagick-7, image-capable-agent]
+  - name: pinshu-write
+    origin: original
+    distribution: bundled
+    present_in_repository: true
+    version: 1.0.0
+    status: public-candidate
+    depends_on: []
+    runtime_dependencies: [python3]
+  - name: pinshu-visual-learning
+    origin: original
+    distribution: bundled
+    present_in_repository: true
+    version: 0.1.0
+    status: public-candidate
+    depends_on: [pinshu-course, pinshu-distill, pinshu-transcript]
+    runtime_dependencies: [python3]

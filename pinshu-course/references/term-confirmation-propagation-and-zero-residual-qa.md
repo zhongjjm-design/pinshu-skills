@@ -1,100 +1,100 @@
-# Propagating Confirmed Course Terminology and Zero-Residual Acceptance
+# 课程术语确认回写与零残留验收
 
-Use this reference when the first organization pass of both course drafts is complete, the end of a file or the course map still contains “terms pending confirmation,” and the user then confirms product names, model names, commands, mode names, or feature states in several batches.
+用于课程双稿已经完成首轮整理、文末或课程地图仍有“待确认术语”，随后用户分批确认产品名、模型名、命令、模式名或功能状态的场景。
 
-## Core Principle
+## 核心原则
 
-A user’s direct confirmation of the course’s intended wording and recorded screen is an authoritative correction input for course processing. Apply an explicit correction immediately without asking the user to confirm again. However, “the user confirms that the course said this” must not be expanded into independent verification of the external world.
+用户对课程原意和录屏内容的直接确认，是课程整理的权威校正输入。收到明确纠正后直接进入回写，不再要求用户重复确认；但不得把“用户确认课程里这样说”扩大成外部世界的独立事实核验。
 
-Distinguish three states:
+必须区分三类状态：
 
-1. **Terminology confirmation:** names, capitalization, homophones, and product classes. Examples: `Grok I → Grok`, `Chat Car → ChatCut`, and `Go → Goal`.
-2. **Course-feature confirmation:** the user confirms that a feature demonstrated in the recording was available at recording time. Remove “possibly unavailable,” but do not infer that every platform, client, or current version behaves identically.
-3. **External fact verification:** user counts, token rankings, prices, release dates, market share, and similar claims. Unless the user also supplies a verifiable source, retain them as classroom reports or pending external verification.
+1. **术语确认**：名称、大小写、近音词、产品类别。例如 `Grok I → Grok`、`Chat Car → ChatCut`、`Go → Goal`。
+2. **课程功能确认**：用户确认录屏中演示的功能在录制时已上线。可删除“可能未上线”措辞，但不得自动推断所有平台、所有客户端或当前版本表现完全一致。
+3. **外部事实核验**：用户量、Token 排行、价格、发布时间、市场份额等。除非用户同时提供可核验来源，否则仍标记为课堂口述或待外部核验。
 
-## Propagation Scope
+## 回写范围
 
-Every confirmation must produce a checklist from “confirmed item → every derived artifact.” Check at least:
+一次确认必须形成“确认项 → 所有派生产物”的传播清单，至少检查：
 
-- Faithful transcript body;
-- Pending-confirmation section at the end of the faithful transcript;
-- Structured lecture body, terminology boxes, and risk boundaries;
-- Course map, next-lesson preview, flowcharts, and checklists;
-- `fact_status`, status, and source fields in frontmatter;
-- Synonymous old forms, homophone errors, and obsolete caveats.
+- 忠实精编稿正文；
+- 忠实稿文末待确认区；
+- 系统化讲义正文、术语框和风险边界；
+- 课程地图、下一课预告、流程图和检查表；
+- Frontmatter 中的 `fact_status`、状态或来源字段；
+- 同义旧写法、近音错误和过时保留语。
 
-Do not merely check off the confirmation list while leaving the wrong name in the body. Do not modify only the body while leaving the old “still pending confirmation” state.
+不要只把清单打勾，而让正文继续保留错误名称；也不要只改正文，而留下“仍待确认”的旧状态。
 
-## Incremental Confirmation Process
+## 分批确认流程
 
-The user may provide answers across two or three consecutive messages. Process each incrementally:
+用户可能连续两三条消息补充答案。每次按增量确认执行：
 
-1. Read this batch of confirmations and any earlier confirmations not yet propagated;
-2. Search the entire course directory for old forms and pending-confirmation language;
-3. Apply targeted updates without overwriting the latest changes made by the user or another task;
-4. If a patch fails because a file changed or context no longer matches, reread the latest file and rebuild a targeted patch against current text. Never roll back the whole file or overwrite from an old snapshot;
-5. After the final confirmation batch, run a zero-residual scan.
+1. 读取本轮确认项及此前尚未回写的确认项；
+2. 搜索整个课程目录中的旧写法和待确认措辞；
+3. 定点回写，不覆盖用户或其他任务的最新修改；
+4. 若补丁因文件已变更或上下文不匹配而失败，先重读最新文件，再按当前文本重做定点补丁；禁止整文件回退或从旧快照覆盖；
+5. 最后一轮确认后执行零残留扫描。
 
-## State-Rewrite Rules
+## 状态改写规则
 
-A confirmation checklist is process metadata, not a permanent part of course prose. Once terminology or feature state has been integrated into the body, apply this default: **keep the fact in the body and remove the confirmation process from the final draft.** Do not keep confirmation explanations indefinitely merely to prove verification occurred.
+确认清单是过程性元数据，不是课程正文的永久组成部分。术语或功能状态已经回写正文后，默认执行“事实留在正文、确认过程退出成稿”，不要为了证明做过核验而长期悬挂确认说明。
 
-- Delete `## Terms Pending Confirmation` after all project items are confirmed instead of mechanically renaming it `## Confirmed Terms`. Retain only a concise log if the user explicitly requests an audit trail.
-- Also remove opening callouts such as “confirmed terms / confirmed features and terms,” “tool confirmed” labels inside cases, checked confirmation lists in the course map that exist only for process tracking, and closing “confirmed information” summaries. Correct names, commands, and feature descriptions remain where they belong in the body.
-- If the user says “confirmed items can also be deleted,” interpret this as deleting **confirmation-process notes**, not the knowledge facts already integrated into the body.
-- When closing the final pending item, do not create a new “confirmed information” section to replace the old list. Update the body, frontmatter, and course state directly.
-- Keep only terminology tables in the course map that serve learning or future maintenance. Remove sections whose only purpose is to show who confirmed what unless the user requests an audit trail.
-- Rewrite obsolete frontmatter such as “product interface and version unverified.” If every item is closed, use concise factual state rather than a long confirmation history.
-- When the user confirms a model name, use the correct name directly. Do not repeatedly add “the course provider confirmed the name,” and do not invent an official release date or external version history.
-- If the user confirms that “anything demonstrated must have been live,” describe the capability as available at recording time without expanding that into availability on all platforms. No separate feature-confirmation note is needed.
+- `## 待确认术语` 在项目全部确认后**默认删除**，而不是机械改名为 `## 已确认术语`；只有用户明确要求保留审计轨迹时，才保留精简记录。
+- 同步删除讲义开头的“已确认术语／已确认功能与术语”Callout、案例里的“工具确认”标签、课程地图中仅用于过程追踪的已勾选确认清单，以及文末“已确认信息”汇总；正确名称、命令和功能描述必须继续留在正文相关位置。
+- 用户说“已经确认的也可以删除”时，应把它解释为删除**确认过程说明**，不能删除已经融入正文的知识事实。
+- 关闭最后一项待办时，不要新建一个“已确认信息”章节来替代旧清单；直接更新正文、Frontmatter和课程状态即可。
+- 课程地图只保留对学习或后续维护真正有用的术语表；若某段只是展示“谁确认过什么”，用户未要求审计轨迹时应删除。
+- Frontmatter 中“产品界面与版本未核验”等已过期描述同步改写；若所有事项已关闭，用简洁事实状态，不写冗长确认过程。
+- 模型名由用户确认正确时，正文直接使用正确名称；不要反复添加“课程提供者已确认名称无误”，也不要擅自补充官方发布日期或外部版本史。
+- 用户确认“能演示的肯定已上线”时，正文按录制时已上线能力表述，避免扩大为所有平台均已上线；无需另挂功能确认说明。
 
-## Two Meanings of Closing a Confirmation Item
+## 关闭确认项的两种语义
 
-Determine which meaning the user intends:
+用户关闭待确认项时，先判断他表达的是哪一种，不能混写：
 
-1. **Content confirmation:** the user says “this is correct” or “the screenshot was already supplied and corrected.” Mark the current name, screenshot transcription, or interface wording as confirmed by the course provider and remove every obsolete caveat.
-2. **Blocking waiver:** the user says “this no longer needs confirmation” or “it does not affect this lesson.” This means only that the detail no longer blocks finalization. Unless the user also says the existing wording is correct, do not elevate an incomplete screenshot, guessed name, or fuzzy number into verbatim fact. You may retain “handled as an approximate value reported in the course” or “interface detail does not block finalization,” but remove task state.
+1. **内容确认**：用户说“这是对的”“截图已经发过并改好了”。可以把现有名称、截图转录或界面写法标为课程提供者已确认，并清除所有旧保留语。
+2. **阻塞豁免**：用户说“这项没必要再确认”“不影响这节课”。只表示该细节不再阻塞课程定稿；除非用户同时说现有写法正确，否则不要把不完整截图、猜测名称或模糊数字升级为逐字精确事实。可保留“按课程口述约值处理”或“界面细节不作为定稿阻塞项”，但必须删除待办状态。
 
-Propagate closure **within one lesson boundary**. Close only pending items for the lesson the user identifies; preserve independent items in other lessons until the user explicitly closes them.
+关闭动作必须以**单课为边界**传播：只关闭用户点名课次的待确认项，其他课次维持原状态；用户随后明确说其他课也已确认时，再分别清场。
 
-## Prevent Confirmed State from Reappearing
+## 防止已确认状态回潮
 
-Course confirmation state is maintained data, not a one-time endnote. After context compaction, continuation into later lessons, or rereading an old summary, never reintroduce historical pending items. Before reporting what remains pending, inspect the latest formal course tree:
+课程确认状态是可持续维护的数据，不是一次性文末备注。上下文压缩、继续整理后续课程或重新读取旧摘要时，禁止把历史待办重新带回当前状态。每次汇报“还剩哪些待确认”前，必须以正式课程树的最新文件为准，核对：
 
-- Current course-map state;
-- Ending state in the faithful transcript and lecture;
-- Frontmatter `fact_status`;
-- Source notes, warning callouts, and editorial notes in the body;
-- The user’s latest explicit confirmation or waiver.
+- 课程地图当前状态；
+- 忠实稿与讲义的文末状态；
+- Frontmatter `fact_status`；
+- 正文中的来源说明、警告框和编辑注；
+- 用户最近一次明确确认或取消确认要求。
 
-Old session summaries, stale tasks, and earlier search results may help locate material, but cannot override the latest on-disk state. If the user says “that was already confirmed,” acknowledge the state-maintenance error and clear the full course tree without asking the user to resend screenshots or explain the same item again.
+旧会话摘要、旧Todo和先前搜索结果只能用于定位，不得覆盖已落盘的最新确认状态。用户指出“已经确认过”时，先承认状态维护错误，再执行全树清场，不要让用户重复发送截图或解释同一项。
 
-## Zero-Residual Acceptance
+## 零残留验收
 
-Run at least two search groups:
+最终至少做两组搜索：
 
-### Old-Form and Semantic-Residue Search
+### 旧写法与语义残留搜索
 
-Do not search only for the heading “Pending Confirmation.” Also search for synonymous stale states such as “pending recording confirmation,” “still requires recording verification,” “exact behavior remains to be confirmed,” “complete source still required,” “precise number pending interface confirmation,” “not fully recovered from text-only input,” “cannot be completed as a definite command,” “may not yet have been released,” and “do not infer from this.” Search every original homophone, old name, `Goal/Go`, `Go command`, “consolidated pending confirmation,” “official name unverified,” and related forms.
+不要只搜索标题“待确认”。同时搜索正文和Callout里的同义旧状态，例如：`待录屏确认`、`仍需根据录屏确认`、`准确行为仍需确认`、`完整原文仍待补充`、`精确数字待界面确认`、`未从纯文本完整恢复`、`不能补造为确定命令`、`可能尚未上线`、`不据此推断`。还要搜索所有原近音词、旧名称、`Goal/Go`、`Go 指令`、`统一待确认`、`未核验官方名称` 等。
 
-Expected result: zero, or a documented reason for every retained hit. Rules such as “deletion, payment, and publication still require human confirmation” are task-safety boundaries, not course terminology pending confirmation. Classify hits semantically rather than deleting valid safety rules for a mechanical zero.
+结果应为0，或每个保留项都有明确理由。像“删除、付款、发布仍需人工确认”属于任务安全边界，不是课程术语待确认；命中后要按语义分类，不能为了追求机械零命中而删除有效安全规则。
 
-### New-Form Coverage Search
+### 新写法覆盖搜索
 
-Verify that formal names, commands, and product categories appear in the faithful transcript, lecture, and map where required. Occurrence count is not a quality measure, but can expose a change applied to only one file.
+确认正式名称、命令和产品类别至少出现在应有的忠实稿、讲义与地图中。出现次数不是质量标准，但可用于发现只改了一处的漏改。
 
-Read back the map’s confirmation region and each lesson’s ending state to verify alignment with the body. Announce terminology clearance only when old-form residue is zero and the result has propagated to both drafts and the map.
+回读课程地图的确认区和每课文末状态，检查状态与正文一致。只有旧表述残留为 0、确认结果已传播到双稿和地图，才可宣布术语清零。
 
-## Common Traps
+## 常见陷阱
 
-- Recording the user’s correction only in chat without updating formal files;
-- Updating the course map but not the body;
-- Deleting the final pending list while leaving body warnings, callouts, or “still requires recording confirmation” language;
-- Treating a finalization waiver as proof of verbatim evidence;
-- Reintroducing a closed item after compaction, stale-summary recovery, or an old task even though the user already supplied a screenshot or confirmation;
-- Closing independent items in other lessons while clearing one named lesson;
-- Rewriting “demonstrated in the recording” as “available on every platform”;
-- Treating a course provider’s confirmation of a model name as external fact verification;
-- Claiming all files were updated when some multi-file patches failed;
-- Using an old whole-file snapshot after patch context fails and thereby destroying concurrent changes;
-- Leaving frontmatter as “version unverified” after terminology is cleared.
+- 把用户纠正只记在聊天里，未写回正式文件；
+- 只更新课程地图，不更新正文；
+- 删除文末待确认清单，却遗漏正文里的来源警告、Callout和“仍需录屏确认”等同义旧状态；
+- 用户只是取消该项的定稿阻塞，却被误写成已经获得逐字精确证据；
+- 用户已经提供截图或完成确认，后续因上下文压缩、历史摘要或旧Todo再次把它列为待确认；
+- 关闭某一课确认项时顺手清掉其他课的独立待办；
+- 把“录屏已演示”误写成“所有平台均已上线”；
+- 把课程提供者确认的模型名误当成已完成外部事实核验；
+- 多文件补丁部分失败后仍宣称全部完成；
+- 补丁上下文不匹配时使用旧快照整文件覆盖，破坏并发更新；
+- 术语已清零，Frontmatter 仍写“版本未核验”。

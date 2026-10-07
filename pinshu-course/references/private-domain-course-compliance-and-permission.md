@@ -1,271 +1,271 @@
-# Permission Relationships, Platform Rules, and Copyright Governance for Private-Domain Courses
+# 私域课程的许可关系、平台规则与版权治理
 
-Use this reference when processing courses about private-domain operations, public-to-private conversion, referral loops, communities, and sales through private messages. The objective is to preserve the instructor’s argument faithfully without strengthening platform-rule evasion, unsolicited outreach, copyright misconceptions, or manipulative selling into executable tutorials.
+适用于整理私域、公转私、裂变、社群和私聊成交课程。目标是在忠实保留讲师论证的同时，不把规避平台治理、骚扰式触达、版权误区或操控性成交强化为可执行教程。
 
-## 1. Reframe “Private Domain” as a Relationship Structure, Not User Ownership
+## 一、先把“私域”改写为关系结构，不是用户所有权
 
-Instructors often describe private-domain traffic as “my traffic,” “my users,” or “my territory.”
+讲师常把私域说成“自己的流量”“自己的用户”“自己的地盘”。
 
-- The faithfully edited transcript may preserve this business context, but add nearby that users do not belong to an operator and retain rights to delete, block, leave, refuse messages, and request deletion of their data.
-- The structured lecture should use this definition consistently: **a relationship system that, within user consent, platform rules, and privacy boundaries, supports repeated contact, ongoing service, and accumulated trust**.
-- Do not equate a WeChat friend count directly with customers, trust, or business value.
+- 忠实精编稿可保留其经营语境，但紧邻补充：用户并不归经营者所有，仍有删除、屏蔽、退出、拒收和删除数据的权利。
+- 系统化讲义统一使用：**在用户同意、平台规则和隐私边界内，可重复触达、持续服务并累积信任的关系系统**。
+- 不把“微信好友数”直接等同于客户、信任或商业价值。
 
-A non-precise model may be used:
-
-```text
-Private-domain value
-= number of effective relationships
-× degree of trust
-× need fit
-× permission to contact
-× service capacity
-```
-
-## 2. Assess Private-Domain Fit Across Five Dimensions
-
-1. Does conversion require high trust?
-2. Does delivery require communication, feedback, or guidance?
-3. Is repurchase or referral likely?
-4. Can customer lifetime value cover operating cost?
-5. Is there a natural, relevant, and compliant reason for continued contact?
-
-For businesses poorly suited to intensive private-domain operations, use lighter-touch alternatives such as membership, customer support, email subscriptions, mini-programs, or order aftercare. Do not force every user to add a WeChat contact merely because private-domain operation is considered standard.
-
-## 3. Handling Gray-Area Public-to-Private Methods
-
-If a course teaches secondary accounts, hidden contact details in background images, contact transmission through short videos, code words, homophones, or low-priced products that automatically send contact information, first determine whether the purpose is to bypass explicit platform restrictions on off-platform diversion.
-
-### Faithfully Edited Transcript
-
-- Preserve the meaning of which categories the course listed, why it used them, and what effects the instructor claimed.
-- Do not turn the material into a step-by-step operating guide. Do not add sensitive terms, screen positions, evasion probabilities, recommended parameters, or more reliable bypasses.
-- State explicitly that avoiding detection in the short term does not establish compliance, rules change over time, and the transcript does not reproduce detection-evasion steps.
-
-### Structured Lecture
-
-Upgrade the original “three-step method” into:
+可用非精确模型：
 
 ```text
-Identify the need
-→ provide a small but complete value hook
-→ use a platform-permitted entry point
-→ fulfill the promise immediately
-→ disclose identity, boundaries, contact frequency, and exit options
+私域价值
+＝有效关系数量
+× 信任程度
+× 需求匹配
+× 触达许可
+× 服务能力
 ```
 
-Priority for compliant handoff:
+## 二、私域适配必须同时判断五件事
 
-1. Direct delivery within the platform;
-2. Official customer service, direct messaging, storefront, membership, and group tools;
-3. Official lead forms, enterprise accounts, or verified-account capabilities;
-4. Websites, email addresses, or contact details the platform explicitly permits;
-5. Other channels only after the user requests them and within the rules.
+1. 成交是否需要高信任；
+2. 交付是否需要沟通、反馈或陪伴；
+3. 是否存在复购或转介绍；
+4. 用户生命周期价值能否覆盖运营成本；
+5. 是否存在自然、相关、合规的持续触达理由。
 
-Verify current requirements against the platform’s latest official documentation. Historical creator experience must not be presented as current fact.
+不适合重私域的业务，可改用会员、客服、邮件订阅、小程序、订单售后等轻触达，不要为了“私域标配”强行加微信。
 
-## 4. A Lead Product Is Not Bait
+## 三、公转私课程的灰度方法处理
 
-A healthy value hook must:
+课程若教授小号、背景图藏号、短视频传号、暗语、谐音、低价商品自动发联系方式等方法，先判断其目的是否为绕过平台明确的站外导流限制。
 
-- Address a specific small problem the target user currently has;
-- Match its title to its content;
-- Provide standalone value;
-- Avoid adding surprise sharing, group-invitation, or payment requirements;
-- Avoid withholding essential content to force a purchase;
-- Avoid fake original prices, perpetual countdowns, and anxiety-based pressure;
-- Keep cost controllable and connect naturally to the next product.
+### 忠实精编稿
 
-Common forms include checklists, templates, guides, diagnostics, examples, calculators, trials, and public classes.
+- 保留“课程列举了哪些类别的做法、为什么这样做、讲师认为有什么效果”的语义。
+- 不写成逐步操作指南，不补充敏感词、画面位置、规避概率、推荐参数或更稳定的绕过方案。
+- 明确标注：短期未被识别不等于合规；规则具有时效性；本稿不复述绕检测步骤。
 
-## 5. Correct Copyright Misconceptions Immediately
+### 系统化讲义
 
-If a course claims that “collecting material from multiple sources, extracting the best parts, deleting and rearranging them, and adding secondary processing removes copyright issues,” correct it explicitly:
-
-> Deletion, rearrangement, rewriting, replacing covers, compiling multiple sources, or adding a “for study only” notice does not automatically eliminate copyright.
-
-Permissible sources include only:
-
-- Original work created by the operator;
-- Explicit authorization;
-- Public-domain material;
-- Openly licensed material used in compliance with attribution, share-alike, noncommercial, and other conditions;
-- Material whose official owner explicitly permits distribution;
-- Necessary and proportionate quotation with attribution that satisfies applicable legal conditions.
-
-Question banks, explanations, templates, images, course notes, database collections, and distinctive structures may all be protected. Add a copyright-source table to the structured lecture with fields for content, source, rights holder, license, whether modification is allowed, and whether commercial use is allowed.
-
-## 6. Correct Sequence for the First Contact
+将原来的“三步法”升级为：
 
 ```text
-Confirm the source of the relationship
-→ immediately fulfill the promised material, discount, consultation, or aftercare
-→ explain identity and value in one sentence
-→ explain usage and service boundaries
-→ disclose future contact and exit options
+需求识别
+→ 小而完整的价值钩子
+→ 平台许可入口
+→ 第一时间兑现承诺
+→ 说明身份、边界、触达频率和退出方式
 ```
 
-Prohibited:
+合规承接优先级：
 
-- Sending a large volume of advertising immediately after adding a contact;
-- Promising material and then requiring sharing or recruitment;
-- Presenting automated bulk messages as personally handwritten for one recipient;
-- Continuing contact after a user refuses;
-- Adding users to groups or collecting unrelated sensitive information without consent.
+1. 平台内直接交付；
+2. 官方客服、私信、店铺、会员与群聊工具；
+3. 官方线索组件、企业号或认证账号能力；
+4. 平台明确允许展示的网站、邮箱或联系方式；
+5. 用户主动要求后，在规则允许范围内提供其他渠道。
 
-## 7. Preset Review for Referral and Sales Chapters
+具体规则必须查平台最新官方文档，不能把历史博主经验写成当前事实。
 
-When later lessons include any of the following, preserve context in the faithful transcript and add boundaries in the lecture:
+## 四、引流产品不是诱饵
 
-- Requiring users to repost to Moments or recruit group members to receive a reward;
-- Multi-level incentives, distribution, agencies, or commissions;
-- Group-control tools, bulk contact additions, or automated direct messages;
-- Selling through shame, fear, scarcity, conformity, or emotional vulnerability;
-- Pretending to care in private messages while actually chasing a sale;
-- Displaying income, transactions, praise, or extreme cases;
-- Moving platform-restricted businesses into private channels to evade oversight.
+健康价值钩子要满足：
 
-Review dimensions: informed consent, platform rules, personal information, advertising truthfulness, incentive disclosure, consumer rights, exit mechanisms, and anti-harassment.
+- 对应目标用户当前的具体小问题；
+- 标题与内容一致；
+- 能独立提供价值；
+- 不临时增加转发、拉群、付费条件；
+- 不故意扣留关键内容迫使购买；
+- 不用虚假原价、永久倒计时和焦虑强迫行动；
+- 成本可控且与后续产品自然衔接。
 
-## 8. Govern Referral Loops, Distribution, and Recommendations Separately
+常见形态：清单、模板、指南、诊断、样例、计算器、试看、公开课。
 
-Do not label every relationship-driven spread as “viral referral”:
+## 五、版权误区必须即时纠正
 
-| Type | Advocate | Primary Motivation | Key Governance |
+课程若称“搜集多家资料、取其精华、删减重排、二次加工就没有版权问题”，必须明确纠正：
+
+> 删减、重排、改写、换封面、汇编多家资料或声明‘仅供学习’，都不会自动消除版权。
+
+可用来源只有：
+
+- 自己原创；
+- 明确授权；
+- 公共领域；
+- 开放许可证且遵守署名、相同方式共享、非商业等条件；
+- 官方明确允许传播；
+- 必要、适量、注明来源并符合法定条件的引用。
+
+题库、解析、模板、图片、课程笔记、数据库集合和独特结构都可能受保护。系统讲义应加入“内容—来源—权利人—许可—是否可改—是否可商用”的版权来源表。
+
+## 六、首次破冰的正确顺序
+
+```text
+确认来源
+→ 立即兑现资料、优惠、咨询或售后承诺
+→ 一句话说明身份与价值
+→ 告知使用方式和服务边界
+→ 说明后续触达及退出方式
+```
+
+禁止：
+
+- 加好友后先发大量广告；
+- 承诺资料却临时要求转发或拉人；
+- 把自动群发伪装成本人专属手写；
+- 用户拒绝后继续触达；
+- 未经同意拉群或收集无关敏感信息。
+
+## 七、裂变与成交章节的预设审查
+
+后续课程出现以下内容时，忠实稿保留语境，讲义必须加边界：
+
+- 转发朋友圈/拉人进群才能领奖；
+- 多级奖励、分销、代理和返佣；
+- 群控、批量加人、自动私聊；
+- 利用羞耻、恐惧、稀缺、从众或脆弱情绪成交；
+- 私聊假装关心、实为追单；
+- 晒收入、成交、好评或极端个案；
+- 平台限制业务转私域规避监管。
+
+审查维度：用户知情同意、平台规则、个人信息、广告真实性、奖励披露、消费者权益、退出机制和反骚扰。
+
+## 八、裂变、分销与转介绍要拆开治理
+
+不要把所有关系传播统称为“裂变”：
+
+| 类型 | 传播者 | 主要动机 | 关键治理 |
 |---|---|---|---|
-| Organic recommendation | Satisfied customer | Helping a friend; confidence in the product | Authentic delivery; permission to use reviews |
-| Incentivized referral | Existing user | Confidence plus a benefit | Benefits for both sides; no submission of a friend’s contact details |
-| Transparent affiliate distribution | Promotional partner | Commission plus product judgment | Commission disclosure; product-selection responsibility; single-tier settlement |
-| Joint marketing | Creator or institution | Complementary resources | Public collaboration; voluntary user participation |
-| Task-based referral campaign | Campaign participant | Completing a task for a benefit | Platform compliance; no forced sharing |
+| 自然转介绍 | 满意用户 | 帮朋友、认可产品 | 真实交付、评价授权 |
+| 激励式推荐 | 现有用户 | 认可＋权益 | 双边权益、不得提交朋友联系方式 |
+| 透明分销 | 合作推广者 | 佣金＋选品判断 | 佣金披露、选品责任、单层结算 |
+| 联合营销 | 创作者或机构 | 资源互补 | 公开合作、用户自主参加 |
+| 任务裂变 | 活动参与者 | 完成任务换权益 | 平台规则、不得强迫分享 |
 
-If a course proposes “repost for free access,” “invite several people for a prize,” or “refer three people to add WeChat,” the structured lecture must replace direct submission of friends’ WeChat IDs, phone numbers, or other personal information with a public link or referral code through which new users opt in themselves.
+课程若出现“转发换免费、邀请若干人领奖、推荐三人加微信”等设计，系统讲义必须改成公开链接或邀请码，由新用户自主进入；不得让推荐者直接提交朋友的微信、手机号或其他个人信息。
 
-### Commissions and Labels
+### 佣金与称谓
 
-- Disclose both the commission percentage and actual amount, together with refund clawbacks, settlement cycle, fees, and taxes. Saying “60%” without “CNY 8.40” is structurally misleading.
-- Calculate the maximum affordable commission from collected price minus product cost, delivery, platform fees, taxes, refund reserve, and target profit. High commissions must not hollow out delivery.
-- Do not misleadingly call an ordinary referrer a legal “partner.” Without equity, decision rights, and shared responsibility, use labels such as “promotional partner,” “affiliate member,” or “referrer.”
-- When a referrer receives commission, gifts, free products, or future collaboration, the relationship must be disclosed clearly to the audience.
-- Prefer single-tier referrals. If earnings depend primarily on recruiting subordinate distributors and extracting a percentage from multiple transaction tiers, warn about pyramid-selling and unlawful multi-level distribution risk.
+- 佣金同时披露比例和实际金额，并说明退款扣回、结算周期、手续费和税务；只讲“60%”不讲“8.4元”属于框架性误导。
+- 用实收价减去产品、交付、平台、税费、退款预留和目标利润，计算最高可承受佣金；高佣金不能挤压交付。
+- 普通推荐者不能被误导性称为法律意义上的“合伙人”；如无股权、决策和共担责任，使用“推广伙伴、联盟成员、推荐人”。
+- 推荐者获得佣金、赠品、免费产品或未来合作时，须向受众清楚披露利益关系。
+- 优先单层推荐；若收益核心来自招募下级并从多层交易抽成，必须提示传销和非法多层分销风险。
 
-### Pricing and Launch Evidence
+### 价格与发售证据
 
-- Claims such as “worth CNY 2,000, now CNY 14,” time limits, quantity limits, inventory, sales posters, and countdowns must be grounded in reality. Never put nonexistent reference prices, perpetual countdowns, or fabricated sales into an executable template.
-- A low-priced product must independently solve one small problem; it cannot be an empty shell leading only to a high-priced offer.
-- Reframe private-domain launches as “needs research and development preview → complete product explanation → concentrated Q&A and a genuine action window → delivery review,” rather than treating mysterious teasing, high-pressure livestreaming, repetitive testimonial posting, and payment chasing as standard practice.
-- If course-reported sales, income, commissions, or conversion rates lack reviewable evidence, label them as instructor reports rather than verified cases.
+- “价值2000元、现价14元”、限时、名额、库存、成交海报和倒计时必须有真实依据；从未存在的原价、永久倒计时、虚构成交不得进入可执行模板。
+- 低价产品必须独立解决一个小问题，不能只做高价产品的空壳诱饵。
+- 私域发售应改写为“需求研究与开发预告 → 完整产品说明 → 集中答疑与真实行动窗口 → 交付复盘”，不以神秘预热、高压直播、刷屏晒单和催付为标准动作。
+- 课程转述的销量、收入、佣金和转化率没有可复核证据时，标记为讲师转述，不写成已验证案例。
 
-## 9. Record “Traffic Theft, Bulk Prospecting, and Interception” as Risks, Not Tutorials
+## 九、“偷流量、打粉、截流”只做风险记录，不做教程
 
-If a course describes harvesting users from comment sections, messaging competitor followers, entering another person’s community to add members, bulk prospecting, or buying and selling traffic:
+课程若讲评论区截流、私信竞品粉丝、进入他人社群加成员、批量打粉或买卖流量：
 
-- The faithful transcript may record what was taught, why the instructor believed it worked, and historical case outcomes, but must not expand account lists, comment templates, direct-message scripts, batching tactics, or ban-evasion steps;
-- The structured lecture must identify possible spam, unpermitted outreach, community-rule, personal-information, unfair-competition, and platform-enforcement risks;
-- Offer compliant alternatives such as joint livestreams, public guest sessions, transparent sponsorships, co-branded resources, content cross-promotion, legitimate affiliate programs, and voluntary signup;
-- “This industry exists” must never be rewritten as “this method is legal, stable, or worth adopting.”
+- 忠实稿记录“课程讲了什么、讲师为何认为有效、历史案例结果”，但不展开账号名单、留言模板、私信脚本、加人批次或规避封禁步骤；
+- 系统讲义明确其可能涉及垃圾营销、未经许可触达、社群规则、个人信息、不正当竞争和平台处罚；
+- 合规替代为联合直播、公开嘉宾分享、透明赞助、联名资料、内容互推、正规联盟分销和用户自主报名；
+- “这种产业存在”不能被写成“这种方法合法、稳定或值得采用”。
 
-## 10. Private-Domain Conversion Must Not Disguise Itself as Friendship or Manufacture Group Pressure
+## 十、私域转化不能伪装友谊或制造群体压力
 
-Courses often say “become friends with users” or “warm strangers into customers.” Preserve the sincere, long-term, human part, but correct the boundary:
+课程常说“和用户做朋友”“把陌生人温暖成客户”。保留其真诚、长期、有温度的部分，但必须纠正：
 
-> Private-domain operation should be a humane long-term service relationship with transparent commercial identity and interests—not simulated intimacy followed by conversion through emotional debt.
+> 私域应是有人情味、但商业身份和利益关系透明的长期服务关系，不是先伪装私人亲密，再利用情感债成交。
 
-- Trust does not imply that a sale will eventually occur. A user may trust someone for years and never have the need, budget, or intention to buy.
-- Liking posts, viewing Moments, entering a group, or remaining silent does not grant sales permission.
-- “Moments → community → one-to-one” is not a compulsory funnel; users may exit at any point.
-- The first objective of one-to-one communication is fit assessment, not “precision penetration,” pressure closing, or payment chasing. Ask about context, goals, constraints, budget, and risks; explain price, delivery, limitations, and refunds completely; and allow comparison, deliberation, and refusal.
-- Explicitly recommend not buying when the need is a poor fit, the budget would cause hardship, the user expects guaranteed returns, available time is insufficient, or delivery capacity is full.
+- 信任不意味着成交迟早会发生；用户可能长期信任但永远没有需求、预算或购买意愿。
+- 点赞、观看朋友圈、进群和沉默都不构成销售许可。
+- “朋友圈 → 社群 → 1V1”不是强制漏斗；用户可在任何节点退出。
+- 一对一沟通的第一目标是适配判断，不是“精准击穿、逼单、催付”。应询问情境、目标、约束、预算和风险，完整说明价格、交付、限制和退款，并允许比较、考虑和拒绝。
+- 发现需求不匹配、预算造成负担、期待保证收益、时间不足或交付容量已满时，应明确建议不买。
 
-## 11. Evidence, Permission, and Lifecycle for Moments and Communities
+## 十一、朋友圈与社群的证据、许可和生命周期
 
-### Five Categories of Moments Content
+### 朋友圈五类内容
 
-Lifestyle, educational material, process, results, and product content answer “Who are you? What do you know? Are you reliable in practice? Have you produced results? What do you sell?” Add these boundaries:
+生活、干货、过程、结果、产品分别回答“你是谁、你懂什么、做事是否可靠、是否产生过结果、最终卖什么”。处理时补充：
 
-- Authentic lifestyle content does not justify unlimited exposure of family, clients, addresses, or sensitive information;
-- Process content must not stage effort or expose client material;
-- Results and chat records must be authentic, authorized, anonymized, and accompanied by conditions; extreme cases must not imply typical results;
-- Posting frequency and timing are experience-based values. Evaluate them alongside meaningful interaction, consultations, blocks, unsubscribes, complaints, and production cost.
+- 生活真实不等于无限暴露家人、客户、地址和敏感信息；
+- 过程不能摆拍努力，也不能泄露客户材料；
+- 结果和聊天记录必须真实、授权、匿名、说明条件，不把极端个案暗示为普遍结果；
+- 频率和发布时间均是经验值，应联合观察有效互动、咨询、屏蔽、退订、投诉和内容成本。
 
-### Define the Community Contract First
+### 社群先定义合同
 
-Before creating a group, specify its purpose, intended participants, user value, whether selling occurs, Q&A scope, operating frequency, lifecycle, closure, and exit method. Obtain fresh permission if the group’s purpose changes.
+每个群在建立前写清：目的、适合对象、用户价值、是否销售、答疑范围、运营频率、生命周期、结束和退出方式。群用途改变时重新取得许可。
 
-- “999+” messages is not a success metric. Depending on group type, measure task completion, problem resolution, attendance, renewal, refunds, departures, and complaints;
-- Use group sign-up chains only for voluntary registration and counting. Shared testimonials must be genuine, authorized, and privacy-safe;
-- Do not have insiders pose as users, fabricate orders, publicly shame observers, or replace fit assessment with “everyone else is buying”;
-- When an event group finishes its mission, dissolve it or move to low frequency. Do not force continued activity for appearances.
+- 群消息“999+”不是成功指标；按群类型观察任务完成、问题解决、到场、续费、退款、退群和投诉。
+- 群接龙只用于自愿报名与统计；群晒单必须真实、授权、隐私安全。
+- 不允许内部人员伪装用户接龙、伪造订单、公开羞辱观望者，或用“大家都买”替代适配判断。
+- 活动群使命完成后可以解散或转低频；不要为了表面活跃强行续命。
 
-## 12. Upgrade the Sales Metric to Sales Quality
+## 十二、成交指标要升级为成交质量
 
-A high conversion rate may reflect precise fit or high-pressure selling. At minimum, evaluate jointly:
-
-```text
-Sales quality
-= conversion rate
-× activation rate
-× completion rate
-× outcome rate
-× satisfaction and retention
-− refunds and complaints
-```
-
-Also record inbound inquiries, fit consultations, explicit recommendations not to buy, purchases, activation, completion, refunds, complaints, repurchases, referrals, and operating time.
-
-## 13. Do Not Measure Only New Contacts and Purchases
-
-At minimum, record:
-
-- Relevance of the value hook;
-- Voluntary opt-in rate;
-- Promise-fulfillment rate;
-- Material opens and use;
-- Meaningful conversations;
-- Consultations and purchases;
-- Unsubscribes, deletions, blocks, and complaints;
-- Per-user handoff cost;
-- Refunds, repurchases, and referrals.
-
-A non-precise model may be used:
+高成交率可能来自精准适配，也可能来自高压销售。至少联合观察：
 
 ```text
-Effective relationship value
-= entrants
-× need fit
-× promise fulfillment
-× ongoing relationship health
+成交质量
+＝成交率
+× 开始使用率
+× 完成率
+× 结果率
+× 满意与留存
+－退款与投诉
 ```
 
-## 14. Per-Lesson Acceptance Glossary
+建议同步记录：主动咨询、适配咨询、明确建议不买、成交、开始使用、完成、退款、投诉、复购、转介绍和运营耗时。
 
-Search for and correct STT residue:
+## 十三、数据指标不要只看新增好友与成交
 
-- Homophones meaning “Civic,” “selfish desire,” or “dead fish” → `private domain`
-- Homophones meaning “apartment” or “public welfare” → `public domain`
-- Homophones meaning “artist company” or “business company” → `one-person company`
-- A homophone meaning “manuscript fee” → `make money`
-- A homophone meaning “zero materials” → `receive materials`
-- Homophones meaning “curtain-wall mentality” or “grave-wall mentality” → `status admiration`
-- Homophones of “icebreaking script” → `icebreaker script`
-- `QOL` and a homophone meaning “pretty face” → `KOL` and `bridge`
-- Misrecognitions meaning “new input” or “send a message” → `new way out` and `original intention`, verified against case context
-- A homophone meaning “there is a number for making money” → the course title `Techniques for Making Money`
-- Homophones meaning “little parcel child” or “little newspaper tube” → the product name `Xiaobaotong`
-- A homophone meaning “small-amount service” → the product name `Xiaoetong`
-- `EV1` or `ev 1` → `1V1`
-- A homophone meaning “cultivating the incumbent” → `trust cultivation`
-- A homophone meaning “falling tone” → `patronizing tone`
-- `be a guest` in a course-development context → `create a course`
-- `project psychology` in a purchase-evidence context → `conformity psychology` or social proof, judged from the original sentence
-- A near-homophone meaning “restrain complaints” → `customer complaint`
+至少同时记录：
 
-Also search for and review high-risk terms manually:
+- 价值钩子相关性；
+- 自愿进入率；
+- 承诺兑现率；
+- 资料打开和使用；
+- 有效对话；
+- 咨询与成交；
+- 退订、删除、屏蔽与投诉；
+- 单用户承接成本；
+- 退款、复购和转介绍。
 
-- Avoidance, evading detection, sensitive terms, secondary accounts, code words, hidden contact details, automated fulfillment, adding WeChat;
-- Copying, compilation, secondary processing, “no copyright issue”;
-- Compulsion, loss aversion, time limits, final places, original price, value anchoring, perpetual countdowns;
-- Viral referral, recruitment, reposting, commissions, distribution, partners, multi-level structures, group-control tools;
-- Traffic theft, bulk prospecting, interception, competitor groups, comment-section diversion, bulk direct messages;
-- Becoming friends with users, group consensus, sign-up chains, testimonials, penetration, pressure closing, and payment chasing.
+可用非精确模型：
 
-The acceptance objective is not to delete every high-risk term. It is to ensure that editing has not made prohibited practices more executable and that the lecture offers compliant alternatives.
+```text
+有效关系价值
+＝进入人数
+× 需求匹配
+× 承诺兑现
+× 后续关系健康
+```
+
+## 十四、逐课验收词表
+
+搜索并修正STT残留：
+
+- 思域、私欲、死鱼 → 私域
+- 公寓、公益 → 公域
+- 艺人公司、业务公司 → 一人公司
+- 稿钱 → 搞钱
+- 零资料 → 领资料
+- 幕墙/墓墙心理 → 慕强心理
+- 破运话术/破运化数 → 破冰话术
+- QOL、俏脸 → KOL、桥梁
+- 新输入、发新 → 新出路、发心（结合案例语境复核）
+- 生财有数 → 生财有术
+- 小包童、小报筒 → 小报童
+- 小额通 → 小鹅通
+- EV1、ev 1 → 1V1
+- 现任培育 → 信任培育
+- 跌味儿 → 爹味儿
+- 做客（课程开发语境）→ 做课
+- 项目心理（购买证据语境）→ 从众心理或社会证明，须结合原句判断
+- 克诉 → 客诉
+
+同时搜索并人工判断高风险词：
+
+- 躲避、规避识别、敏感词、小号、暗语、藏号、自动发货、加V；
+- 复制、汇编、二次加工、版权没问题；
+- 不得不、损失厌恶、限时、最后名额、原价、价值锚定、永久倒计时；
+- 裂变、拉人、转发、返佣、分销、合伙人、多层级、群控；
+- 偷流量、打粉、截流、竞品群、评论区引流、批量私信；
+- 和用户做朋友、群体共识、接龙、晒单、击穿、逼单、催付。
+
+验收目标不是删除所有高风险词，而是确保它们没有被编辑成更可执行的违规方法，并且讲义给出合规替代路径。

@@ -1,84 +1,84 @@
-# Transcript-First Order for Dual-Document Delivery
+# 逐字稿优先的双文档交付顺序
 
-## When to Use
+## 适用场景
 
-Use this reference when the user continuously supplies complete transcripts from courses, interviews, talks, or expert presentations and asks to “organize this,” “organize this talk,” or “put it into the asset library,” without explicitly requesting only a summary.
+用户连续提供课程、访谈、演讲或专家分享的完整转写，并说“整理一下”“帮我整理这段分享”“整理进素材库”，但没有明确只要摘要时使用。
 
-## Core Correction
+## 核心纠正
 
-“Organize the transcript” and “summarize the course” are different tasks. Never skip the faithful transcript and output only a summary merely because a structured lecture displays value more readily.
+“整理逐字稿”与“总结课程”是两项不同工作。不得因为结构化讲义更容易展示价值，就跳过忠实逐字稿直接输出总结。
 
-Default delivery order:
+默认交付顺序必须是：
 
-1. **Faithfully edited transcript:** the corpus master;
-2. **Systemized lecture / summary version:** a derivative of the transcript;
-3. Other models, quotations, and action checklists: derive only when needed.
+1. **忠实精编逐字稿**：语料母本；
+2. **系统化讲义／总结版**：逐字稿的派生产物；
+3. 其他模型、金句、行动清单：必要时再派生。
 
-A summary comes after the transcript. It cannot occupy the transcript’s place or mix summary prose into the instructor’s first-person body.
+总结只能排在逐字稿之后，不能占用逐字稿的位置，也不能把总结段落混进讲师第一人称正文。
 
-## From Collection State to Execution State
+## 收集态到执行态
 
-When a user sends a long transcript over multiple messages:
+用户分多次发送长转写时：
 
-- Before the user finishes: collect only. Do not summarize early or interrupt with interim summaries;
-- When the user labels “Part 1 / Part 2 / Part 3,” record boundaries and terminology pending confirmation;
-- When the user says “that is everything” or “start organizing,” or the final part contains a clear lesson ending, enter execution if the overall task was already explicit;
-- If “organize” could still refer to both a faithful transcript and a lecture, default to both drafts rather than selecting the lecture alone;
-- If only one can be completed first, it must be the faithful transcript.
+- 尚未发完：只收集，不提前总结，不用阶段性摘要打断；
+- 用户明确发送“第一部分／第二部分／第三部分”时，记录边界和术语待确认项；
+- 用户说“都发完了”“开始整理”或最后一部分具有明确课程结束语时，如先前总任务已明确，可进入执行；
+- 若“整理”仍可能同时指忠实稿和讲义，默认双稿，不要擅自只选讲义；
+- 如只能先做一份，必须先做忠实逐字稿。
 
-## Responsibilities of the Two Documents
+## 双文档职责
 
-### 01 Faithfully Edited Transcript
+### 01 忠实精编逐字稿
 
-- Preserve the instructor’s first-person voice;
-- Preserve original speaking order and development of the argument;
-- Preserve every case, number, person, product, transition, question, and qualifier;
-- Delete only meaningless fillers, mechanical repetition, stalls, and course-process noise;
-- Normalize high-confidence STT errors directly and consolidate uncertain items at the end;
-- Do not introduce editorial models, applicable boundaries, or rebuttals; those belong in the lecture.
+- 保留讲师第一人称；
+- 保持原讲述顺序和论证展开；
+- 保留全部案例、数字、人物、产品、转折、反问和限定；
+- 只删除无意义口头语、机械重复、卡顿和课程流程噪声；
+- 高把握STT错误直接统一，不确定项集中列在文末；
+- 不加入编辑者提出的新模型、适用边界或反驳；这些属于讲义。
 
-### 02 Systemized Lecture / Summary
+### 02 系统化讲义／总结版
 
-- May reorganize order, extract models, and add applicable conditions;
-- Must be based on the faithful transcript rather than replace it;
-- Must label editorial extraction rather than present it as instructor wording;
-- May place facts pending verification in the lecture or a separate file without contaminating the faithful body.
+- 可重组顺序、提炼模型、补适用条件；
+- 必须基于忠实稿，而不是替代忠实稿；
+- 编辑提炼须明确标识，不能伪装成讲师原话；
+- 事实待核验表可放在讲义或独立文件，不污染忠实稿正文。
 
-## Default File and Directory Structure
+## 文件与目录默认
 
-When the user asks for an asset directory by instructor or expert, reuse an existing expert-talk directory in the library rather than inventing a new system. Suggested structure:
+用户要求按讲师或专家建立素材目录时，优先沿用库内已有专家分享目录，不另造体系。建议：
 
 ```text
-[Instructor]·[Topic]/
-├── 01_[Instructor]·[Topic]·Proofread-Transcript.md
-└── 02_[Instructor]·[Topic]·Systemized-Lecture.md
+[讲师]·[主题]/
+├── 01_[讲师]·[主题]·逐字稿校订版.md
+└── 02_[讲师]·[主题]·系统讲义.md
 ```
 
-If the current library uses another convention, follow existing examples. Update the directory index when necessary.
+如果现有库采用其他命名，以现有样例为准。必要时更新目录索引。
 
-## File-Operation Gate
+## 文件操作门控
 
-- When the user explicitly says “create the folder and put the files there,” task intent and scope are already clear;
-- If the environment imposes file-operation acceptance, use one minimal notice: operation type, file type, full path, directory verification, and governing convention;
-- Do not reopen an already settled dual-draft design during the notice or add rounds of synonymous confirmation;
-- Once approved, create the directory, transcript, lecture, index, and readback verification in one execution.
+- 用户已明确“直接建文件夹并放进去”时，这代表任务意图和范围已明确；
+- 若环境另有强制文件操作验收，只做一次最短验收：操作类型、文件类型、完整路径、目录验证、规范出处；
+- 不在验收里重新讨论已经确定的双稿方案，不增加多轮同义确认；
+- 获批后一次完成建目录、逐字稿、讲义、索引和回读验收。
 
-## Acceptance
+## 验收
 
-- [ ] `01` is a complete first-person faithful transcript, not a summary;
-- [ ] `02` is the structured summary;
-- [ ] The two documents are physically separate and clearly linked;
-- [ ] The summary did not replace or contaminate the transcript;
-- [ ] The transcript covers the opening, critical middle cases, and course ending;
-- [ ] All uncertain terminology is delivered in one consolidated list;
-- [ ] The user-specified asset library and existing directory conventions were reused;
-- [ ] Both files and the index were read back after writing.
+- [ ] `01` 是完整第一人称忠实稿，不是摘要；
+- [ ] `02` 才是结构化总结；
+- [ ] 两份文档物理分离、链接清晰；
+- [ ] 总结没有取代或污染逐字稿；
+- [ ] 逐字稿覆盖开头、中段关键案例和课程结尾；
+- [ ] 所有待确认术语集中交付；
+- [ ] 用户指定的素材库与既有目录规范已复用；
+- [ ] 写入后已回读两个文件及索引。
 
-## Typical Failures
+## 典型失败
 
-- The user asks to “organize the transcript” and receives only a course summary;
-- Interim summaries interrupt segmented source collection and fragment later content;
-- The faithful transcript uses third-person language such as “the instructor believes”;
-- Editorial rebuttals, boundaries, or formulas are inserted into the transcript;
-- The summary is numbered `01` and the transcript is placed afterward;
-- The user already approved both drafts and a folder, but the agent continues explaining the process instead of executing.
+- 用户说“整理逐字稿”，却只收到一份课程总结；
+- 一边接收分段原文，一边提前输出阶段摘要，导致后续内容被割裂；
+- 忠实稿改成第三方“讲师认为”口吻；
+- 把编辑者的反驳、边界和公式塞进逐字稿；
+- 总结版先编号为01，逐字稿被放到后面；
+- 用户已经明确要双稿和文件夹，还继续长篇解释流程而不执行。

@@ -1,114 +1,114 @@
-# Revising Companion Teaching Documents, Linking Sources, and Using Visual References
+# 配套教学文档校订、来源回链与视觉参考
 
-Use this workflow when course audio, a live transcript, or a screen recording has companion teaching documents, lectures, slides, illustrated pages, Prompt pages, or resource links. The goal is a course draft that is faithful, verifiable, traceable, and reusable.
+适用于课程语音、直播转写或录屏存在配套教学文档、讲义、课件、图文页、Prompt 页面或资源链接的情况。目标是让课程稿同时具备忠实性、可校验性、可追溯性和后续可复用性。
 
-## 1. Source Responsibilities
+## 1. 来源分工
 
-- **Spoken/video body:** preserve the instructor's order, first-person voice, cases, judgments, concerns, and live process.
-- **Companion teaching document:** correct terms, versions, model and product names, links, code, Prompts, parameters, and on-screen text that STT cannot recover reliably.
-- **Editorial additions:** explain risk boundaries, source conflicts, update dates, and applicability conditions. Use separate labels such as “Editorial note,” “Teaching-document supplement,” or “Fact check”; never present them as the instructor's own words.
+- **语音/视频正文**：保留讲师讲述顺序、第一人称、案例、判断、顾虑和现场过程。
+- **配套教学文档**：校正 STT 无法可靠恢复的术语、版本、模型、产品名、链接、代码、Prompt、参数和画面文字。
+- **编辑补充**：说明风险边界、来源冲突、更新时点和适用条件；必须使用“编辑提示 / 教学文档补充 / 事实核验”等独立标签，不得伪装成讲师原话。
 
-## 2. Revision Workflow
+## 2. 校订流程
 
-1. Complete a faithful cleanup of the spoken transcript and establish a list of pending confirmations.
-2. Open the companion document and actually read its title, table of contents, body, code blocks, tables, images, and attachments. The table of contents or a text summary alone is insufficient.
-3. Build an internal comparison table: `spoken STT → accurate document wording → evidence location → treatment in final draft`.
-4. Correct person names, tool names, version numbers, system requirements, platform differences, download links, and operation order first.
-5. Add valuable Prompts, code, resource links, and operating instructions that the teaching document contains but the speaker did not read in full to the relevant body section or hands-on review.
-6. For a long Prompt, retain a “complete core version” by default and clearly label it as a compressed edit; the source teaching document remains authoritative for the verbatim full text. Include the full version only when the user requests it.
-7. Add “Further Reading and Related Links” at the end. Link at least the source teaching document and, when useful, the resource repository, download page, and authoritative upstream source.
+1. 先完成语音稿忠实清洗，并建立待确认项清单。
+2. 打开配套文档，实际读取标题、目录、正文、代码块、表格、图片和附件；不能只看目录或文本摘要。
+3. 建立内部对照表：`语音 STT → 文档准确写法 → 证据位置 → 成稿处理方式`。
+4. 优先校正人名、工具名、版本号、系统要求、平台差异、下载链接和操作顺序。
+5. 将教学文档中有价值、但语音没有完整念出的 Prompt、代码、资源链接和操作说明补到对应正文或“实操复盘”。
+6. Prompt 很长时，默认在成稿保留“完整核心版”，明确标注它是压缩整理；一字不漏全文仍以原教学文档为准。用户要求全文时再完整收录。
+7. 文末增加“扩展阅读与相关链接”，至少链接原教学文档；资源仓库、下载页和权威上游按需附上。
 
-## 3. Resolving Source Conflicts
+## 3. 来源冲突处理
 
-Companion material may itself conflict internally, be outdated, or preserve both an old approach and a newer Goal. Do not apply a mechanical “document wins” rule.
+配套材料也可能内部冲突、过期，或同时保留旧方案和新版 Goal。不能机械使用“文档优先”。
 
-Priority:
+优先级：
 
-1. explicit user correction;
-2. within the same source, the newer, more fully constrained, lower-risk version;
-3. legible original text in a visual or code block;
-4. wording repeated consistently in the spoken material;
-5. contextual inference.
+1. 用户明确纠正；
+2. 同一来源中日期更新、约束更完整且风险更低的版本；
+3. 清晰画面或代码块原文；
+4. 语音中多次一致表述；
+5. 上下文推断。
 
-When a material conflict exists:
+遇到实质冲突：
 
-- state it explicitly rather than choosing silently;
-- use the lower-risk, more fully constrained version as the basis for editorial correction;
-- do not present an obsolete high-risk procedure as the current recommendation;
-- retain the source link for review;
-- label changeable versions, commits, Issues, SHA-256 values, and compatibility claims “re-verify before execution.”
+- 明确写出冲突，不静默选择；
+- 采用风险更低、约束更完整的版本作为编辑校正依据；
+- 不把旧的高风险步骤写成当前推荐；
+- 保留原链接供复核；
+- 对会变化的版本、commit、Issue、SHA-256 和兼容性标注“执行前重新核验”。
 
-## 4. Prompts and High-Risk Hands-On Procedures
+## 4. Prompt 与高风险实操
 
-Course material may involve accounts, privacy, process memory, databases, system privileges, downgrade installations, or third-party tools.
+课程材料可能涉及账号、隐私、进程内存、数据库、系统权限、降级安装或第三方工具。
 
-- Preserving a course Prompt does not mean recommending immediate execution.
-- Distinguish “archived reference” from “the user's current decision.”
-- A core Prompt version should retain the authorization statement, platform scope, read-only principle, upstream audit, permission-risk gate, stop conditions, rollback, and acceptance evidence.
-- Do not strengthen the course into instructions for bypassing controls, evading risk systems, or gaining unauthorized access.
-- An instructor's personal success does not become a universal safety guarantee.
-- If the user expresses risk concerns, add a separate editorial note stating that the material may be retained without execution; do not merge the user's concern into the instructor's first-person voice.
+- 保存课程 Prompt 不等于建议立即执行。
+- 成稿必须区分“资料归档”与“用户当前决策”。
+- Prompt 核心版应保留：授权声明、平台范围、只读原则、上游审计、权限风险门、停止条件、回滚和验收证据。
+- 不替课程强化绕过、风控规避或未授权访问能力。
+- 讲师个人成功经验不能改写成普遍安全保证。
+- 用户明确表达风险顾虑时，用独立编辑提示写明“可以只保留资料、暂不执行”，不得把用户顾虑混入讲师第一人称。
 
-## 5. Images Are Also Source Evidence
+## 5. 配图也是来源证据
 
-Infographics, screenshots, and flowcharts in teaching documents may carry information not spoken aloud:
+教学文档中的信息图、截图和流程图可能承担语音未念出的信息：
 
-- Inspect the actual pixels of every image; confirming an image block or token exists is insufficient.
-- Extract headings, flows, groups, numbers, arrow relationships, and risk warnings from the image.
-- To infer a visual style, inspect at least four layouts before identifying a stable visual grammar.
-- Before creating a visual Skill, collect 6–10 representative images spanning flowcharts, relationship diagrams, card overviews, device interfaces, and data pages; avoid overfitting to one image.
-- Abstract paper texture, palette, typography, layout, iconography, information hierarchy, and use cases rather than copying one image.
-- Produce the visual DNA and one test image first; formalize the Skill only after user acceptance.
+- 逐张查看实际像素，不能只确认存在图片块或 token；
+- 提取图中的标题、流程、分组、数字、箭头关系和风险提示；
+- 需要提炼视觉风格时，至少查看 4 张不同版式，再判断稳定视觉语法；
+- 创建视觉 Skill 前，建议收集 6–10 张代表图，覆盖流程图、关系图、卡片总览、设备界面和数据页，避免凭单图过拟合；
+- 视觉 Skill 应抽象纸张、色板、字体、布局、图标、信息层级和适用场景，而不是复制某一张图；
+- 先输出视觉 DNA 和一张测试图，用户验收后再固化 Skill。
 
-## 6. Layered Extraction and Conflict Revision for Image-Based Slides
+## 6. 图片型 PPT 的多层提取与冲突校订
 
-If a PDF exposes copyable text only on the cover and every other page is an image, an empty `pdftotext` result does not mean that the slides contain no content. Use a three-layer evidence chain:
+当 PDF 只有封面可复制、其余页面全是图片时，不能据 `pdftotext` 的空结果判断“PPT没有内容”。采用三层证据链：
 
-1. **Text-layer inventory:** read page count, dimensions, encryption status, and extractable text; confirm that the file is image-based rather than damaged.
-2. **Batch OCR index:** render each page to an image and OCR the batch, producing a searchable draft index of `page → title → terms → numbers → cases`. OCR is for location only, not final authoritative text.
-3. **Pixel-level verification of critical pages:** inspect the source image for biographies, amounts, headcounts, brand names, model names, timelines, flowcharts, and summary pages. Correct OCR from legible pixels; never fill text from context alone.
+1. **文本层盘点**：先读取页数、尺寸、加密状态与可复制文本；确认是图片型而不是损坏文件。
+2. **批量 OCR 建索引**：把每页渲染成图片后批量 OCR，生成“页码→标题→术语→数字→案例”的可检索草图。OCR 只用于定位，不直接当最终准确文本。
+3. **关键页像素复核**：对履历、金额、人数、品牌名、模型名、时间线、流程图和总结页逐页看原图；用清晰画面修正 OCR，不凭语境补字。
 
-Source responsibilities remain unchanged:
+来源职责仍保持：
 
-- The transcript is authoritative for the instructor's live argument, first-person voice, and case process.
-- Slides correct proper nouns, framework order, explicit on-page numbers, and structures the instructor did not read verbatim.
-- Slide text must not be presented as if the instructor spoke it word for word.
+- 逐字稿是讲师现场论证、第一人称和案例过程的主源；
+- PPT用于校正专名、框架顺序、页面明确数字及讲师未逐字念出的结构；
+- PPT文字不得伪装成讲师现场逐句说过的话。
 
-When transcript and slide numbers conflict:
+当逐字稿与PPT数字冲突时：
 
-- Do not choose silently based on “the slides are more formal” or “the speech is more complete.”
-- Record the “live spoken figure” and “slide figure” separately, citing the exact page or timestamp.
-- Only the user, source business records, or another authoritative source may resolve the conflict. Until then, use a conclusion that does not depend on the disputed value and list the matter as pending verification at the end.
-- If the two numbers might represent different metrics, do not merge them into a total, monthly figure, or cumulative figure.
+- 不按“PPT更正式”或“口述更完整”静默选边；
+- 分别记录“现场口述口径”和“PPT口径”，注明具体页码或时间戳；
+- 只有用户、原始业务记录或其他权威来源能消解冲突；否则正文使用不依赖冲突值的结论，文末列入待核；
+- 两个数字可能描述不同指标时，也不能自行合并成总额、单月或累计值。
 
-Also reconcile a slide deck against itself. Treat the cover biography, section headings, timeline nodes, case pages, and summary page as separate statements. If a title says “50→510” while the timeline says “30→200→600,” preserve this as an **internal slide conflict**. In the body, prefer the timeline phrasing with explicit year or stage labels, while recording the title wording in the end notes. Never replace legible source pixels with an OCR approximation or splice the two number sets into a new growth path.
+同一份PPT内部也要做横向对账：封面履历、章节标题、时间线节点、案例页和总结页分别视为独立口径。若标题写“50→510”，时间线却写“30→200→600”，应保留为**PPT内部冲突**，正文优先采用带明确年份或阶段标签的时间线表达，文末同时记录标题口径；不得用OCR近似值覆盖看得清的原图，也不得把两组数字拼成新的增长路径。
 
-At minimum, critical-page review must cover the cover/instructor biography, master framework, every page with case numbers, process or model pages, timeline, self-assessment checklist, and closing summary. If a course draft treats an image as core evidence, verify that page separately; whole-document OCR is not a substitute.
+关键页最少覆盖：封面／讲师履历、总框架、所有案例数字页、流程或模型页、时间线、自测清单、结尾总结页。若课程稿将某张图作为核心证据，必须单独复核该页，不以整份OCR替代。
 
-## 7. End-Matter Format
+## 7. 文末格式
 
 ```markdown
 ---
 
-## Further Reading and Related Links
+## 扩展阅读与相关链接
 
-- **Companion teaching document for this lesson:** [Course teaching document](source-link)
-- **Related resource:** <resource-link>
+- **本节课配套教学文档：** [课程教学文档](原始链接)
+- **相关资源：** <资源链接>
 
-> These links support later review of course content, retrieval of the complete Prompt, and verification of version information. They do not recommend immediate execution of high-risk operations described in the documents.
+> 链接用于后续复核课程内容、查找完整 Prompt 和验证版本信息；不代表建议立即执行文档中的高风险操作。
 ```
 
-## 8. Delivery Checklist
+## 8. 交付检查
 
-- [ ] An image-based PDF was not misclassified as empty because it lacked copyable text
-- [ ] Batch OCR was used only for location; critical terms, figures, and case pages were verified against source pixels
-- [ ] Transcript/slide conflicts preserve both figures, page/timestamp references, and pending-verification state instead of choosing silently
-- [ ] The teaching document was actually read, not reduced to its link title or table of contents
-- [ ] Actual image content was inspected, not just an image token or placeholder
-- [ ] STT terminology, version numbers, and links were corrected from source evidence
-- [ ] Supplemental material has an explicit source identity and was not merged into the instructor's first-person voice
-- [ ] A long Prompt is identified as either full text or a core version
-- [ ] Internal source conflicts are stated explicitly
-- [ ] The user's risk concerns were not rewritten as the instructor's views
-- [ ] The end matter contains a clickable link to the source teaching document
-- [ ] “Preserve the material” was not interpreted as “execute it immediately”
+- [ ] 图片型PDF没有因可复制文本为空而被误判为无内容
+- [ ] 批量OCR只用于定位，关键术语、数字和案例页已看原图复核
+- [ ] 逐字稿与PPT冲突已保留双口径、页码／时间戳和待核状态，没有静默选边
+- [ ] 教学文档已实际读取，不是只看链接标题或目录
+- [ ] 图片已查看实际画面，不是只看到 token/占位符
+- [ ] STT 术语、版本号和链接已据来源校正
+- [ ] 补充内容已标明来源身份，没有混进讲师第一人称
+- [ ] 长 Prompt 已说明是全文还是核心版
+- [ ] 来源内部冲突已显式说明
+- [ ] 用户风险顾虑没有被误写成讲师观点
+- [ ] 文末存在可点击的原教学文档链接
+- [ ] 未把“保存资料”误解为“立即执行”

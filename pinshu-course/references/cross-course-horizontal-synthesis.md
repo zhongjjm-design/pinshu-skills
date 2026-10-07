@@ -1,115 +1,115 @@
-# Cross-Lesson Synthesis: Master Course Outline and Methodology/Model Library
+# 跨课横向归并：课程总纲与方法论模型库
 
-Use this workflow after the accepted per-lesson drafts are complete and the task requires deduplication across lessons and a cross-topic knowledge library that can be studied independently.
+适用于逐课精品稿已经完成、需要跨课去重并生成可独立学习的横向知识库时。
 
-## Authoritative-Source Gate
+## 权威源门控
 
-1. Define the one authoritative input layer first, usually the accepted per-lesson systematized lectures.
-2. Return to the faithful edited transcripts only when the speaker, a number, sequence, or original meaning needs verification.
-3. Do not mix old segmented lectures, asset candidates, historical summaries, or unaccepted intermediate drafts into the synthesis.
-4. Frontmatter must declare `authoritative_sources` and `source_policy` so that later work does not misuse old drafts.
+1. 先明确唯一权威输入层，通常是已验收的逐课系统化讲义。
+2. 只有在讲者、数字、顺序或原意需要核对时，才回查忠实精编稿。
+3. 旧分段讲义、资产候选、历史摘要和未验收中间稿不得混入横向归并。
+4. Frontmatter必须写明`authoritative_sources`与`source_policy`，防止后续误用旧稿。
 
-## Two Core Deliverables
+## 两份核心产物
 
-### Master Course Outline
+### 课程总纲
 
-Include at least:
+至少包含：
 
-- the problem the course actually solves and its throughline;
-- cognitive progression by day or module;
-- a relationship map covering every lesson;
-- learning paths for different goals;
-- identity, case, and viewpoint-attribution boundaries between the lead instructor and guests;
-- relative links to per-lesson lectures, the course map, and the method library;
-- a candidate formal master title clearly marked `provisional`;
-- the final cross-lesson action framework.
+- 整门课真正解决的问题与贯穿主线；
+- 按天或模块的认知递进；
+- 全部课次关系图；
+- 面向不同目标的学习路径；
+- 主讲与嘉宾的身份、案例和观点归属边界；
+- 指向逐课讲义、课程地图与方法库的相对链接；
+- 正式课程总标题候选，并明确“暂定”状态；
+- 跨课最终行动框架。
 
-The outline is not a concatenation of thirteen summaries. For each lesson, retain only its function in the full course and its relationship to preceding and following lessons.
+总纲不是13份摘要的拼接。每课只保留它在整门课中的功能，以及与前后课的关系。
 
-### Methodology and Model Library
+### 方法论与模型库
 
-Deduplicate across lessons before normalizing fields. Every entry includes at least:
+先跨课去重，再统一字段。每个条目至少包含：
 
-1. method name;
-2. problem solved;
-3. core principle;
-4. execution steps;
-5. applicability conditions;
-6. inapplicable scenarios or risks;
-7. source lesson(s);
-8. related cases.
+1. 方法名称；
+2. 解决问题；
+3. 核心原理；
+4. 执行步骤；
+5. 适用条件；
+6. 不适用场景或风险；
+7. 来源课次；
+8. 相关案例。
 
-When the same method appears in multiple lessons, create one canonical entry and merge later additions into its principle, steps, boundaries, and cases. Do not create duplicate records by lesson.
+同一方法跨多课出现时只建一个主条目，把不同课次的补充合并到原理、步骤、边界和案例中，不按课重复建档。
 
-## Converting Course Methodology into an Executable Skill
+## 从课程方法论到可执行Skill
 
-If the ultimate purpose of organizing the course is to derive a Skill that guides later content or business work, do not paste the master outline or thirty lectures into `SKILL.md`. Apply these gates:
+当用户整理课程的最终目的，是提炼一套指导后续内容或业务的Skill时，不要把课程总纲或30份讲义直接拼进SKILL.md。按以下门控转换：
 
-1. **Complete the course corpus first:** finalize only after all paired lesson drafts and the course map have passed acceptance; until then, record candidate methods only.
-2. **Build a cross-lesson method library:** deduplicate by `problem → principle → steps → conditions → risks → cases` and identify recurring core models.
-3. **Layer the evidence:** distinguish instructor methods, editorial synthesis, time-sensitive platform experience, case-specific outcomes, and external facts. An unverified threshold must not become a hard rule.
-4. **Derive a decision process:** the Skill must diagnose the user's stage and primary constraint before selecting a method; it must not retell the course sequentially from Lesson 1.
-5. **Define inputs and outputs:** state what material the user must provide and which diagnoses, topics, content, reviews, or business plans the Skill reliably delivers.
-6. **Add stop conditions and failure handling:** define when to request more data, switch methods, avoid execution, or return to user validation.
-7. **Audit counterexamples:** specify at least one inapplicable scenario for every core method so that case-specific experience does not harden into a universal rule.
-8. **Use class-level naming:** name the repeatable task class, such as “Personal-IP Content Growth and Commercial Conversion,” rather than the course, instructor, or one lesson.
-9. **Control `SKILL.md` size:** keep triggers, diagnosis, the main workflow, output standards, and verification in the main file; put course evidence, complete cases, and model entries under `references/`.
-10. **Case-test before hardening:** run at least one real business case and record the required changes before treating the method as stable.
+1. **先完成全课语料**：逐课双稿和课程地图全部验收后再定型，过程中只记录候选方法。
+2. **建立跨课方法库**：按“问题—原理—步骤—条件—风险—案例”去重，识别反复出现的核心模型。
+3. **做证据分层**：区分讲师方法、编辑归纳、平台时效经验、个案结果和外部事实；未验证阈值不能写成硬规则。
+4. **提炼决策流程**：Skill应先诊断用户所处阶段和主要约束，再调用对应方法，而不是从第一课顺序复述。
+5. **定义输入与输出**：写清需要用户提供哪些材料，以及Skill稳定交付哪些诊断、选题、内容、复盘或商业方案。
+6. **加入停止条件和失败处理**：什么情况下需要更多数据、切换方法、避免执行或回到用户验证。
+7. **做反例审计**：至少为每个核心方法写出不适用场景，防止把个案经验固化为普遍规律。
+8. **采用类级命名**：名称描述可重复任务类别，例如“个人IP内容增长与商业转化”，不得以课程名、讲师名或某一课命名。
+9. **控制SKILL.md体积**：主文件保留触发、诊断、主流程、输出标准和验证；课程证据、完整案例和模型条目放入`references/`。
+10. **先案例测试再钉死**：用至少一个真实业务案例跑通，记录修改点后再作为稳定方法使用。
 
-The final Skill must answer: What stage is the user in? What is the largest constraint? Which model should be used next? How is it executed? Which metrics establish acceptance? It must not merely prove what the course taught.
+最终Skill应回答：用户当前在哪个阶段、最大约束是什么、下一步用哪个模型、如何执行、用什么指标验收，而不是只证明“课程讲过什么”。
 
-## Deduplication Rules
+## 去重判定
 
-Usually merge when:
+以下情况通常应合并：
 
-- names differ but the same problem is being solved;
-- one lesson teaches the principle and a later lesson adds execution, failures, or boundaries;
-- one method is applied differently in content, business, and Agent contexts;
-- a later lesson adds only cases, limitations, or validation methods to the original model.
+- 名称不同，但解决的是同一问题；
+- 一个课次讲原理，后续课次讲实操、失败或边界；
+- 一个方法在内容、商业和Agent场景中只是不同应用；
+- 后续课只是为原模型增加案例、限制或验证方式。
 
-Keep separate when:
+以下情况应分开：
 
-- inputs, outputs, and completion criteria differ;
-- one is a diagnostic method and the other an execution process;
-- the two share vocabulary but solve different problems;
-- after merging, no coherent applicability conditions and stop criteria can be stated.
+- 输入、输出和完成标准不同；
+- 一个是诊断方法，另一个是执行流程；
+- 两者虽有共同词汇，但解决的问题不同；
+- 合并后无法写出统一适用条件与停止标准。
 
-## Independent-Learning Standard
+## 独立学习标准
 
-Every model must allow someone who has not watched the course to answer:
+每个模型必须让没看过原课的人也能回答：
 
-- When should it be used?
-- Why does it work?
-- What comes first and what follows?
-- Under what conditions does it fail or create risk?
-- Which lesson contains the complete argument and case?
+- 什么时候应该使用；
+- 为什么有效；
+- 具体先做什么、后做什么；
+- 什么情况下会失效或造成风险；
+- 回哪一课看完整论证和案例。
 
-A slogan, formula, heading, or lesson index alone is insufficient.
+禁止只留下口号、公式、标题或课次索引。
 
-## Speaker and Fact Discipline
+## 讲者与事实纪律
 
-- Do not misattribute cases or views among the lead instructor, guests, and learners.
-- Classroom experience, platform thresholds, operating figures, and product outcomes do not automatically become externally verified facts.
-- Label an editorially derived formula as such; do not present it as the instructor's words or an official model.
-- Retain `needs-audio-review` information rather than filling it from common knowledge.
-- Analyze the mechanism of gray-area platform tactics without expanding them into instructions for evading governance.
+- 主讲、嘉宾和学员案例不能互相错归。
+- 课堂经验、平台阈值、经营数字和产品结果不自动等于外部事实。
+- 编辑归纳公式必须标明不是讲师原话或官方模型。
+- 待回听信息继续保留，不用常识补齐。
+- 灰度平台方法只分析机制，不扩写成规避治理的教程。
 
-## Navigation Design
+## 导航设计
 
-- The master outline provides both sequential study and problem-based jump-in paths.
-- The method library starts with category navigation, and every entry links back to its per-lesson lecture.
-- Use relative paths so the knowledge base remains navigable after relocation.
-- Keep exactly one H1 in each file; use H2 or lower for every other heading.
+- 总纲应同时提供“顺序学习”和“按问题跳读”两类入口。
+- 方法库顶部建立类别导航，条目内链接回逐课讲义。
+- 使用相对路径，确保知识库移动后仍可浏览。
+- 每份文件只保留一个H1，其余均使用H2及以下层级。
 
-## Minimum Verification
+## 最小验证
 
-1. Target files exist and only the approved scope was written.
-2. Frontmatter contains the course, state, document type, authoritative sources, source policy, related documents, and tags.
-3. Each file contains exactly one H1.
-4. The master outline covers every lesson and includes speaker boundaries, learning paths, and knowledge-base navigation.
-5. The number of method-library entries matches frontmatter.
-6. Every method contains all eight standard fields.
-7. Every relative link resolves to an existing target.
-8. Search for old intermediate-draft paths and confirm that the body references none.
-9. Sample the beginning, middle, and end to confirm the files are untruncated.
-10. The final report lists only real deliverables, verification results, and unresolved issues; it must not report an unexecuted check as passed.
+1. 目标文件真实存在，且只写入批准范围。
+2. Frontmatter包含课程、状态、文档类型、权威源、来源政策、关联文档和标签。
+3. 每份文件只有一个H1。
+4. 总纲覆盖全部课次，并有讲者边界、学习路径和知识库导航。
+5. 方法库条目数与Frontmatter一致。
+6. 每个方法都具有八个标准字段。
+7. 所有相对链接都指向存在的目标。
+8. 搜索旧中间稿路径，确认正文没有误引用。
+9. 抽查开头、中段和结尾，确认文件没有截断。
+10. 最终报告只列真实产物、验证结果和未解决问题，不把未执行的检查写成通过。

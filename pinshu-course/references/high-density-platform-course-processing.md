@@ -1,129 +1,129 @@
-# Per-Lesson Processing for High-Density Platform Courses
+# 高密度平台课程的逐课整理
 
-Use this workflow for lessons with long transcripts that simultaneously cover media principles, platform differences, algorithms, monetization, violations, and many question-and-answer cases. The goal is neither to compress the lesson into a summary nor to preserve spoken order as a wall of text.
+适用于单节逐字稿很长、同时包含媒介原理、平台差异、算法、商业化、违规与大量问答案例的课程。目标是避免把一节课压成摘要，也避免把口语按原顺序堆成文字墙。
 
-## 1. Identify a Multi-System Lesson First
+## 一、先识别“多系统同课”
 
-Treat a lesson as high-density when it contains at least three of the following:
+当一课同时出现以下三类以上内容时，按高密度课处理：
 
-- stable methodology or judgment frameworks;
-- time-bound platform experience;
-- algorithmic or product mechanisms;
-- monetization, paid traffic, and conversion;
-- compliance, medical, financial, or platform-governance issues;
-- multiple rounds of learner questions and counterexamples;
-- first-hand instructor figures for views, followers, or sales.
+- 稳定方法论或判断框架；
+- 平台阶段性经验；
+- 算法或产品机制；
+- 商业化、投流与转化；
+- 合规、医疗、金融或平台治理；
+- 多轮学员问答与反例；
+- 讲师亲历的播放、粉丝或销售数字。
 
-Do not force all of this into a short summary. Continue using “paired drafts plus course map,” but assign explicit responsibilities to the two drafts.
+不要用一份短摘要承载全部内容。仍执行“一课双稿＋课程地图”，但双稿必须显式分工。
 
-## 2. Faithful Edited Transcript: Preserve the Instructor's Voice First
+## 二、忠实精编稿：先守住讲师声音
 
-1. Preserve the instructor's first-person voice and original speaking order. Greetings, microphone adjustments, and no-information interaction may be removed.
-2. Retain follow-up questions, rhetorical questions, corrections, counterexamples, and figures that add information; do not reduce them to “learners asked several questions.”
-3. When the instructor discusses platforms, regulation, ownership, algorithm scale, or earnings, preserve the original meaning in the body. Put verification notes in a separate block quote; do not turn the body into third-person narration such as “the instructor believes” or “the course states.”
-4. After writing, scan the full text for `instructor-believes|course-believes|instructor-mentioned|course-reminds|mentioned-in-course`. Rewrite body matches into first person. Only source notes and separate editorial notes may retain a third-person perspective.
-5. Preserve the full case chain: who the user was → why a certain response emerged → how the platform adjusted → what the case demonstrates. A case name alone is insufficient.
+1. 保持讲师第一人称和原讲述顺序；寒暄、调麦和无信息互动可以删除。
+2. 有新增信息的追问、反问、纠偏、反例和数字必须保留，不能以“学员提了几个问题”概括。
+3. 讲师谈平台、监管、股权、算法规模或收益时，正文按原意保留；核验提示放独立引用块，不能把正文改成“讲师认为、课程指出”等第三方叙述。
+4. 写完后全文扫描：`讲师认为|课程认为|讲师提到|课程提醒|课程中提到`。正文命中应改回第一人称；只有来源说明或独立编辑提示可保留第三方视角。
+5. 案例必须保留“用户是谁—为什么会产生某种反馈—平台如何调整—案例说明什么”，不能只留案例名称。
 
-## 3. Systematized Lecture: Reorganize by Knowledge System
+## 三、系统化讲义：按知识系统重组
 
-Do not mechanically preserve spoken order in a high-density lesson. Recommended structure:
+高密度课不要机械沿用口播顺序。推荐重组为：
 
-1. problem solved by the lesson;
-2. stable judgment framework;
-3. platform differences;
-4. algorithmic or distribution mechanisms;
-5. demand, competition, and traffic models;
-6. monetization and paid traffic;
-7. risk, factual, and compliance boundaries;
-8. execution checklist, diagnostic table, or assignment.
+1. 本课解决的问题；
+2. 稳定判断框架；
+3. 平台差异；
+4. 算法或分发机制；
+5. 需求、竞争和流量模型；
+6. 商业化与付费流量；
+7. 风险、事实和合规边界；
+8. 执行清单、诊断表或作业。
 
-For every module, preserve `context → course judgment → reasoning → complete case → applicability conditions → use`. Tables support comparison and review; they do not replace explanatory prose.
+每个模块保留“背景→课程判断→推导→完整案例→适用条件→怎么用”。表格只用于比较和复习，不替代正文。
 
-## 4. Conflicting Dates and Source Conventions
+## 四、时间冲突与来源口径
 
-The course-directory date, release batch, and recording date stated by the instructor may differ. When they conflict:
+课程目录时间、发布批次和讲师口述录制时间可能不同。遇到冲突时：
 
-- record `date` (archive date/course batch) and `recording_date_claimed` (instructor's spoken claim) separately in frontmatter;
-- add a brief opening note that the dates may refer to different stages;
-- do not resolve or rewrite one into the other without official information;
-- carry the note into the course map so later lessons do not misuse the date.
+- frontmatter 分开记录 `date`（归档/课程批次）与 `recording_date_claimed`（讲师口述）；
+- 文档开头简短说明两者可能对应不同环节；
+- 未获得官方信息前不自行裁决，不把其中一个改成另一个；
+- 课程地图同步保留该说明，避免后续课误用。
 
-## 5. Layer Platform Facts and Gray-Area Cases
+## 五、平台事实与灰度案例的分层
 
-By default, none of the following is externally verified fact:
+以下内容默认不是已核实事实：
 
-- internal platform-label counts, recommendation formulas, or real-time adjustment conventions;
-- claims about platform ownership, regulatory authority, or political mandates;
-- course retellings of creator conferences, algorithm upgrades, or traffic-pool changes;
-- views, sales, conversion, and refund figures reported by the instructor or learners;
-- gray-area tactics involving foot-bath businesses, private-domain operations, follower cleansing, or acquisition through false identities.
+- 平台内部标签数量、推荐公式和实时调整口径；
+- 平台股权、监管权限和政治任务等说法；
+- 创作者大会、算法升级或流量池变化的课程转述；
+- 讲师或学员的播放、销售、转化和退款数字；
+- 足浴、私域、洗粉、假身份获客等灰度玩法。
 
-The faithful transcript preserves course context. The systematized lecture creates a “facts, experience, and risk boundaries” table distinguishing course viewpoints, instructor experience, unverified facts, and gray-area methods that should not be copied. Never turn a vague tactic into operational instructions for evading platform governance.
+忠实稿保留课程语境；系统讲义建立“事实、经验与风险边界”表，标明课程观点、讲师亲历、待核验事实和不建议复制的灰度方法。不得把模糊做法强化成规避平台治理的操作指南。
 
-## 6. Platform-Data Review Lessons: Build a Diagnostic Tree Before Placing Thresholds
+## 六、平台数据复盘课：先建诊断树，再安放阈值
 
-When the lesson itself reviews views, engagement, followers, transactions, or account operations, organize the systematized lecture in this order instead of by the view bands reported by the instructor:
+当课程主题本身是播放、互动、粉丝、成交或账号运营复盘时，系统化讲义优先按下面的顺序重组，而不是照着讲师报出的播放区间排列：
 
 ```text
-content objective
-→ influencing factors
-→ audience/transaction funnel
-→ multiple samples and baselines
-→ attribution and alternative explanations
-→ actions for the next batch
+内容目标
+→ 影响因素
+→ 用户/成交漏斗
+→ 多条样本与基线
+→ 归因与替代解释
+→ 下一批行动
 ```
 
-### 1. Separate Content Objectives First
+### 1. 先分内容目标
 
-Distinguish at least persona/follower-growth content, lead-generation content, product-linked/conversion content, and live streams. Different objectives must not share one metric set. Product-linked content, for example, cannot be judged only against persona-video view thresholds, and a conversion live stream cannot be judged only by concurrent viewers.
+至少区分：人设/涨粉内容、引流内容、挂车/成交内容和直播。不同目标不能混用一套指标；例如挂车内容不能只按人设视频的播放阈值判定，成交直播也不能只看在线人数。
 
-### 2. Demote View Bands to an Experience Ladder
+### 2. 把播放区间降级为经验梯子
 
-Spoken ranges such as “below 5,000,” “5,000–50,000,” “hundreds of thousands,” and “millions/tens of millions,” or like-rate thresholds such as 5% or 10%, are **instructor experience thresholds** only. The lecture must give the more reliable evaluation order:
+讲师口述的“低于5000、5000—5万、十几万、百万/千万级”“5%或10%点赞率”等，只能标为**讲师经验阈值**。讲义必须同时给出更稳妥的使用顺序：
 
-1. the account's historical median for comparable content;
-2. a peer baseline with similar objective, format, duration, and traffic source;
-3. broad platform-dashboard references;
-4. course thresholds only as a final auxiliary check.
+1. 账号自身同类内容的历史中位数；
+2. 相近目标、形式、时长和流量来源的同类基线；
+3. 平台后台的大盘参考；
+4. 最后才用课程阈值辅助判断。
 
-Do not turn Douyin experience from one recording period into a permanent rule across platforms, industries, and account stages.
+不要把某次录制时的抖音经验写成跨平台、跨行业、跨账号阶段的永久规则。
 
-### 3. Distinguish Viewers, Engagers, and Followers
+### 3. 区分观众、互动者和粉丝
 
-- A viewer model answers “Who did this item attract?”
-- A follower model answers “Who did the account retain over time?”
-- Commenters, likers, followers, and silent viewers cannot substitute for one another.
+- 观众模型回答“这条内容吸引了谁”；
+- 粉丝模型回答“账号长期留下了谁”；
+- 评论者、点赞者、关注者和沉默浏览者不能互相替代。
 
-Visible commenters do not automatically represent the actual user base. If a case observes that commenters skew toward beginners while silent followers are more experienced, preserve the observation process and state that only legally visible platform data may be used; do not collect sensitive data or create profiles beyond authorization.
+评论区显眼的人不自动代表真实用户全貌。案例若说明“评论者偏小白、沉默关注者更成熟”，应保留完整观察过程，并提示只能使用平台合法可见数据，不收集敏感信息、不越权画像。
 
-### 4. Curves Are Leads, Not Causation
+### 4. 曲线是线索，不是因果
 
-Completion, like, and comment curves only locate an inspection range. If a drop occurs at second 8, inspect seconds 2–5 for an earlier information stall, rejection-triggering phrase, or visual problem. Do not mechanically state that “the sentence at second 8 caused the drop.”
+完播、点赞和评论节点只能定位检查范围。若第8秒下滑，应回看前2—5秒是否已经出现信息停滞、拒绝性表达或画面问题；不得机械写成“第8秒这句话导致流失”。
 
-### 5. Reduce Misdiagnosis with Batch Samples and Controlled Variables
+### 5. 用批量样本和控制变量减少误判
 
-If the course recommends “review three together,” batches of five to ten, or an A/B test, complete the specification with sample scope, self-baseline, primary changed variable, variables kept similar, alternative explanations, and the next batch test. Content creation is not a laboratory; state that “the current sample supports” a conclusion, never that “users always like/dislike” something.
+课程若提出“三条一起复盘”“五到十条为一批”或A/B Test，应补全：样本范围、自身基线、主要变化变量、保持相似的变量、替代解释和下一批测试。创作不是实验室，结论写成“当前样本支持”，不能升级成“用户永远喜欢/不喜欢”。
 
-### 6. The Lecture Must Specify a Next Action
+### 6. 讲义必须给下一步动作
 
-Provide at least one fillable asset: review table, transaction-funnel table, issue-priority matrix, controlled-variable experiment table, account-stage assessment, or 30-day implementation plan. Prefer the action order “standardize what is working, then correct one or two high-impact local issues” instead of rebuilding everything after every review.
+至少提供一种可填写资产：复盘表、成交漏斗表、问题优先级矩阵、控制变量实验表、账号阶段判断或30天落地计划。动作顺序优先是“先固化做对的，再修正一到两个高影响局部”，避免每次复盘全盘推倒。
 
-## 7. Minimum Acceptance Set
+## 七、验收最小集
 
-After writing, verify at least:
+写完至少检查：
 
-- paired drafts and course map actually exist;
-- every file contains one H1 and complete frontmatter and tags;
-- map links and the lecture's relative `source` path resolve;
-- the faithful-transcript first-person scan returns zero violations;
-- a contextual glossary of frequent STT residual terms was created and searched;
-- no `TODO`, `TBD`, continuation sentinel, ellipsis placeholder, or empty image directory remains;
-- recording/archive date conflicts remain explicit;
-- platform facts, experience thresholds, time-sensitive features, earnings figures, and gray-area cases are layered correctly;
-- the map uses two-phase commit: after source files are complete it says `preview-sync-pending/acceptance-pending`, and only after the preview exists and is reconciled does it say `unrestricted-acceptance-passed`;
-- when a preview copy is required, at least compare the text of both drafts and the map. If the user explicitly excludes SHA, do not run it. If the permission layer blocks SHA or statistics, do not rewrite the command, switch tools, or bypass the block; record the check as not run;
-- a permission block describes only the current action state and must not be generalized into “this tool is permanently unusable.”
+- 双稿、课程地图真实存在；
+- 每个文件只有一个H1，frontmatter和标签完整；
+- 地图链接和讲义的 `source` 相对路径可解析；
+- 忠实稿第一人称扫描归零；
+- 高频STT残留词按本课上下文建立词表并搜索；
+- 无 `TODO`、`TBD`、续写哨兵、省略号占位或空图片目录；
+- 录制时间与归档时间冲突已显式保留；
+- 平台事实、经验阈值、时效性功能、收益数字和灰度案例已分层；
+- 地图状态采用两阶段提交：源文件完成时写“预览待同步/验收待完成”，只有预览真实存在并对账后才写“非受限验收通过”；
+- 预览副本如需交付，至少核对双稿与地图的文本一致性；用户明确不做SHA时不得擅自执行，SHA或统计动作被权限层拦截时不得改写命令、换工具或绕行，只记录该项未执行；
+- 权限拦截只代表本次动作状态，不应固化成“该工具永久不可用”的结论。
 
-## 8. Avoid Overengineering
+## 八、不要过度工程化
 
-However long a single lesson is, do not build all six cross-topic libraries from the first lesson. Complete the paired drafts and map first. Every 3–5 lessons, or at module closeout, consolidate stable cross-lesson models, cases, and tools. If a module still has missing lessons, the map must show the completed set and proportion; processing the final-numbered lesson does not by itself close the module.
+单节再长，也不要第一课就建立完整横向六库。先完成双稿和地图；每3—5课或模块结束后，再把跨课稳定模型、案例和工具集中归并。模块内仍有缺课时，地图写清完成集合和比例，不因已处理最后一课就宣布模块收官。

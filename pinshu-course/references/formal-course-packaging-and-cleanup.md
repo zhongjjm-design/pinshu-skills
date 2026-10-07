@@ -1,68 +1,68 @@
-# Formal Course Packaging, Validation, and Intermediate-Draft Cleanup
+# 正式课程打包、验证与中间稿清理
 
-Use this workflow when accepted per-lesson drafts must move from a temporary workspace into a formal course library. Cross-topic work and independent QA are included when the purpose or risk triggers them; neither is a universal precondition.
+适用于长课程完成逐课双稿、横向知识库和独立QA后，从临时工作区写入正式课程库。
 
-## 1. Define the Content Boundary First
+## 1. 先确定内容边界
 
-By default, the formal package contains only durable deliverables:
+正式包默认只收可长期使用的成果：
 
-- the manifest/path-map target `course_map`;
-- terminology and audio-review table;
-- accepted per-lesson faithful edited transcripts;
-- accepted per-lesson systematized lectures;
-- cross-topic knowledge library, only when produced and accepted for this course.
+- `00_课程地图.md`；
+- 术语与待回听表；
+- 逐课忠实精编验收稿；
+- 逐课系统化讲义验收稿；
+- 横向知识库。
 
-Preserve and verify the immutable raw transcript as one of the four core results in its designated raw-source area; it need not be duplicated inside the formal edited-draft folder. Do not copy source audio, disposable transcription derivatives, logs, partial batch outputs, completion markers, temporary QA reports, or rework reconciliation files into the edited-draft folder. Filter actual accepted files from the course map, not an invented `lesson-*.md` naming rule; do not copy entire directories indiscriminately.
+不要把原始音频、机器转写衍生格式、日志、批次半成品、完成标记、临时QA报告或返工对账文件复制进正式库。复制逐课文件时按稳定文件名白名单筛选（如仅 `第*.md`），不要整目录无差别复制。
 
-## 2. Review File Operations Before the Formal Write
+## 2. 正式写入前做一次文件操作验收
 
-List:
+列出：
 
-1. operation type;
-2. file types and counts;
-3. source directory and complete target path;
-4. whether the target directory exists and whether conflicts exist;
-5. formal-package directory structure;
-6. complete paths of files or directories proposed for cleanup;
-7. validation method;
-8. governing rule source.
+1. 操作类型；
+2. 文件类型与数量；
+3. 源目录和完整目标路径；
+4. 目标目录是否存在、是否冲突；
+5. 正式包目录结构；
+6. 待清理文件或目录的完整路径；
+7. 验证方法；
+8. 规范出处。
 
-Interpret “continue” as approval of the current plan only when it immediately follows an explicit operation list and the scope is unambiguous. Prefer an explicit authorization sentence for deletion or a formal write across libraries. If a terminal security confirmation times out or is denied, stop. Do not bypass it with another tool. State what was and was not completed, then wait for new authorization.
+“继续”只在紧接明确操作清单且无范围歧义时可解释为继续当前方案；涉及删除或跨库正式写入，优先要求明确授权句。若终端安全确认超时或拒绝，停止，不改用其他工具绕过；说明已完成与未完成部分，等待新授权。
 
-## 3. Copy; Do Not Move
+## 3. 采用复制，不采用移动
 
-First copy the accepted deliverables to the formal directory and retain the temporary-workspace copy until the formal package passes validation. If the target directory already exists, stop by default and determine whether it is an old version or a naming conflict; do not overwrite it.
+先把验收成果复制到正式目录，临时工作区保留一份，直至正式包验证通过。目标目录已存在时默认中止，先检查是否为旧版本或命名冲突，不覆盖。
 
-Preserve the source directory's relative structure, especially relative links from systematized lectures to faithful transcripts and from the cross-topic library to per-lesson lectures. Do not rename directories merely to make them look neater and thereby break links.
+保持源目录的相对结构，尤其是系统讲义指向忠实精编、横向库指向逐课讲义的相对链接。不要为了“看起来更整齐”随意改目录名导致断链。
 
-## 4. Four Required Formal-Package Checks
+## 4. 正式包四项验证
 
-After copying, actually execute:
+复制后必须真实执行：
 
-1. **Count:** formal-package file count matches the plan.
-2. **SHA-256:** every source file and target file have identical hashes.
-3. **Heading structure:** every Markdown file contains exactly one H1.
-4. **Relative links:** resolve every relative Markdown link; broken-link count is zero.
+1. **数量**：正式包文件数符合计划；
+2. **SHA-256**：每个源文件与目标文件哈希一致；
+3. **标题结构**：每份Markdown恰有一个H1；
+4. **相对链接**：解析所有Markdown相对链接，零断链。
 
-Also confirm that source audio, transcription derivatives, logs, and temporary QA artifacts did not enter the formal package. If any check fails, cleanup must not begin.
+还要确认正式包未混入原始音频、转写衍生文件、日志和临时QA产物。任何一项失败，都不得开始清理。
 
-## 5. Clean Up Only After Validation
+## 5. 验证后再清理
 
-- Deletion requires separate authorization.
-- On macOS, always use `/usr/bin/trash`, never `rm`.
-- Prefer moving a clearly obsolete directory to the Trash as a unit. List scattered duplicate files by complete path.
-- After cleanup, verify that each cleanup target is absent, the formal package remains complete, and the accepted deliverables remain in the temporary workspace.
+- 删除操作必须单独获得授权；
+- macOS统一使用 `/usr/bin/trash`，不用 `rm`；
+- 优先把明确的旧目录整体移入废纸篓，零散重复文件按完整路径列出；
+- 清理后复核：清理目标不存在，正式包仍完整，临时工作区的验收成果仍保留。
 
-## 6. Final Delivery Report
+## 6. 最终交付口径
 
-Report the actual execution result:
+报告真实执行结果：
 
-- formal title and absolute path;
-- formal file count;
-- SHA-256 mismatch count;
-- H1 anomaly count;
-- broken relative-link count;
-- count of cleaned intermediate files;
-- retained source material and unresolved audio-review boundaries.
+- 正式标题与绝对路径；
+- 正式文件数；
+- SHA-256差异数；
+- H1异常数；
+- 相对链接断链数；
+- 清理的中间文件数；
+- 仍保留的原始素材与待回听边界。
 
-Do not describe a fact-verification table that requires ongoing updates as incomplete content. Structure and source governance can pass acceptance while external facts remain explicitly under continued verification.
+不要把“事实核验表仍需持续核验”说成内容未完成；结构与来源治理可以验收，外部事实状态继续保留为持续核验。

@@ -1,26 +1,90 @@
-# Markdown Learning Assets and Records
+# Markdown 学习资产与记录规范
 
-Keep three distinct layers: reusable recall cards and question banks, records of actual learner activity, and regenerable web views. Generated questions do not mean someone has studied; reading does not equal mastery. A learner's error never changes the course's standard answer, and personal mastery status does not go into shared notes.
+## 三层分工
 
-## Placement and timing
+1. **复习与训练内容**：系统可预先生成的主动回忆卡与训练题库；
+2. **学习记录**：学习者真实作答、追问、错因、重答和复测；
+3. **可再生界面**：从 Markdown 与后台索引生成的网页或其他展示。
 
-Use existing confirmed course directories and numbering; never translate them into a second tree. In a new course agree on a project path map before writing. The example is `03_Review_and_Practice/01_Active_Recall/` and `02_Practice_Bank/` for enabled review materials, `04_Learning_Records/00_Progress.md` and `01_Practice_Sessions/` after real learning, `02_Errors_and_Rechecks.md` only after an actual error, and `99_Production_Control/Learning_Asset_Index/` for JSON indices. Never pre-create empty optional directories. Use generic learner labels, never one named individual by default.
+生成了内容不等于发生了学习。读过不等于掌握；个人一次错答不修改课程标准答案；个人掌握状态不进入公共讲义。
 
-The question bank preserves the question, answer, follow-up cues, and sources in learner-facing prose. During practice expose one question, not its answer. A session record preserves date/scope, original answer, coverage, omissions, follow-up and supplemental answer, cause, source reviewed, fresh answer, retest timing and result. Feynman explanation and simulated exams are training methods within session records, not mandatory new top-level folders.
+## 通用目录
 
-## Reading text versus machine data
+```text
+03_复习与训练/
+├── 01_主动回忆卡/
+└── 02_训练题库/
 
-Frontmatter contains a few file-level values: course/lesson/document type, total count, source files, and `metadata_index`. Do not put a per-card `cards:` list or per-question `questions:` list in frontmatter. Do not put `%%`, HTML, IDs, operations, attributes, types or pipeline state in the reading body. Use independent JSON indices; paths below are illustrative and must resolve from the owner file:
+04_学习记录/
+├── 00_学习进度.md
+├── 01_训练记录/
+└── 02_错题与复测.md
+
+99_生产控制/
+└── 学习资产索引/
+```
+
+目录和模板面向任何学习者，不出现 Aidan、品叔或其他固定使用者姓名。原创归属和维护者可以保留在 Skill 元信息中。
+
+完整结构预先确定，目录按真实活动出现：启用系统学习或备考用途后生成 `03_复习与训练`；第一次真实学习后创建 `04_学习记录`；出现真实错答后才写错题与复测。不预建空目录。
+
+## 复习与训练内容
+
+### 主动回忆卡
+
+用于短时、高频、反复提取。正文保存中文卡标题、问题、折叠答案、解释和中文来源。每课卡与模块综合卡用文件名区分，不再用“候选卡／正式卡”作为用户目录。
+
+### 训练题库
+
+用于理解、推导、辨析和迁移。正文保存中文题目、问题、参考答案、追问规则和来源；运行时一次只展示一题。题库不大量复制主动回忆卡中的简单定义题和口诀题。
+
+## 学习记录
+
+`00_学习进度.md` 保存课次状态、最近学习、薄弱点和下一步。`01_训练记录/` 按真实学习日期保存第一次回答、已覆盖、遗漏、追问、补充回答、错因、回源位置、重答结果和复测安排。`02_错题与复测.md` 只汇总真实错题、复测日期与结果。
+
+费曼讲述、病案训练、模拟考试和应用练习先作为训练方式写入训练记录，不立即增加新的一级目录。
+
+## 人读正文与机器数据分离
+
+Markdown Frontmatter 只保留少量文件级属性，例如课程、课次、文档类型、状态、总数、来源和 `metadata_index`。不得把逐卡 `cards:` 或逐题 `questions:` 清单塞进 Frontmatter，也不得把 `%%`、HTML 注释、ID、动作、属性、题型和内部状态写进正文。
+
+逐项元数据进入独立 JSON：
+
+```text
+99_生产控制/学习资产索引/第03课·主动回忆卡.index.json
+99_生产控制/学习资产索引/第03课·训练题库.index.json
+```
+
+卡片索引示例：
 
 ```json
 {
   "schema_version": 1,
   "asset_type": "active_recall_cards",
-  "source_document": "../../03_Review_and_Practice/01_Active_Recall/lesson-03.md",
-  "items": [{"card_id": "L03-01", "position": 1, "card_kind": "atomic", "action": "basic-recall", "priority": "core"}]
+  "source_document": "../../03_复习与训练/01_主动回忆卡/第03课·主动回忆卡.md",
+  "items": [
+    {"card_id": "L03-01", "position": 1, "card_kind": "原子卡", "action": "基础回忆", "priority": "核心"}
+  ]
 }
 ```
 
-The separate question index uses `asset_type: training_questions`, `items`, and `q_id`, not `cards` or `card_id`; it points back to the question-bank Markdown. Keep IDs unique and positions aligned to body order. Values for machine classification may be English; visible prose and citations follow the learner's language. The actual relative paths must be checked for existence and round-trip resolution.
+题库索引示例：
 
-The validator checks structure, compact frontmatter, index type/count/order/IDs, and source paths. A representative file must also be opened in the real target reading interface to inspect properties, headings, collapsible answers, mobile readability, and code leaks. Without that visual check, do not claim visual acceptance.
+```json
+{
+  "schema_version": 1,
+  "asset_type": "training_questions",
+  "source_document": "../../03_复习与训练/02_训练题库/第03课·训练题库.md",
+  "items": [
+    {"q_id": "T03-01", "position": 1, "identity": "课堂题", "question_type": "因果推导"}
+  ]
+}
+```
+
+`asset_type`、ID 字段和正文类型必须匹配。训练题库不能使用 `cards` 或 `card_id`。索引按正文顺序排列，数量和唯一 ID 必须可复核。
+
+## 阅读与渲染验收
+
+机械检查负责正文污染、Frontmatter 体积、索引类型、数量、顺序、唯一 ID、来源路径和结构一致性。它不能证明阅读体验。
+
+代表性样稿必须在目标阅读界面真实打开。当前主要检查 Obsidian Reading View：属性区是否干净、标题层级是否自然、答案是否正常折叠、手机宽度是否可读、是否泄漏代码。没有真实渲染检查，不得声称“视觉通过”或“任何软件打开都干净”。

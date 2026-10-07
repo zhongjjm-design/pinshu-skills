@@ -104,6 +104,7 @@ def main() -> int:
         ("course learning-asset tests", [sys.executable, "pinshu-course/tests/self_test_validate_learning_assets.py"]),
         ("course runtime-contract tests", [sys.executable, "pinshu-course/tests/self_test_runtime_contracts.py"]),
         ("content-route tests", [sys.executable, "-m", "unittest", "discover", "-s", "pinshu-content-assets/tests", "-v"]),
+        ("visual-learning validator positive fixture", [sys.executable, "-m", "unittest", "tests/test_visual_learning_validator.py", "-v"]),
         ("release-validator controls", [sys.executable, "-m", "unittest", "tests/test_release_validator.py", "-v"]),
     ]
     for label, command in gates:

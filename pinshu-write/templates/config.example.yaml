@@ -1,0 +1,37 @@
+# pinshu-write configuration example
+# Copy this file to pinshu-write.yaml in your writing folder, or tell the agent where it is.
+# Use paths on your own computer. Leave unknown items empty; the agent will ask when it needs them.
+
+author_names:            # Names that refer to the author in materials; the article writes them as first person
+  - Example Author
+
+accounts:                # One or more accounts; say which one at the start of each article
+  - name: Example Account
+    platform: WeChat Official Account
+    reader: "One sentence on who reads it, e.g. people who use AI at work and people who run or advise businesses"
+    profile: ~/writing/profiles/example-account.md        # Authority for topics, readers, length, style, banned words, title tests
+    published_folder: ~/writing/published/example/        # Learn tone and openings only; optional
+    good_article_standard: ~/writing/standards/good-article.md   # Extends the built-in standard; its readability questions stay; optional
+    banned_words_file: ~/writing/standards/banned-words.txt      # One word per line, passed to audit_draft.py; optional
+    length: 2500-4000    # Usual body length in Chinese characters
+    hard_max: 6000
+    ai_drafting_allowed: yes   # "no" means this Skill declines the account
+
+author_style_profile: ~/writing/profiles/author-style.md   # Title habits, openings, endings, voice traits
+edit_patterns: ~/writing/standards/edit-patterns.md         # What the author keeps changing; optional
+
+material_folders:        # Searched during research: notes, courses, work logs, classic texts
+  - ~/writing/library/
+
+source_list: ~/writing/sources.md      # Media and authors to check first; optional
+topic_pool: ~/writing/topic-pool.md    # Used when the author gives no topic
+style_card_folders: []                 # Optional style cards (structure and moves only)
+
+drafts_folder: ~/writing/drafts/       # One folder per article: date plus topic
+web_access: allowed                    # "allowed": research checks the last three months online; "none": library only
+
+models:                  # Fill from your own tools; see references/model-routing.md
+  writer:                # e.g. Claude Opus 4.6, Qwen 3.8, DeepSeek V4.1 Flash
+  second_writer:         # optional, another vendor
+  reviewers: []          # at least one vendor different from the writer's
+  layperson_reader:      # another vendor, or "colleague"

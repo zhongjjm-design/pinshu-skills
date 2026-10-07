@@ -1,236 +1,236 @@
-# Course Corpus Editing, Slide Integration, and Execution Gates
+# 课程语料精编、PPT整合与执行门控
 
-Use this reference for three high-risk areas in long-term course knowledge bases: executing prematurely while a user is still submitting feedback, allowing a faithful transcript to swing between subtitle dump and third-party interpretation, and damaging reading flow by inserting slide information as abrupt patches.
+本参考用于长期课程知识库中三类高风险环节：用户连续提交反馈时误执行、忠实稿在“字幕稿”和“第三方解读”之间摇摆、PPT信息硬插后造成阅读割裂。
 
-## 1. State Machine: Material Input Is Not Execution Authorization
+## 1. 状态机：材料输入不等于执行授权
 
-### Collection State
+### 收集态
 
-Signals: the user continues sending audio, screenshots, or transcripts; says “I am not finished” or “listen first”; or is correcting standards without approving a plan.
+触发信号：用户连续发语音、截图、逐字稿；“我还没说完”“先听我讲”；正在纠正标准但尚未认可方案。
 
-Behavior: acknowledge receipt, restate, and record unresolved points only. Do not write files, batch-rework history, update cross-lesson libraries, or promote candidate conclusions into formal outputs.
+行为：只确认收到、复述、记录未决点。禁止写文件、批量返工、更新横向库或把候选结论写成正式成果。
 
-### Discussion State
+### 讨论态
 
-Signals: “What do you think?”, “Let’s discuss this,” or “Should this image remain an image or become text?”
+触发信号：“你怎么看”“我们讨论一下”“这张图放图还是转文字”。
 
-Behavior: provide options, short samples, and tradeoffs. A recommendation is not approval.
+行为：给方案、短样稿和取舍；不得把推荐视为批准。
 
-### Execution State
+### 执行态
 
-Signals: “Confirm execution,” “Do it this way,” or “Start with Lesson 07 so I can review it.”
+触发信号：“确认执行”“按这个做”“先做第07课给我看”。
 
-Behavior: restate and strictly limit scope. Old authorization does not automatically cover earlier lessons, later lessons, another draft type, or the cross-lesson knowledge base.
+行为：复述并严格限制范围。旧授权不能自动覆盖前几课、后续课、另一种稿件或横向知识库。
 
-### Mid-Execution Reversion
+### 中途回退
 
-If the user continues supplying feedback while execution is underway, pause later operations immediately and return to collection state. An in-progress task list is not authorization to continue.
+用户执行中继续提交反馈，立即暂停后续操作并回到收集态。任务清单仍在进行，不构成继续执行的授权。
 
-## 2. Faithfully Edited Transcript: An Article Written in the Instructor’s Own Voice
+## 2. 忠实精编稿：讲师本人写成的文章
 
-Its role is neither summary nor proofread subtitles. It is:
+定位不是摘要，也不是校对字幕，而是：
 
-> Edit the instructor’s spoken course into an article still narrated by the instructor in first person.
+> 把讲师的口头课程编辑成一篇仍由讲师本人以第一人称讲述的文章。
 
-The editor should disappear. Avoid third-party interpretive phrases such as “the course mentions,” “the instructor wants to explain,” “the author believes,” and “this case shows.”
+编辑者应隐身。忠实精编稿中避免“课程中提到”“讲师想说明”“作者认为”“这个案例反映了”等第三方解读句式。
 
-### Semantic Equivalence, Not Sentence-by-Sentence Copying
+### 语义等值，而非逐句照抄
 
-Allowed:
+可以：
 
-- Delete non-informative fillers such as “um,” “ah,” “right?”, “everyone look,” and “OK”;
-- Delete course-process language and mechanical repetition that adds no information;
-- Merge synonymous sentences and adjust sentence order, paragraphs, and subheadings;
-- Convert meandering speech into natural written language.
+- 删除“嗯、啊、哈、对吧、大家看、OK”等无信息口头语；
+- 删除课程流程话术和没有新增信息的机械重复；
+- 合并同义句，调整句序、自然段和小标题；
+- 把绕行口语改为自然书面语。
 
-Not allowed:
+不可以：
 
-- Delete people, products, concrete scenes, numbers, prices, tools, or case processes;
-- Change causality, qualifiers, or judgment strength;
-- Replace category-specific concepts with vague higher-level terms;
-- Quietly sanitize, soften, or amplify the author’s viewpoint for safety, professionalism, or stylistic consistency.
+- 删除人物、产品、具体场景、数字、价格、工具和案例过程；
+- 改变因果关系、限定词或判断力度；
+- 用抽象上位词替代品类特有概念；
+- 为了安全、专业或文风统一，暗中净化、弱化或放大作者观点。
 
-### Semantic-Anchor Examples
+### 语义锚点示例
 
-| Source Anchor | Incorrect Editing | Correct Treatment |
+| 原文锚点 | 错误精编 | 正确处理 |
 |---|---|---|
-| “Change-of-fortune effect” | “Expected effect” | Retain “change-of-fortune effect”; annotate risk separately |
-| CNY 69 diagnosis, CNY 999 coaching | Low-priced product to high-priced service | Retain products, prices, and the conversion relationship |
-| Insomnia at night, lying at home after quitting without another job | Career confusion | Preserve the concrete situation, then summarize if needed |
-| 53 action guides and 64 cases | Rich content | Preserve the numbers and their evidentiary function |
-| Sold several thousand yuan in one day and customer service could not keep up | Service pressure rose with sales | Preserve sales, problem, and process |
-| “Northeastern everything stew” | Somewhat disorganized information | Preserve the distinctive original metaphor |
+| 转运效果 | 期待获得的效果 | 保留“转运效果”；风险另注 |
+| 69元诊断、999元陪跑 | 低价产品转高价服务 | 保留产品、价格和转化关系 |
+| 晚上失眠、裸辞后在家躺着 | 职业迷茫 | 保留具体场景，再按需总结 |
+| 53篇行动指南、64篇案例 | 内容丰富 | 保留数字及其证明作用 |
+| 一天卖出几千元，客服回不过来 | 销量增加后服务压力变大 | 保留销量、问题和过程 |
+| 东北大乱炖 | 信息较混乱 | 保留有辨识度的原比喻 |
 
-### Handling Risk Content
+### 风险内容如何处理
 
-Preserve the author’s viewpoint faithfully in the body. Put verification notices in a separate editorial note, footnote, or boundary section of the systemized lecture. For example, references to “changing fortune” or “improving wealth luck” remain in the body but are labeled separately as user beliefs and marketing cases from the course, not verified effects.
+正文忠实保留作者观点；核验提示放在独立编辑注、脚注或系统化讲义的边界章节。例如“转运、提升财运”仍保留在正文，但另标明它属于课程中的用户信念和营销案例，不代表功效已验证。
 
-## 3. Semantic Reconciliation
+## 3. 语义对账
 
-After faithful editing, compare the opening, a middle case, and the ending against the source:
+忠实精编完成后，对照原始来源抽查开头、中段案例和结尾：
 
-- Are people and relationships preserved?
-- Are products, tools, and platform names preserved?
-- Are scenes, numbers, prices, and times preserved?
-- Did causality or sequence change?
-- Did judgment strength shift among terms such as “most,” “possibly,” and “certain”?
-- Were concrete terms replaced by vague abstractions?
-- Did the editor add an explanation the instructor never made?
+- 人物与关系是否在；
+- 产品、工具和平台名是否在；
+- 场景、数字、价格和时间是否在；
+- 因果链和先后顺序是否变化；
+- “多数、可能、一定”等判断力度是否变化；
+- 具体词是否被空泛概念替换；
+- 是否加入讲师没有表达的新解释。
 
-Principle: **remove noise, not information; change syntax, not meaning.**
+原则：**删噪声，不删信息；改句式，不改语义。**
 
-## 4. Reading-Edit Standard
+## 4. 阅读编辑规范
 
-Support three reading speeds:
+目标支持三种阅读速度：
 
-1. Headings alone reveal the course path;
-2. Bold text and quotations reveal key judgments;
-3. Full body reading provides the complete reasoning and cases.
+1. 只看标题能知道课程路径；
+2. 扫粗体和引用能抓住关键判断；
+3. 阅读正文能获得完整论证和案例。
 
-Rules:
+规则：
 
-- Use one H1 and natural H2/H3 sections;
-- Each paragraph carries one complete idea. Avoid both solid walls of text and subtitle-like one-sentence fragments;
-- Bold core conclusions, definitions, numbers, and decisive actions, not whole paragraphs;
-- Distinctive source wording may use blockquotes;
-- Use lists only when the instructor enumerates items explicitly;
-- Give cases clear headings while preserving background, concern, process, adjustment, and outcome.
+- 一个一级标题，正文按自然主题使用二、三级标题；
+- 一个自然段承载一个完整意思，避免一大堵文字，也避免每句话都单独断成字幕；
+- 加粗核心结论、定义、数字和决定性动作，不能整段加粗；
+- 原作者有辨识度的原话可以用引用块；
+- 只有作者明确列举时才列表化；
+- 案例增加醒目标题，但完整保留背景、顾虑、过程、调整和结果。
 
-## 5. Systemized In-Depth Lecture: Explanatory Textbook, Not Slide Outline
+## 5. 系统化深度讲义：解释型教材，不是PPT提纲
 
-The systemized lecture may adopt a neutral knowledge-organizer perspective and reorganize content, but it must not collapse into conclusions, formulas, tables, and checklists.
+系统化讲义可以改用中性知识整理者视角，并重新组织内容，但不能只剩结论、公式、表格和清单。
 
-A significant knowledge module should develop:
-
-```text
-Problem background
-→ core judgment
-→ why it works
-→ internal relationships within the method
-→ complete case
-→ reusable elements
-→ conditions that must not be copied
-→ execution method
-```
-
-Recommended structure:
-
-1. Orientation and the lesson’s place in the course;
-2. Core problem and background;
-3. Key models and relationships among models;
-4. Complete walkthroughs of all important cases;
-5. Counterexamples, misconceptions, factual boundaries, and compliance boundaries;
-6. Execution tables, assignments, and diagnostic templates;
-7. Knowledge map and relationships to earlier and later lessons.
-
-Place tables and checklists after explanation as comparison and execution aids. They cannot replace prose. Acceptance criterion: someone who has not watched the video can understand what was taught, why it works, how cases developed, and how to apply the method.
-
-## 6. Slides and Screenshots: Integrate Naturally, Not as Abrupt Patches
-
-When slides contain tables, models, numbers, or product pages not fully stated in the narration:
-
-1. Save original images permanently at the manifest/path-map target `{lesson_assets}`;
-2. Embed each image where the instructor naturally discusses the topic;
-3. Convert tables and models fully into text. For product pages, extract key selling points, numbers, structure, and visual logic;
-4. Use concise captions such as “Figure 1 | Original course slide: Six Elements of a Selling Proposition”;
-5. Do not interrupt the narrative with long “slide supplement / source explanation” blocks;
-6. Do not present image text as though the instructor spoke each item;
-7. Let the instructor’s first-person narrative connect naturally in the faithful transcript. The lecture may explain further but must label provenance boundaries.
-
-Incorrect rhythm:
+一个重要知识模块应尽量包含：
 
 ```text
-Author body → image → slide supplement → source declaration → editorial summary → return to author body
+问题背景
+→ 核心判断
+→ 为什么成立
+→ 方法内部关系
+→ 完整案例
+→ 可复用点
+→ 不可照搬条件
+→ 执行方法
 ```
 
-Correct rhythm:
+推荐结构：
+
+1. 导读与本节在全课中的位置；
+2. 核心问题及背景；
+3. 关键模型和模型关系；
+4. 全部重要案例的完整推演；
+5. 反例、误区、事实与合规边界；
+6. 执行表、作业和诊断模板；
+7. 知识地图与前后课程关系。
+
+表格和清单放在解释之后，用于比较和执行，不能替代正文。验收标准：没看过视频的人也能理解“讲了什么、为什么、案例怎样发展、方法怎样使用”。
+
+## 6. PPT与截图：自然融入，不设突兀补丁
+
+当PPT包含口播未展开的表格、模型、数字或商品页时：
+
+1. 原图永久保存到 `assets/第XX课/`；
+2. 嵌入讲师讲到该主题的自然位置；
+3. 表格或模型完整文字化，商品页只提炼关键卖点、数字、结构和视觉逻辑；
+4. 使用简短图注，如“图1｜原课PPT：卖点六要素”；
+5. 不用长篇“PPT补充/来源说明”切断叙事；
+6. 图中文字不能伪装成讲师逐项口播；
+7. 忠实稿由作者第一人称自然承接，讲义可以进一步解释但要标明边界。
+
+错误节奏：
 
 ```text
-Author introduces method → body explains → original course slide serves as visual evidence → case continues
+作者正文 → 图片 → PPT补充 → 来源声明 → 编辑总结 → 回到作者正文
 ```
 
-### Build a Visual Evidence Chain for Multiple Slides
-
-When several slides appear consecutively, do not recognize each in isolation and insert them mechanically. Identify each image’s argumentative function before placing it. Common functions include:
-
-1. **Problem-evidence image:** shows actual risk, errors, user feedback, or failure scenarios;
-2. **Path-comparison image:** compares extra actions, decisions, or drop-off points in two processes;
-3. **End-to-end flowchart:** completes nodes and order distributed across the narration;
-4. **Before-and-after optimization image:** shows the original path, obstacle, change, and result;
-5. **Metric-funnel image:** maps business stages to metrics such as impression, click, purchase, contact-addition, positive-review, or referral rates.
-
-First write the evidence chain for the whole image set, for example:
+正确节奏：
 
 ```text
-Payment risk
-→ transaction-path bottleneck
-→ complete buyer flow
-→ change before and after optimization
-→ funnel-metric review
+作者提出方法 → 正文解释 → 原课PPT作为视觉证据 → 案例继续展开
 ```
 
-Then place each image in the body module where it performs that function. The images should advance one course argument, not become five unrelated attachments.
+### 多张PPT先组成“视觉证据链”
 
-### Maintain a Register of Information Appearing Only in Images
+同一课连续出现多张PPT时，不要逐张孤立识别、机械插图。先为每张图判断它在论证中的功能，再安排正文位置。常见功能包括：
 
-After visual inspection, record content clearly shown on a slide but not explicitly stated in the narration, such as:
+1. **问题证据图**：展示真实风险、报错、用户反馈或失败场景；
+2. **路径对比图**：比较两条流程多出的动作、判断或流失点；
+3. **全链路流程图**：补全口播中分散出现的节点与先后关系；
+4. **优化前后图**：呈现原路径、阻碍、调整动作与结果；
+5. **指标漏斗图**：把业务节点映射到曝光率、点击率、购买率、加微率、好评率或转介绍率等指标。
 
-- Additional process nodes;
-- Arrow directions and branch conditions;
-- Complete before-and-after paths;
-- Metric names, numbers, and stage relationships;
-- Positive reviews, repurchases, or referrals after service;
-- A “direct effect” relationship labeled on one node.
-
-Processing rules:
-
-1. **Faithfully edited transcript:** these details may be converted to text and integrated naturally, but captions or provenance notes must identify them as originating from original course slides; never present them as sentence-by-sentence speech;
-2. **Systemized lecture:** may explain image relationships further, but must distinguish “explicitly expressed by the slide” from “editorial inference from the diagram”;
-3. **Fact verification:** platform rules, conversion rates, and individual outcomes in images remain course material and do not automatically become universal facts;
-4. **Semantic reconciliation:** before delivery, reconcile both spoken and visual anchors; transcript keyword search alone is insufficient.
-
-### Preservation Order for Temporary Attachments
-
-When chat attachments reside in temporary storage, after execution authorization complete this sequence first:
+先写出整组图片的证据链，例如：
 
 ```text
-Confirm image and lesson attribution
-→ copy to the rendered `{lesson_assets}` target
-→ assign a semantic filename
-→ verify existence, non-empty content, and pixel dimensions
-→ only then write a relative path in the body
+支付风险
+→ 交易路径卡点
+→ 完整买家流程
+→ 优化前后变化
+→ 漏斗指标复盘
 ```
 
-Do not reference a temporary path in a draft first, and do not claim an image is archived before saving the original. Multi-image names should reflect both sequence and function, for example:
+然后把每张图放回其承担论证功能的正文模块。这样图片共同推动课程逻辑，而不是成为五个互不相干的附件。
+
+### 建立“仅图片出现的信息台账”
+
+识图后单独记录口播没有明确说出、但PPT清晰展示的内容，例如：
+
+- 图中新增的流程节点；
+- 箭头方向与分支条件；
+- 优化前后两条完整路径；
+- 指标名称、数字和阶段关系；
+- 服务之后的好评、复购或转介绍环节；
+- 图片对某个节点标注的“直接影响”关系。
+
+处理规则：
+
+1. **忠实精编稿**：可把这些信息文字化并自然融入，但要用图注或来源说明表明来自原课PPT，不能伪装成讲师逐句口播；
+2. **系统化讲义**：可以进一步解释图中关系，但必须区分“PPT明确表达”与“编辑者基于图示的推导”；
+3. **事实核验**：图片中的平台规则、转化率和个案结果仍属于课程材料，不自动升级为普遍事实；
+4. **语义对账**：交付前同时对账口播锚点和视觉锚点，不能只搜索逐字稿关键词。
+
+### 临时附件的留证顺序
+
+聊天附件位于临时目录时，执行授权后应先完成：
 
 ```text
-01_Payment-Risk-and-Purchase-Abandonment.png
-02_Transaction-Path-Comparison.png
-03_Complete-Buyer-Flow.png
-04_Conversion-Path-Before-and-After.png
-05_Funnel-Stages-and-Metrics.png
+确认图片与课次
+→ 复制到 assets/第XX课/
+→ 使用语义化文件名
+→ 验证文件存在、非空和像素尺寸
+→ 再在正文中写相对路径
 ```
 
-## 7. Anti-Complexity Strategy
+不要先在文稿中引用临时路径，也不要在尚未保存原图时声称图片已经入库。多图命名应同时体现顺序与功能，例如：
 
-Use a progressive “2 + 1” model:
+```text
+01_支付风险提示与购买放弃.png
+02_交易路径对比.png
+03_买家完整流程.png
+04_转化路径优化前后.png
+05_漏斗节点与指标.png
+```
 
-- Per lesson: faithfully edited transcript + systemized in-depth lecture;
-- Per lesson: lightweight course-map update;
-- Every three to five lessons or at module close: consolidate methods, cases, tools, and templates across lessons;
-- Only after a method is corroborated across lessons and cases should it become a Skill, Agent, or original course.
+## 7. 防繁琐策略
 
-Do not manufacture eight redundant documents per lesson.
+采用“2＋1”渐进模型：
 
-## 8. Pre-Delivery Check
+- 每课：忠实精编稿＋系统化深度讲义；
+- 每课：轻量更新课程地图；
+- 每3—5课或模块结束：横向归并方法、案例、工具和模板；
+- 方法经过多课交叉和案例验证后，再考虑Skill、Agent或自有课程。
 
-- [ ] The user explicitly entered execution state and scope did not expand;
-- [ ] The faithful transcript remains narrated by the instructor in first person;
-- [ ] No third-party interpretation such as “the course mentions” or “the instructor wants to explain” remains;
-- [ ] The opening, a middle case, and the ending passed semantic reconciliation;
-- [ ] Specific nouns, numbers, prices, scenes, and judgment strength were not generalized;
-- [ ] The page is neither a wall of text nor subtitle-like fragments;
-- [ ] The lecture contains explanatory prose and complete cases, not lists alone;
-- [ ] Slides are permanently saved, naturally embedded, and searchable as text;
-- [ ] Course information, editorial analysis, and fact verification are distinguishable;
-- [ ] Other courses and files outside the approved scope remain untouched.
+不要每课制造八份重复文档。
+
+## 8. 交付前检查
+
+- [ ] 用户明确进入执行态，范围没有扩大；
+- [ ] 精编稿仍由讲师第一人称讲述；
+- [ ] 无“课程中提到/讲师想说明”式第三方解读；
+- [ ] 开头、中段案例、结尾已做语义对账；
+- [ ] 具体名词、数字、价格、场景和判断力度没有被泛化；
+- [ ] 页面不是文字墙，也不是字幕式碎段；
+- [ ] 讲义不是只有列表，重要判断有解释和完整案例；
+- [ ] PPT永久保存、自然嵌入、文字可检索；
+- [ ] 课程信息、编辑分析和事实核验可以区分；
+- [ ] 未经批准的其他课程和文件保持不动。

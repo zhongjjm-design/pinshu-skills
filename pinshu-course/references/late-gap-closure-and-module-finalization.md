@@ -1,174 +1,172 @@
-# Closing a Module After a Late Missing Lesson Arrives
+# 迟到缺课补齐与模块收官
 
-Use this workflow when non-contiguous course input created a module gap, the user later supplies the final missing lesson, and the module becomes complete for the first time.
+适用于：课程曾因跳号输入形成模块缺口，后续用户补发最后一节缺课；补齐后该模块第一次达到全课齐备。
 
-## Core Judgment
+## 核心判断
 
-“Filling one missing lesson” triggers two state transitions:
+“补齐一课”同时触发两类状态变化：
 
-1. **Per-lesson state:** the lesson moves from awaiting input to paired drafts complete and preview acceptance passed.
-2. **Module state:** the module moves from `N-1/N` to `N/N`, which requires module-level closeout rather than a one-line table-of-contents update.
+1. **逐课状态**：本课从待输入变为双稿完成、预览验收通过；
+2. **模块状态**：模块从 `N-1/N` 变为 `N/N`，需要执行模块级收官，而不是只更新一行目录。
 
-Do not handle this as an ordinary single-lesson task.
+不要把这类任务当作普通单课处理。
 
-## 1. Determine Whether the Material Forms a Complete Lesson
+## 一、先判断资料是否构成完整一课
 
-Verify at least:
+至少核对：
 
-- whether the opening contains a formal start or stable topic anchor;
-- whether the ending contains a dismissal, the end of Q&A, a pointer to the next lesson, or another boundary;
-- whether a system-level `[truncated]` marker, continuation request, or obvious large omission appears;
-- whether a locally incomplete quotation, spoken fragment, or STT segment affects only one citation rather than the lesson boundary.
+- 开头是否有正式开课或稳定主题锚点；
+- 结尾是否有下课、问答结束、下一课提示等边界；
+- 是否出现系统级 `[truncated]`、续传提示或明显大段缺失；
+- 局部引文、口述或STT不完整，是否只影响一个引用而不影响整课边界。
 
-### Local Incompleteness Does Not Equal Whole-Lesson Truncation
+### 局部残缺不等于整课截断
 
-If the lesson has a complete beginning and end and only one quotation, name, or spoken/recognized sentence is incomplete:
+若整课首尾完整，只有某条引文、姓名或句子口述/识别不完整：
 
-- create the paired drafts normally;
-- record the local gap explicitly in an editorial note, risk boundary, or pending-verification entry;
-- do not complete the original wording from common knowledge;
-- do not mark the whole lesson `awaiting-full-text`.
+- 可以正常生成双稿；
+- 在编辑说明、风险边界或待核记录中明确局部缺口；
+- 不凭常识补原句；
+- 不把整课状态写成“待补全文”。
 
-Return to collection state only if the system truncated the material, the latter portion of the lesson is missing, or the user explicitly says that submission is incomplete.
+只有系统截断、后半课缺失或用户明确说“还没发完”时，才回到收集态。
 
-## 2. Resolve Differences Between the Official Title and the Classroom Self-Introduction
+## 二、处理官方标题与课堂自报名差异
 
-Authority order:
+权威顺序：
 
 ```text
-official course directory / confirmed course map
-> classroom self-announced title
-> title inferred from STT
+官方课程目录/已确认课程地图
+> 课堂开场自报名
+> STT推测标题
 ```
 
-Execution rules:
+执行规则：
 
-1. Use the official title consistently in the filename, H1, `original_title`, course-map row, and preview filename.
-2. Preserve “the classroom self-announced title was...” in the faithful transcript's editorial note and the lecture introduction.
-3. Do not force the two titles to become identical or discard the self-announced title.
-4. If the titles may indicate genuinely different courses rather than wording variants, pause and ask the user.
+1. 文件名、H1、`original_title`、地图目录行、预览文件名统一采用官方标题；
+2. 忠实稿编辑说明和讲义导读保留“课堂自报名为……”；
+3. 不把二者强行改成完全相同，也不把自报名丢失；
+4. 若两者可能是实质不同课程而非措辞差异，暂停并询问。
 
-## 3. Preserve a Method System That Evolves During the Lesson
+## 三、双稿要保留课堂中动态形成的方法体系
 
-A lesson may begin by announcing “six methods,” then add a seventh through interaction or merge one method into another.
+课堂可能先说“六种方法”，互动后又新增第七种，或把某项归并到另一项。
 
-Preserve all of the following:
+应同时保留：
 
-- the count announced at the beginning;
-- additions that emerged through classroom interaction;
-- the instructor's final consolidation;
-- a systematized-lecture overview based on the final classroom state.
+- 开场时的方法数量；
+- 课堂互动带来的新增项；
+- 讲师最后的归并判断；
+- 系统讲义按课堂终态建立总览。
 
-Do not erase how the method system formed and changed merely to keep the table of contents neat.
+不要为了目录整齐，抹掉方法体系在课堂中形成和修正的过程。
 
-## 4. Course-Map State Surfaces Must Update Atomically
+## 四、地图必须原子更新的状态面
 
-After filling the final missing lesson, inspect and update together:
+最后缺课补齐后，一次性检查并更新：
 
-1. frontmatter `current_progress`;
-2. frontmatter `next_lesson`;
-3. set of received transcripts;
-4. set of lessons with paired drafts;
-5. accepted-lesson set;
-6. completed modules;
-7. current module;
-8. next lesson;
-9. module completion ratio;
-10. total organized lesson count across the course;
-11. the lesson's table-of-contents row and paired-draft links;
-12. the lesson's knowledge navigation;
-13. notes in later organized lessons that say this lesson is missing or archived non-contiguously;
-14. stale wording in later module-closeout sections such as “missing lesson,” `N-1/N`, or “do not perform cross-topic synthesis”;
-15. the end-of-file next-lesson note.
+1. frontmatter `current_progress`；
+2. frontmatter `next_lesson`；
+3. 已收到转写集合；
+4. 已生成双稿集合；
+5. 已验收集合；
+6. 已完成模块；
+7. 当前模块；
+8. 下一课；
+9. 模块完成比例；
+10. 全课程已整理总数；
+11. 本课目录行与双稿链接；
+12. 本课知识导航；
+13. 后续已整理课程中提及的“本课缺失/非连续归档”说明；
+14. 后续模块收官段里的“缺课、N-1/N、不做横向归并”等陈旧表述；
+15. 文末下一课说明。
 
-### Required Residual Scan
+### 必做残留扫描
 
-Search at least for:
+至少搜索：
 
-- `lesson-XX-awaiting-input`
-- `lesson-XX-not-received`
-- `lesson-XX-gap`
+- `第XX课待输入`
+- `第XX课尚未收到`
+- `第XX课缺口`
 - `N-1/N`
-- `(missing-lesson)`
-- `acceptance-in-progress`
-- `next-lesson=lesson-XX`
-- `current-module=old-module`
+- `（缺课）`
+- `验收推进中`
+- `下一课为第XX课`
+- `当前模块：旧模块`
 
-Only a zero residual count permits declaring the module closed.
+残留为0后，才可宣布模块闭合。
 
-## 5. Closing the Module Automatically Triggers Five Assets
+## 五、模块闭合自动触发五件套
 
-When the module first reaches `N/N`, create or update:
+模块首次达到 `N/N` 时，生成或更新：
 
-1. `{cross_lesson_methodology}`
-2. `{case_library}`
-3. `{tools_and_checklists}`
-4. `{fact_checking}`
-5. `{practice_and_assignments}`
+1. `03_横向方法论库/[模块]·核心方法论.md`
+2. `04_案例库/[模块]·案例索引.md`
+3. `05_工具与清单/[模块]·执行清单.md`
+4. `06_事实核查/[模块]·事实与风险清单.md`
+5. `07_练习与作业/[模块]·模块作业.md`
 
-The braces denote semantic path-map keys, not literal English directories. Resolve them from the manifest or confirmed path map; if a key is absent, confirm it before writing.
+五件套必须是模块级归并，不是把单课讲义拼接在一起。
 
-These five assets must synthesize the module; they are not concatenated copies of per-lesson lectures.
+### 核心方法论
 
-### Core Methodology
+回答模块共同解决的总问题，给出跨课因果链、统一SOP和能力标准。
 
-Answer the module's shared overarching problem and provide a cross-lesson causal chain, unified SOP, and capability standard.
+### 案例索引
 
-### Case Index
+按“案例解决什么问题”分类，标明来源课次、用途和待核状态。
 
-Classify cases by the problem they solve and identify the source lesson, use, and pending-verification state.
+### 执行清单
 
-### Execution Checklist
+把跨课方法转成可填写、可验收的生产工具。
 
-Convert cross-lesson methods into a fillable, verifiable production tool.
+### 事实与风险清单
 
-### Facts and Risks List
+分稳定原理、讲师经验、时效规则与高风险主张，汇总转写缺口和历史验收限制。
 
-Separate stable principles, instructor experience, time-sensitive rules, and high-risk claims, while consolidating transcript gaps and historical acceptance limitations.
+### 模块作业
 
-### Module Assignment
+设计一项贯穿全模块的真实交付，而不是逐课作业简单相加；应包含第一版、盲测/发布、复盘和控制变量第二版。
 
-Design one real deliverable spanning the full module rather than adding per-lesson assignments together. It includes a first version, blind test/publication, review, and a second version with controlled variables.
+## 六、预览同步采用两阶段终态
 
-## 6. Preview Synchronization Uses Two Finalization Phases
+### 第一阶段：内容同步
 
-### Phase 1: Content Synchronization
+同步：
 
-Synchronize:
+- 本课忠实稿；
+- 本课讲义；
+- 当前地图；
+- 模块五件套。
 
-- the lesson's faithful transcript;
-- the lesson's lecture;
-- the current course map;
-- the five module assets.
+保留双稿相对目录，避免同名覆盖。
 
-Preserve the paired drafts' relative directories to avoid same-name overwrites.
+### 第二阶段：终态地图同步
 
-### Phase 2: Final-State Map Synchronization
+内容和模块文件验收通过后，地图通常还要把“推进中”改为“通过”，并把当前模块切到下一模块。
 
-After the content and module files pass acceptance, the map usually still needs to move from “in progress” to “passed” and switch the current module to the next module.
+因此必须：
 
-Therefore:
+1. 完成状态终改；
+2. 再同步一次地图；
+3. 对逐课预览地图和模块预览地图分别做文本比较；
+4. 再执行一次旧状态残留扫描。
 
-1. complete the final state update;
-2. synchronize the map again;
-3. compare text separately between the per-lesson preview map and module preview map;
-4. run the old-state residual scan again.
+不要把第一阶段的临时地图当成最终地图。
 
-Do not mistake the interim map from Phase 1 for the final map.
+## 七、非SHA验收模板
 
-## 7. Non-SHA Acceptance Template
+用户明确不执行SHA时，可使用：
 
-If the user explicitly excludes SHA, use:
+- 文件存在性；
+- 标题/frontmatter读取；
+- 唯一锚点与占位符扫描；
+- 忠实稿第一人称红线扫描；
+- 源端与预览端逐文件文本比较；
+- 地图旧状态残留扫描；
+- 模块五件套完整性与来源课次覆盖。
 
-- file existence;
-- heading/frontmatter readback;
-- unique-anchor and placeholder scans;
-- faithful-transcript first-person red-line scan;
-- per-file text comparison between source and preview;
-- course-map stale-state scan;
-- completeness and source-lesson coverage of the five module assets.
-
-Record:
+结果记录：
 
 ```text
 lesson_faithful_equal=true
@@ -180,46 +178,46 @@ stale_state_count=0
 sha=not_run
 ```
 
-## 8. Common Errors
+## 八、常见错误
 
-### Error 1: Creating the Paired Drafts Without Clearing the Non-Contiguous State
+### 错误1：只补双稿，不解除非连续状态
 
-Consequence: the map and later lectures still claim that the lesson is missing.
+后果：地图和后续讲义仍声称本课缺失。
 
-### Error 2: Changing the Module Ratio to N/N Without Cross-Topic Synthesis
+### 错误2：模块比例改成N/N，但不做横向归并
 
-Consequence: the workflow violates the knowledge-base cadence requiring consolidation at module closeout.
+后果：违反“模块结束集中归并”的知识库节奏。
 
-### Error 3: Marking Acceptance as Passed Too Early
+### 错误3：过早把验收写成通过
 
-Consequence: the map declares completion before the preview actually exists.
+后果：预览尚未真实存在，地图已经宣告完成。
 
-### Error 4: Synchronizing the Map Only Once
+### 错误4：只同步一次地图
 
-Consequence: the preview retains interim states such as `acceptance-in-progress` and `current-module=old-module`.
+后果：预览保留“验收推进中”“当前模块为旧模块”等临时状态。
 
-### Error 5: Treating an Incomplete Local Quotation as a Truncated Lesson
+### 错误5：把局部引文不完整当成整课截断
 
-Consequence: a complete lesson is blocked unnecessarily.
+后果：无谓阻塞完整课程入库。
 
-### Error 6: Completing a Quotation from Common Knowledge
+### 错误6：用常识补全引文
 
-Consequence: the faithful transcript contains original wording that the user never supplied.
+后果：忠实稿混入未经提供的原话。
 
-### Error 7: Writing the Five Module Assets as Per-Lesson Copies
+### 错误7：模块五件套写成单课复制品
 
-Consequence: no cross-lesson workflow, risk structure, or executable asset is formed.
+后果：没有形成跨课工作流、风险结构和可执行资产。
 
-## 9. Completion Criteria
+## 九、完成条件
 
-Declare module closeout only when all conditions hold:
+只有同时满足以下条件，才能宣布模块收官：
 
-- paired drafts for the final missing lesson are complete;
-- the lesson's knowledge navigation is complete;
-- module ratio and total lesson count are correct;
-- missing-lesson notes have been removed from later lessons;
-- the five assets have been created or updated;
-- the map points to the next module and next lesson;
-- previews agree for the lesson, five module assets, and final-state map;
-- stale-state count is zero;
-- truncation, STT, factual, copyright, and platform-rule risks are recorded explicitly.
+- 最后一节缺课双稿完成；
+- 本课知识导航完成；
+- 模块比例和总课数正确；
+- 后续课程的缺课说明已清理；
+- 五件套生成或更新；
+- 地图已切换到下一模块和下一课；
+- 本课、模块五件套和终态地图预览一致；
+- 旧状态残留为0；
+- 截断、STT、事实、版权和平台规则风险已显式记录。

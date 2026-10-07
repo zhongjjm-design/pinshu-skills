@@ -1,50 +1,52 @@
-# General Knowledge Distillation Patterns
+# 通用知识提炼模式
 
-This reference preserves `pinshu-distill` capabilities outside course study guides. Select one pattern from the requested result; do not stack several templates at once.
+本参考保留`pinshu-distill`原有的非课程能力。先按用户结果选择一种模式，不同时套多个模板。
 
-## Method or tutorial
+## 方法论／教程
 
-Include the problem context, core judgment, reasoning, complete case, applicability conditions, counterexamples, execution steps, tools, and limits. Formulas and checklists support reuse but do not replace explanation.
+输出应包含：问题背景、核心判断、推导、完整案例、适用条件、反例、执行步骤、工具和限制。公式和清单帮助复用，不能替代解释。
 
-For each case, retain the person or object, initial state, constraints, judgment, action, adjustment, important numbers, result, reusable mechanism, and what must not be copied directly.
+案例至少保留人物或对象、原始状态、约束、判断、动作、调整、关键数字、结果、可复用机制和不能照搬处。
 
-## Sales or commerce livestream and competitor analysis
+## 销售／带货直播与竞品分析
 
-Cover:
+重点：
 
-- product positioning, target users, and usage flow;
-- features in the real workflow;
-- technology, deployment, and cost;
-- pricing and payment model;
-- clear separation between presenter claims and verifiable facts;
-- sales strategy, risks, and relevance to the user's work.
+- 产品定位、目标用户和使用流程；
+- 功能与真实工作流；
+- 技术、部署和成本；
+- 定价和付费方式；
+- 主播声称与可验证事实分开；
+- 销售策略、风险和对我方参考价值。
 
-Do not treat marketing language as product fact. Preserve concrete prices, cases, and limitations.
+不要把营销话术当产品事实，不遗漏具体价格、案例和限制。
 
-## Talk or presentation
+## 演讲／分享
 
-Reorganize around the central claims while preserving evidence, stories, data, rebuttals, and limits. Every quoted line must be traceable to the source. Keep editorial extensions separate from the speaker's views.
+按核心论点重组，保留论据、故事、数据、反驳和边界。金句必须能定位原文；编辑者延伸思考与演讲者观点分开。
 
-Here, traceable quotations are a source-identity requirement, not a required publication field. If the user requests reusable publication assets, hand off an accepted source to `pinshu-content-assets` when available; keep that workflow separate from the knowledge draft.
+这里的“金句可定位”是来源身份要求，不是知识稿的固定传播字段。需要篇级传播母资产时，在知识稿验收后调用 `pinshu-content-assets`，不要把传播候选混入讲义正文。
 
-## Interview or dialogue
+## 访谈／对话
 
-Combine related exchanges by insight theme while preserving speaker identity, disagreements, new information produced by follow-up questions, key facts, and qualifications. Do not average competing views into an ownerless conclusion.
+按洞察主题合并相关问答，但保留发言人身份、观点冲突、追问产生的新信息、关键事实和限定条件。不能把多方分歧平均成一个没有主体的结论。
 
-The interview knowledge draft explains the structure of the views. The optional publication layer handles candidate selection, source anchors, risk, and handoff. They may share an accepted source but are saved and checked separately.
+访谈知识稿负责把观点结构讲清；传播层负责候选捕捉、来源锚点、风险和 handoff。两者可以使用同一稳定来源，但分别保存、分别验证。
 
-## Panel discussion
+## 圆桌
 
-Preserve each participant's position, common ground, disagreement, premises, and evidence before organizing the issue structure. A moderator's transitions do not replace the participants' arguments.
+分别保留参与者立场、共同点、分歧、前提和证据，再整理议题结构。主持人串场不替代参与者论证。
 
-## Tools, cases, and data
+## 工具、案例和数据
 
-Every important tool, case, step, and data point in the source needs a destination. Large sets may be classified, but never replace the details with phrases such as "several other tools and cases were also introduced."
+来源中出现的每个重要工具、案例、步骤和数据都要有去向。大量内容可以分类，不得用“还介绍了若干工具／案例”代替具体信息。
 
-## Very long material
+## 超长材料
 
-You may process the source in chunks, but first establish the overall structure and provenance boundaries. Subagents draft only in isolated temporary directories. The primary agent deduplicates, reconciles case identifiers, and verifies final semantic coverage.
+可以分块处理，但先建立整体骨架和来源边界；子Agent只在独占临时目录起草，主Agent统一去重、核对案例编号和最终语义覆盖。
 
-## Saving
+## 保存
 
-Follow the current project's approved destination. Unless the user asks, do not save to three locations or place one-off project output in this skill's `references` directory. Store publication source assets and platform-ready copy outside the knowledge draft, under the separately configured publishing workflow.
+服从当前项目的正式路径和授权。用户没有要求时，不自动三处保存，不把一次性业务产物塞进Skill自己的references。
+
+传播母资产和平台成品不保存到知识稿文件中；需要时交给 `pinshu-content-assets` 及其配置的下游内容工作流。

@@ -1,170 +1,178 @@
 ---
 name: pinshu-distill
-description: "Use when users want to reorganize faithful transcripts, courses, interviews, talks, or livestreams into structured study guides, methods, cases, or formal cross-course topic syntheses. Do not use it to preserve the original speaking sequence or to run tutoring, quizzes, or personal learning records."
+description: "用于把忠实逐字稿、课程、访谈、演讲或直播重组成结构化讲义、方法、案例或正式横向专题；English keywords: distill transcript, study guide, course notes, method extraction, knowledge synthesis."
 ---
 
-# Pinshu Knowledge Distillation
+# 品叔知识提炼
 
-## Provenance and maintenance
+## 来源与维护
 
-- Original work: Pinshu (`original`)
-- Owner: Aidan (Pinshu)
-- Maintainer: Aidan (Pinshu)
-- Optional upstream skills: `pinshu-data-cleaning` (not bundled), `pinshu-transcript`
-- Downstream learning skill: `pinshu-study`
-- Optional downstream publishing skill: `pinshu-content-assets` (not bundled; use only when separately installed and requested)
-- Series orchestration skill: `pinshu-course`
-- Distribution status: `bundled`
+- 原创身份：品叔原创（original）
+- 原创归属：Aidan（品叔）
+- 维护者：Aidan（品叔）
+- 可选上游：`pinshu-data-cleaning`、`pinshu-transcript`
+- 下游学习：`pinshu-study`
+- 下游图解：`pinshu-visual-learning`（不属于本轮 12 项公开候选；仅在用户环境已安装、课程清单启用或用户明确要求且依赖可验证时使用）
+- 下游传播：`pinshu-content-assets`
+- 系列编排：`pinshu-course`
+- 分发状态：公开候选；不声明正式发布或外部安装验证
 
-Reorganize stable source material into knowledge that stands alone and can be reused. The structured study guide is one of the course pipeline's four core per-lesson results; create a formal cross-course topic synthesis only after the required lessons are available. `pinshu-study` owns optional active-recall cards, tutoring, drills, and personal learning records; they are not required per-lesson results.
+把稳定来源重组成可独立理解和复用的知识。在课程流水线中，结构化讲义属于每课四项核心结果之一；多课资料齐备后可生成正式横向专题。主动回忆卡、带学、训练和个人学习记录由 `pinshu-study` 按需负责，不属于逐课强制结果。
 
-## Scope
+课程已正式验收后，本 Skill 不直接覆盖正式讲义；修改必须返回课程总控的验收后修订通道。项目专用的章节数量、段落阈值、表格行数、专业词典与内容模板由 manifest、工作包或领域适配器显式提供，不因单个大项目有效就变成通用默认值。
 
-Use this skill for:
+## 触发边界
 
-- structured study guides, course notes, and standalone learning material;
-- extracting methods, models, SOPs, cases, or tools;
-- reorganizing knowledge from talks, interviews, panels, or livestreams;
-- formal cross-course topic syntheses after the relevant lessons are complete.
+使用本Skill：
 
-Route elsewhere for:
+- 结构化讲义、课程笔记、独立学习教材；
+- 方法论、模型、SOP、案例或工具提取；
+- 演讲、访谈、圆桌和直播的知识重组；
+- 多课完成后的正式横向专题。
 
-- an edited transcript that preserves the speaker's wording and sequence -> `pinshu-transcript`;
-- review cards, quizzes, tutoring, or error-based drills -> `pinshu-study`;
-- progress, checkpoints, and pending synthesis leads across a course series -> `pinshu-course`.
-- publication candidates, theme aggregation, external verification, and content-production handoff -> `pinshu-content-assets` when separately available.
+不使用本Skill：
 
-If the user says only "organize this" and the desired result is unclear, ask whether they want a faithful transcript or structured knowledge. If the target is clear, proceed without asking.
+- 保留老师原话和顺序的忠实精编稿 → `pinshu-transcript`；
+- 复习卡、考我、带我学、错题训练 → `pinshu-study`；
+- 整门系列的进度、断点、待归并线索 → `pinshu-course`。
+- 传播候选、母题聚合、外部核验与内容生产交接 → `pinshu-content-assets`。
 
-## Upstream gate
+用户只说“整理一下”且结果不清时，才问要忠实稿还是结构化知识；目标已明确时直接执行。
 
-Before drafting, confirm that:
+## 上游闸门
 
-1. the source and lesson identity are clear;
-2. the transcript has received necessary cleanup and terminology correction;
-3. uncertain passages are marked;
-4. the availability of images, slides, board work, or worked examples is known;
-5. multiple versions have not been silently merged.
+开始前检查：
 
-If the source still contains transcript-level errors, return it to `pinshu-transcript`. For heterogeneous corruption, missing pages, ordering errors, or uncertain provenance, use `pinshu-data-cleaning` only if it is installed; it is not provided by this repository. Otherwise request pre-cleaned Markdown or a transcript, or continue only with a clearly identified clean-text subset. Do not silently omit unsupported material or infer content while distilling it.
+1. 来源和课次清楚；
+2. 逐字稿已完成必要去噪和术语校正；
+3. 不确定项已有标记；
+4. 图片、PPT、板书或例盘的有无已说明；
+5. 多版本没有静默混合。
 
-For course production, learner-facing prose follows the manifest's `output_language` when a manifest exists, or the user's explicit preference; an omitted field means `match-user`, with source language as fallback. When course-capture state or a manifest exists, save to its rendered path keys. Neither is required for standalone use: otherwise preserve existing confirmed project paths or confirm a new course's destination before writing. Keep established IDs and program fields intact.
+上游仍有大量乱码、漏页、错序或来源不清时，退回`pinshu-transcript`或`pinshu-data-cleaning`，不边猜边提炼。
 
-If the work package names a domain or content adapter, read only its source authorities, evidence priority, risk triggers, boundaries, and content anchors needed for this lesson. An adapter cannot replace the general guide workflow, relax quality requirements, or add default deliverables.
+若工作包指定领域或内容适配器，只读取当前课需要的术语权威、来源优先级、高风险触发器、不可越过边界和内容锚点。适配器不得复制通用讲义流程，不得降低质量合同，也不得自行增加默认产物。
 
-## First decision: choose the requested result
+## 第一判断：用户要哪一种结果
 
-### Route A: structured guide for one lesson
+### 路径A：单课结构化讲义
 
-Reorganize one lesson into a guide for second-pass learning. You may change the lecture order, but must retain more than its conclusions. Choose the primary structure from the lesson's main learning task, then embed only the cases, procedures, source texts, or other submodules that actually occurred. Never invent stages to fill a template.
+把一节课重新组织成适合第二遍学习的讲义。允许改变讲课顺序，但不能只留结论。先按主要学习任务选择主骨架，再嵌入课堂真实存在的病案、实操或经典子模块；不为填模板补造课堂没有发生的环节。
 
-Read `references/structured-study-guide-rules.md`. For professional instruction, cases, medical content, or visually dependent procedures, also read `references/professional-course-source-safety-and-visual-gates.md`.
+读取 `references/structured-study-guide-rules.md`。专业课程、病案、医疗或强视觉实操还必须读取 `references/professional-course-source-safety-and-visual-gates.md`。
 
-### Route B: formal cross-course topic synthesis
+### 路径B：正式横向专题
 
-Use this route only when a complete module or course is available. Merge the same concept, method, case, disagreement, and change across lessons into one authoritative topic entry.
+只有模块或全课资料齐备时执行。把多课中的同一概念、方法、案例、分歧和变化合并成一个正式主条目。
 
-Read the cross-course section in `references/structured-study-guide-rules.md`. A lesson's "pending synthesis leads" are input hints, not finished topic entries.
+同样读取 `references/structured-study-guide-rules.md` 的横向专题部分。每课的“待归并知识线索”只是输入提示，不是正式专题。
 
-### Route C: other knowledge distillation
+### 路径C：其他知识提炼
 
-For talks, interviews, sales livestreams, methods, and competitor analysis, read `references/general-distillation-patterns.md`.
+演讲、访谈、销售直播、方法论和竞品分析继续保留原有能力，读取 `references/general-distillation-patterns.md`。
 
-After a single-source knowledge draft passes its own review, the user may separately request publication assets. Hand off its accepted source and identity/verification labels to `pinshu-content-assets` if installed. Keep knowledge drafts and publication assets separate; quotable lines, promotional angles, audience hooks, and platform copy are not mandatory study-guide appendices.
+单篇材料可以在知识稿验收后把稳定来源交给 `pinshu-content-assets`，但本 Skill 不在讲义末尾强制附加金句、传播观点、用户连接点或平台文案。知识稿与传播母资产分别保存、分别验证。
 
-When `pinshu-course-capture` state exists, obtain paths from that state and write only to the rendered runtime scope. An `ACCEPTED` official guide may change only through `revision-open` / `revision-close`; formatting that changes words, numbers, code, or links requires independent QA rather than a self-declared equivalence.
+## 结构化讲义的核心结果
 
-## Core result for a structured study guide
+讲义首先服务学习者，不服务模板完整。优先级：
 
-The guide serves the learner, not the template. Prioritize:
+1. 重点突出；
+2. 内容组织顺；
+3. 不看视频能独立理解；
+4. 老师独有的推导、案例、口诀、批评和经验有去处；
+5. 来源身份清楚。
 
-1. clear emphasis;
-2. coherent organization;
-3. standalone comprehension without replaying the source;
-4. a clear place for the instructor's distinctive reasoning, cases, mnemonics, critiques, and experience;
-5. explicit source identity.
-
-Use no universal length threshold and do not optimize for a contrived perfect score. Each important module should usually contain:
+长短不设统一阈值，不追求虚假100分。每个重要模块尽量形成：
 
 ```text
-Question and prerequisites
--> Core judgment
--> Why it holds
--> Comparisons and conditional branches
--> Complete case
--> Misconceptions, counterexamples, and limits
--> Sources
+问题与前提
+→ 核心判断
+→ 为什么成立
+→ 比较与条件分叉
+→ 完整案例
+→ 误区、反例和边界
+→ 来源
 ```
 
-Tables, models, and diagrams should expose relationships. They do not replace necessary explanation or cases.
+表格、模型和图只帮助看见关系，不能替代必要解释与案例。
 
-## Information completeness
+## 信息完整度
 
-Structure is not summarization. Every distinct unit of knowledge must have a destination, including:
+结构化不等于摘要。所有独立知识增量都必须有去向：
 
-- core concepts and judgments;
-- reasoning, conditions, and counterexamples;
-- cases, numbers, and tools;
-- the instructor's distinctive views and critiques of the source material;
-- valuable side discussions;
-- safety, compliance, and factual limits.
+- 核心概念和判断；
+- 推导、条件、反例；
+- 案例、数字和工具；
+- 老师独有观点和教材批评；
+- 有学习价值的课堂旁支；
+- 安全、合规和事实边界。
 
-Merge mechanical repetition. Lower-priority or high-risk material may move to sections such as "Instructor Perspective," "Needs Verification," or "Not for Training," but it must not disappear silently.
+可以合并机械重复；高风险或旁支内容可以降级放入“课堂观点／待核验／暂不训练”，不能静默消失。
 
-## Source identity
+## 来源身份
 
-Distinguish at least:
+至少区分：
 
-1. explicit statements by the author or instructor;
-2. editorial restructuring based on the source;
-3. external authoritative additions;
-4. extensions based on the user's real practice;
-5. explicitly identified simulated material.
+1. 作者或讲师明确表达；
+2. 编辑者基于来源的结构化整理；
+3. 外部权威补充；
+4. 用户基于真实实践形成的延伸；
+5. 明确标注的模拟内容。
 
-Treat `needs confirmation`, `partially supported`, `disputed`, and `unverifiable` as **verification states**, not speaking identities. Preserve these two separate axes in any handoff to `pinshu-content-assets`.
+“待确认、部分支持、存在争议、无法核验”属于核验状态，不属于表达身份。交给 `pinshu-content-assets` 时必须保持“表达身份 × 核验状态”双轴分离。
 
-A spoken course is not automatically factual. Layer verification for income claims, medical guidance, medication, law, platform rules, and guaranteed outcomes. Preserve the instructor's view without rewriting it out of existence or elevating it into consensus. Place source identity and real-world limits beside each high-risk claim, table, or map; a single disclaimer at the end is insufficient.
+课程口述不自动等于客观事实。收入、医疗、药物、法规、平台和确定性结果需要分层核验；不通过改写抹去老师观点，也不把它升级为共识。高风险内容必须在相应语句、表格或地图旁就地标明身份和现实边界，文末统一免责声明不能替代近邻分层。
 
-## Formal cross-course topic synthesis
+课程流水线中的正式结构化讲义必须分别使用可点击的 Markdown 相对链接回链本课原始转写与正式忠实精编稿，并按讲义最终位置计算路径。正式讲义不得保留 `runtime/`、`lesson-*` 或其他临时生产目录；Worker 临时稿按总控 `paths` 给出的正式目标位置预先计算，提交者提升前复核两条链接均可解析。
 
-- Keep one authoritative topic entry per knowledge object.
-- Record new conditions, cases, changes, and sources from other lessons.
-- Keep distinct objects, schools, or course editions separate even when names overlap.
-- Link methods to their cases.
-- Separate source texts, instructor views, external standards, and editorial analysis.
-- When material has index value only, create a pointer instead of copying the full text.
-- The result must answer where the topic appeared, which lesson covers it most completely, and what later lessons added or changed.
+## 正式横向专题
 
-## Layout
+- 一个知识对象只保留一个正式主条目；
+- 其他课次记录新增条件、案例、变化和来源；
+- 同名不同物、不同流派、不同期次不强行融合；
+- 方法与案例互相链接；
+- 教材、老师、外部规范和编辑分析分层；
+- 只有索引价值时只建指针，不复制全文；
+- 输出必须能回答“这个知识在哪里讲过、哪一课最完整、后来增加或改变了什么”。
 
-- Use exactly one H1 unless a confirmed course-library convention explicitly omits it.
-- Read the whole source before naming the file. Use the necessary lesson number plus its central question or judgment and one distinctive method, case, or outcome. The filename and H1 should tell a reader what this lesson teaches and why it merits opening. If the directory identifies the type, do not repeat “structured study guide,” “study guide,” or “edited draft” in either title; put type in the directory or frontmatter. Avoid stuffing the table of contents into a title or using `Lesson-3-Study-Guide.md` as a placeholder. Honor an established official course-title convention where required.
-- Let heading levels express knowledge relationships, not timestamps.
-- Give each paragraph one complete idea; avoid subtitle fragments and walls of text.
-- Use bold for core judgments, definitions, and important distinctions, not as continuous highlighting.
-- Place each case near the method it illustrates instead of collecting all cases at the end.
-- Keep reader-facing prose natural. Put engineering fields in frontmatter, hidden comments, or production-control files.
+## 版式
 
-## Quality assurance
+- H1只有一个；
+- **先读完再定题眼**：结构化讲义的文件名与 H1 必须提炼本课的主问题、核心判断和最有辨识度的方法、案例或结果，让读者不打开文件也能判断本课讲什么、为什么值得看；
+- **目录表达类型，标题表达内容**：若上级目录已是“结构化讲义”，文件名和 H1 不再重复“结构化讲义、讲义、整理稿、阅读版”等类型词；类型放目录与 Frontmatter，不占标题展示长度；
+- 标题保留必要课次后，只留下能区分本课的有效信息。不能用“第X课＋结构化讲义”占位，也不能把整份目录塞进标题；
+- 标题层级表达知识关系，不按时间戳切；
+- 每段完成一个意思，避免字幕碎段和文字墙；
+- 加粗用于核心判断、定义和关键差异，不满篇标色；
+- 案例放在对应方法附近，不统一堆到文末；
+- 用户可见正文使用自然中文，工程字段留在Frontmatter、隐藏注释或后台控制文件。
 
-Run mechanical checks for frontmatter, the project-required H1 convention, heading spacing, links, images, tables, placeholders, and terminology.
+## QA
 
-Every guide requires a model semantic decision to check whether the draft:
+机械检查：Frontmatter、唯一H1、标题空行、链接、图片、表格、占位符和术语。脚本 PASS 不等于语义通过。
 
-- omitted any distinct unit of knowledge;
-- introduced reasoning absent from the source;
-- changed the strength of a judgment or its conditions;
-- separated a case from its method;
-- presented an instructor's view as fact;
-- merged different objects incorrectly;
-- can genuinely be learned without the source.
+每份讲义都必须完成模型语义判定，检查：
 
-An ordinary clean lesson may use the drafting model's semantic self-check. A risk-triggered or adaptively sampled lesson requires independent QA in a different context; there the writer cannot be the only reviewer. A script reporting `PASS` proves deterministic checks only and does not prove that the learning material is sound.
+- 是否漏掉独立知识增量；
+- 是否新增来源没有的推导；
+- 是否改变判断力度和限定条件；
+- 是否把案例与方法拆散；
+- 是否把老师观点写成事实；
+- 是否把不同对象错误合并；
+- 是否真正独立可学；
+- 原始转写与忠实精编稿的 Markdown 相对回链是否从正式位置解析成功，且不含临时生产路径。
 
-## Save and stop
+普通清洁课可由本课写稿模型完成语义自检；命中风险触发器或自适应抽样时，必须进入不同上下文的独立 QA。需要独立 QA 时，写作者不能成为唯一裁判。
 
-- Follow the current project's path rules and any explicit user destination; do not save to three locations by default.
-- Keep final guides, formal topic syntheses, and internal candidates separate.
-- Hand requests for cards or drills to `pinshu-study`.
-- On explicit request for publication assets, pass accepted sources and separate identity/verification labels to `pinshu-content-assets` if installed; otherwise identify the missing optional handoff rather than claiming publication delivery.
-- Stop when the requested result is complete. Do not generate promotional posts, social copy, or unrelated derivatives by default.
+## 讲义验收后的图解交接
+
+课程清单 `visual_learning.enabled=true` 或用户明确需要图解学习时，讲义先完成语义判定，再把已验收讲义、原始稿／忠实稿回链、待确认项和当前项目允许路径交给 `pinshu-visual-learning`；由课程总控登记结果，不由本 Skill 提前制图。MD 学习笔记是主阅读版，逐模块嵌入 PNG，保存可编辑 SVG，同源自包含 HTML 只作辅助阅读。图解不改讲义原意、不替代四项核心结果，未核验事实继续保留身份与边界。旧课程不主动补产；图解样课未获用户批准不批量。
+
+## 保存与停止
+
+- 保存位置服从当前项目和用户指定，不再机械三处保存；
+- 正式讲义、横向专题和后台候选各自分开；
+- 用户需要卡片或训练时交给`pinshu-study`；
+- 用户明确需要传播资产时，把已验收来源和来源身份交给 `pinshu-content-assets`；
+- 达到当前知识结果后停止，不默认生成传播素材、朋友圈或无关派生产物。

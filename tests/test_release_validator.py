@@ -26,12 +26,26 @@ class ReleaseValidatorNegativeControls(unittest.TestCase):
             VALIDATOR.scan_tree()
             return list(VALIDATOR.errors)
 
-    def test_rejects_east_asian_script(self):
+    def test_allows_east_asian_public_text(self):
         with tempfile.TemporaryDirectory(prefix="pinshu-release-validator-") as tmp:
             root = Path(tmp)
-            (root / "bad.md").write_text("forbidden: \u4e2d\u6587", encoding="utf-8")
+            (root / "good.md").write_text("公开中文说明可以进入候选包。", encoding="utf-8")
+            self.assertFalse(self.run_scan(root))
+
+    def test_allows_east_asian_public_path(self):
+        with tempfile.TemporaryDirectory(prefix="pinshu-release-validator-") as tmp:
+            root = Path(tmp)
+            (root / "中文.md").write_text("safe content", encoding="utf-8")
+            self.assertFalse(self.run_scan(root))
+
+    def test_rejects_sensitive_filename_even_with_public_language_path(self):
+        with tempfile.TemporaryDirectory(prefix="pinshu-release-validator-") as tmp:
+            root = Path(tmp)
+            nested = root / "中文配置"
+            nested.mkdir()
+            (nested / ".env").write_text("PLACEHOLDER=safe", encoding="utf-8")
             self.assertTrue(
-                any("East Asian script in text" in item for item in self.run_scan(root))
+                any("sensitive filename" in item for item in self.run_scan(root))
             )
 
     def test_rejects_personal_absolute_paths(self):

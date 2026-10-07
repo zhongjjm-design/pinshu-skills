@@ -1,81 +1,75 @@
-# Independent Final QA for the Cross-Topic Knowledge Library
+# 横向知识库独立终验
 
-Use this read-only final QA after completing the master course outline, methodology library, case library, tool library, execution-template library, and fact-verification table. The goal is not to confirm that files exist, but to verify links, coverage, deduplication, factual boundaries, and executability.
+适用于课程总纲、方法论库、案例库、工具库、执行模板库、事实核验表完成后的只读终验。目标不是确认“文件存在”，而是验证链接、覆盖、去重、事实边界和可执行性。
 
-## 1. Acceptance Order
+## 一、验收顺序
 
-1. **Lock authoritative inputs:** prefer accepted per-lesson systematized lectures. When the speaker, a number, proper noun, or original wording is disputed, return to the faithful edited transcript. Do not mix old segmented assets, candidate drafts, or deprecated intermediate drafts into QA.
-2. **Mechanical checks:** for each file, verify parseable frontmatter, exactly one H1, resolving relative paths, valid internal anchors, and agreement between declared and measured entry counts.
-3. **Field completeness:** validate required fields for every entry according to library type. Total line count is not evidence of content completeness.
-4. **Reverse-coverage scan:** work backward from headings, core chains, assignments, pending audio reviews, and high-risk numbers in every authoritative lecture to the cross-topic library. Downward sampling from the cross-topic library alone is insufficient.
-5. **Semantic deduplication and boundary checks:** identify duplicate records for the same method or case and detect distinct mechanisms merged incorrectly.
-6. **Independent executability:** a template must define inputs, steps, deliverables, acceptance, risks, and stop conditions. Conceptual explanation alone is insufficient.
-7. **Per-file verdict:** give each file an independent `PASS` or `BLOCKED` verdict with line-number evidence. If critical coverage or factual boundaries remain incomplete, do not replace the blocked verdict with “overall quality is good.”
+1. **锁定权威输入**：优先使用逐课系统化讲义；有讲者、数字、专名或原句争议时回查忠实精编。旧分段资产、候选稿和已废弃中间稿不得混入。
+2. **机械检查**：逐文件验证 frontmatter 可解析、H1 唯一、相对路径存在、内部锚点命中、声明条目数与实测一致。
+3. **字段完整性**：按库类型验证每个条目必需字段，不以总行数代替内容完整性。
+4. **反向覆盖扫描**：从全部权威讲义的标题、核心链路、作业、待回听项和高风险数字反查横向库；不能只从横向库向下抽查。
+5. **语义去重与边界检查**：检查同一方法或案例是否重复建档，也检查不同机制是否被错误合并。
+6. **独立可执行性检查**：模板必须有输入、步骤、交付物、验收、风险和停止条件；不能只有概念说明。
+7. **逐文件判定**：每份文件单独给出“通过/阻塞”，并给出行号证据。只要关键覆盖或事实边界仍有缺口，就不能用“整体质量不错”替代阻塞结论。
 
-## 2. Minimum Gates for Six File Types
+## 二、六类文件的最低门槛
 
-### Master Course Outline
+### 课程总纲
+- 课程节数与逐课链接完整；
+- 日期、讲师、嘉宾和多人问答边界正确；
+- 课程主线、学习路径和导航一致；
+- 编辑归纳不得冒充讲师官方命名。
 
-- Lesson count and per-lesson links are complete.
-- Dates, instructor, guests, and multi-speaker Q&A boundaries are correct.
-- Course throughline, learning paths, and navigation agree.
-- Editorial synthesis is not presented as the instructor's official terminology.
+### 方法论与模型库
+- 声明条目数与实际条目数一致；
+- 每条至少包含：解决问题、核心原理、步骤、适用条件、不适用/风险、来源课次、相关案例；
+- **关键覆盖必须用反向扫描判断**：逐课标题或主链中的核心方法若仅被埋入其他条目、无法独立检索，应列为覆盖缺口；
+- 公式须区分讲师原表达、编辑整理和外部定律。
 
-### Methodology and Model Library
+### 案例库
+- 每例包含背景、关键动作、结果口径、能说明什么、不能推出什么、来源和核验状态；
+- 同一案例跨课出现时合并来源，不重复建档；
+- 相似题材但机制不同的案例不可误判为重复；
+- 医疗、收入、播放、经营和平台结果必须降级为课堂口述或待核验。
 
-- Declared entry count equals actual entry count.
-- Every entry includes the problem solved, core principle, steps, applicability conditions, inapplicable cases/risks, source lesson, and related cases.
-- **Determine critical coverage through reverse scanning:** if a core method from a per-lesson heading or primary chain is buried inside another entry and cannot be independently retrieved, record a coverage gap.
-- Formulas distinguish the instructor's original expression, editorial organization, and external laws.
+### 工具与平台库
+- 先区分模型、Chatbot、Agent客户端、CLI、知识库、Skill、MCP和投流/交易工具；
+- 每项记录课堂用法、限制、时效/合规风险和来源；
+- “课堂使用”不等于推荐，“当时功能”不等于当前功能；
+- 合并条目数与唯一产品数要明确区分。
 
-### Case Library
+### 作业与执行模板库
+- 每个模板具备目标、输入、步骤、交付物、验收、风险；
+- 未披露的完整 Prompt、命令、维度表、审核法和钩子体系必须写“需按意图自建”；
+- 必须能直接填写或执行，不得只有原则。
 
-- Every case includes context, critical actions, outcome convention, what it demonstrates, what it does not establish, source, and verification state.
-- Merge source references when the same case appears across lessons; do not create duplicate records.
-- Do not misclassify similar subject matter with different mechanisms as duplicates.
-- Medical, earnings, view, operating, and platform outcomes are downgraded to classroom reports or pending verification.
+### 事实核验表
+- ID连续无缺号、无重复只是机械门槛，不代表覆盖通过；
+- 至少区分：待回听、上下文纠错但待音频确认、课堂口述未外证、平台规则需时效复核；
+- 反向扫描全部讲义中的专名、金额、收入、播放、型号、平台规则、医疗、效果和商业条款；
+- 对“表中不存在某事项”的负面结论，必须用全文检索或确定性脚本验证；
+- 明确标为未来执行台账的空表不算空壳，但不能把空台账写成已经核验。
 
-### Tool and Platform Library
+## 三、容易漏掉的检查
 
-- Distinguish models, chatbots, Agent clients, CLIs, knowledge bases, Skills, MCP, and paid-traffic/trading tools first.
-- Record classroom use, limits, time sensitivity/compliance risks, and source for every item.
-- “Used in class” does not mean “recommended,” and “available then” does not mean “available now.”
-- Distinguish merged entry count from unique product count.
+- Markdown链接有效，不代表 frontmatter 中的相对源路径有效；两类都要检查。
+- 文件内导航锚点要单独验证，不能只检查目标文件存在。
+- 总数正确不代表覆盖完整：条目数、事实ID仍可能漏掉核心方法或高风险事项。
+- “来源课次清楚”与“精确到段落”是不同追溯等级；若只做到课次级，应如实说明。
+- 不要把“没有明显矛盾”写成“事实全部正确”；终验只证明所检查边界内未发现冲突。
 
-### Assignment and Execution-Template Library
-
-- Every template contains an objective, inputs, steps, deliverables, acceptance criteria, and risks.
-- For any undisclosed complete prompt, command, dimension table, review method, or hook system, state `must-reconstruct-from-intent`.
-- Every template must be directly fillable or executable rather than a list of principles.
-
-### Fact-Verification Table
-
-- Continuous IDs without gaps or duplicates are only a mechanical gate; they do not prove coverage.
-- Distinguish at least: needs audio review; contextually corrected but awaiting audio confirmation; classroom report without external evidence; platform rule requiring time-sensitive re-verification.
-- Reverse-scan every lecture for proper nouns, amounts, earnings, views, model numbers, platform rules, medical claims, effects, and commercial terms.
-- Any negative claim that “the table contains no such item” requires full-text search or a deterministic script.
-- An intentionally empty future-execution ledger is not a hollow file, but it must not be described as already verified.
-
-## 3. Commonly Missed Checks
-
-- A valid Markdown link does not establish that a relative source path in frontmatter resolves; check both.
-- Validate in-document navigation anchors separately; confirming the target file exists is insufficient.
-- Correct totals do not prove complete coverage: entry counts and fact IDs can still omit a core method or high-risk issue.
-- “Source lesson identified” and “traced to a specific paragraph” are different traceability levels. Report lesson-level traceability honestly when that is all that exists.
-- Do not rewrite “no obvious conflict found” as “all facts are correct.” Final QA proves only that no conflict was found within the checked boundary.
-
-## 4. Recommended Output Format
+## 四、推荐输出格式
 
 ```text
-Overall: N files passed, M files blocked
+总体：N份通过，M份阻塞
 
-Global mechanical checks:
-- frontmatter / H1 / links / anchors / entry counts
+全局机械检查：
+- frontmatter / H1 / 链接 / 锚点 / 条目数
 
-Per file:
-1. Filename: PASS or BLOCKED
-   - Passed items
-   - Blocking item + authoritative-source line number + target-file line number / evidence of an absent search match
+逐文件：
+1. 文件名：通过或阻塞
+   - 已通过项
+   - 阻塞项＋权威来源行号＋目标文件行号/缺失检索证据
 
-File operations: no files created, modified, or deleted (for read-only QA)
+文件操作：未创建、未修改、未删除（如为只读QA）
 ```

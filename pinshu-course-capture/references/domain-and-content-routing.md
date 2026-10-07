@@ -1,46 +1,46 @@
-# Domain and Content Routing
+# 领域与内容路由
 
-Purpose: load only the professional boundaries and content anchors required by the current lesson. Do not duplicate the whole pipeline for every domain.
+目标：只给当前课加载必要的专业边界和内容锚点，不为每个领域复制一套流水线。
 
-## Shared rules
+## 共同规则
 
-- A domain adapter may add authoritative terminology sources, source hierarchy, risk triggers, and hard boundaries.
-- A content adapter may add only the structures, evidence, and presentation details that must be preserved.
-- Neither adapter type may weaken the core quality contract, change the four core results, or enable extension assets by default.
-- One lesson may combine several content types. Record only selected adapters in the Worker Spec.
+- 领域适配器只增加术语权威、来源层级、风险触发器和不可越过边界。
+- 内容适配器只增加必须保留的结构、证据和呈现方式。
+- 两者都不能降低核心质量合同、改变四项核心结果或默认生成扩展资产。
+- 一课可组合多个内容类型；只把命中项写进 Worker Spec。
 
-## Domain routing
+## 领域路由
 
-| Domain | Primary authorities and boundaries | Default risk triggers |
+| 领域 | 重点权威与边界 | 默认风险触发器 |
 |---|---|---|
-| General or cross-domain | Original material and the course glossary | Identity conflict, truncated source, conflicting key numbers |
-| Business and management | Original operating material, contracts, and financial definitions | Revenue attribution, extrapolated cases, internal data |
-| Brand marketing and sales | Platform rules, advertising law, and original cases | Performance promises, attribution, gray-area acquisition |
-| AI, software, and technology | Official documentation, versions, and real execution results | Missing code or commands, outdated versions, unsafe operations |
-| Finance, investment, and economics | Regulatory disclosures, audited definitions, and dated evidence | Return promises, timeliness, valuation, and metric definitions |
-| Medicine, health, nutrition, and traditional medicine | Textbooks, guidelines, pharmacopeias, and identified original cases | Dosage, contraindications, emergencies, treatment advice, causal efficacy claims |
-| Law, compliance, and public policy | Current law, official documents, and applicable jurisdiction | Timeliness, jurisdiction, rights and obligations, overconfident conclusions |
-| Education and learning | Course objectives, assessment criteria, and original responses | Reporting exposure as mastery, fabricating learning records |
-| Psychology, relationships, and personal development | Original accounts and professional boundaries | Diagnosis, labeling, high-risk intervention |
-| History, humanities, philosophy, and religion | Primary texts, editions, and historical context | Anachronism, merged schools, fabricated quotations |
-| Art, design, media, and content | Original works, rights, and creative process | Rights ownership, visual evidence, style misattribution |
-| Science, engineering, manufacturing, and supply chain | Standards, experiment or production records, and specifications | Units, parameters, safety conditions, reproducibility |
-| Client-specific domain | Client-provided authoritative glossary and business rules | Unauthorized data, internal definitions, delivery boundaries |
+| 通用/跨领域 | 原始资料、课程既有词典 | 身份冲突、来源截断、关键数字矛盾 |
+| 商业与管理 | 原始经营材料、合同、财务口径 | 收入归因、案例外推、内部数据 |
+| 品牌营销与销售 | 平台规则、广告法、原始案例 | 效果承诺、归因、灰度获客 |
+| AI、软件与技术 | 官方文档、版本、真实运行结果 | 代码/命令缺失、版本过时、安全操作 |
+| 财经、投资与经济 | 监管披露、审计口径、时间点 | 收益承诺、时效、估值和数据口径 |
+| 医疗、健康、营养与中医 | 教材、指南、药典、原始病案身份 | 剂量、禁忌、危重症、诊疗建议、疗效因果 |
+| 法律、合规与公共政策 | 现行法规、正式文件、适用法域 | 时效、辖区、权利义务、确定性结论 |
+| 教育与学习 | 课程目标、测评口径、原始作答 | 把听过写成掌握、伪造学习记录 |
+| 心理、关系与个人成长 | 原始叙述、专业边界 | 诊断化、标签化、高风险干预 |
+| 历史、人文、哲学与宗教 | 原典、版本、时代语境 | 时代错置、流派混并、伪引语 |
+| 艺术、设计、媒体与内容 | 原作、版权、创作过程 | 权利归属、画面证据、风格误归因 |
+| 科学、工程、制造与供应链 | 标准、实验/生产记录、规格 | 单位、参数、安全条件、可复现性 |
+| 客户专用领域 | 客户提供的权威词典与业务规则 | 未授权数据、内部口径、交付边界 |
 
-## Content-type routing
+## 内容类型路由
 
-| Content type | Must preserve |
+| 内容类型 | 必须保留 |
 |---|---|
-| Viewpoint or theory lesson | Claims, evidence, rebuttals, qualifications, and reasoning chain |
-| Case, clinical case, or retrospective | Context, process, adjustments, outcome, and limits; do not turn correlation into causation |
-| Procedure or demonstration | Preconditions, actions, interface or tool feedback, exceptions, correction, and result |
-| Code or technical lesson | Code, commands, parameters, dependencies, versions, errors, and runtime results |
-| Interview or multi-speaker discussion | Speakers, follow-up questions, disagreements, and contextual continuity; never merge viewpoint owners |
-| Q&A | Original question intent, answer, follow-ups, exceptions, and unresolved items |
-| Visually dependent lesson | Correspondence among slides, whiteboard, charts, screen content, and narration |
-| Data- or fact-dense lesson | Date, definition, unit, source identity, and conflicts |
-| Module summary | Links to prior lessons, core relationships, changes, and unresolved disagreements |
+| 观点/理论课 | 论点、论据、反驳、限定条件、推导链 |
+| 案例/病案/复盘 | 背景、过程、调整、结果、边界；不把相关写成因果 |
+| 实操/演示课 | 前提、动作、界面/工具反馈、异常、修正、结果 |
+| 代码/技术课 | 代码、命令、参数、依赖、版本、报错和运行结果 |
+| 访谈/多人对谈 | 发言人、追问、分歧、上下文承接，不合并观点主体 |
+| 问答/答疑 | 问题原意、回答、追问、例外和未解决项 |
+| 强视觉课 | PPT、板书、图表、屏幕内容与口播的对应关系 |
+| 数据/事实密集课 | 时间点、口径、单位、来源身份和冲突 |
+| 模块总结 | 前课回链、核心关系、变化与未解决分歧 |
 
-## Escalate to independent QA
+## 升级独立 QA
 
-Escalate when any condition applies: unresolved uncertainty; medical, legal, financial, safety, or real operational consequences; conflicts in speaker relationships, visuals, code, commands, or key numbers; a semantic-risk warning in the mechanical report; formal external use; a matching recent `high`; or stable sampling under the assurance mode.
+命中任一项升级：未解决待确认；医疗/法律/财务/安全或真实操作后果；多人关系、视觉、代码、命令、关键数字冲突；机械报告出现语义风险；外部正式使用；最近课程出现同类 high；保障模式稳定抽样。
