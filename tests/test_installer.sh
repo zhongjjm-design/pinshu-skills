@@ -192,6 +192,15 @@ assert_exact_active_roster() {
   [ "$count" -eq "${#EXPECTED_SKILLS[@]}" ] || fail "expected ${#EXPECTED_SKILLS[@]} active Pinshu packages, found $count"
 }
 
+assert_public_visual_link() {
+  local skill=$1 version=$2 target="$HOME_DIR/.agents/skills/$1"
+  [ -L "$target" ] || fail "expected managed public link: $target"
+  [ "$(readlink "$target")" = "$HOME_DIR/.pinshu-skills/$skill" ] || fail 'wrong public link target'
+  assert_file "$target/SKILL.md"
+  assert_file "$target/.public-bundle"
+  assert_contains "$target/payload.txt" "$version"
+}
+
 test_clean_install() {
   local skill
   local git_artifact
@@ -446,7 +455,7 @@ test_partial_install_without_clone() {
   assert_contains "$saved" v1
 }
 
-test_local_visual_suite_is_retained_as_a_group() {
+test_private_dependencies_and_public_companion_update() {
   local skill
   new_case mixed-visual-group
   make_remote v1 valid
@@ -458,11 +467,15 @@ test_local_visual_suite_is_retained_as_a_group() {
   done
   update_remote v2
   run_installer_success
-  for skill in pinshu-visual-system pinshu-infographic pinshu-business-graphics; do
+  for skill in pinshu-visual-system pinshu-business-graphics; do
     diff -r "$CASE_ROOT/before-$skill" "$HOME_DIR/.agents/skills/$skill"
   done
+  assert_public_visual_link pinshu-infographic v2
   assert_contains "$HOME_DIR/.agents/skills/pinshu-study/payload.txt" v2
-  assert_contains "$LOG_FILE" 'Installed or updated 8 public Pinshu Skills'
+  assert_contains "$LOG_FILE" 'Installed or updated 9 public Pinshu Skills'
+  local saved
+  saved=$(find "$HOME_DIR/.agents/skills/.pinshu-backups" -type f -path '*/pinshu-infographic/payload.txt' -print -quit)
+  assert_contains "$saved" v1
 }
 
 test_existing_claude_package_conflict_is_retained() {
@@ -643,11 +656,11 @@ test_private_visual_system_is_not_replaced() {
   diff -r "$CASE_ROOT/private-before" "$HOME_DIR/.agents/skills/pinshu-visual-system"
   assert_contains "$HOME_DIR/.agents/skills/pinshu-visual-system/assets/identity.txt" 'private identity'
   assert_contains "$HOME_DIR/.agents/skills/pinshu-transcript/payload.txt" v1
-  assert_contains "$LOG_FILE" 'Installed or updated 8 public Pinshu Skills'
+  assert_contains "$LOG_FILE" 'Installed or updated 10 public Pinshu Skills'
+  assert_exact_active_roster
   assert_contains "$LOG_FILE" 'kept existing, not upgraded: pinshu-visual-system'
-  assert_contains "$LOG_FILE" 'not installed alongside the local suite: pinshu-infographic'
-  assert_absent "$HOME_DIR/.agents/skills/pinshu-infographic"
-  assert_absent "$HOME_DIR/.agents/skills/pinshu-business-graphics"
+  assert_public_visual_link pinshu-infographic v1
+  assert_public_visual_link pinshu-business-graphics v1
   assert_dir "$HOME_DIR/.pinshu-skills/.git"
 }
 
@@ -679,7 +692,7 @@ test_seven_package_installation_adds_visual_system() {
   assert_file "$HOME_DIR/.agents/skills/pinshu-film-teardown/SKILL.md"
 }
 
-run_test 'private visual core stays active while other Skills install' test_private_visual_system_is_not_replaced
+run_test 'private core remains intact and missing companions use the public core' test_private_visual_system_is_not_replaced
 run_test 'prior seven packages upgrade to the current roster with backups' test_seven_package_installation_adds_visual_system
 
 test_private_visual_companions_are_not_replaced() {
@@ -696,8 +709,17 @@ test_private_visual_companions_are_not_replaced() {
     assert_contains "$HOME_DIR/.agents/skills/$skill/assets/original.txt" 'private original survives'
     assert_dir "$HOME_DIR/.pinshu-skills/.git"
     assert_contains "$HOME_DIR/.agents/skills/pinshu-transcript/payload.txt" v1
-    assert_absent "$HOME_DIR/.agents/skills/pinshu-visual-system"
+    assert_dir "$HOME_DIR/.agents/skills/pinshu-visual-system"
+    assert_contains "$HOME_DIR/.agents/skills/pinshu-visual-system/payload.txt" v1
+    assert_exact_active_roster
     assert_contains "$LOG_FILE" "kept existing, not upgraded: $skill"
+    update_remote v2
+    run_installer_success
+    assert_contains "$HOME_DIR/.agents/skills/pinshu-visual-system/payload.txt" v1
+    diff -r "$CASE_ROOT/private-before" "$HOME_DIR/.agents/skills/$skill"
+    local public_companion=pinshu-infographic
+    [ "$skill" != pinshu-infographic ] || public_companion=pinshu-business-graphics
+    assert_public_visual_link "$public_companion" v2
   done
 }
 
@@ -730,7 +752,7 @@ test_nine_package_installation_adds_visual_companions() {
   assert_contains "$old_clone" 'v1'
 }
 
-run_test 'private visual companions stay intact without mixing public core' test_private_visual_companions_are_not_replaced
+run_test 'private companions remain intact and missing public packages are added' test_private_visual_companions_are_not_replaced
 run_test 'prior nine packages upgrade to eleven with complete backups' test_nine_package_installation_adds_visual_companions
 
 run_test 'owned old-six installation upgrades to the current roster with backups' test_old_six_owned_upgrade
@@ -738,7 +760,7 @@ run_test 'altered installed copy is backed up during upgrade' test_altered_insta
 run_test 'dirty old five upgrades to the current roster and preserves local edits' test_dirty_old_five_upgrades_to_current_with_backups
 run_test 'repeated upgrade replaces stale content and preserves backup' test_repeated_upgrade
 run_test 'partial installed packages without a prior clone upgrade and complete' test_partial_install_without_clone
-run_test 'mixed private and public visual suite stays consistent during upgrade' test_local_visual_suite_is_retained_as_a_group
+run_test 'mixed visual upgrade preserves private dependencies and updates public companion' test_private_dependencies_and_public_companion_update
 run_test 'existing Claude package stays intact while missing links are added' test_existing_claude_package_conflict_is_retained
 run_test 'Linux rsync timestamp-only output permits owned upgrade' test_linux_rsync_timestamp_only_upgrade
 run_test 'conflicting Claude path is left untouched' test_conflicting_claude_path_is_untouched
@@ -749,6 +771,135 @@ run_test 'special-file destination is refused' test_special_file_destination_ref
 run_test 'escaping destination path is refused' test_escaping_destination_refusal
 run_test 'existing installer lock prevents a second run' test_existing_lock_refusal
 run_test 'symlink backup container is refused' test_symlink_backup_container_refusal
+
+
+seed_private_core() {
+  mkdir -p "$HOME_DIR/.agents/skills/pinshu-visual-system/assets"
+  printf -- '---\nname: pinshu-visual-system\n---\n' >"$HOME_DIR/.agents/skills/pinshu-visual-system/SKILL.md"
+  printf 'private identity\n' >"$HOME_DIR/.agents/skills/pinshu-visual-system/assets/identity.txt"
+  cp -R "$HOME_DIR/.agents/skills/pinshu-visual-system" "$CASE_ROOT/private-before"
+}
+
+test_managed_visual_links_upgrade() {
+  new_case linked-upgrade
+  make_remote v1 valid
+  seed_private_core
+  run_installer_success
+  printf 'local public edit\n' >"$HOME_DIR/.agents/skills/pinshu-infographic/local.txt"
+  update_remote v2
+  run_installer_success
+  assert_public_visual_link pinshu-infographic v2
+  assert_public_visual_link pinshu-business-graphics v2
+  assert_exact_active_roster
+  diff -r "$CASE_ROOT/private-before" "$HOME_DIR/.agents/skills/pinshu-visual-system"
+  local saved
+  saved=$(find "$HOME_DIR/.pinshu-install-backups" -type f -path '*/previous-clone/pinshu-infographic/local.txt' -print -quit)
+  assert_contains "$saved" 'local public edit'
+  run_installer_success
+  assert_public_visual_link pinshu-infographic v2
+}
+
+test_managed_links_rollback() {
+  new_case linked-rollback
+  make_remote v1 valid
+  seed_private_core
+  run_installer_success
+  update_remote v2
+  local wrapper_dir="$CASE_ROOT/wrapper-bin" real_mv
+  real_mv=$(command -v mv)
+  mkdir -p "$wrapper_dir"
+  cat >"$wrapper_dir/mv" <<'WRAPPER'
+#!/usr/bin/env bash
+set -u
+last_arg=${!#}
+if [ "$last_arg" = "$PINSHU_SKILLS_DIR/pinshu-business-graphics" ] && [ ! -e "$MV_FAIL_STATE" ]; then
+  : >"$MV_FAIL_STATE"
+  exit 97
+fi
+exec "$PINSHU_REAL_MV" "$@"
+WRAPPER
+  chmod +x "$wrapper_dir/mv"
+  if installer_env PATH="$wrapper_dir:$NO_NETWORK_BIN:$PATH" PINSHU_REAL_MV="$real_mv" MV_FAIL_STATE="$CASE_ROOT/failed-once" bash "$INSTALLER" >"$LOG_FILE" 2>&1; then
+    fail 'linked upgrade unexpectedly succeeded after injected failure'
+  fi
+  assert_file "$CASE_ROOT/failed-once"
+  assert_contains "$LOG_FILE" 'Rollback completed'
+  assert_public_visual_link pinshu-infographic v1
+  assert_public_visual_link pinshu-business-graphics v1
+  assert_contains "$HOME_DIR/.agents/skills/pinshu-study/payload.txt" v1
+  diff -r "$CASE_ROOT/private-before" "$HOME_DIR/.agents/skills/pinshu-visual-system"
+}
+
+test_foreign_visual_link_refused() {
+  new_case foreign-visual-link
+  make_remote v1 valid
+  seed_private_core
+  mkdir -p "$CASE_ROOT/foreign"
+  printf 'foreign sentinel\n' >"$CASE_ROOT/foreign/sentinel"
+  ln -s "$CASE_ROOT/foreign" "$HOME_DIR/.agents/skills/pinshu-infographic"
+  run_installer_failure
+  assert_contains "$LOG_FILE" 'Destination symlink was refused'
+  assert_file "$CASE_ROOT/foreign/sentinel"
+  assert_absent "$HOME_DIR/.pinshu-skills"
+}
+
+test_managed_link_requires_official_clone() {
+  new_case linked-origin-refusal
+  make_remote v1 valid
+  seed_private_core
+  run_installer_success
+  git -C "$HOME_DIR/.pinshu-skills" remote set-url origin "$CASE_ROOT/unrelated.git"
+  run_installer_failure
+  assert_contains "$LOG_FILE" 'Existing clone origin does not match'
+  assert_public_visual_link pinshu-infographic v1
+}
+
+test_all_private_visual_packages_retained() {
+  new_case all-private-visual
+  make_remote v1 valid
+  local skill
+  for skill in pinshu-visual-system pinshu-infographic pinshu-business-graphics; do
+    mkdir -p "$HOME_DIR/.agents/skills/$skill"
+    printf -- '---\nname: %s\n---\n' "$skill" >"$HOME_DIR/.agents/skills/$skill/SKILL.md"
+    printf 'private sentinel\n' >"$HOME_DIR/.agents/skills/$skill/sentinel"
+    cp -R "$HOME_DIR/.agents/skills/$skill" "$CASE_ROOT/before-$skill"
+  done
+  run_installer_success
+  for skill in pinshu-visual-system pinshu-infographic pinshu-business-graphics; do
+    diff -r "$CASE_ROOT/before-$skill" "$HOME_DIR/.agents/skills/$skill"
+  done
+  assert_exact_active_roster
+  assert_contains "$LOG_FILE" 'Installed or updated 8 public Pinshu Skills'
+}
+
+test_real_planners_through_shared_links() {
+  new_case real-linked-planners
+  make_remote v1 valid
+  local skill
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    rsync -a --exclude=__pycache__/ --exclude='*.pyc' "$REPO_ROOT/$skill/" "$FIXTURE_SOURCE/$skill/"
+  done
+  git -C "$FIXTURE_SOURCE" add -A
+  git -C "$FIXTURE_SOURCE" commit -q -m 'real public packages'
+  git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
+  seed_private_core
+  run_installer_success
+  # The private core deliberately has no scripts. Wrong dependency routing fails.
+  python3 "$HOME_DIR/.agents/skills/pinshu-infographic/scripts/plan_infographic.py" \
+    --brief "$HOME_DIR/.agents/skills/pinshu-infographic/examples/brief.json" --output-dir "$CASE_ROOT/infographic-out"
+  python3 "$HOME_DIR/.agents/skills/pinshu-business-graphics/scripts/plan_business_graphic.py" \
+    --brief "$HOME_DIR/.agents/skills/pinshu-business-graphics/examples/brief.json" --output-dir "$CASE_ROOT/business-out"
+  assert_file "$CASE_ROOT/infographic-out/route-plan.json"
+  assert_file "$CASE_ROOT/business-out/route-plan.json"
+  diff -r "$CASE_ROOT/private-before" "$HOME_DIR/.agents/skills/pinshu-visual-system"
+}
+
+run_test 'managed public visual links update repeatedly and preserve canonical edits' test_managed_visual_links_upgrade
+run_test 'linked upgrade failure restores old clone and both entry links' test_managed_links_rollback
+run_test 'foreign visual symlink is refused without mutation' test_foreign_visual_link_refused
+run_test 'managed visual links require the prior official clone origin' test_managed_link_requires_official_clone
+run_test 'all three private visual packages remain unchanged' test_all_private_visual_packages_retained
+run_test 'real companion planners invoked through shared links use their public core' test_real_planners_through_shared_links
 
 printf '%s passed; %s failed\n' "$PASS_COUNT" "$FAIL_COUNT"
 [ "$FAIL_COUNT" -eq 0 ]

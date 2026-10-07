@@ -34,7 +34,10 @@ LEGACY_SKILLS=(
 )
 
 INSTALL_SKILLS=()
+KEPT_SKILLS=()
+LINKED_SKILLS=()
 KEEP_LOCAL_VISUALS=0
+VISUAL_SELECTION=""
 
 WORK_ROOT=""
 ACQUIRED_REPO=""
@@ -126,35 +129,75 @@ is_visual_skill() {
   esac
 }
 
+is_managed_visual_link() {
+  local slug=$1 target="$SKILLS_DIR/$1"
+  case "$slug" in pinshu-infographic|pinshu-business-graphics) ;; *) return 1 ;; esac
+  [ -L "$target" ] || return 1
+  [ "$(readlink "$target")" = "$INSTALL_DIR/$slug" ] || return 1
+  [ -d "$INSTALL_DIR/.git" ] && [ ! -L "$INSTALL_DIR" ] || return 1
+  [ -d "$INSTALL_DIR/$slug" ] && [ ! -L "$INSTALL_DIR/$slug" ] || return 1
+  [ -f "$target/.public-bundle" ] && [ ! -L "$target/.public-bundle" ] || return 1
+  [ -f "$target/SKILL.md" ] && [ ! -L "$target/SKILL.md" ] || return 1
+  grep -Eq "^name:[[:space:]]*$slug[[:space:]]*$" "$target/SKILL.md"
+}
+
+is_linked_selection() {
+  local slug
+  for slug in ${LINKED_SKILLS[@]+"${LINKED_SKILLS[@]}"}; do
+    [ "$slug" != "$1" ] || return 0
+  done
+  return 1
+}
+
+is_local_visual() {
+  local target="$SKILLS_DIR/$1"
+  is_visual_skill "$1" && path_exists "$target" &&
+    { [ ! -f "$target/.public-bundle" ] || [ -L "$target/.public-bundle" ]; }
+}
+
 has_local_visual_suite() {
-  local slug target
+  local slug
   for slug in pinshu-visual-system pinshu-infographic pinshu-business-graphics; do
-    target="$SKILLS_DIR/$slug"
-    if path_exists "$target" && { [ ! -f "$target/.public-bundle" ] || [ -L "$target/.public-bundle" ]; }; then
+    if is_local_visual "$slug"; then
       return 0
     fi
   done
   return 1
 }
 
+visual_selection_signature() {
+  local slug target
+  for slug in pinshu-visual-system pinshu-infographic pinshu-business-graphics; do
+    target="$SKILLS_DIR/$slug"
+    if is_local_visual "$slug"; then printf '%s:local\n' "$slug"
+    elif is_managed_visual_link "$slug"; then printf '%s:linked\n' "$slug"
+    elif path_exists "$target"; then printf '%s:public\n' "$slug"
+    else printf '%s:missing\n' "$slug"; fi
+  done
+}
+
 select_installation_skills() {
   local skill
   if has_local_visual_suite; then
     KEEP_LOCAL_VISUALS=1
-    printf 'Keeping the existing private/local visual suite active; other public Skills will still install or update.\n'
+    printf 'Keeping local visual packages; missing public companions will use their own public core.\n'
   fi
   for skill in "${EXPECTED_SKILLS[@]}"; do
-    if [ "$KEEP_LOCAL_VISUALS" -eq 1 ] && is_visual_skill "$skill"; then
+    # Preserve an existing core when private companions may depend on it.
+    if is_local_visual "$skill" || { [ "$KEEP_LOCAL_VISUALS" -eq 1 ] && [ "$skill" = pinshu-visual-system ] && path_exists "$SKILLS_DIR/$skill"; }; then
+      KEPT_SKILLS+=("$skill")
       continue
     fi
     INSTALL_SKILLS+=("$skill")
+    if is_visual_skill "$skill" && [ "$skill" != pinshu-visual-system ] && { [ "$KEEP_LOCAL_VISUALS" -eq 1 ] || is_managed_visual_link "$skill"; }; then
+      LINKED_SKILLS+=("$skill")
+    fi
   done
+  VISUAL_SELECTION=$(visual_selection_signature)
 }
 
 check_visual_selection_unchanged() {
-  local current=0
-  if has_local_visual_suite; then current=1; fi
-  [ "$current" -eq "$KEEP_LOCAL_VISUALS" ] || die "Visual installation changed during staging; rerun to select a consistent suite."
+  [ "$(visual_selection_signature)" = "$VISUAL_SELECTION" ] || die "Visual installation changed during staging; rerun to select a consistent suite."
 }
 
 validate_configuration() {
@@ -211,7 +254,9 @@ preflight_target_paths() {
       *) die "Skill destination escapes PINSHU_SKILLS_DIR: $target" ;;
     esac
     if path_exists "$target"; then
-      [ ! -L "$target" ] || die "Destination symlink was refused: $target"
+      if [ -L "$target" ]; then
+        is_managed_visual_link "$slug" || die "Destination symlink was refused: $target"
+      fi
       [ -d "$target" ] || die "Destination is not a real directory: $target"
     fi
   done
@@ -240,7 +285,10 @@ preflight_previous_installation() {
   for skill in "${EXPECTED_SKILLS[@]}"; do
     target="$SKILLS_DIR/$skill"
     if path_exists "$target"; then
-      [ -d "$target" ] && [ ! -L "$target" ] || die "Destination is not a real directory: $target"
+      [ -d "$target" ] || die "Destination is not a directory: $target"
+      if [ -L "$target" ]; then
+        is_managed_visual_link "$skill" || die "Destination symlink was refused: $target"
+      fi
       [ -f "$target/SKILL.md" ] && [ ! -L "$target/SKILL.md" ] || die "Existing Skill lacks a regular SKILL.md: $target"
       grep -Eq "^name:[[:space:]]*$skill[[:space:]]*$" "$target/SKILL.md" || die "Existing Skill name does not match its directory: $target"
     fi
@@ -286,6 +334,10 @@ validate_staged_skills() {
   local bad_entry
 
   for skill in "${INSTALL_SKILLS[@]}"; do
+    if is_linked_selection "$skill"; then
+      [ -L "$SKILL_STAGE_ROOT/$skill" ] && [ "$(readlink "$SKILL_STAGE_ROOT/$skill")" = "$INSTALL_DIR/$skill" ] || die "Staged public link is invalid: $skill"
+      continue
+    fi
     [ -d "$SKILL_STAGE_ROOT/$skill" ] && [ ! -L "$SKILL_STAGE_ROOT/$skill" ] || die "Staged package is not a real directory: $skill"
     [ -f "$SKILL_STAGE_ROOT/$skill/SKILL.md" ] && [ ! -L "$SKILL_STAGE_ROOT/$skill/SKILL.md" ] || die "Staged package lacks a regular SKILL.md: $skill"
   done
@@ -420,6 +472,10 @@ validate_active_installation() {
   local skill
 
   for skill in "${INSTALL_SKILLS[@]}"; do
+    if is_linked_selection "$skill"; then
+      is_managed_visual_link "$skill" || die "Installed public link is invalid: $skill"
+      continue
+    fi
     [ -d "$SKILLS_DIR/$skill" ] && [ ! -L "$SKILLS_DIR/$skill" ] || die "Installed package is not a real directory: $skill"
     [ -f "$SKILLS_DIR/$skill/SKILL.md" ] && [ ! -L "$SKILLS_DIR/$skill/SKILL.md" ] || die "Installed package lacks a regular SKILL.md: $skill"
   done
@@ -510,6 +566,10 @@ assert_directory_chain "$(dirname -- "$INSTALL_DIR")" "PINSHU_INSTALL_DIR parent
 
 SKILL_STAGE_ROOT=$(mktemp -d "$SKILLS_DIR/.pinshu-stage.XXXXXX")
 for skill in "${INSTALL_SKILLS[@]}"; do
+  if is_linked_selection "$skill"; then
+    ln -s -- "$INSTALL_DIR/$skill" "$SKILL_STAGE_ROOT/$skill"
+    continue
+  fi
   mkdir -- "$SKILL_STAGE_ROOT/$skill"
   rsync -a \
     --exclude='.DS_Store' \
@@ -544,10 +604,10 @@ for skill in "${INSTALL_SKILLS[@]}"; do
 done
 backup_target "$INSTALL_DIR" "$INSTALL_BACKUP_ROOT/previous-clone"
 
+install_staged_target "$INSTALL_STAGE" "$INSTALL_DIR"
 for skill in "${INSTALL_SKILLS[@]}"; do
   install_staged_target "$SKILL_STAGE_ROOT/$skill" "$SKILLS_DIR/$skill"
 done
-install_staged_target "$INSTALL_STAGE" "$INSTALL_DIR"
 
 validate_active_installation
 COMMITTED=1
@@ -568,14 +628,12 @@ for skill in "${LEGACY_SKILLS[@]}"; do
 done
 printf 'Installed or updated %s public Pinshu Skills:\n' "${#INSTALL_SKILLS[@]}"
 printf '  - %s\n' "${INSTALL_SKILLS[@]}"
-if [ "$KEEP_LOCAL_VISUALS" -eq 1 ]; then
-  printf 'Visual suite retained together to avoid mixing public and private companions:\n'
-  for skill in pinshu-visual-system pinshu-infographic pinshu-business-graphics; do
-    if path_exists "$SKILLS_DIR/$skill"; then
-      printf '  - kept existing, not upgraded: %s\n' "$skill"
-    else
-      printf '  - not installed alongside the local suite: %s\n' "$skill"
-    fi
-  done
+if [ "${#KEPT_SKILLS[@]}" -gt 0 ]; then
+  printf 'Existing local visual packages retained without replacement:\n'
+  printf '  - kept existing, not upgraded: %s\n' "${KEPT_SKILLS[@]}"
+fi
+if [ "${#LINKED_SKILLS[@]}" -gt 0 ]; then
+  printf 'Public visual entry points use the complete public suite in %s:\n' "$INSTALL_DIR"
+  printf '  - linked to public suite: %s\n' "${LINKED_SKILLS[@]}"
 fi
 printf 'Installation complete. Restart your Agent client.\n'

@@ -11,6 +11,8 @@ Public preview **0.1.4**, original methods by Aidan (Pinshu), developed with Cod
 
 The public pinshu-visual-system 0.2.4 or later must be installed beside this folder. It provides the shared platform registry and reviewed image export. This package owns the seven business-method cards, mother selection, semantic metaphor, series discipline and data checks. The planner creates a business-mother plan with mode=null; it does not mix a blueprint mother with an unrelated illustration mode.
 
+When this Skill's entry is a symlink, resolve its real package directory first (Python: `Path(skill_md_path).resolve().parent`). Read this package's references there and load `../pinshu-visual-system/SKILL.md` relative to that real directory. Use that sibling for all platform, render and publish commands. Do not look up the core by its global Skill name: a private core may legitimately occupy that name. The installer supplies the public sibling automatically. Run the quickstart commands from the real package's parent directory; the planner resolves the same sibling even when invoked through the shared entry link.
+
 No private character or approved internal artwork is included. This first business adapter is character-free. For fixed-identity illustration use the public core's approved local reference interface. Image generation requires the runtime's image tool; precision charts and editable slides require a chart/slide/design tool. baoyu-infographic is an optional separately installed workflow, never a bundled or automatically installed dependency.
 
 ## Select the mother

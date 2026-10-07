@@ -5,7 +5,7 @@ maintainer: Aidan
 repository: https://github.com/zhongjjm-design/pinshu-skills
 runtime_layout: flat
 runtime_glob: ~/.agents/skills/pinshu-*
-updated: 2026-10-06
+updated: 2026-10-07
 skills:
   - name: pinshu-transcript
     origin: original
@@ -47,7 +47,7 @@ skills:
     origin: original
     distribution: bundled-sanitized
     present_in_repository: true
-    version: 0.2.2
+    version: 0.2.4
     status: public-preview
     depends_on: []
     runtime_dependencies: [python3, imagemagick-7, image-capable-agent]
@@ -63,17 +63,17 @@ skills:
     origin: original
     distribution: bundled-sanitized
     present_in_repository: true
-    version: 0.1.2
+    version: 0.1.4
     status: public-preview
     depends_on: [pinshu-visual-system]
-    minimum_core_version: 0.2.2
+    minimum_core_version: 0.2.4
     runtime_dependencies: [python3, imagemagick-7, image-capable-agent]
   - name: pinshu-business-graphics
     origin: original
     distribution: bundled-sanitized
     present_in_repository: true
-    version: 0.1.2
+    version: 0.1.4
     status: public-preview
     depends_on: [pinshu-visual-system]
-    minimum_core_version: 0.2.2
+    minimum_core_version: 0.2.4
     runtime_dependencies: [python3, imagemagick-7, image-capable-agent]
