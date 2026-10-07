@@ -11,6 +11,8 @@ import hashlib
 import json
 import os
 import re
+import shutil
+import subprocess
 import sys
 import tempfile
 from collections import Counter
@@ -18,6 +20,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 SCHEMA_VERSION = 1
+REPORT_SCHEMA_VERSION = 2
+MECHANICAL_ALGORITHM_VERSION = "pinshu-mechanical-2026-10-v2"
+USAGE_PHASES = ("capture", "draft", "mechanical", "qa", "rework", "recheck", "promotion", "revision", "visual", "legacy")
+REPORT_TYPES = {"mechanical_report", "semantic_check", "qa_report", "revision_report"}
 MAIN_FLOW = [
     "DISCOVERED", "CAPTURED", "SOURCE_VERIFIED", "DRAFTED",
     "MECHANICAL_PASS", "SEMANTIC_QA_PASS", "PROMOTED", "ACCEPTED",
@@ -74,6 +80,7 @@ ALLOWED_RISK_FLAGS = {
     "mechanical_semantic_warning", "recent_repeated_high",
 }
 BUDGET_KEYS = {"max_tokens_per_lesson", "max_wall_minutes_per_lesson", "max_agent_calls_per_lesson", "max_reworks_per_lesson", "max_qa_rounds_per_lesson"}
+PROMOTION_HYGIENE_KEYS = {"source_link_fields", "forbidden_draft_markers", "require_source_backlink"}
 
 
 def now() -> str:
@@ -98,6 +105,147 @@ def atomic_write(path: Path, data: dict) -> None:
     finally:
         if os.path.exists(tmp):
             os.unlink(tmp)
+
+
+def absolute_from(base: Path, value: str) -> Path:
+    path = Path(value).expanduser()
+    return path.resolve() if path.is_absolute() else (base / path).resolve()
+
+
+def build_path_context(manifest_path: Path, state_path: Path, manifest: dict) -> dict:
+    """Freeze all path anchors so later commands never depend on process cwd."""
+    manifest_dir = manifest_path.resolve().parent
+    control_dir = state_path.resolve().parent
+    return {
+        "manifest_dir": str(manifest_dir),
+        "control_dir": str(control_dir),
+        "state_path": str(state_path.resolve()),
+        "course_root": str(absolute_from(manifest_dir, str(manifest["course_root"]))),
+        "runtime_dir": str(absolute_from(manifest_dir, str(manifest["runtime_dir"]))),
+    }
+
+
+def path_anchors(state: dict, state_path: Path) -> list[Path]:
+    """Return only persisted/state-derived anchors, including legacy layouts."""
+    context = state.get("path_context", {})
+    state_dir = state_path.resolve().parent
+    anchors: list[Path] = []
+    for value in (
+        context.get("control_dir"),
+        context.get("runtime_dir"),
+        state.get("runtime_dir"),
+        context.get("course_root"),
+        state.get("course_root"),
+        state_dir,
+    ):
+        if not value:
+            continue
+        p = Path(value).expanduser()
+        if not p.is_absolute():
+            # Legacy state values are interpreted from the state directory, not cwd.
+            p = state_dir / p
+        p = p.resolve()
+        if p not in anchors:
+            anchors.append(p)
+    return anchors
+
+
+def resolve_state_path(state: dict, state_path: Path, value: str, *, must_exist: bool = False) -> Path:
+    """Resolve a stored path without a cwd fallback.
+
+    Historical states sometimes stored ``runtime/lesson-N/file`` while the state
+    itself lived inside ``runtime``.  The parent-of-runtime candidate supports that
+    shape using only persisted/state-derived anchors.
+    """
+    raw = Path(value).expanduser()
+    if raw.is_absolute():
+        candidates = [raw.resolve()]
+    else:
+        candidates = []
+        anchors = path_anchors(state, state_path)
+        for anchor in anchors:
+            candidates.append((anchor / raw).resolve())
+            if raw.parts and raw.parts[0] == anchor.name:
+                candidates.append((anchor.parent / raw).resolve())
+        unique: list[Path] = []
+        for candidate in candidates:
+            if candidate not in unique:
+                unique.append(candidate)
+        candidates = unique
+    existing = [candidate for candidate in candidates if candidate.exists()]
+    if len(existing) > 1:
+        # Identical real paths are harmless; distinct matches are ambiguous.
+        real = {str(candidate.resolve()) for candidate in existing}
+        if len(real) > 1:
+            raise ValueError(f"ambiguous stored path {value}: {sorted(real)}")
+    if existing:
+        return existing[0]
+    if must_exist:
+        raise ValueError(f"stored path not found without cwd fallback: {value}")
+    if not candidates:
+        raise ValueError(f"cannot resolve stored path: {value}")
+    return candidates[0]
+
+
+def artifact_path(state: dict, state_path: Path, lesson: dict, key: str, *, must_exist: bool = True) -> Path:
+    value = lesson.get("artifacts", {}).get(key)
+    if not value:
+        raise ValueError(f"missing artifact key {key}")
+    return resolve_state_path(state, state_path, str(value), must_exist=must_exist)
+
+
+def new_usage() -> dict:
+    return {
+        "tokens": 0,
+        "wall_minutes": 0.0,
+        "agent_calls": 0,
+        "phases": {phase: {"tokens": 0, "wall_minutes": 0.0, "agent_calls": 0} for phase in USAGE_PHASES},
+    }
+
+
+def normalize_usage(lesson: dict) -> dict:
+    usage = lesson.setdefault("usage", {"tokens": 0, "wall_minutes": 0.0, "agent_calls": 0})
+    if "phases" not in usage:
+        usage["phases"] = {
+            "legacy": {
+                "tokens": int(usage.get("tokens", 0)),
+                "wall_minutes": float(usage.get("wall_minutes", 0.0)),
+                "agent_calls": int(usage.get("agent_calls", 0)),
+            }
+        }
+    phases = usage["phases"]
+    for phase in USAGE_PHASES:
+        phases.setdefault(phase, {"tokens": 0, "wall_minutes": 0.0, "agent_calls": 0})
+    return usage
+
+
+def add_usage(lesson: dict, phase: str, tokens: int = 0, wall: float = 0.0, calls: int = 0) -> None:
+    if phase not in USAGE_PHASES:
+        raise ValueError(f"unknown usage phase: {phase}")
+    if tokens < 0 or wall < 0 or calls < 0:
+        raise ValueError("usage values must be non-negative")
+    usage = normalize_usage(lesson)
+    usage["tokens"] = int(usage.get("tokens", 0)) + int(tokens)
+    usage["wall_minutes"] = float(usage.get("wall_minutes", 0.0)) + float(wall)
+    usage["agent_calls"] = int(usage.get("agent_calls", 0)) + int(calls)
+    bucket = usage["phases"][phase]
+    bucket["tokens"] += int(tokens)
+    bucket["wall_minutes"] += float(wall)
+    bucket["agent_calls"] += int(calls)
+
+
+def usage_consistent(lesson: dict) -> bool:
+    usage = normalize_usage(lesson)
+    phases = usage["phases"]
+    # Legacy totals may predate phase tracking. Preserve them in an explicit bucket.
+    sums = {
+        "tokens": sum(int(x.get("tokens", 0)) for x in phases.values()),
+        "wall_minutes": sum(float(x.get("wall_minutes", 0.0)) for x in phases.values()),
+        "agent_calls": sum(int(x.get("agent_calls", 0)) for x in phases.values()),
+    }
+    return (sums["tokens"] == int(usage.get("tokens", 0))
+            and abs(sums["wall_minutes"] - float(usage.get("wall_minutes", 0.0))) < 1e-9
+            and sums["agent_calls"] == int(usage.get("agent_calls", 0)))
 
 
 def resolved_course_profile(m: dict) -> str:
@@ -164,6 +312,21 @@ def validate_manifest(m: dict) -> None:
         raise ValueError("unknown budget fields: " + ", ".join(sorted(unknown_budgets)))
     for key, value in budgets.items():
         validate_positive_int(key, value)
+    hygiene = m.get("promotion_hygiene")
+    if hygiene is not None:
+        if not isinstance(hygiene, dict) or set(hygiene) - PROMOTION_HYGIENE_KEYS:
+            raise ValueError("promotion_hygiene contains unsupported fields")
+        fields = hygiene.get("source_link_fields")
+        markers = hygiene.get("forbidden_draft_markers")
+        if not isinstance(fields, list) or not fields or any(not isinstance(x, str) or not x.strip() for x in fields):
+            raise ValueError("promotion_hygiene.source_link_fields must be a non-empty string list")
+        if not isinstance(markers, list) or any(not isinstance(x, str) or not x for x in markers):
+            raise ValueError("promotion_hygiene.forbidden_draft_markers must be a string list")
+        if hygiene.get("require_source_backlink") is not True:
+            raise ValueError("promotion_hygiene.require_source_backlink must be true")
+    case_library = m.get("case_library")
+    if case_library is not None and not isinstance(case_library, (str, dict)):
+        raise ValueError("case_library must be a path string or object")
     path_templates = m.get("path_templates", {})
     if not isinstance(path_templates, dict):
         raise ValueError("path_templates must be an object")
@@ -223,7 +386,7 @@ def effective_policy(m: dict, item: dict, base_budgets: dict) -> dict:
     }
 
 
-def initial_state(m: dict) -> dict:
+def initial_state(m: dict, path_context: dict | None = None) -> dict:
     created = now()
     default_budgets = {
         "max_tokens_per_lesson": 300000,
@@ -243,9 +406,10 @@ def initial_state(m: dict) -> dict:
             "effective_policy": effective_policy(m, item, default_budgets),
             "status": "DISCOVERED",
             "attempts": {"capture": 0, "draft": 0, "qa": 0, "rework": 0, "strong_adjudication": 0},
-            "usage": {"tokens": 0, "wall_minutes": 0.0, "agent_calls": 0},
+            "usage": new_usage(),
             "artifacts": {},
             "artifact_sha256": {},
+            "revision": None,
             "last_reason": "initialized",
             "updated_at": created,
             "history": [{"at": created, "from": None, "to": "DISCOVERED", "reason": "initialized"}],
@@ -261,8 +425,9 @@ def initial_state(m: dict) -> dict:
         "course_id": m["course_id"],
         "course_title": m["course_title"],
         "lecturer": m["lecturer"],
-        "course_root": m["course_root"],
-        "runtime_dir": m["runtime_dir"],
+        "course_root": (path_context or {}).get("course_root", m["course_root"]),
+        "runtime_dir": (path_context or {}).get("runtime_dir", m["runtime_dir"]),
+        "path_context": path_context,
         "source_adapter": m["source_adapter"],
         "production": {
             "profile": resolved_course_profile(m),
@@ -284,12 +449,15 @@ def initial_state(m: dict) -> dict:
                 "official_lecture": "02_\u7ed3\u6784\u5316\u8bb2\u4e49/{filename}",
                 "course_map": "00_\u8bfe\u7a0b\u5730\u56fe.md",
             }),
+            "promotion_hygiene": m.get("promotion_hygiene"),
+            "case_library": m.get("case_library"),
         },
         "sample_gate": sample_gate,
         "models": {"writer": m["writer_model"], "qa": m["qa_model"], "strong": m["strong_model"]},
         "gold_samples": m["gold_samples"],
         "created_at": created,
         "updated_at": created,
+        "shared_artifacts": {},
         "lessons": lessons,
     }
 
@@ -300,13 +468,13 @@ def state_profile(state: dict, lesson: dict | None = None) -> str:
     return state.get("production", {}).get("profile", "strict")
 
 
-def sample_gate_valid(state: dict) -> bool:
+def sample_gate_valid(state: dict, state_path: Path) -> bool:
     gate = state.get("sample_gate", {})
     if not gate.get("enabled", False):
         return True
     if not gate.get("approved", False):
         return False
-    samples = [Path(x) for x in state.get("gold_samples", [])]
+    samples = [resolve_state_path(state, state_path, x, must_exist=True) for x in state.get("gold_samples", [])]
     hashes = gate.get("sample_sha256", {})
     return (
         len(samples) == 2
@@ -344,38 +512,75 @@ def bound_input_hashes(lesson: dict) -> dict[str, str]:
     return {k: hashes[k] for k in ("source", "faithful", "lecture", "uncertainties", "coverage") if k in hashes}
 
 
-def verify_bound_artifacts(lesson: dict, keys: tuple[str, ...] | None = None) -> None:
+def verify_bound_artifacts(state: dict, state_path: Path, lesson: dict, keys: tuple[str, ...] | None = None) -> None:
     expected = lesson.get("artifact_sha256", {})
     for key in keys or tuple(expected):
         if key not in expected:
             continue
-        value = lesson.get("artifacts", {}).get(key)
-        if not value or not Path(value).is_file() or sha256_file(Path(value)) != expected[key]:
+        try:
+            actual = artifact_path(state, state_path, lesson, key)
+        except ValueError as exc:
+            raise ValueError(f"artifact integrity failed {key}: {exc}") from exc
+        if sha256_file(actual) != expected[key]:
             raise ValueError(f"artifact integrity failed {key}")
 
 
-def validate_input_hashes(data: dict, lesson: dict) -> None:
+def validate_input_hashes(data: dict, lesson: dict, *, expected_hashes: dict[str, str] | None = None) -> None:
     declared = data.get("input_sha256")
-    expected = bound_input_hashes(lesson)
-    if not isinstance(declared, dict) or any(declared.get(k) != v for k, v in expected.items()):
+    expected = expected_hashes if expected_hashes is not None else bound_input_hashes(lesson)
+    if not isinstance(declared, dict) or any(not declared.get(k) or declared.get(k) != v for k, v in expected.items()):
         raise ValueError("report input_sha256 does not match reviewed artifacts")
 
 
-def validate_mechanical_report(path: Path, state: dict, lesson: dict) -> None:
+def validate_report_envelope(data: dict, report_type: str, state: dict, lesson: dict) -> None:
+    """Validate v2 strictly while retaining known-valid v1 public reports."""
+    version = data.get("schema_version")
+    if version not in {1, REPORT_SCHEMA_VERSION}:
+        raise ValueError(f"unsupported {report_type} schema_version")
+    if version == REPORT_SCHEMA_VERSION:
+        required = {
+            "report_type", "course_id", "lesson_no", "reviewer_kind", "reviewer_model",
+            "assurance_mode", "review_round", "review_scope", "decision", "recommended_state",
+            "source_identity", "coverage", "input_sha256",
+        }
+        missing = required - set(data)
+        if missing:
+            raise ValueError(f"{report_type} missing fields: {', '.join(sorted(missing))}")
+        if data.get("report_type") != report_type:
+            raise ValueError(f"report_type must be {report_type}")
+    if data.get("course_id") not in (None, state.get("course_id")):
+        raise ValueError(f"{report_type} course_id mismatch")
+    if data.get("lesson_no") is not None and int(data["lesson_no"]) != int(lesson["lesson_no"]):
+        raise ValueError(f"{report_type} lesson_no mismatch")
+
+
+def validate_mechanical_report(path: Path, state: dict, lesson: dict) -> dict:
     data = load_json(path)
-    if data.get("schema_version") != 1 or data.get("mechanical_pass") is not True:
-        raise ValueError("mechanical_report must be a passing schema_version 1 report")
+    if data.get("schema_version") == REPORT_SCHEMA_VERSION:
+        validate_report_envelope(data, "mechanical_report", state, lesson)
+        if data.get("reviewer_kind") != "deterministic_validator" or data.get("reviewer_model") != "none":
+            raise ValueError("mechanical_report reviewer identity is invalid")
+        if data.get("decision") != "mechanical_pass" or data.get("recommended_state") != "MECHANICAL_PASS":
+            raise ValueError("mechanical_report decision is invalid")
+        if data.get("algorithm_version") != MECHANICAL_ALGORITHM_VERSION or not data.get("statistics_definition"):
+            raise ValueError("mechanical_report algorithm metadata is missing or unsupported")
+    elif data.get("schema_version") != 1:
+        raise ValueError("mechanical_report schema_version is invalid")
+    if data.get("mechanical_pass") is not True:
+        raise ValueError("mechanical_report must be passing")
     if data.get("semantic_pass") is not None or data.get("errors") not in ([], None):
         raise ValueError("mechanical_report has invalid semantic_pass or errors")
-    if data.get("profile") != state_profile(state, lesson):
+    if data.get("profile", data.get("assurance_mode")) != state_profile(state, lesson):
         raise ValueError("mechanical_report profile mismatch")
     validate_input_hashes(data, lesson)
+    return data
 
 
-def validate_semantic_check(path: Path, state: dict, lesson: dict) -> None:
+def validate_semantic_check(path: Path, state: dict, lesson: dict) -> dict:
     data = load_json(path)
-    if data.get("schema_version") != 1 or data.get("reviewer_kind") != "writer_self_check":
-        raise ValueError("semantic_check must be a writer_self_check schema_version 1 report")
+    validate_report_envelope(data, "semantic_check", state, lesson)
+    if data.get("reviewer_kind") != "writer_self_check":
+        raise ValueError("semantic_check must be a writer_self_check report")
     if data.get("course_id") != state.get("course_id") or int(data.get("lesson_no", 0)) != int(lesson["lesson_no"]):
         raise ValueError("semantic_check course_id or lesson_no mismatch")
     if data.get("reviewer_model") != state.get("models", {}).get("writer"):
@@ -393,14 +598,18 @@ def validate_semantic_check(path: Path, state: dict, lesson: dict) -> None:
         if coverage.get(key) is not True:
             raise ValueError("semantic_check requires opening/middle/ending/high-risk evidence")
     validate_input_hashes(data, lesson)
+    return data
 
 
-def validate_qa_report(path: Path, state: dict, lesson: dict, new_state: str) -> None:
+def validate_qa_report(path: Path, state: dict, lesson: dict, new_state: str,
+                       *, expected_round: int | None = None, allowed_scopes: set[str] | None = None,
+                       expected_hashes: dict[str, str] | None = None) -> dict:
     data = load_json(path)
+    validate_report_envelope(data, "qa_report", state, lesson)
     expected_decision = {
         "SEMANTIC_QA_PASS": "pass", "FIX_REQUIRED": "fix_required", "ESCALATED": "escalated",
     }[new_state]
-    expected_round = int(lesson.get("attempts", {}).get("qa", 0)) + 1
+    expected_round = expected_round or int(lesson.get("attempts", {}).get("qa", 0)) + 1
     if data.get("course_id") != state.get("course_id") or int(data.get("lesson_no", 0)) != int(lesson["lesson_no"]):
         raise ValueError("qa_report course_id or lesson_no mismatch")
     if data.get("decision") != expected_decision:
@@ -417,7 +626,10 @@ def validate_qa_report(path: Path, state: dict, lesson: dict, new_state: str) ->
     if reviewer != expected_reviewer:
         raise ValueError("qa_report reviewer_model mismatch")
     scope = data.get("review_scope")
-    if expected_round > 1:
+    if allowed_scopes is not None:
+        if scope not in allowed_scopes:
+            raise ValueError(f"qa_report review_scope must be one of {sorted(allowed_scopes)}")
+    elif expected_round > 1:
         if scope != "targeted_recheck":
             raise ValueError("second QA round must use targeted_recheck")
     elif requires_full_qa(state, lesson, expected_round):
@@ -428,8 +640,7 @@ def validate_qa_report(path: Path, state: dict, lesson: dict, new_state: str) ->
     issues = data.get("issues")
     if not isinstance(issues, list) or any(not isinstance(x, dict) for x in issues):
         raise ValueError("qa_report issues must be a list of objects")
-    allowed_severities = {"high", "note"}
-    if any(x.get("severity") not in allowed_severities for x in issues):
+    if any(x.get("severity") not in {"high", "note"} for x in issues):
         raise ValueError("qa_report issue severity must be high or note")
     high = [x for x in issues if x.get("severity") == "high"]
     if any(not x.get("source_quote") or not x.get("required_fix") for x in high):
@@ -440,7 +651,7 @@ def validate_qa_report(path: Path, state: dict, lesson: dict, new_state: str) ->
         raise ValueError("qa_report requires source_identity and coverage objects")
     if new_state == "SEMANTIC_QA_PASS" and (source_identity.get("passed") is not True or coverage.get("passed") is not True):
         raise ValueError("passing QA requires source_identity.passed and coverage.passed")
-    if new_state == "SEMANTIC_QA_PASS" and scope == "full":
+    if new_state == "SEMANTIC_QA_PASS" and scope in {"full", "revision_content", "revision_formatting"}:
         required_checks = ("opening_checked", "middle_checked", "ending_checked", "longest_case_checked", "high_risk_anchors_checked")
         if any(coverage.get(k) is not True for k in required_checks):
             raise ValueError("full QA requires all coverage evidence fields")
@@ -452,7 +663,8 @@ def validate_qa_report(path: Path, state: dict, lesson: dict, new_state: str) ->
         raise ValueError("qa_report cannot pass with unresolved high issues")
     if new_state == "FIX_REQUIRED" and not high:
         raise ValueError("fix_required requires at least one high issue")
-    validate_input_hashes(data, lesson)
+    validate_input_hashes(data, lesson, expected_hashes=expected_hashes)
+    return data
 
 
 def get_lesson(state: dict, no: int) -> dict:
@@ -463,23 +675,81 @@ def get_lesson(state: dict, no: int) -> dict:
 
 
 def cmd_init(args: argparse.Namespace) -> int:
-    manifest_path, state_path = Path(args.manifest), Path(args.state)
+    manifest_path, state_path = Path(args.manifest).resolve(), Path(args.state).resolve()
     if state_path.exists():
         print(f"refusing to overwrite existing state: {state_path}", file=sys.stderr)
         return 2
     manifest = load_json(manifest_path)
     validate_manifest(manifest)
-    state = initial_state(manifest)
+    context = build_path_context(manifest_path, state_path, manifest)
+    state = initial_state(manifest, context)
     atomic_write(state_path, state)
     print(json.dumps({"created": str(state_path), "lessons": len(state["lessons"])}, ensure_ascii=False))
     return 0
 
 
+FRONTMATTER_BLOCK = re.compile(r"\A---\s*\n(.*?)\n---\s*\n", re.S)
+MARKDOWN_LINK = re.compile(r"!?\[([^\]]*)\]\(([^)]+)\)")
+
+
+def frontmatter_values(text: str) -> dict[str, str]:
+    match = FRONTMATTER_BLOCK.match(text.replace("\r\n", "\n"))
+    if not match:
+        return {}
+    result: dict[str, str] = {}
+    for line in match.group(1).splitlines():
+        if ":" in line and not line[:1].isspace():
+            key, value = line.split(":", 1)
+            result[key.strip()] = value.strip().strip("'\"")
+    return result
+
+
+def local_link_targets(path: Path, text: str) -> list[Path]:
+    targets: list[Path] = []
+    for _label, raw in MARKDOWN_LINK.findall(text):
+        raw = raw.strip().split("#", 1)[0]
+        if not raw or re.match(r"^[a-z][a-z0-9+.-]*:", raw, re.I):
+            continue
+        targets.append((path.parent / raw).resolve())
+    return targets
+
+
+def validate_promotion_hygiene(state: dict, state_path: Path, lesson: dict,
+                               candidate_artifacts: dict[str, str]) -> None:
+    config = state.get("production", {}).get("promotion_hygiene")
+    if not isinstance(config, dict):
+        raise ValueError("promotion_hygiene is not configured; refusing to guess the frontmatter source schema")
+    source = resolve_state_path(state, state_path, candidate_artifacts["source"], must_exist=True)
+    runtime = resolve_state_path(state, state_path, state.get("runtime_dir", "."), must_exist=False)
+    markers = list(config.get("forbidden_draft_markers", []))
+    markers.extend(["awaiting independent QA", "pending independent QA", "FIX_REQUIRED"])
+    for key in ("official_faithful", "official_lecture"):
+        path = resolve_state_path(state, state_path, candidate_artifacts[key], must_exist=True)
+        text = path.read_text(encoding="utf-8")
+        if any(marker and marker in text for marker in markers):
+            raise ValueError(f"promotion hygiene failed: forbidden draft marker in {key}")
+        if str(runtime) in text or runtime.name + "/lesson-" in text:
+            raise ValueError(f"promotion hygiene failed: runtime draft reference in {key}")
+        if any(not target.is_file() for target in local_link_targets(path, text)):
+            raise ValueError(f"promotion hygiene failed: broken local link in {key}")
+        values = frontmatter_values(text)
+        backlinks = [str(values[field]) for field in config.get("source_link_fields", []) if values.get(field)]
+        if config.get("require_source_backlink") and not backlinks:
+            raise ValueError(f"promotion hygiene failed: configured source backlink missing in {key}")
+        if backlinks:
+            resolved = [resolve_state_path(state, state_path, value, must_exist=True) if Path(value).is_absolute()
+                        else (path.parent / value).resolve() for value in backlinks]
+            if source.resolve() not in [item.resolve() for item in resolved] or any(not item.is_file() for item in resolved):
+                raise ValueError(f"promotion hygiene failed: source backlink is broken or points to another source in {key}")
+
+
 def cmd_transition(args: argparse.Namespace) -> int:
-    path = Path(args.state)
+    path = Path(args.state).resolve()
     state = load_json(path)
     lesson = get_lesson(state, args.lesson)
     old, new = lesson["status"], args.to
+    expected_round = int(lesson.get("attempts", {}).get("qa", 0)) + 1
+    actual_evidence: tuple[str, Path, dict] | None = None
     if new not in ALL_STATES:
         raise ValueError(f"unknown state: {new}")
     if new not in ALLOWED[old]:
@@ -488,7 +758,7 @@ def cmd_transition(args: argparse.Namespace) -> int:
     production = state.get("production", {})
     budgets = lesson.get("effective_policy", {}).get("budgets", production.get("budgets", {}))
     gate = state.get("sample_gate", {})
-    if new == "DRAFTED" and gate.get("enabled", False) and args.lesson != int(gate.get("lesson_no", args.lesson)) and not sample_gate_valid(state):
+    if new == "DRAFTED" and gate.get("enabled", False) and args.lesson != int(gate.get("lesson_no", args.lesson)) and not sample_gate_valid(state, path):
         raise ValueError("sample gate is not approved or sample hashes changed; only the sample lesson may be drafted")
     if new == "FIX_REQUIRED" and args.severity != "high":
         raise ValueError("FIX_REQUIRED requires --severity high; notes must not trigger rework")
@@ -538,20 +808,22 @@ def cmd_transition(args: argparse.Namespace) -> int:
                 raise ValueError(f"duplicate artifact key: {key}")
             if key not in allowed_artifact_keys:
                 raise ValueError(f"unknown artifact key: {key}")
+            if not Path(value).expanduser().is_absolute():
+                raise ValueError("new artifact registrations require absolute paths")
             seen_artifact_keys.add(key)
-            candidate_artifacts[key] = value
+            candidate_artifacts[key] = str(Path(value).expanduser().resolve())
 
     profile = state_profile(state, lesson)
     for key in required_artifacts(new, profile):
         value = candidate_artifacts.get(key)
         if not value:
             raise ValueError(f"cannot enter {new}: missing artifact key {key}")
-        if not Path(value).is_file():
+        if not resolve_state_path(state, path, value, must_exist=True).is_file():
             raise ValueError(f"cannot enter {new}: artifact not found {key}={value}")
 
     if new == "DRAFTED":
         is_sample = args.lesson == int(gate.get("lesson_no", args.lesson))
-        if gate.get("enabled", False) and not is_sample and not sample_gate_valid(state):
+        if gate.get("enabled", False) and not is_sample and not sample_gate_valid(state, path):
             raise ValueError("cannot enter DRAFTED: approved gold_samples are missing or changed")
         if state.get("models", {}).get("writer") in {None, "", "unassigned"}:
             raise ValueError("cannot enter DRAFTED: writer model is unassigned")
@@ -559,41 +831,46 @@ def cmd_transition(args: argparse.Namespace) -> int:
             raise ValueError("cannot enter DRAFTED: selected independent QA requires a qa model")
 
     if new == "PROMOTED":
-        verify_bound_artifacts(lesson, ("source", "faithful", "lecture", "uncertainties", "coverage"))
-        expected_paths = render_paths(state, lesson)
+        verify_bound_artifacts(state, path, lesson, ("source", "faithful", "lecture", "uncertainties", "coverage"))
+        expected_paths = render_paths(state, lesson, path)
         for official_key, draft_key in (("official_faithful", "faithful"), ("official_lecture", "lecture")):
-            official_path = Path(candidate_artifacts[official_key]).resolve()
+            official_path = resolve_state_path(state, path, candidate_artifacts[official_key], must_exist=True)
             if str(official_path) != str(Path(expected_paths[official_key]).resolve()):
                 raise ValueError(f"{official_key} must match manifest-rendered path")
-            if sha256_file(official_path) != sha256_file(Path(candidate_artifacts[draft_key])):
+            draft_path = resolve_state_path(state, path, candidate_artifacts[draft_key], must_exist=True)
+            if sha256_file(official_path) != sha256_file(draft_path):
                 raise ValueError(f"{official_key} content must match QA-validated {draft_key}")
+        validate_promotion_hygiene(state, path, lesson, candidate_artifacts)
 
     if new == "ACCEPTED":
-        expected_map = Path(render_paths(state, lesson)["course_map"]).resolve()
-        actual_map = Path(candidate_artifacts["course_map"]).resolve()
+        expected_map = Path(render_paths(state, lesson, path)["course_map"]).resolve()
+        actual_map = resolve_state_path(state, path, candidate_artifacts["course_map"], must_exist=True)
         if str(actual_map) != str(expected_map):
             raise ValueError("course_map must match manifest-rendered path")
 
     if new == "MECHANICAL_PASS":
-        verify_bound_artifacts(lesson, ("source", "faithful", "lecture", "uncertainties", "coverage"))
-        validate_mechanical_report(Path(candidate_artifacts["mechanical_report"]), state, lesson)
+        verify_bound_artifacts(state, path, lesson, ("source", "faithful", "lecture", "uncertainties", "coverage"))
+        validate_mechanical_report(resolve_state_path(state, path, candidate_artifacts["mechanical_report"], must_exist=True), state, lesson)
 
     if new in {"SEMANTIC_QA_PASS", "FIX_REQUIRED", "ESCALATED"} and not administrative_escalation:
-        verify_bound_artifacts(lesson, ("source", "faithful", "lecture", "uncertainties", "coverage"))
-        expected_round = int(lesson.get("attempts", {}).get("qa", 0)) + 1
-        full_qa = requires_full_qa(state, lesson, expected_round) or new in {"FIX_REQUIRED", "ESCALATED"}
+        verify_bound_artifacts(state, path, lesson, ("source", "faithful", "lecture", "uncertainties", "coverage"))
+        full_qa = expected_round > 1 or requires_full_qa(state, lesson, expected_round) or new in {"FIX_REQUIRED", "ESCALATED"}
         if full_qa:
             qa_path = candidate_artifacts.get("qa_report")
-            if not qa_path or not Path(qa_path).is_file():
+            if not qa_path:
                 raise ValueError("independent QA decision requires qa_report artifact")
-            validate_qa_report(Path(qa_path), state, lesson, new)
+            report_path = resolve_state_path(state, path, qa_path, must_exist=True)
+            report_data = validate_qa_report(report_path, state, lesson, new)
+            actual_evidence = ("qa_report", report_path, report_data)
         else:
             if new != "SEMANTIC_QA_PASS":
                 raise ValueError("writer self-check may only recommend SEMANTIC_QA_PASS")
             semantic_path = candidate_artifacts.get("semantic_check")
-            if not semantic_path or not Path(semantic_path).is_file():
+            if not semantic_path:
                 raise ValueError("ordinary lesson requires semantic_check artifact")
-            validate_semantic_check(Path(semantic_path), state, lesson)
+            report_path = resolve_state_path(state, path, semantic_path, must_exist=True)
+            report_data = validate_semantic_check(report_path, state, lesson)
+            actual_evidence = ("semantic_check", report_path, report_data)
 
     stamp = now()
     lesson["status"] = new
@@ -603,54 +880,88 @@ def cmd_transition(args: argparse.Namespace) -> int:
     lesson["history"].append({"at": stamp, "from": old, "to": new, "reason": args.reason})
     if new == "CAPTURED":
         lesson["attempts"]["capture"] += 1
-        lesson.setdefault("artifact_sha256", {})["source"] = sha256_file(Path(candidate_artifacts["source"]))
+        lesson.setdefault("artifact_sha256", {})["source"] = sha256_file(
+            resolve_state_path(state, path, candidate_artifacts["source"], must_exist=True)
+        )
     if new == "DRAFTED":
         lesson["attempts"]["draft"] += 1
         hashes = lesson.setdefault("artifact_sha256", {})
         for key in ("source", "faithful", "lecture", "uncertainties", "coverage"):
             value = candidate_artifacts.get(key)
-            if value and Path(value).is_file():
-                hashes[key] = sha256_file(Path(value))
+            if value:
+                actual = resolve_state_path(state, path, value, must_exist=True)
+                if actual.is_file():
+                    hashes[key] = sha256_file(actual)
     if new in {"SEMANTIC_QA_PASS", "FIX_REQUIRED", "ESCALATED"} and not administrative_escalation:
-        lesson["attempts"]["qa"] += 1
-    if old == "FIX_REQUIRED" and new == "DRAFTED": lesson["attempts"]["rework"] += 1
-    if old == "ESCALATED" and new == "DRAFTED":
-        lesson["attempts"]["strong_adjudication"] = lesson["attempts"].get("strong_adjudication", 0) + 1
-        lesson["strong_adjudication_pending"] = True
-    if new in {"SEMANTIC_QA_PASS", "FIX_REQUIRED", "ESCALATED"} and not administrative_escalation:
-        evidence_key = "qa_report" if candidate_artifacts.get("qa_report") and (requires_full_qa(state, lesson, lesson["attempts"]["qa"]) or new in {"FIX_REQUIRED", "ESCALATED"}) else "semantic_check"
-        lesson.setdefault("artifact_sha256", {})[evidence_key] = sha256_file(Path(candidate_artifacts[evidence_key]))
+        # The exact evidence selected and validated above is recorded before the QA
+        # attempt counter changes; targeted round two therefore cannot be reclassified.
+        if actual_evidence is None:
+            raise ValueError("validated semantic evidence was not registered")
+        evidence_key, evidence_path, evidence_data = actual_evidence
+        digest = sha256_file(evidence_path)
+        lesson.setdefault("artifact_sha256", {})[evidence_key] = digest
         lesson.setdefault("semantic_evidence_history", []).append({
             "at": stamp,
             "kind": evidence_key,
-            "path": candidate_artifacts[evidence_key],
-            "sha256": lesson["artifact_sha256"][evidence_key],
+            "path": str(evidence_path),
+            "sha256": digest,
+            "review_round": int(evidence_data.get("review_round", expected_round)),
+            "review_scope": evidence_data.get("review_scope"),
+            "input_sha256": dict(evidence_data.get("input_sha256", {})),
+            "reviewer_model": evidence_data.get("reviewer_model"),
+            "decision": evidence_data.get("decision"),
         })
+        lesson["attempts"]["qa"] += 1
         if strong_recovery:
             lesson["strong_adjudication_pending"] = False
+    if old == "FIX_REQUIRED" and new == "DRAFTED":
+        lesson["attempts"]["rework"] += 1
+    if old == "ESCALATED" and new == "DRAFTED":
+        lesson["attempts"]["strong_adjudication"] = lesson["attempts"].get("strong_adjudication", 0) + 1
+        lesson["strong_adjudication_pending"] = True
     if new == "PROMOTED":
         hashes = lesson.setdefault("artifact_sha256", {})
-        hashes["official_faithful"] = sha256_file(Path(candidate_artifacts["official_faithful"]))
-        hashes["official_lecture"] = sha256_file(Path(candidate_artifacts["official_lecture"]))
+        hashes["official_faithful"] = sha256_file(resolve_state_path(state, path, candidate_artifacts["official_faithful"], must_exist=True))
+        hashes["official_lecture"] = sha256_file(resolve_state_path(state, path, candidate_artifacts["official_lecture"], must_exist=True))
+        lesson["promotion_baseline"] = {
+            "input_sha256": bound_input_hashes(lesson),
+            "official_faithful": hashes["official_faithful"],
+            "official_lecture": hashes["official_lecture"],
+            "at": stamp,
+        }
     if new == "ACCEPTED":
-        lesson.setdefault("artifact_sha256", {})["course_map"] = sha256_file(Path(candidate_artifacts["course_map"]))
+        map_path = resolve_state_path(state, path, candidate_artifacts["course_map"], must_exist=True)
+        map_hash = sha256_file(map_path)
+        lesson.setdefault("artifact_sha256", {})["course_map"] = map_hash
+        state["shared_artifacts"] = {
+            **state.get("shared_artifacts", {}),
+            "course_map": {"path": str(map_path), "sha256": map_hash, "updated_at": stamp, "updated_by_lesson": args.lesson},
+        }
     if production and cost_bearing:
-        lesson.setdefault("usage", {"tokens": 0, "wall_minutes": 0.0, "agent_calls": 0})
-        lesson["usage"]["tokens"] += int(args.tokens_used or 0)
-        lesson["usage"]["wall_minutes"] += float(args.wall_minutes_used)
-        lesson["usage"]["agent_calls"] = int(lesson["usage"].get("agent_calls", 0)) + int(1 if args.agent_calls is None else args.agent_calls)
+        if new == "DRAFTED":
+            phase = "rework" if old in {"FIX_REQUIRED", "ESCALATED"} else "draft"
+        else:
+            phase = "recheck" if expected_round > 1 else "qa"
+        add_usage(lesson, phase, int(args.tokens_used or 0), float(args.wall_minutes_used),
+                  int(1 if args.agent_calls is None else args.agent_calls))
     state["updated_at"] = stamp
     atomic_write(path, state)
     print(json.dumps({"lesson": args.lesson, "from": old, "to": new}, ensure_ascii=False))
     return 0
 
 
-def render_paths(state: dict, lesson: dict) -> dict[str, str]:
+def render_paths(state: dict, lesson: dict, state_path: Path | None = None) -> dict[str, str]:
     template = state.get("production", {}).get("naming_template", "\u7b2c{lesson_no:02d}\u8bfe\u00b7{title}.md")
     filename = template.format(lesson_no=int(lesson["lesson_no"]), title=lesson["title"])
     if not filename or Path(filename).name != filename or filename in {".", ".."}:
         raise ValueError("naming_template must render one safe filename")
-    root = Path(state["course_root"]).resolve()
+    raw_root = Path(state["course_root"]).expanduser()
+    if raw_root.is_absolute():
+        root = raw_root.resolve()
+    elif state_path is not None:
+        root = resolve_state_path(state, state_path, state["course_root"], must_exist=False)
+    else:
+        raise ValueError("legacy relative course_root requires the state path")
     templates = {
         "source": "00_\u539f\u59cb\u8f6c\u5199/{filename}",
         "official_faithful": "01_\u5fe0\u5b9e\u7cbe\u7f16\u7a3f/{filename}",
@@ -705,9 +1016,10 @@ def cmd_agreement(args: argparse.Namespace) -> int:
 
 
 def cmd_paths(args: argparse.Namespace) -> int:
-    state = load_json(Path(args.state))
+    state_path = Path(args.state).resolve()
+    state = load_json(state_path)
     lesson = get_lesson(state, args.lesson)
-    print(json.dumps({"lesson_no": args.lesson, "paths": render_paths(state, lesson)}, ensure_ascii=False, indent=2))
+    print(json.dumps({"lesson_no": args.lesson, "paths": render_paths(state, lesson, state_path)}, ensure_ascii=False, indent=2))
     return 0
 
 
@@ -750,33 +1062,442 @@ def valid_archived_entry(entry: object) -> bool:
     return isinstance(entry, dict) and all(entry.get(k) for k in ("path", "archived_at", "reason", "sha256"))
 
 
+def cmd_preflight(args: argparse.Namespace) -> int:
+    state_path = Path(args.state).resolve()
+    state = load_json(state_path)
+    lesson = get_lesson(state, args.lesson)
+    if lesson.get("status") != "DRAFTED":
+        raise ValueError("preflight requires DRAFTED")
+    required = ["source", "faithful", "lecture", "uncertainties"]
+    if state_profile(state, lesson) == "strict":
+        required.append("coverage")
+    paths = {key: artifact_path(state, state_path, lesson, key) for key in required}
+    if args.report:
+        report_path = Path(args.report).expanduser()
+        if not report_path.is_absolute():
+            raise ValueError("--report must be an absolute path")
+        report_path = report_path.resolve()
+    else:
+        control = path_anchors(state, state_path)[0]
+        report_path = control / f"lesson-{args.lesson}" / "mechanical-report.json"
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(suffix=".json", delete=False, dir=str(report_path.parent)) as handle:
+        raw_report = Path(handle.name)
+    try:
+        command = [sys.executable, str(Path(__file__).with_name("validate_lesson.py")),
+                   "--profile", state_profile(state, lesson),
+                   "--source", str(paths["source"]), "--faithful", str(paths["faithful"]),
+                   "--lecture", str(paths["lecture"]), "--uncertainties", str(paths["uncertainties"]),
+                   "--json-out", str(raw_report)]
+        if "coverage" in paths:
+            command.extend(["--coverage", str(paths["coverage"])])
+        result = subprocess.run(command, text=True, capture_output=True)
+        mechanical = load_json(raw_report)
+    finally:
+        if raw_report.exists():
+            raw_report.unlink()
+    report = {
+        **mechanical,
+        "schema_version": REPORT_SCHEMA_VERSION,
+        "report_type": "mechanical_report",
+        "course_id": state.get("course_id"),
+        "lesson_no": int(lesson["lesson_no"]),
+        "reviewer_kind": "deterministic_validator",
+        "reviewer_model": "none",
+        "assurance_mode": state_profile(state, lesson),
+        "review_round": int(lesson.get("attempts", {}).get("qa", 0)) + 1,
+        "review_scope": "mechanical_only",
+        "decision": "mechanical_pass" if result.returncode == 0 else "mechanical_fail",
+        "recommended_state": "MECHANICAL_PASS" if result.returncode == 0 else "DRAFTED",
+        "source_identity": {"passed": None, "mechanical_only": True},
+        "coverage": {"passed": None, "mechanical_only": True, "statistics": mechanical.get("metrics", {})},
+        "algorithm_version": MECHANICAL_ALGORITHM_VERSION,
+        "statistics_definition": "UTF-8 text shape, placeholders, declared ledger counts, and SHA-256 bindings; no semantic judgment",
+    }
+    atomic_write(report_path, report)
+    lesson.setdefault("artifacts", {})["mechanical_report"] = str(report_path)
+    lesson.setdefault("artifact_sha256", {})["mechanical_report"] = sha256_file(report_path)
+    stamp = now()
+    if result.returncode == 0:
+        validate_mechanical_report(report_path, state, lesson)
+        lesson["history"].append({"at": stamp, "from": "DRAFTED", "to": "MECHANICAL_PASS", "reason": "deterministic preflight passed"})
+        lesson["status"] = "MECHANICAL_PASS"
+        lesson["last_reason"] = "deterministic preflight passed; semantic review remains pending"
+    else:
+        lesson["last_reason"] = "deterministic preflight failed; see bound report"
+    lesson["updated_at"] = stamp
+    state["updated_at"] = stamp
+    atomic_write(state_path, state)
+    print(json.dumps({"lesson": args.lesson, "mechanical_pass": result.returncode == 0,
+                      "semantic_pass": None, "report": str(report_path)}, ensure_ascii=False))
+    return 0 if result.returncode == 0 else 1
+
+
+def parse_artifact_args(items: list[str] | None, allowed: set[str]) -> dict[str, str]:
+    parsed: dict[str, str] = {}
+    for item in items or []:
+        if "=" not in item:
+            raise ValueError("artifact must be key=/absolute/path")
+        key, value = item.split("=", 1)
+        if key not in allowed or key in parsed:
+            raise ValueError(f"invalid or duplicate artifact key: {key}")
+        path = Path(value).expanduser()
+        if not path.is_absolute() or not path.is_file():
+            raise ValueError(f"artifact must be an existing absolute file: {key}")
+        parsed[key] = str(path.resolve())
+    return parsed
+
+
+def cmd_self_rework(args: argparse.Namespace) -> int:
+    state_path = Path(args.state).resolve()
+    state = load_json(state_path)
+    lesson = get_lesson(state, args.lesson)
+    old_status = lesson.get("status")
+    if old_status not in {"DRAFTED", "MECHANICAL_PASS"}:
+        raise ValueError("self-rework is allowed only from DRAFTED or MECHANICAL_PASS")
+    if int(lesson.get("attempts", {}).get("qa", 0)) != 0 or lesson.get("semantic_evidence_history"):
+        raise ValueError("self-rework is forbidden after independent or semantic QA begins")
+    budget = lesson.get("effective_policy", {}).get("budgets", {}).get("max_reworks_per_lesson", 1)
+    if int(lesson.get("attempts", {}).get("rework", 0)) >= int(budget):
+        raise ValueError("self-rework budget exhausted")
+    updates = parse_artifact_args(args.artifact, {"faithful", "lecture", "uncertainties", "coverage"})
+    if not updates:
+        raise ValueError("self-rework requires changed artifact files")
+    before = dict(lesson.get("artifact_sha256", {}))
+    after = dict(before)
+    for key, value in updates.items():
+        after[key] = sha256_file(Path(value))
+    if not any(before.get(key) != after.get(key) for key in ("faithful", "lecture")):
+        raise ValueError("self-rework requires a real faithful or lecture hash change")
+    lesson.setdefault("artifacts", {}).update(updates)
+    lesson["artifacts"].pop("mechanical_report", None)
+    after.pop("mechanical_report", None)
+    lesson["artifact_sha256"] = after
+    lesson["status"] = "DRAFTED"
+    lesson.setdefault("attempts", {})["rework"] = int(lesson.get("attempts", {}).get("rework", 0)) + 1
+    stamp = now()
+    lesson.setdefault("rework_history", []).append({
+        "at": stamp, "phase": "writer_self_rework", "reason": args.reason,
+        "before_sha256": before, "after_sha256": after,
+        "count": lesson["attempts"]["rework"],
+    })
+    lesson["history"].append({"at": stamp, "from": old_status, "to": "DRAFTED",
+                              "reason": args.reason, "phase": "writer_self_rework"})
+    add_usage(lesson, "rework", int(args.tokens_used or 0), float(args.wall_minutes_used or 0), int(args.agent_calls or 0))
+    lesson["updated_at"] = stamp
+    state["updated_at"] = stamp
+    atomic_write(state_path, state)
+    print(json.dumps({"lesson": args.lesson, "status": "DRAFTED", "qa_rounds": lesson["attempts"].get("qa", 0),
+                      "rework_count": lesson["attempts"]["rework"]}, ensure_ascii=False))
+    return 0
+
+
+def select_case_library(state: dict, state_path: Path, lesson: dict) -> dict:
+    config = state.get("production", {}).get("case_library")
+    if not config:
+        return {"status": "unresolved", "reason": "case_library is not configured", "cases": []}
+    if isinstance(config, str):
+        library_path = resolve_state_path(state, state_path, config, must_exist=True)
+    elif isinstance(config, dict) and isinstance(config.get("path"), str):
+        library_path = resolve_state_path(state, state_path, config["path"], must_exist=True)
+    else:
+        return {"status": "unresolved", "reason": "case_library path is not configured", "cases": []}
+    data = load_json(library_path)
+    records = data.get("cases", []) if isinstance(data, dict) else []
+    flags = set(lesson.get("effective_policy", {}).get("risk_flags", []))
+    adapters = lesson.get("effective_policy", {}).get("adapters", {})
+    scopes = {state_profile(state, lesson), *adapters.get("domain", []), *adapters.get("content", [])}
+    selected = []
+    today = datetime.now(timezone.utc).date().isoformat()
+    for record in records:
+        if not isinstance(record, dict) or record.get("status") != "confirmed":
+            continue
+        if record.get("expires_at") and str(record["expires_at"]) < today:
+            continue
+        triggers = set(record.get("triggers", []))
+        record_scopes = set(record.get("scopes", []))
+        if triggers and not (triggers & flags):
+            continue
+        if record_scopes and not (record_scopes & scopes):
+            continue
+        if not all(isinstance(record.get(k), str) and record[k].strip() for k in ("principle", "check_method")):
+            continue
+        selected.append({"principle": record["principle"], "triggers": sorted(triggers),
+                         "check_method": record["check_method"]})
+    return {"status": "resolved", "path": str(library_path), "cases": selected}
+
+
+def cmd_work_order(args: argparse.Namespace) -> int:
+    state_path = Path(args.state).resolve()
+    state = load_json(state_path)
+    lesson = get_lesson(state, args.lesson)
+    result = {
+        "course_id": state.get("course_id"), "lesson_no": args.lesson,
+        "status": lesson.get("status"), "assurance_mode": state_profile(state, lesson),
+        "output_language": state.get("production", {}).get("output_language", "match-user"),
+        "paths": render_paths(state, lesson, state_path),
+        "artifacts": {key: str(resolve_state_path(state, state_path, value, must_exist=False))
+                      for key, value in lesson.get("artifacts", {}).items()},
+        "usage": normalize_usage(lesson),
+        "case_library": select_case_library(state, state_path, lesson),
+    }
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0
+
+
+def markdown_visible_body(text: str) -> str:
+    body = FRONTMATTER_BLOCK.sub("", text.replace("\r\n", "\n"), count=1)
+    return MARKDOWN_LINK.sub(lambda match: match.group(1), body)
+
+
+def conservative_semantic_fingerprint(text: str) -> str:
+    body = FRONTMATTER_BLOCK.sub("", text.replace("\r\n", "\n"), count=1)
+    tokens = re.findall(r"https?://[^\s)>]+|`[^`]*`|\d+(?:[.,]\d+)*|[A-Za-z]+(?:[-'][A-Za-z]+)*|[\u3400-\u9fff]", body)
+    return hashlib.sha256("\n".join(tokens).encode("utf-8")).hexdigest()
+
+
+def revision_hashes(state: dict, state_path: Path, lesson: dict) -> dict[str, str]:
+    hashes = {"source": sha256_file(artifact_path(state, state_path, lesson, "source")),
+              "faithful": sha256_file(artifact_path(state, state_path, lesson, "official_faithful")),
+              "lecture": sha256_file(artifact_path(state, state_path, lesson, "official_lecture"))}
+    if lesson.get("artifacts", {}).get("uncertainties"):
+        hashes["uncertainties"] = sha256_file(artifact_path(state, state_path, lesson, "uncertainties"))
+    if lesson.get("artifacts", {}).get("coverage"):
+        hashes["coverage"] = sha256_file(artifact_path(state, state_path, lesson, "coverage"))
+    shared_map = state.get("shared_artifacts", {}).get("course_map")
+    if isinstance(shared_map, dict) and shared_map.get("path"):
+        hashes["course_map"] = sha256_file(resolve_state_path(state, state_path, shared_map["path"], must_exist=True))
+    return hashes
+
+
+def cmd_revision_open(args: argparse.Namespace) -> int:
+    state_path = Path(args.state).resolve()
+    state = load_json(state_path)
+    lesson = get_lesson(state, args.lesson)
+    if lesson.get("status") != "ACCEPTED":
+        raise ValueError("revision-open requires ACCEPTED")
+    if isinstance(lesson.get("revision"), dict) and lesson["revision"].get("status") == "open":
+        raise ValueError("a revision is already open")
+    baseline = revision_hashes(state, state_path, lesson)
+    stamp = now()
+    control = Path(state.get("path_context", {}).get("control_dir", state_path.parent)).resolve()
+    revision_id = re.sub(r"[^0-9]", "", stamp)[:20] + f"-lesson-{args.lesson}"
+    snapshot_dir = control / "revisions" / revision_id
+    snapshot_dir.mkdir(parents=True, exist_ok=False)
+    snapshots = {}
+    for key in ("official_faithful", "official_lecture"):
+        src = artifact_path(state, state_path, lesson, key)
+        dst = snapshot_dir / f"{key}-{src.name}"
+        shutil.copy2(src, dst)
+        snapshots[key] = {"path": str(dst), "sha256": sha256_file(dst)}
+    state_snapshot = snapshot_dir / "course-state.json"
+    atomic_write(state_snapshot, state)
+    shared = state.get("shared_artifacts", {}).get("course_map")
+    shared_snapshot = None
+    if isinstance(shared, dict) and shared.get("path"):
+        shared_path = resolve_state_path(state, state_path, shared["path"], must_exist=True)
+        dst = snapshot_dir / "course-map.md"
+        shutil.copy2(shared_path, dst)
+        shared_snapshot = {"path": str(dst), "sha256": sha256_file(dst)}
+    lesson["revision"] = {
+        "status": "open", "revision_id": revision_id, "type": args.type, "reason": args.reason,
+        "opened_at": stamp, "baseline_sha256": baseline, "snapshots": snapshots,
+        "state_snapshot": {"path": str(state_snapshot), "sha256": sha256_file(state_snapshot)},
+        "shared_course_map_snapshot": shared_snapshot,
+    }
+    state["updated_at"] = stamp
+    atomic_write(state_path, state)
+    print(json.dumps({"lesson": args.lesson, "revision_id": revision_id, "type": args.type,
+                      "status": "open", "snapshot_dir": str(snapshot_dir)}, ensure_ascii=False))
+    return 0
+
+
+def validate_revision_report(path: Path, state: dict, lesson: dict, revision: dict,
+                             new_hashes: dict[str, str]) -> dict:
+    data = load_json(path)
+    if "semantic_equivalent" in data:
+        raise ValueError("revision_report may not self-declare semantic_equivalent")
+    required = {"schema_version", "report_type", "course_id", "lesson_no", "revision_id", "revision_type",
+                "reason", "baseline_sha256", "new_sha256"}
+    missing = required - set(data)
+    if missing:
+        raise ValueError("revision_report missing fields: " + ", ".join(sorted(missing)))
+    if data.get("schema_version") != 1 or data.get("report_type") != "revision_report":
+        raise ValueError("revision_report schema or report_type is invalid")
+    if data.get("course_id") != state.get("course_id") or int(data.get("lesson_no", 0)) != int(lesson["lesson_no"]):
+        raise ValueError("revision_report identity mismatch")
+    if data.get("revision_id") != revision.get("revision_id") or data.get("revision_type") != revision.get("type"):
+        raise ValueError("revision_report round or type mismatch")
+    if data.get("baseline_sha256") != revision.get("baseline_sha256") or data.get("new_sha256") != new_hashes:
+        raise ValueError("revision_report hash binding mismatch")
+    return data
+
+
+def cmd_revision_close(args: argparse.Namespace) -> int:
+    state_path = Path(args.state).resolve()
+    state = load_json(state_path)
+    lesson = get_lesson(state, args.lesson)
+    revision = lesson.get("revision")
+    if lesson.get("status") != "ACCEPTED" or not isinstance(revision, dict) or revision.get("status") != "open":
+        raise ValueError("revision-close requires an open revision on ACCEPTED")
+    report_path = Path(args.revision_report).expanduser()
+    if not report_path.is_absolute() or not report_path.is_file():
+        raise ValueError("--revision-report must be an existing absolute file")
+    new_hashes = revision_hashes(state, state_path, lesson)
+    validate_revision_report(report_path, state, lesson, revision, new_hashes)
+    baseline = revision["baseline_sha256"]
+    revision_type = revision["type"]
+    qa_required = revision_type == "content"
+    snapshots = revision["snapshots"]
+    if revision_type == "metadata_link_only":
+        for key, official_key in (("official_faithful", "official_faithful"), ("official_lecture", "official_lecture")):
+            old_text = Path(snapshots[key]["path"]).read_text(encoding="utf-8")
+            current_path = artifact_path(state, state_path, lesson, official_key)
+            new_text = current_path.read_text(encoding="utf-8")
+            if markdown_visible_body(old_text) != markdown_visible_body(new_text):
+                raise ValueError("metadata/link revision changed visible body text")
+            if any(not target.is_file() for target in local_link_targets(current_path, new_text)):
+                raise ValueError("metadata/link revision contains a broken local link")
+        validate_promotion_hygiene(state, state_path, lesson, lesson["artifacts"])
+    elif revision_type == "formatting":
+        for key, official_key in (("official_faithful", "official_faithful"), ("official_lecture", "official_lecture")):
+            old_text = Path(snapshots[key]["path"]).read_text(encoding="utf-8")
+            new_text = artifact_path(state, state_path, lesson, official_key).read_text(encoding="utf-8")
+            if conservative_semantic_fingerprint(old_text) != conservative_semantic_fingerprint(new_text):
+                qa_required = True
+        validate_promotion_hygiene(state, state_path, lesson, lesson["artifacts"])
+    qa_path = None
+    if qa_required:
+        if not args.qa_report:
+            raise ValueError(f"{revision_type} revision requires independent --qa-report")
+        qa_path = Path(args.qa_report).expanduser()
+        if not qa_path.is_absolute() or not qa_path.is_file():
+            raise ValueError("--qa-report must be an existing absolute file")
+        validate_qa_report(qa_path, state, lesson, "SEMANTIC_QA_PASS",
+                           expected_round=int(lesson.get("attempts", {}).get("qa", 0)) + 1,
+                           allowed_scopes={"revision_content", "revision_formatting"},
+                           expected_hashes={k: v for k, v in new_hashes.items() if k != "course_map"})
+    elif args.qa_report:
+        raise ValueError("deterministically equivalent revision must not attach an unvalidated optional QA report")
+    stamp = now()
+    revision.update({"status": "closed", "closed_at": stamp, "new_sha256": new_hashes,
+                     "revision_report": {"path": str(report_path.resolve()), "sha256": sha256_file(report_path)},
+                     "qa_report": ({"path": str(qa_path.resolve()), "sha256": sha256_file(qa_path)} if qa_path else None),
+                     "deterministic_equivalence": not qa_required})
+    hashes = lesson.setdefault("artifact_sha256", {})
+    hashes["source"] = new_hashes["source"]
+    hashes["official_faithful"] = new_hashes["faithful"]
+    hashes["official_lecture"] = new_hashes["lecture"]
+    if "course_map" in new_hashes and isinstance(state.get("shared_artifacts", {}).get("course_map"), dict):
+        state["shared_artifacts"]["course_map"]["sha256"] = new_hashes["course_map"]
+        state["shared_artifacts"]["course_map"]["updated_at"] = stamp
+        lesson["artifact_sha256"]["course_map"] = new_hashes["course_map"]
+    if qa_path:
+        hashes["qa_report"] = sha256_file(qa_path)
+        lesson.setdefault("semantic_evidence_history", []).append({
+            "at": stamp, "kind": "qa_report", "path": str(qa_path.resolve()), "sha256": hashes["qa_report"],
+            "review_round": int(lesson.get("attempts", {}).get("qa", 0)) + 1,
+            "review_scope": f"revision_{revision_type}", "input_sha256": new_hashes,
+            "reviewer_model": state.get("models", {}).get("qa"), "decision": "pass",
+        })
+        lesson["attempts"]["qa"] = int(lesson.get("attempts", {}).get("qa", 0)) + 1
+    add_usage(lesson, "revision", int(args.tokens_used or 0), float(args.wall_minutes_used or 0), int(args.agent_calls or 0))
+    lesson["updated_at"] = stamp
+    state["updated_at"] = stamp
+    atomic_write(state_path, state)
+    print(json.dumps({"lesson": args.lesson, "revision_id": revision["revision_id"], "status": "closed",
+                      "qa_bound": bool(qa_path), "new_sha256": new_hashes}, ensure_ascii=False))
+    return 0
+
+
 def cmd_audit(args: argparse.Namespace) -> int:
-    state = load_json(Path(args.state))
-    problems = []
+    state_path = Path(args.state).resolve()
+    state = load_json(state_path)
+    problems: list[dict] = []
+
+    def problem(lesson: dict, category: str, detail: str) -> None:
+        problems.append({"lesson": lesson["lesson_no"], "category": category, "problem": detail})
+
+    shared_map = state.get("shared_artifacts", {}).get("course_map")
+    shared_map_ok = True
+    if isinstance(shared_map, dict) and shared_map.get("path"):
+        try:
+            current_map = resolve_state_path(state, state_path, shared_map["path"], must_exist=True)
+            shared_map_ok = sha256_file(current_map) == shared_map.get("sha256")
+        except ValueError:
+            shared_map_ok = False
     for lesson in state["lessons"]:
         profile = state_profile(state, lesson)
-        status = lesson["status"]
+        status = lesson.get("status")
         if status not in ALL_STATES:
-            problems.append({"lesson": lesson["lesson_no"], "problem": f"unknown status {status}"})
+            problem(lesson, "registration_defect", f"unknown status {status}")
             continue
         archived = lesson.get("artifacts_archived", {})
         for key in required_artifacts(status, profile):
+            if key == "course_map" and status == "ACCEPTED" and isinstance(shared_map, dict):
+                if not shared_map_ok:
+                    problem(lesson, "formal_candidate_drift", "latest shared course_map baseline is missing or changed")
+                continue
             if key in archived:
                 if status != "ACCEPTED" or key not in {"faithful", "lecture", "mechanical_report"} or not valid_archived_entry(archived[key]):
-                    problems.append({"lesson": lesson["lesson_no"], "problem": f"invalid archived artifact {key}"})
+                    problem(lesson, "registration_defect", f"invalid archived artifact {key}")
                 continue
             value = lesson.get("artifacts", {}).get(key)
             if not value:
-                problems.append({"lesson": lesson["lesson_no"], "problem": f"missing artifact key {key}"})
-            elif not Path(value).is_file():
-                problems.append({"lesson": lesson["lesson_no"], "problem": f"artifact not found {key}: {value}"})
-            elif key in {"qa_report", "official_faithful", "official_lecture"}:
-                expected_hash = lesson.get("artifact_sha256", {}).get(key)
-                if not expected_hash or sha256_file(Path(value)) != expected_hash:
-                    problems.append({"lesson": lesson["lesson_no"], "problem": f"artifact integrity failed {key}"})
+                category = "report_missing" if key.endswith("report") else "registration_defect"
+                problem(lesson, category, f"missing artifact key {key}")
+                continue
+            try:
+                actual = resolve_state_path(state, state_path, value, must_exist=True)
+            except ValueError as exc:
+                category = "report_missing" if key.endswith("report") else "registration_defect"
+                problem(lesson, category, str(exc))
+                continue
+            expected_hash = lesson.get("artifact_sha256", {}).get(key)
+            if expected_hash and sha256_file(actual) != expected_hash:
+                category = "formal_candidate_drift" if key.startswith("official_") else "qa_binding_mismatch" if key in {"qa_report", "semantic_check"} else "registration_defect"
+                problem(lesson, category, f"artifact integrity failed {key}")
+        evidence = lesson.get("semantic_evidence_history", [])
+        revision = lesson.get("revision")
+        deterministic_revision = (isinstance(revision, dict) and revision.get("status") == "closed"
+                                  and revision.get("deterministic_equivalence") is True)
+        if status in {"SEMANTIC_QA_PASS", "PROMOTED", "ACCEPTED"}:
+            if not evidence:
+                problem(lesson, "registration_defect", "semantic pass has no registered evidence history")
+            else:
+                latest = evidence[-1]
+                if (int(latest.get("review_round", 1)) > 1 or requires_full_qa(state, lesson, int(latest.get("review_round", 1)))) and latest.get("kind") != "qa_report":
+                    problem(lesson, "independent_qa_missing", "current acceptance required independent QA")
+                if not deterministic_revision:
+                    current_inputs = revision_hashes(state, state_path, lesson) if status == "ACCEPTED" else bound_input_hashes(lesson)
+                    declared = latest.get("input_sha256")
+                    relevant = {k: v for k, v in current_inputs.items() if k in {"source", "faithful", "lecture", "uncertainties", "coverage"}}
+                    if not isinstance(declared, dict) or any(declared.get(k) != v for k, v in relevant.items()):
+                        problem(lesson, "qa_binding_mismatch", "latest semantic evidence is bound to different inputs")
+        if status in {"PROMOTED", "ACCEPTED"}:
+            baseline = lesson.get("promotion_baseline", {})
+            for key in ("official_faithful", "official_lecture"):
+                try:
+                    actual_hash = sha256_file(artifact_path(state, state_path, lesson, key))
+                except ValueError:
+                    continue
+                expected = lesson.get("artifact_sha256", {}).get(key)
+                if expected != actual_hash:
+                    problem(lesson, "formal_candidate_drift", f"current {key} differs from registered formal candidate")
+                if status == "PROMOTED" and baseline.get(key) and baseline.get(key) != actual_hash:
+                    problem(lesson, "formal_candidate_drift", f"{key} changed after promotion")
+            try:
+                validate_promotion_hygiene(state, state_path, lesson, lesson.get("artifacts", {}))
+            except ValueError as exc:
+                problem(lesson, "promotion_hygiene", str(exc))
+        if isinstance(revision, dict) and revision.get("status") == "open":
+            problem(lesson, "revision_open", f"revision {revision.get('revision_id')} remains open")
+        if not usage_consistent(lesson):
+            problem(lesson, "registration_defect", "usage phase totals do not equal lesson totals")
         if status in {"BLOCKED", "SKIPPED", "FIX_REQUIRED", "ESCALATED"} and not lesson.get("last_reason"):
-            problems.append({"lesson": lesson["lesson_no"], "problem": f"{status} requires reason"})
-    print(json.dumps({"ok": not problems, "problems": problems}, ensure_ascii=False, indent=2))
+            problem(lesson, "registration_defect", f"{status} requires reason")
+    categories = Counter(item["category"] for item in problems)
+    print(json.dumps({"ok": not problems, "categories": dict(sorted(categories.items())), "problems": problems}, ensure_ascii=False, indent=2))
     return 0 if not problems else 1
 
 
@@ -789,7 +1510,7 @@ def sha256_file(path: Path) -> str:
 
 
 def cmd_approve_sample(args: argparse.Namespace) -> int:
-    path = Path(args.state)
+    path = Path(args.state).resolve()
     state = load_json(path)
     gate = state.get("sample_gate", {})
     gate_lesson_no = int(gate.get("lesson_no", args.lesson))
@@ -802,7 +1523,8 @@ def cmd_approve_sample(args: argparse.Namespace) -> int:
     if not all(expected):
         raise ValueError("accepted sample is missing official artifacts")
     samples = [Path(args.faithful).resolve(), Path(args.lecture).resolve()]
-    if [str(p) for p in samples] != [str(Path(x).resolve()) for x in expected]:
+    expected_paths = [resolve_state_path(state, path, str(x), must_exist=True) for x in expected]
+    if [str(p) for p in samples] != [str(p) for p in expected_paths]:
         raise ValueError("approved sample paths must match the accepted lesson official artifacts")
     if any(not p.is_file() for p in samples):
         raise ValueError("approved sample files are missing")
@@ -817,7 +1539,7 @@ def cmd_approve_sample(args: argparse.Namespace) -> int:
 
 
 def cmd_archive_artifact(args: argparse.Namespace) -> int:
-    path = Path(args.state)
+    path = Path(args.state).resolve()
     state = load_json(path)
     lesson = get_lesson(state, args.lesson)
     if lesson["status"] != "ACCEPTED":
@@ -826,9 +1548,10 @@ def cmd_archive_artifact(args: argparse.Namespace) -> int:
     if args.key not in allowed:
         raise ValueError(f"artifact cannot be archived: {args.key}")
     value = lesson.get("artifacts", {}).get(args.key)
-    if not value or not Path(value).is_file():
+    if not value:
         raise ValueError(f"artifact not found: {args.key}")
-    digest = sha256_file(Path(value))
+    actual = resolve_state_path(state, path, value, must_exist=True)
+    digest = sha256_file(actual)
     if digest != args.sha256:
         raise ValueError("sha256 mismatch; refusing to archive")
     lesson.setdefault("artifacts_archived", {})[args.key] = {
@@ -865,6 +1588,11 @@ def build_parser() -> argparse.ArgumentParser:
     q = sub.add_parser("next"); q.add_argument("--state", required=True); q.set_defaults(func=cmd_next)
     q = sub.add_parser("agreement"); q.add_argument("--state", required=True); q.set_defaults(func=cmd_agreement)
     q = sub.add_parser("paths"); q.add_argument("--state", required=True); q.add_argument("--lesson", type=int, required=True); q.set_defaults(func=cmd_paths)
+    q = sub.add_parser("work-order"); q.add_argument("--state", required=True); q.add_argument("--lesson", type=int, required=True); q.set_defaults(func=cmd_work_order)
+    q = sub.add_parser("preflight"); q.add_argument("--state", required=True); q.add_argument("--lesson", type=int, required=True); q.add_argument("--report"); q.set_defaults(func=cmd_preflight)
+    q = sub.add_parser("self-rework"); q.add_argument("--state", required=True); q.add_argument("--lesson", type=int, required=True); q.add_argument("--reason", required=True); q.add_argument("--artifact", action="append", required=True); q.add_argument("--tokens-used", type=int); q.add_argument("--wall-minutes-used", type=float); q.add_argument("--agent-calls", type=int); q.set_defaults(func=cmd_self_rework)
+    q = sub.add_parser("revision-open"); q.add_argument("--state", required=True); q.add_argument("--lesson", type=int, required=True); q.add_argument("--type", required=True, choices=["metadata_link_only", "formatting", "content"]); q.add_argument("--reason", required=True); q.set_defaults(func=cmd_revision_open)
+    q = sub.add_parser("revision-close"); q.add_argument("--state", required=True); q.add_argument("--lesson", type=int, required=True); q.add_argument("--revision-report", required=True); q.add_argument("--qa-report"); q.add_argument("--tokens-used", type=int); q.add_argument("--wall-minutes-used", type=float); q.add_argument("--agent-calls", type=int); q.set_defaults(func=cmd_revision_close)
     q = sub.add_parser("audit"); q.add_argument("--state", required=True); q.set_defaults(func=cmd_audit)
     q = sub.add_parser("approve-sample"); q.add_argument("--state", required=True); q.add_argument("--lesson", type=int, required=True); q.add_argument("--faithful", required=True); q.add_argument("--lecture", required=True); q.add_argument("--approved-by", required=True); q.set_defaults(func=cmd_approve_sample)
     q = sub.add_parser("archive-artifact"); q.add_argument("--state", required=True); q.add_argument("--lesson", type=int, required=True); q.add_argument("--key", required=True); q.add_argument("--sha256", required=True); q.add_argument("--reason", required=True); q.set_defaults(func=cmd_archive_artifact)

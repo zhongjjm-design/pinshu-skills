@@ -24,6 +24,11 @@
     "max_qa_rounds_per_lesson": 2
   },
   "sample_gate": {"lesson_no": 1, "approved": false},
+  "promotion_hygiene": {
+    "source_link_fields": ["source", "source_transcript"],
+    "forbidden_draft_markers": ["DRAFT ONLY", "PENDING INDEPENDENT QA"],
+    "require_source_backlink": true
+  },
   "naming_template": "Lesson-{lesson_no:02d}-{title}.md",
   "path_templates": {
     "source": "00_Source_Transcripts/{filename}",

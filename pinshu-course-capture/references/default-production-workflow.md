@@ -73,14 +73,10 @@ Completion here means only `DRAFTED`, not accepted. Character ratios are anomaly
 ## 6. Run mechanical checks
 
 ```bash
-python3 scripts/validate_lesson.py \
-  --profile <fast|standard|strict> \
-  --source <source-transcript> --faithful <faithful-edit> --lecture <structured-lecture> \
-  --uncertainties <uncertainties.json> [--coverage <coverage.json>] \
-  --json-out <mechanical-report.json>
+python3 scripts/course_pipeline.py preflight --state <course-state.json> --lesson <N>
 ```
 
-`strict` requires a coverage file; `fast` and `standard` do not. The script checks deterministic risks only and must never claim semantic fidelity.
+The command calls `validate_lesson.py` using the artifacts already bound in state, then writes and binds the versioned mechanical report. `strict` requires a coverage file; `fast` and `standard` do not. The report checks deterministic risks only and records `semantic_pass: null`; it must never claim semantic fidelity.
 
 ## 7. Select semantic review and independent QA
 
@@ -113,6 +109,8 @@ Do not start a new agent for formatting, wording, or ledger maintenance. Use the
 
 Only a lesson at `SEMANTIC_QA_PASS` may be promoted to official directories, and only by the designated committer. Before promotion, read back the actual files and save their paths in state. After promotion, transition to `PROMOTED`.
 
+Promotion also enforces the manifest's explicit `promotion_hygiene` contract: configured source backlinks must resolve to the registered source, forbidden draft/QA markers must be absent, and official prose must not retain runtime-draft references. Missing configuration blocks promotion rather than guessing a course's frontmatter schema.
+
 Then `pinshu-course` updates the course map and cross-lesson assets. If the course purpose enables learning extensions, `pinshu-study` creates active-recall cards and a practice bank in the manifest-rendered locations. Create learning records only after the user has actually answered or studied. Keep human-readable learning content separate from item-level machine metadata, and verify representative files in the target reading interface. Transition to `ACCEPTED` only after state, official files, and the course map agree. Draft, QA, and rework workers must never edit the official course map.
 
 ### 9.1 Manifest-driven names and paths
@@ -126,3 +124,7 @@ After the new file is promoted successfully, move the old name or version to the
 ## 10. Optional content sourcebook after accepted core assets
 
 When the user confirmed `content_asset` as a course purpose, load `pinshu-content-assets` only after the lesson's faithful edit and structured guide are accepted. Have the agent read both in full, reconcile corrected terminology and raw quotations, then write one readable lesson sourcebook. For a full course, organize a separate course-level sourcebook linking back to the lessons. Obtain the destination from the current manifest's `content_master_lesson` and `content_master_course` path templates, an existing course's approved paths, or an explicit user-approved path map. Do not invent or translate a parallel archive. Mark new sourcebooks **pending user review**; their existence and the core lesson's `ACCEPTED` status do not make them approved writing inputs. Do not generate an article unless separately requested. This is an agent handoff, not a claim that `course_pipeline.py` generates or approves content sourcebooks automatically.
+
+## 11. Revisions after acceptance
+
+Use `revision-open` before any accepted official file changes. The course remains `ACCEPTED`, but audit reports `revision_open` until closure. `metadata_link_only` permits only unchanged visible body text plus resolvable links and clean promotion hygiene. `formatting` uses a conservative fingerprint; changes to words, numbers, code, or links require independent QA. `content` always requires independent QA bound to the revised source, official pair, uncertainty ledger, and coverage evidence. `revision-close` independently computes all hashes and rejects a revision report that self-declares semantic equivalence.

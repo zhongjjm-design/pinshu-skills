@@ -53,6 +53,8 @@ def manifest(root: Path, course_id: str, count: int = 1, profile: str | None = "
         "budgets": {"max_reworks_per_lesson": 1, "max_qa_rounds_per_lesson": 2,
                     "max_tokens_per_lesson": 1000, "max_wall_minutes_per_lesson": 20},
         "sample_gate": {"lesson_no": 1, "approved": False},
+        "promotion_hygiene": {"source_link_fields": ["source"], "forbidden_draft_markers": ["DRAFT ONLY"],
+                              "require_source_backlink": True},
         "path_templates": {"active_recall": "03_\u590d\u4e60/{filename}"},
         "writer_model": "cheap-a", "qa_model": "cheap-b", "strong_model": "strong",
         "gold_samples": [],
@@ -96,9 +98,10 @@ def main() -> int:
         raw = root / "raw.md"; faithful = root / "faithful.md"; lecture = root / "lecture.md"
         coverage = root / "coverage.json"; uncertainties = root / "uncertainties.json"
         mech = root / "mechanical.json"; qa = root / "qa.json"
+        source_header = f"---\nsource: {raw}\n---\n\n"
         for p, text in ((raw, "The lecturer's source statement. A case and conclusion."),
-                        (faithful, "# Lesson One\n\nThe lecturer's source statement. A case and conclusion."),
-                        (lecture, "# Structured Lecture\n\n## Method\n\nA case and conclusion.")):
+                        (faithful, source_header + "# Lesson One\n\nThe lecturer's source statement. A case and conclusion."),
+                        (lecture, source_header + "# Structured Lecture\n\n## Method\n\nA case and conclusion.")):
             p.write_text(text, encoding="utf-8")
         write_json(coverage, {"block_count": 1, "status_summary": {"retained": 1, "merged": 0, "noise": 0, "uncertain": 0},
                               "blocks": [{"id": "B01", "status": "retained"}]})

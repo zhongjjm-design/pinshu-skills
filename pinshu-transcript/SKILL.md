@@ -26,6 +26,7 @@ In a course pipeline, this skill edits an immutable raw transcript into the fait
 5. **Do not guess through uncertainty**: When a term or on-screen text cannot be confirmed, preserve the context and mark it `[To confirm]`. Never fabricate exact instructions or code.
 6. **Name the lesson by its central point**: Read the whole source before naming it. Keep a lesson number only when needed; identify its central question or judgment and a distinctive case, method, or result. If the directory already identifies the document type, keep type labels out of both filename and H1. A title must distinguish this lesson from its neighbors and tell a reader why to open it. An established course timetable title takes precedence where the library requires it.
 7. **The raw source is immutable**: Permanently retain the raw transcript. Every deletion in the edited version must remain traceable to the original source. Never modify, overwrite, or delete the raw transcript file.
+8. **Respect accepted-file revision control**: When `pinshu-course-capture` state exists, write drafts only to its rendered runtime scope. Never silently edit an `ACCEPTED` official transcript; use the capture pipeline's typed revision commands and evidence gates.
 
 ## Input Boundary: First Decide Whether This Is a Transcript Task
 

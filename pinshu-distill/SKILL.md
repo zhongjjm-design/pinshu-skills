@@ -72,6 +72,8 @@ For talks, interviews, sales livestreams, methods, and competitor analysis, read
 
 After a single-source knowledge draft passes its own review, the user may separately request publication assets. Hand off its accepted source and identity/verification labels to `pinshu-content-assets` if installed. Keep knowledge drafts and publication assets separate; quotable lines, promotional angles, audience hooks, and platform copy are not mandatory study-guide appendices.
 
+When `pinshu-course-capture` state exists, obtain paths from that state and write only to the rendered runtime scope. An `ACCEPTED` official guide may change only through `revision-open` / `revision-close`; formatting that changes words, numbers, code, or links requires independent QA rather than a self-declared equivalence.
+
 ## Core result for a structured study guide
 
 The guide serves the learner, not the template. Prioritize:

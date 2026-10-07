@@ -18,6 +18,8 @@ Existing public/local edits are preserved in the reported backup directories, no
 
 ## Get started
 
+For the CLI-level production path, report contracts, safe accepted-file revision flow, and offline release checks, see [Course Foundation Quickstart](QUICKSTART.md). Source and repository-history boundaries are recorded in [Provenance](PROVENANCE.md).
+
 Tell your Agent:
 
 ```text

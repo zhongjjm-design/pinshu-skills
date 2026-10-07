@@ -1,9 +1,11 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "report_type": "qa_report",
   "course_id": "example-course",
   "lesson_no": 1,
   "reviewer_model": "exact-model-id",
-  "production_profile": "fast",
+  "reviewer_kind": "independent_qa",
+  "assurance_mode": "fast",
   "review_round": 1,
   "review_scope": "full",
   "decision": "pass",

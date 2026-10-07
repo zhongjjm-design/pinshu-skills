@@ -29,7 +29,7 @@ The orchestrator recommends settings from the course name, structure, content ri
 3. **Assurance approach:** recommend lightweight, standard, or full evidence and explain why in one sentence. These modes change only evidence density, independent-QA sampling, and budgets; they never change the quality floor or the four core results.
 4. **Final assets:** always deliver the source transcript, faithful edit, structured lecture, and course map. Then list enabled review/practice materials, content sourcebooks, horizontal topics, or external-use review. A content sourcebook starts as pending review; core lesson acceptance is not its editorial approval.
 
-Write the confirmed choices to `course_purpose`, both decision-basis fields, `optional_extensions`, `external_use`, `output_language`, and `intake_confirmation` in the manifest. `output_language` accepts `match-user`, `match-source`, or a short BCP-47 tag. If an old manifest omits it, the runtime records `match-user`. The worker, not the CLI, resolves `match-user` from the conversation; if that language is unavailable, use the source language. Public instructions remain English; learner-facing prose follows the selected language, while stable IDs, frontmatter keys, enum values, and other program fields remain English. Do not initialize production before this agreement is confirmed. Use the `agreement` command to show the stored language policy to the user, writer, and QA reviewer.
+Write the confirmed choices to `course_purpose`, both decision-basis fields, `optional_extensions`, `external_use`, `output_language`, and `intake_confirmation` in the manifest. Also configure `promotion_hygiene` with the course's real source-link frontmatter fields, forbidden draft markers, and `require_source_backlink: true`; the pipeline refuses to guess an unknown frontmatter schema at promotion. `output_language` accepts `match-user`, `match-source`, or a short BCP-47 tag. If an old manifest omits it, the runtime records `match-user`. The worker, not the CLI, resolves `match-user` from the conversation; if that language is unavailable, use the source language. Public instructions remain English; learner-facing prose follows the selected language, while stable IDs, frontmatter keys, enum values, and other program fields remain English. Do not initialize production before this agreement is confirmed. Use the `agreement` command to show the stored language policy to the user, writer, and QA reviewer.
 
 Startup also requires a course identity, lecturer, one canonical root directory, a lesson and source inventory, a primary writing model, an available QA route whenever a trigger applies, and a writable temporary runtime directory. Drafts must never enter the official knowledge base directly.
 
@@ -77,13 +77,22 @@ Common commands:
 python3 scripts/course_pipeline.py init --manifest <course-manifest.json> --state <runtime/course-state.json>
 python3 scripts/course_pipeline.py agreement --state <course-state.json>
 python3 scripts/course_pipeline.py paths --state <course-state.json> --lesson <N>
+python3 scripts/course_pipeline.py work-order --state <course-state.json> --lesson <N>
 python3 scripts/course_pipeline.py next --state <course-state.json>
+python3 scripts/course_pipeline.py preflight --state <course-state.json> --lesson <N>
+python3 scripts/course_pipeline.py self-rework --state <course-state.json> --lesson <N> --reason <explanation> --artifact faithful=<absolute-path>
 python3 scripts/course_pipeline.py transition --state <course-state.json> --lesson <N> --to <STATE> --reason <explanation> --wall-minutes-used <minutes> [--tokens-used <tokens>]
+python3 scripts/course_pipeline.py revision-open --state <course-state.json> --lesson <N> --type <metadata_link_only|formatting|content> --reason <explanation>
+python3 scripts/course_pipeline.py revision-close --state <course-state.json> --lesson <N> --revision-report <absolute-path> [--qa-report <absolute-path>]
 python3 scripts/course_pipeline.py audit --state <course-state.json>
 python3 scripts/course_pipeline.py summary --state <course-state.json>
 ```
 
-State writes must be atomic. After interruption, trust the state file and actual artifacts, not a chat summary. If the state file already exists, never overwrite it; resume with `next` or `summary`.
+State writes must be atomic. Initialization freezes a stable control directory and path anchors; later commands never use the current working directory as a fallback. Legacy relative artifacts are resolved only from the state, runtime, and course-root context. After interruption, trust the state file and actual artifacts, not a chat summary. If the state file already exists, never overwrite it; resume with `next` or `summary`.
+
+`preflight` is the canonical mechanical gate. It invokes `validate_lesson.py` on the registered artifacts, writes a versioned report with stable statistics and hashes, and never claims semantic success. A writer may call `self-rework` only before the first semantic/independent QA round; a real paired-draft hash must change, the bounded rework budget applies, and no QA round is consumed.
+
+After `ACCEPTED`, never edit official files silently. Open a typed revision so the pipeline snapshots the official pair, state, and shared-map context. Metadata/link and formatting revisions close deterministically only when the pipeline proves their narrow equivalence; content changes and substantive formatting changes require current-hash-bound independent QA. Audit remains failing while a revision is open.
 
 ## Scaling rules
 

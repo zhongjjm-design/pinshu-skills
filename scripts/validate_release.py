@@ -216,6 +216,10 @@ def run_executable_gates(full: bool) -> None:
         [sys.executable, "pinshu-course-capture/scripts/self_test.py"],
     )
     run_check(
+        "course-foundation regression tests",
+        [sys.executable, "-m", "unittest", "discover", "-s", "pinshu-course-capture/tests", "-v"],
+    )
+    run_check(
         "content-assets route self-test",
         [sys.executable, "-m", "unittest", "discover", "-s", "pinshu-content-assets/tests", "-v"],
     )

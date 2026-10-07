@@ -32,6 +32,8 @@ jobs:
           python3 -m pip install --quiet python-pptx==1.0.2
       - name: Validate release bundle
         run: python3 scripts/validate_release.py
+      - name: Validate course foundation
+        run: python3 scripts/release_check.py
       - name: Learning-asset validator self-test
         run: python3 pinshu-course/tests/self_test_validate_learning_assets.py
       - name: Runtime-contract self-test

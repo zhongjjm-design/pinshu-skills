@@ -1,5 +1,12 @@
 # Changelog
 
+## Course Foundation 0.1.0 - 2026-10-07
+
+- Add a CLI-level production foundation for stable path contexts, explicit production agreements, mechanical preflight reports, hash-bound semantic QA, auditable promotion, and bounded writer self-rework.
+- Add safe post-acceptance revision workflows for metadata/link, formatting, and content changes; substantive edits require current independent QA and open revisions fail audit.
+- Add public quickstart and provenance documentation, focused offline release checks, regression coverage, and a reproducible SHA-256 release manifest.
+- Keep one-command installation and repeat upgrades on the same installer path: recognized public packages and the managed repository clone are backed up and replaced, partial older installations are completed, and unrelated or private collisions remain protected.
+
 ## Visual set: core 0.2.0, companions 0.1.0 - 2026-10-06
 
 - Complete the public three-piece visual set with independent pinshu-infographic and pinshu-business-graphics packages. The repository now contains eleven Skills.

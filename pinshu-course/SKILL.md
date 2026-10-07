@@ -14,6 +14,8 @@ description: "Use when a multi-lesson course needs ongoing organization, learnin
 
 Orchestrate a traceable course library: identity, purpose, progress, concurrency, pending synthesis, and promotion. Delegate specialized content production.
 
+When a capture state exists, `pinshu-course-capture` remains the authority for paths, evidence binding, promotion hygiene, and accepted-file revisions. Update the shared course map serially, then register its latest baseline through that pipeline. Never edit an `ACCEPTED` official pair outside `revision-open` / `revision-close`.
+
 ## Common foundation and course purpose
 
 Every lesson has four core results: immutable raw transcript, faithful edit, structured notes, and one idempotently updated shared-map entry—not an extra map file. The faithful edit is the downstream content source; raw recordings/transcripts are ultimate evidence. Recheck mnemonics, numbers, safety, cases, and disagreements against both as needed.
