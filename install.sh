@@ -33,6 +33,9 @@ LEGACY_SKILLS=(
   pinshu-md-to-pdf
 )
 
+INSTALL_SKILLS=()
+KEEP_LOCAL_VISUALS=0
+
 WORK_ROOT=""
 ACQUIRED_REPO=""
 SKILL_STAGE_ROOT=""
@@ -116,6 +119,44 @@ is_expected_skill() {
   esac
 }
 
+is_visual_skill() {
+  case "$1" in
+    pinshu-visual-system|pinshu-infographic|pinshu-business-graphics) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+has_local_visual_suite() {
+  local slug target
+  for slug in pinshu-visual-system pinshu-infographic pinshu-business-graphics; do
+    target="$SKILLS_DIR/$slug"
+    if path_exists "$target" && { [ ! -f "$target/.public-bundle" ] || [ -L "$target/.public-bundle" ]; }; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+select_installation_skills() {
+  local skill
+  if has_local_visual_suite; then
+    KEEP_LOCAL_VISUALS=1
+    printf 'Keeping the existing private/local visual suite active; other public Skills will still install or update.\n'
+  fi
+  for skill in "${EXPECTED_SKILLS[@]}"; do
+    if [ "$KEEP_LOCAL_VISUALS" -eq 1 ] && is_visual_skill "$skill"; then
+      continue
+    fi
+    INSTALL_SKILLS+=("$skill")
+  done
+}
+
+check_visual_selection_unchanged() {
+  local current=0
+  if has_local_visual_suite; then current=1; fi
+  [ "$current" -eq "$KEEP_LOCAL_VISUALS" ] || die "Visual installation changed during staging; rerun to select a consistent suite."
+}
+
 validate_configuration() {
   local slug
 
@@ -172,9 +213,6 @@ preflight_target_paths() {
     if path_exists "$target"; then
       [ ! -L "$target" ] || die "Destination symlink was refused: $target"
       [ -d "$target" ] || die "Destination is not a real directory: $target"
-      if { [ "$slug" = "pinshu-visual-system" ] || [ "$slug" = "pinshu-infographic" ] || [ "$slug" = "pinshu-business-graphics" ]; } && [ ! -f "$target/.public-bundle" ]; then
-        die "Existing visual Skill is private or locally managed; use a separate destination instead of replacing it: $target"
-      fi
     fi
   done
 }
@@ -247,7 +285,7 @@ validate_staged_skills() {
   local skill
   local bad_entry
 
-  for skill in "${EXPECTED_SKILLS[@]}"; do
+  for skill in "${INSTALL_SKILLS[@]}"; do
     [ -d "$SKILL_STAGE_ROOT/$skill" ] && [ ! -L "$SKILL_STAGE_ROOT/$skill" ] || die "Staged package is not a real directory: $skill"
     [ -f "$SKILL_STAGE_ROOT/$skill/SKILL.md" ] && [ ! -L "$SKILL_STAGE_ROOT/$skill/SKILL.md" ] || die "Staged package lacks a regular SKILL.md: $skill"
   done
@@ -381,7 +419,7 @@ on_exit() {
 validate_active_installation() {
   local skill
 
-  for skill in "${EXPECTED_SKILLS[@]}"; do
+  for skill in "${INSTALL_SKILLS[@]}"; do
     [ -d "$SKILLS_DIR/$skill" ] && [ ! -L "$SKILLS_DIR/$skill" ] || die "Installed package is not a real directory: $skill"
     [ -f "$SKILLS_DIR/$skill/SKILL.md" ] && [ ! -L "$SKILLS_DIR/$skill/SKILL.md" ] || die "Installed package lacks a regular SKILL.md: $skill"
   done
@@ -392,6 +430,7 @@ validate_active_installation() {
 handle_claude_link() {
   local claude_dir="$HOME_ROOT/.claude"
   local claude_skills="$claude_dir/skills"
+  local skill target
 
   validate_path_syntax "$claude_dir" "Claude configuration directory"
 
@@ -408,7 +447,31 @@ handle_claude_link() {
   fi
 
   if path_exists "$claude_skills"; then
-    printf 'Warning: %s already exists and was left untouched.\n' "$claude_skills"
+    if [ -L "$claude_skills" ]; then
+      if [ "$(readlink "$claude_skills")" = "$SKILLS_DIR" ]; then
+        printf 'Claude already uses the shared Skills directory.\n'
+      else
+        printf 'Warning: %s points elsewhere and was left untouched.\n' "$claude_skills"
+      fi
+    elif [ -d "$claude_skills" ]; then
+      for skill in "${EXPECTED_SKILLS[@]}"; do
+        target="$claude_skills/$skill"
+        [ -f "$SKILLS_DIR/$skill/SKILL.md" ] || continue
+        if ! path_exists "$target"; then
+          if ln -s -- "$SKILLS_DIR/$skill" "$target"; then
+            printf 'Added Claude Skill link: %s\n' "$target"
+          else
+            printf 'Warning: could not create Claude Skill link: %s\n' "$target"
+          fi
+        elif [ -L "$target" ] && [ "$(readlink "$target")" = "$SKILLS_DIR/$skill" ]; then
+          :
+        else
+          printf 'Warning: existing Claude Skill was left untouched: %s\n' "$target"
+        fi
+      done
+    else
+      printf 'Warning: %s is not a directory and was left untouched.\n' "$claude_skills"
+    fi
     return 0
   fi
 
@@ -440,12 +503,13 @@ validate_repository "$ACQUIRED_REPO"
 # Repository acquisition and validation are complete before any active path mutation.
 preflight_target_paths
 preflight_previous_installation
+select_installation_skills
 mkdir -p -- "$SKILLS_DIR" "$(dirname -- "$INSTALL_DIR")"
 assert_directory_chain "$SKILLS_DIR" "PINSHU_SKILLS_DIR"
 assert_directory_chain "$(dirname -- "$INSTALL_DIR")" "PINSHU_INSTALL_DIR parent"
 
 SKILL_STAGE_ROOT=$(mktemp -d "$SKILLS_DIR/.pinshu-stage.XXXXXX")
-for skill in "${EXPECTED_SKILLS[@]}"; do
+for skill in "${INSTALL_SKILLS[@]}"; do
   mkdir -- "$SKILL_STAGE_ROOT/$skill"
   rsync -a \
     --exclude='.DS_Store' \
@@ -467,6 +531,7 @@ validate_repository "$INSTALL_STAGE"
 # Repeat preflight after staging to narrow the race window before the transaction.
 preflight_target_paths
 preflight_previous_installation
+check_visual_selection_unchanged
 RUN_ID="$(date +%Y%m%d-%H%M%S)-$$"
 SKILLS_BACKUP_ROOT="$SKILLS_DIR/.pinshu-backups/$RUN_ID"
 INSTALL_BACKUP_ROOT="$INSTALL_PARENT/.pinshu-install-backups/$RUN_ID"
@@ -474,12 +539,12 @@ INSTALL_BACKUP_ROOT="$INSTALL_PARENT/.pinshu-install-backups/$RUN_ID"
 [ ! -e "$INSTALL_BACKUP_ROOT" ] && [ ! -L "$INSTALL_BACKUP_ROOT" ] || die "Backup path already exists: $INSTALL_BACKUP_ROOT"
 
 TRANSACTION_STARTED=1
-for skill in "${EXPECTED_SKILLS[@]}"; do
+for skill in "${INSTALL_SKILLS[@]}"; do
   backup_target "$SKILLS_DIR/$skill" "$SKILLS_BACKUP_ROOT/active/$skill"
 done
 backup_target "$INSTALL_DIR" "$INSTALL_BACKUP_ROOT/previous-clone"
 
-for skill in "${EXPECTED_SKILLS[@]}"; do
+for skill in "${INSTALL_SKILLS[@]}"; do
   install_staged_target "$SKILL_STAGE_ROOT/$skill" "$SKILLS_DIR/$skill"
 done
 install_staged_target "$INSTALL_STAGE" "$INSTALL_DIR"
@@ -501,6 +566,16 @@ for skill in "${LEGACY_SKILLS[@]}"; do
     printf 'Warning: legacy path has no ownership proof and was left untouched: %s\n' "$SKILLS_DIR/$skill"
   fi
 done
-printf 'Installed Pinshu Skills:\n'
-printf '  - %s\n' "${EXPECTED_SKILLS[@]}"
+printf 'Installed or updated %s public Pinshu Skills:\n' "${#INSTALL_SKILLS[@]}"
+printf '  - %s\n' "${INSTALL_SKILLS[@]}"
+if [ "$KEEP_LOCAL_VISUALS" -eq 1 ]; then
+  printf 'Visual suite retained together to avoid mixing public and private companions:\n'
+  for skill in pinshu-visual-system pinshu-infographic pinshu-business-graphics; do
+    if path_exists "$SKILLS_DIR/$skill"; then
+      printf '  - kept existing, not upgraded: %s\n' "$skill"
+    else
+      printf '  - not installed alongside the local suite: %s\n' "$skill"
+    fi
+  done
+fi
 printf 'Installation complete. Restart your Agent client.\n'

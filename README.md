@@ -4,13 +4,17 @@ Aidan (Pinshu) maintains this suite of eleven skills for faithful transcript edi
 
 ## Quick install
 
-On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. The same command installs all eleven skills on a fresh computer or upgrades an older Pinshu installation. Before replacing an existing, correctly named Pinshu Skill, the installer moves the complete old directory and any previous repository clone to recoverable backups; unrelated or unsafe paths are refused. Inspect the installer before executing a remote script on your computer.
+On macOS or Linux (including WSL), have Bash, Git, `rsync`, and Python 3 available. Use the same command for a first install, a partial older installation or an update. A fresh computer gets all eleven Skills; existing public packages are backed up and replaced, and missing packages are added. Before replacement, the installer moves the complete old directory and any previous repository clone to recoverable backups; unrelated or unsafe paths are refused. Inspect the installer before executing a remote script on your computer.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/install.sh | bash
 ```
 
 Restart your Agent client after installation.
+
+If a visual package is private or locally managed (no public-bundle marker), the three visual packages are retained together to avoid mixing a private core with public companions. This no longer aborts the entire installation: the other eight public Skills still install or update. The final summary distinguishes installed/updated packages, existing visual packages kept without an upgrade, and missing visual companions intentionally not installed. Updating a private visual suite requires a separate source-aware migration; this command does not claim to perform it.
+
+Existing public/local edits are preserved in the reported backup directories, not automatically merged into the new public package. Re-run the same command whenever you want the latest published version; there is no background auto-update. Claude's existing shared-directory link is reused. In an existing real Claude skills directory, missing package links are added while conflicting copies/links are kept and reported.
 
 ## Get started
 

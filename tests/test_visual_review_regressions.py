@@ -356,7 +356,9 @@ class ReviewRegressions(unittest.TestCase):
                 native.write_text(f'<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><text x="80" y="100" font-size="{size}">Required label</text></svg>')
                 render(native, self.font_file(), "wechat-article", root / (size + ".png"))
             self.assertTrue(is_zero_pixel_difference(pixel_difference("magick", root / "42pt.png", root / "56px.png")))
-            for viewbox, transform, size in [("0 0 2400 1350", "", "10"), ("0 0 1600 900", "scale(.1)", "60")]:
+            # Keep the negative well below 8 rendered pixels for both Heiti and Noto.
+            # At size 10 Noto's 12px glyph scales to exactly 8px and correctly passes.
+            for viewbox, transform, size in [("0 0 2400 1350", "", "6"), ("0 0 1600 900", "scale(.1)", "60")]:
                 with self.subTest(viewbox=viewbox, transform=transform), self.assertRaisesRegex(ValueError, "rendered label height"):
                     native.write_text(f'<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="{viewbox}"><g transform="{transform}"><text x="100" y="200" font-size="{size}">Required label</text></g></svg>')
                     render(native, self.font_file(), "wechat-article", root / "image.png")

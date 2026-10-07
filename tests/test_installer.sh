@@ -424,6 +424,56 @@ test_conflicting_claude_path_is_untouched() {
   assert_active_version v1
   assert_dir "$HOME_DIR/.claude/skills"
   assert_file "$HOME_DIR/.claude/skills/sentinel"
+  [ -L "$HOME_DIR/.claude/skills/pinshu-study" ] || fail 'existing Claude directory did not gain a missing Skill link'
+}
+
+test_partial_install_without_clone() {
+  local skill
+  new_case partial-no-clone
+  make_remote v1 valid
+  for skill in pinshu-transcript pinshu-visual-system; do
+    mkdir -p "$HOME_DIR/.agents/skills/$skill"
+    rsync -a "$FIXTURE_SOURCE/$skill/" "$HOME_DIR/.agents/skills/$skill/"
+  done
+  update_remote v2
+  run_installer_success
+  assert_active_version v2
+  assert_exact_active_roster
+  assert_contains "$LOG_FILE" 'Installed or updated 11 public Pinshu Skills'
+  local saved
+  saved=$(find "$HOME_DIR/.agents/skills/.pinshu-backups" -type f -path '*/pinshu-transcript/payload.txt' -print -quit)
+  [ -n "$saved" ] || fail 'partial old package was not backed up'
+  assert_contains "$saved" v1
+}
+
+test_local_visual_suite_is_retained_as_a_group() {
+  local skill
+  new_case mixed-visual-group
+  make_remote v1 valid
+  run_installer_success
+  rm -f "$HOME_DIR/.agents/skills/pinshu-business-graphics/.public-bundle"
+  printf 'local identity\n' >"$HOME_DIR/.agents/skills/pinshu-business-graphics/assets/local.txt"
+  for skill in pinshu-visual-system pinshu-infographic pinshu-business-graphics; do
+    cp -R "$HOME_DIR/.agents/skills/$skill" "$CASE_ROOT/before-$skill"
+  done
+  update_remote v2
+  run_installer_success
+  for skill in pinshu-visual-system pinshu-infographic pinshu-business-graphics; do
+    diff -r "$CASE_ROOT/before-$skill" "$HOME_DIR/.agents/skills/$skill"
+  done
+  assert_contains "$HOME_DIR/.agents/skills/pinshu-study/payload.txt" v2
+  assert_contains "$LOG_FILE" 'Installed or updated 8 public Pinshu Skills'
+}
+
+test_existing_claude_package_conflict_is_retained() {
+  new_case claude-package-conflict
+  make_remote v1 valid
+  mkdir -p "$HOME_DIR/.claude/skills/pinshu-study"
+  printf 'private Claude copy\n' >"$HOME_DIR/.claude/skills/pinshu-study/sentinel"
+  run_installer_success
+  assert_contains "$HOME_DIR/.claude/skills/pinshu-study/sentinel" 'private Claude copy'
+  assert_contains "$LOG_FILE" 'existing Claude Skill was left untouched'
+  [ -L "$HOME_DIR/.claude/skills/pinshu-transcript" ] || fail 'missing Claude package was not linked'
 }
 
 test_invalid_roster_causes_no_active_mutation() {
@@ -588,10 +638,17 @@ test_private_visual_system_is_not_replaced() {
   mkdir -p "$HOME_DIR/.agents/skills/pinshu-visual-system/assets"
   printf -- '---\nname: pinshu-visual-system\n---\n' >"$HOME_DIR/.agents/skills/pinshu-visual-system/SKILL.md"
   printf 'private identity\n' >"$HOME_DIR/.agents/skills/pinshu-visual-system/assets/identity.txt"
-  run_installer_failure
+  cp -R "$HOME_DIR/.agents/skills/pinshu-visual-system" "$CASE_ROOT/private-before"
+  run_installer_success
+  diff -r "$CASE_ROOT/private-before" "$HOME_DIR/.agents/skills/pinshu-visual-system"
   assert_contains "$HOME_DIR/.agents/skills/pinshu-visual-system/assets/identity.txt" 'private identity'
-  assert_absent "$HOME_DIR/.pinshu-skills"
-  assert_absent "$HOME_DIR/.agents/skills/pinshu-transcript"
+  assert_contains "$HOME_DIR/.agents/skills/pinshu-transcript/payload.txt" v1
+  assert_contains "$LOG_FILE" 'Installed or updated 8 public Pinshu Skills'
+  assert_contains "$LOG_FILE" 'kept existing, not upgraded: pinshu-visual-system'
+  assert_contains "$LOG_FILE" 'not installed alongside the local suite: pinshu-infographic'
+  assert_absent "$HOME_DIR/.agents/skills/pinshu-infographic"
+  assert_absent "$HOME_DIR/.agents/skills/pinshu-business-graphics"
+  assert_dir "$HOME_DIR/.pinshu-skills/.git"
 }
 
 test_seven_package_installation_adds_visual_system() {
@@ -622,7 +679,7 @@ test_seven_package_installation_adds_visual_system() {
   assert_file "$HOME_DIR/.agents/skills/pinshu-film-teardown/SKILL.md"
 }
 
-run_test 'private visual installation is refused without mutations' test_private_visual_system_is_not_replaced
+run_test 'private visual core stays active while other Skills install' test_private_visual_system_is_not_replaced
 run_test 'prior seven packages upgrade to the current roster with backups' test_seven_package_installation_adds_visual_system
 
 test_private_visual_companions_are_not_replaced() {
@@ -633,10 +690,14 @@ test_private_visual_companions_are_not_replaced() {
     mkdir -p "$HOME_DIR/.agents/skills/$skill/assets"
     printf -- '---\nname: %s\n---\n' "$skill" >"$HOME_DIR/.agents/skills/$skill/SKILL.md"
     printf 'private original survives\n' >"$HOME_DIR/.agents/skills/$skill/assets/original.txt"
-    run_installer_failure
+    cp -R "$HOME_DIR/.agents/skills/$skill" "$CASE_ROOT/private-before"
+    run_installer_success
+    diff -r "$CASE_ROOT/private-before" "$HOME_DIR/.agents/skills/$skill"
     assert_contains "$HOME_DIR/.agents/skills/$skill/assets/original.txt" 'private original survives'
-    assert_absent "$HOME_DIR/.pinshu-skills"
-    assert_absent "$HOME_DIR/.agents/skills/pinshu-transcript"
+    assert_dir "$HOME_DIR/.pinshu-skills/.git"
+    assert_contains "$HOME_DIR/.agents/skills/pinshu-transcript/payload.txt" v1
+    assert_absent "$HOME_DIR/.agents/skills/pinshu-visual-system"
+    assert_contains "$LOG_FILE" "kept existing, not upgraded: $skill"
   done
 }
 
@@ -669,13 +730,16 @@ test_nine_package_installation_adds_visual_companions() {
   assert_contains "$old_clone" 'v1'
 }
 
-run_test 'private visual companions are refused without mutations' test_private_visual_companions_are_not_replaced
+run_test 'private visual companions stay intact without mixing public core' test_private_visual_companions_are_not_replaced
 run_test 'prior nine packages upgrade to eleven with complete backups' test_nine_package_installation_adds_visual_companions
 
 run_test 'owned old-six installation upgrades to the current roster with backups' test_old_six_owned_upgrade
 run_test 'altered installed copy is backed up during upgrade' test_altered_installed_copy_preserved
 run_test 'dirty old five upgrades to the current roster and preserves local edits' test_dirty_old_five_upgrades_to_current_with_backups
 run_test 'repeated upgrade replaces stale content and preserves backup' test_repeated_upgrade
+run_test 'partial installed packages without a prior clone upgrade and complete' test_partial_install_without_clone
+run_test 'mixed private and public visual suite stays consistent during upgrade' test_local_visual_suite_is_retained_as_a_group
+run_test 'existing Claude package stays intact while missing links are added' test_existing_claude_package_conflict_is_retained
 run_test 'Linux rsync timestamp-only output permits owned upgrade' test_linux_rsync_timestamp_only_upgrade
 run_test 'conflicting Claude path is left untouched' test_conflicting_claude_path_is_untouched
 run_test 'invalid repository roster causes no active mutation' test_invalid_roster_causes_no_active_mutation
