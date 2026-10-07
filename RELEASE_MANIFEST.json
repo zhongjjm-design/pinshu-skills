@@ -52,14 +52,14 @@
       "sha256": "94c684812d34e4e189816fb28305f1ac63483fb8001216b911317bdd4e196533"
     },
     {
-      "bytes": 18648,
+      "bytes": 19100,
       "path": "README.md",
-      "sha256": "d5bfddad74b5db15517acc83e4eb3dea232744bbd3bf38342fff02930efd23d2"
+      "sha256": "434b3659d42d1c4ea3d1c0677048adde370ed440fbb44e13422ab3774e9397a1"
     },
     {
-      "bytes": 1984,
+      "bytes": 4487,
       "path": "README.zh-CN.md",
-      "sha256": "f70c44342bf0deb857bd275220e8130d71cd6eee4d0fd53784d9cc71ac0e88f7"
+      "sha256": "eefaac800e095656c03f1f339142a9e8524524451271eba96085177f9619cae3"
     },
     {
       "bytes": 28202,
@@ -1367,9 +1367,9 @@
       "sha256": "48a7122d244cf5a5d074053b0c405cb0267a43ca15740052f67a53ba455a9540"
     },
     {
-      "bytes": 51885,
+      "bytes": 51889,
       "path": "tests/test_installer.sh",
-      "sha256": "6617326212e4f5da238a26db83ca246cadd764a7b8e0ad5a9140c636ca51c8b7"
+      "sha256": "426b1528e11270220808fc2c766681bce3338e8bcec1510b213848d46f606a02"
     },
     {
       "bytes": 7253,

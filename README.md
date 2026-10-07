@@ -1,6 +1,6 @@
 # Pinshu Skills
 
-Aidan (Pinshu) maintains this suite of fourteen candidate skills for faithful transcript editing, course production, learning, reusable content assets, writing, visuals, visual-learning notes, shared video tooling, and brand-film teardown videos. It works with Claude Code and other compatible agents.
+Aidan (Pinshu) maintains this published trial suite of fourteen skills for faithful transcript editing, course production, learning, reusable content assets, writing, visuals, visual-learning notes, shared video tooling, and brand-film teardown videos. It works with Claude Code and other compatible agents. Read the [Chinese guide](README.zh-CN.md) for the primary product instructions.
 
 ## Quick install
 
@@ -103,7 +103,7 @@ Historical pilots in this repository document the origin of rules and lessons fr
 
 ## Language and runtime-path contract
 
-Repository instructions remain in English. Learner-facing output follows `output_language` in the production manifest: a short BCP-47 tag such as `en`, `en-US`, or `zh-Hans`, or the selector `match-user` or `match-source`. Old manifests that omit the field behave as `match-user`; when the user's language is unavailable, use the source language. Stable IDs, frontmatter keys, enum values, and other program fields remain English.
+Chinese is the primary language of Skill operating instructions; this README is the English international entry point. Both entries use the same scripts, state contracts and tests. Learner-facing output follows `output_language` in the production manifest: a short BCP-47 tag such as `en`, `en-US`, or `zh-Hans`, or the selector `match-user` or `match-source`. Old manifests that omit the field behave as `match-user`; when the user's language is unavailable, use the source language. Stable IDs, frontmatter keys, enum values, and other program fields remain English.
 
 When a course-capture manifest or state file exists, every Skill uses its path templates through `course_pipeline.py paths`; no Skill translates or invents a parallel directory tree. For a new course without a manifest, create and confirm the manifest or an explicit path map before writing.
 
@@ -154,4 +154,4 @@ For batches larger than three lessons, deliver one representative lesson first. 
 python3 scripts/validate_release.py
 ```
 
-Aidan (Pinshu) created and maintains this repository. This is a unified public candidate, not a formal release. It does not grant general open-source redistribution rights. Contact the maintainer before modifying, redistributing, or incorporating its contents into another product.
+Aidan (Pinshu) created and maintains this repository. This is a published trial edition, not a claim of production stability on every platform. Under [LICENSE](LICENSE), personal and internal-team use and modification are permitted, including commercial internal work and commercial outputs. External resale or redistribution of the Skills requires separate permission. This is a restricted source-available license, not MIT or OSI open source; third-party licenses remain applicable. See [NOTICE](NOTICE.md).

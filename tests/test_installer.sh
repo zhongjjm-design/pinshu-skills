@@ -733,7 +733,7 @@ test_owned_tree_mutations_are_refused() {
         ;;
       permission)
         local mode
-        mode=$(stat -f '%Lp' "$HOME_DIR/.agents/skills/pinshu-study/payload.txt" 2>/dev/null || stat -c '%a' "$HOME_DIR/.agents/skills/pinshu-study/payload.txt")
+        mode=$(python3 -c 'import os, stat, sys; print(format(stat.S_IMODE(os.stat(sys.argv[1]).st_mode), "o"))' "$HOME_DIR/.agents/skills/pinshu-study/payload.txt")
         [ "$mode" = "600" ] || fail 'permission mutation was not preserved'
         ;;
     esac
