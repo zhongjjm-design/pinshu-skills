@@ -1,6 +1,6 @@
 # Pinshu Skills
 
-Aidan（品叔）维护的14项公开试用Skill，覆盖课程采集、忠实精编、知识提炼、课程编排、学习训练、内容母体、Markdown转PDF、写作、视觉系统、信息图、商业图形、图解学习、视频公共底座和品牌片拆解。
+Aidan（品叔）维护的15项公开试用Skill，覆盖课程采集、忠实精编、知识提炼、课程编排、学习训练、内容母体、Markdown转PDF、写作、视觉系统、信息图、商业图形、图解学习、视频公共底座和品牌片拆解和公众号排版。
 
 ## 下载与安装
 
@@ -30,7 +30,7 @@ curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/
 
 失败回滚覆盖克隆、包目录、归属回执及必需客户端链接。旧内容保存在提示的可恢复备份位置。此命令不是后台自动更新。
 
-## 14项能力
+## 15项能力
 
 | 分组 | Skill |
 |---|---|
@@ -38,6 +38,9 @@ curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/
 | 视觉与品牌表达 | pinshu-visual-system、pinshu-infographic、pinshu-business-graphics、pinshu-film-teardown |
 | 中文商业写作 | pinshu-write |
 | 视频与图解配套 | pinshu-video-core、pinshu-visual-learning |
+| 公众号排版（试用版） | pinshu-wechat-layout |
+
+`pinshu-wechat-layout`：把定稿 Markdown 和配图生成六款可切换的公众号排版预览，可复制正文（试用版）。整篇入口依赖同仓库的`pinshu-visual-system`；单独运行排版脚本不依赖它。
 
 `pinshu-md2pdf`的数字保持原样。配套包随统一安装交付，不需要在不同Agent的仓库中分别拼装。
 

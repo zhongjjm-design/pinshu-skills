@@ -27,6 +27,7 @@ EXPECTED_SKILLS=(
   pinshu-business-graphics
   pinshu-visual-learning
   pinshu-write
+  pinshu-wechat-layout
 )
 
 mkdir -p "$NO_NETWORK_BIN"
@@ -129,7 +130,7 @@ write_fixture_packages() {
     if [ "$roster" = "invalid" ] && [ "$skill" = "pinshu-study" ]; then
       continue
     fi
-    if [ "$roster" = "legacy-five" ] && { [ "$skill" = "pinshu-study" ] || [ "$skill" = "pinshu-content-assets" ] || [ "$skill" = "pinshu-visual-system" ] || [ "$skill" = "pinshu-video-core" ] || [ "$skill" = "pinshu-film-teardown" ] || [ "$skill" = "pinshu-infographic" ] || [ "$skill" = "pinshu-business-graphics" ] || [ "$skill" = "pinshu-visual-learning" ] || [ "$skill" = "pinshu-write" ]; }; then
+    if [ "$roster" = "legacy-five" ] && { [ "$skill" = "pinshu-study" ] || [ "$skill" = "pinshu-content-assets" ] || [ "$skill" = "pinshu-visual-system" ] || [ "$skill" = "pinshu-video-core" ] || [ "$skill" = "pinshu-film-teardown" ] || [ "$skill" = "pinshu-infographic" ] || [ "$skill" = "pinshu-business-graphics" ] || [ "$skill" = "pinshu-visual-learning" ] || [ "$skill" = "pinshu-write" ] || [ "$skill" = "pinshu-wechat-layout" ]; }; then
       continue
     fi
     mkdir -p "$FIXTURE_SOURCE/$skill/assets" "$FIXTURE_SOURCE/$skill/__pycache__"
@@ -384,7 +385,7 @@ test_old_six_owned_upgrade() {
   local skill repository_backup
   new_case owned-old-six
   make_remote v1 valid
-  rm -rf -- "$FIXTURE_SOURCE/pinshu-content-assets" "$FIXTURE_SOURCE/pinshu-visual-system" "$FIXTURE_SOURCE/pinshu-video-core" "$FIXTURE_SOURCE/pinshu-film-teardown" "$FIXTURE_SOURCE/pinshu-infographic" "$FIXTURE_SOURCE/pinshu-business-graphics" "$FIXTURE_SOURCE/pinshu-visual-learning" "$FIXTURE_SOURCE/pinshu-write"
+  rm -rf -- "$FIXTURE_SOURCE/pinshu-content-assets" "$FIXTURE_SOURCE/pinshu-visual-system" "$FIXTURE_SOURCE/pinshu-video-core" "$FIXTURE_SOURCE/pinshu-film-teardown" "$FIXTURE_SOURCE/pinshu-infographic" "$FIXTURE_SOURCE/pinshu-business-graphics" "$FIXTURE_SOURCE/pinshu-visual-learning" "$FIXTURE_SOURCE/pinshu-write" "$FIXTURE_SOURCE/pinshu-wechat-layout"
   stage_fixture_tree
   git -C "$FIXTURE_SOURCE" commit -q -m 'old six roster'
   git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
@@ -399,6 +400,7 @@ test_old_six_owned_upgrade() {
     [ "$skill" = pinshu-business-graphics ] && continue
     [ "$skill" = pinshu-visual-learning ] && continue
     [ "$skill" = pinshu-write ] && continue
+    [ "$skill" = pinshu-wechat-layout ] && continue
     mkdir -p "$HOME_DIR/.agents/skills/$skill"
     rsync -a --exclude='.DS_Store' --exclude='__pycache__/' --exclude='*.pyc' --exclude='*.pyo' --exclude='.git' \
       "$HOME_DIR/.pinshu-skills/$skill/" "$HOME_DIR/.agents/skills/$skill/"
@@ -442,6 +444,7 @@ test_dirty_old_five_is_refused_without_mutation() {
     [ "$skill" = pinshu-business-graphics ] && continue
     [ "$skill" = pinshu-visual-learning ] && continue
     [ "$skill" = pinshu-write ] && continue
+    [ "$skill" = pinshu-wechat-layout ] && continue
     mkdir -p "$HOME_DIR/.agents/skills/$skill"
     rsync -a --exclude='.DS_Store' --exclude='__pycache__/' --exclude='*.pyc' --exclude='*.pyo' --exclude='.git' \
       "$HOME_DIR/.pinshu-skills/$skill/" "$HOME_DIR/.agents/skills/$skill/"
@@ -771,7 +774,7 @@ test_private_dependencies_and_public_companion_update() {
   done
   assert_public_visual_link pinshu-infographic v2
   assert_contains "$HOME_DIR/.agents/skills/pinshu-study/payload.txt" v2
-  assert_contains "$LOG_FILE" 'Installed or updated 12 public Pinshu Skills'
+  assert_contains "$LOG_FILE" 'Installed or updated 13 public Pinshu Skills'
   local saved
   saved=$(find "$HOME_DIR/.agents/skills/.pinshu-backups" -type f -path '*/pinshu-infographic/payload.txt' -print -quit)
   assert_contains "$saved" v1
@@ -1017,7 +1020,7 @@ test_private_visual_system_is_not_replaced() {
   diff -r "$CASE_ROOT/private-before" "$HOME_DIR/.agents/skills/pinshu-visual-system"
   assert_contains "$HOME_DIR/.agents/skills/pinshu-visual-system/assets/identity.txt" 'private identity'
   assert_contains "$HOME_DIR/.agents/skills/pinshu-transcript/payload.txt" v1
-  assert_contains "$LOG_FILE" 'Installed or updated 13 public Pinshu Skills'
+  assert_contains "$LOG_FILE" 'Installed or updated 14 public Pinshu Skills'
   assert_exact_active_roster
   assert_contains "$LOG_FILE" 'kept existing, not upgraded: pinshu-visual-system'
   assert_public_visual_link pinshu-infographic v1
@@ -1029,12 +1032,13 @@ test_twelve_package_installation_adds_video_core_and_visual_learning() {
   local skill
   new_case twelve-to-current
   make_remote v1 valid
-  rm -rf -- "$FIXTURE_SOURCE/pinshu-video-core" "$FIXTURE_SOURCE/pinshu-visual-learning"
+  rm -rf -- "$FIXTURE_SOURCE/pinshu-wechat-layout" "$FIXTURE_SOURCE/pinshu-video-core" "$FIXTURE_SOURCE/pinshu-visual-learning"
   stage_fixture_tree
   git -C "$FIXTURE_SOURCE" commit -q -m 'prior twelve packages'
   git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
   git clone -q "file://$FIXTURE_REMOTE" "$HOME_DIR/.pinshu-skills"
   for skill in "${EXPECTED_SKILLS[@]}"; do
+    [ "$skill" = pinshu-wechat-layout ] && continue
     [ "$skill" = pinshu-video-core ] && continue
     [ "$skill" = pinshu-visual-learning ] && continue
     mkdir -p "$HOME_DIR/.agents/skills/$skill"
@@ -1047,12 +1051,13 @@ test_twelve_package_installation_adds_video_core_and_visual_learning() {
   run_installer_success --adopt-legacy
   assert_active_version v2
   assert_exact_active_roster
+  assert_file "$HOME_DIR/.agents/skills/pinshu-wechat-layout/SKILL.md"
   assert_file "$HOME_DIR/.agents/skills/pinshu-video-core/SKILL.md"
   assert_file "$HOME_DIR/.agents/skills/pinshu-visual-learning/SKILL.md"
 }
 
 run_test 'private core remains intact and missing companions use the public core' test_private_visual_system_is_not_replaced
-run_test 'prior twelve packages upgrade to fourteen with backups' test_twelve_package_installation_adds_video_core_and_visual_learning
+run_test 'prior twelve packages upgrade to fifteen with backups' test_twelve_package_installation_adds_video_core_and_visual_learning
 
 test_private_visual_companions_are_not_replaced() {
   local skill
@@ -1084,15 +1089,16 @@ test_private_visual_companions_are_not_replaced() {
 
 test_eleven_package_installation_adds_write_video_core_and_visual_learning() {
   local skill old_clone
-  new_case eleven-to-fourteen
+  new_case eleven-to-fifteen
   make_remote v1 valid
-  rm -rf -- "$FIXTURE_SOURCE/pinshu-write" "$FIXTURE_SOURCE/pinshu-video-core" "$FIXTURE_SOURCE/pinshu-visual-learning"
+  rm -rf -- "$FIXTURE_SOURCE/pinshu-write" "$FIXTURE_SOURCE/pinshu-wechat-layout" "$FIXTURE_SOURCE/pinshu-video-core" "$FIXTURE_SOURCE/pinshu-visual-learning"
   stage_fixture_tree
   git -C "$FIXTURE_SOURCE" commit -q -m 'prior eleven packages'
   git -C "$FIXTURE_SOURCE" push -q "$FIXTURE_REMOTE" main
   git clone -q "file://$FIXTURE_REMOTE" "$HOME_DIR/.pinshu-skills"
   for skill in "${EXPECTED_SKILLS[@]}"; do
     [ "$skill" = pinshu-write ] && continue
+    [ "$skill" = pinshu-wechat-layout ] && continue
     [ "$skill" = pinshu-video-core ] && continue
     [ "$skill" = pinshu-visual-learning ] && continue
     mkdir -p "$HOME_DIR/.agents/skills/$skill"
@@ -1106,6 +1112,7 @@ test_eleven_package_installation_adds_write_video_core_and_visual_learning() {
   assert_active_version v2
   assert_exact_active_roster
   assert_file "$HOME_DIR/.agents/skills/pinshu-write/SKILL.md"
+  assert_file "$HOME_DIR/.agents/skills/pinshu-wechat-layout/SKILL.md"
   assert_file "$HOME_DIR/.agents/skills/pinshu-video-core/SKILL.md"
   assert_file "$HOME_DIR/.agents/skills/pinshu-visual-learning/SKILL.md"
   old_clone=$(find "$HOME_DIR/.pinshu-install-backups" -type f -path '*/previous-clone/pinshu-film-teardown/payload.txt' -print -quit)
@@ -1114,7 +1121,7 @@ test_eleven_package_installation_adds_write_video_core_and_visual_learning() {
 }
 
 run_test 'private companions remain intact and missing public packages are added' test_private_visual_companions_are_not_replaced
-run_test 'prior eleven packages upgrade to fourteen with complete backups' test_eleven_package_installation_adds_write_video_core_and_visual_learning
+run_test 'prior eleven packages upgrade to fifteen with complete backups' test_eleven_package_installation_adds_write_video_core_and_visual_learning
 
 run_test 'owned old-six installation upgrades to the current roster with backups' test_old_six_owned_upgrade
 run_test 'altered installed copy is refused before replacement' test_altered_installed_copy_refused
@@ -1237,7 +1244,7 @@ test_all_private_visual_packages_retained() {
     diff -r "$CASE_ROOT/before-$skill" "$HOME_DIR/.agents/skills/$skill"
   done
   assert_exact_active_roster
-  assert_contains "$LOG_FILE" 'Installed or updated 11 public Pinshu Skills'
+  assert_contains "$LOG_FILE" 'Installed or updated 12 public Pinshu Skills'
 }
 
 test_real_planners_through_shared_links() {

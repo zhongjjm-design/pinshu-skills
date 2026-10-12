@@ -19,6 +19,17 @@ from prepare_publish_images import is_zero_pixel_difference
 
 
 class PublicVisualTests(unittest.TestCase):
+    def test_current_package_version_matches_registry_and_skill(self):
+        import re
+        version=(ROOT/'VERSION').read_text().strip()
+        self.assertEqual(version,json.loads((ROOT/'references/system-registry.json').read_text())['version'])
+        declared=re.search(r'公开候选版本：\*\*([^*]+)\*\*',(ROOT/'SKILL.md').read_text())
+        self.assertIsNotNone(declared)
+        self.assertEqual(version,declared.group(1))
+        quickstart=re.search(r'The shared package has a separate VERSION \(([^)]+)\)',(ROOT/'references/quickstart.md').read_text())
+        self.assertIsNotNone(quickstart)
+        self.assertEqual(version,quickstart.group(1))
+
     def test_pixel_difference_must_be_exactly_zero(self):
         for metric in ["0", "0 (0)", "0.0"]:
             self.assertTrue(is_zero_pixel_difference(metric))

@@ -1,39 +1,43 @@
-# 文章类型
+# Article types
 
-九类文章是起手式，不是笼子。作者也可以指定“自由体”：跳过类型，但保留硬规则、选题闸门和审稿链。
+Ten types are starting shapes, not cages. The type is chosen with the author at seed confirmation. The author may also say "free form": then skip the type, keep the hard rules, the topic gate and the review chain.
 
-所有类型共用一条主骨架：一个判断，一个把读者放回自身处境的开头，若干每节只推进一步的论证，以及一个给读者可执行动作或清晰判断的结尾。
+Every type shares one spine: one main line (it may have several ranked dimensions that answer the same question), an opening that puts the reader inside their own situation, sections that each carry one step of the argument, and an ending that gives the reader something to do or a clear judgment to keep.
 
-| # | 类型 | 结构 | 通过标准 |
+| # | Type | Structure | Pass test |
 |---|---|---|---|
-| 1 | 真人真事 | 具体动作开头；事情如何发生；一个经典原则解释它；原则何处失效；读者能做什么 | 拿掉原则后，故事仍成立 |
-| 2 | 可执行清单 | 失败场景；常规做法为何挡不住；5 到 9 个可检查项，每项有理由和使用时刻；边界 | 清单脱离正文也能用 |
-| 3 | 展示过程 | 先给成品；列成本、时间、工具版本；哪里坏过；至少两个失败方案；适合谁 | 有一手测试证据和数字 |
-| 4 | 老板话术对账本 | 一句原话及场合日期；3 到 5 个同口径数字；话和数是否一致；判断 | 每个数字能回到财报或公开材料 |
-| 5 | 新闻之后 | 一句话事实；它对老板、市场人、员工意味着什么；同类事发生过几次；下个观察信号；判断与信心 | 第一段是事实，后面讲为什么重要 |
-| 6 | 顾客真正看见什么 | 顾客眼前场景；目标顾客是谁；用一个品牌原则判断；可观察结果；同行可否借鉴 | 从顾客侧写，不重写通稿 |
-| 7 | 经典重读 | 经典判断及时代；当时成立条件；今天案例；逐条检查条件；修正判断 | 经典必须可能被检验失败 |
-| 8 | 短情绪文 | 冲突画面；一个人、一件事；转折；一句可传播的话 | 证据最弱，按短视频和图片帖标准看 |
-| 9 | AI 趋势、应用和评测 | 一句话结论；测试了哪些真实任务；赢在哪里、输在哪里；适合谁；版本号和测试日期 | 失败测试也要写，判断必须当前 |
+| 1 | Real people and real events | Open on a concrete action; how it came about; one classic principle explains it; where that principle stops working; what the reader can do | Remove the principle and the story still stands |
+| 2 | Checklist the reader can use | The failure scene; why the usual practice does not prevent it; 5 to 9 checkable items, each with one reason and the moment to use it; where the list does not apply | The list alone, without the article, is usable |
+| 3 | Show the work | The finished result first; the bill (money, time, tool versions); where it broke; at least two things that did not work; who it suits | First-hand test evidence with numbers |
+| 4 | The owner's words against the books | One quote (occasion, date); 3 to 5 numbers on the same basis; do words and numbers match; judgment | Every number traces to a filing or public statement |
+| 5 | After the news | The fact in one sentence; what it means for owners, marketers and employees; how many times this kind of thing has happened; the next signal to watch; judgment and confidence | The first sentence carries one fact, followed by why it matters |
+| 6 | What the customer actually sees | The scene in front of the customer; who the target customer is; one brand principle to judge it; observable results; can peers borrow it | Written from the customer's side, not a rewrite of the press release |
+| 7 | A classic, reread | The classic judgment and its era; the conditions under which it held; today's case; check each condition; the corrected judgment | It must be possible for the classic to fail the test |
+| 8 | Short emotional piece | A conflict image; one person, one event; a turn; one line people can repeat | Weakest evidence type; judge by short-video and image-post standards, not this Skill's long-form standard |
+| 9 | AI trends, applications and reviews | One-sentence conclusion; which real tasks were tested; where it wins and loses; who it suits; version numbers and test dates | Failed tests are reported too; the judgment is current |
+| 10 | Integration piece | The reader's question; the best answers from the most-read, best-performing articles on it, each credited by author and outlet; where they agree and disagree; our judgment and our choices (what we keep, what we drop, why); what the reader does with it | Every borrowed point is credited; our judgment and selection are visible; the reader gets more than from any single source |
 
-## 每类额外关注
+## What each type cares about most
 
-| # | 额外重点 |
+All types pass the good-article standard. On top of that:
+
+| # | Extra emphasis |
 |---|---|
-| 1 | 事情讲完整；原则揭示读者没想过的东西 |
-| 2 | 每项都有人真实做过；读者能直接行动 |
-| 3 | 真实产出、真实成本、诚实过程，包括没做成的 |
-| 4 | 原话不改，数字有来源，引用和评论分开 |
-| 5 | 准确、快速、回原始来源；可以降低“新角度”要求，但不能降低“对你意味着什么” |
-| 6 | 是品牌原则，不是八卦 |
-| 7 | 经典来源准确，主动寻找失效条件 |
-| 8 | 不按长文标准评 |
-| 9 | 当前判断；写明版本、日期、任务和成本 |
+| 1 | The event is told fully; the principle reveals something the reader had not thought of |
+| 2 | Someone has actually done every item; the reader can act directly |
+| 3 | Real output, real cost, honest process, including what did not work |
+| 4 | Quotes unaltered, numbers sourced, quotes kept separate from commentary |
+| 5 | Accurate, fast, checked against the original; the "new angle" bar may relax, the "what it means for you" bar may not |
+| 6 | A brand principle, not gossip |
+| 7 | Exact source of the classic; find where it fails |
+| 8 | Not judged by this Skill |
+| 9 | Current judgment; version, date, task and cost stated |
+| 10 | Chosen when a topic is crowded (the same judgment, or the same structure, evidence and conclusion together, already published) and we have no angle or experience of our own. Sources are credited in the body in words and listed after it; quotes are short and summaries are our own; our judgment, not the sources, closes the article |
 
-## 实用服务文
+## Practical service pieces
 
-很多商业读者要的是“我该怎么做”。这类通常把类型 1 或 5 和类型 2 结合：一个真实场景，解释为什么会发生，给三四个具体动作、真实案例、边界和一个读者当场能用的话术、表格或第一步。
+Many business readers want "how do I do this" pieces (for example, how a service company keeps its price when clients know it uses AI). These usually combine type 1 or 5 with type 2: a real scene, why it happens from the other party's side, three or four concrete moves with real cases, the limits, and an ending that hands the reader something usable at the exact moment they need it (a sentence to say, a table to send, a first step to take).
 
-## 风格卡
+## Style cards
 
-风格卡只决定组织方式，不覆盖账号画像。若画像要求更严，按画像；若类型和材料冲突，先保护事实与判断。
+Optional. A style card captures another writer's structure and moves (how they open, turn, pace and close), never their identity, catchphrases, experiences or invented examples. Use at most two in one article; when a card conflicts with the account profile, the profile wins. Cards come from the configured style-card folder; this public edition ships none.

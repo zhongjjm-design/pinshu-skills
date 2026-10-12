@@ -1,0 +1,9 @@
+# Local audit and colleague sharing
+
+Plans, source-content.txt, prompt-final.txt, QA, render-receipt.json, clean/export receipts and native editable SVG/PPTX are local-only. Paths inside them are useful for reproducibility and must not be sent as a complete delivery directory. Retain originals locally.
+
+After rights and final-image review, run scripts/export_share.py with explicitly selected final PNGs and a new directory. Only image copies and share-manifest.json are produced. The manifest uses plain filenames and SHA-256, never source paths. The exporter rejects symlinks, filename collisions, non-PNG input, text/EXIF/ICC/C2PA/unknown metadata chunks, trailing data and excessive pixels. It preserves accepted PNG bytes; it neither strips originals nor changes screenshot pixels. If metadata prevents sharing, obtain an approved clean copy from the asset owner first.
+
+PNG pixel content can itself reveal private information. The exporter cannot establish source rights, recognize every private face/name or prove human acceptance. Review the actual final image; pass here means only the declared file boundary. Native editable files need a separate content and metadata audit before any external sharing and are not included by this exporter.
+
+Publishing cleanup and sharing use one PNG chunk whitelist. prepare_publish_images.py removes all other ancillary chunks after conversion, including tIME/orNT, verifies dimensions and AE=0, then runs the same validator as export_share.py before PASS. The original image is unchanged. “Metadata-clean” here means no metadata outside that whitelist; rendering/color/density chunks can remain. For system-produced raster images, run cleanup first and share the resulting *-publish-clean.png; a raw source with metadata is correctly rejected by the sharing gate. Local source/font/QA receipts stay excluded.

@@ -5,7 +5,7 @@ maintainer: Aidan
 repository: https://github.com/zhongjjm-design/pinshu-skills
 runtime_layout: flat
 runtime_glob: ~/.agents/skills/pinshu-*
-updated: 2026-10-07
+updated: 2026-10-12
 skills:
   - name: pinshu-transcript
     origin: original
@@ -47,7 +47,7 @@ skills:
     origin: original
     distribution: bundled-sanitized
     present_in_repository: true
-    version: 0.2.4
+    version: 0.3.0
     status: public-preview
     depends_on: []
     runtime_dependencies: [python3, imagemagick-7, image-capable-agent]
@@ -89,8 +89,8 @@ skills:
     origin: original
     distribution: bundled
     present_in_repository: true
-    version: 1.0.0
-    status: public-candidate
+    version: 1.3.0
+    status: public-preview
     depends_on: []
     runtime_dependencies: [python3]
   - name: pinshu-visual-learning
@@ -101,3 +101,12 @@ skills:
     status: public-candidate
     depends_on: [pinshu-course, pinshu-distill, pinshu-transcript]
     runtime_dependencies: [python3]
+  - name: pinshu-wechat-layout
+    origin: original
+    distribution: bundled
+    present_in_repository: true
+    version: 0.4.0-rc.1
+    status: public-preview
+    depends_on: []
+    optional_companions: [pinshu-visual-system]
+    runtime_dependencies: [python3, markdown-it-py, beautifulsoup4]

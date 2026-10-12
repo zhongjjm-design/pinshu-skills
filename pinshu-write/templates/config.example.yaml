@@ -10,7 +10,7 @@ accounts:                # One or more accounts; say which one at the start of e
     platform: WeChat Official Account
     reader: "One sentence on who reads it, e.g. people who use AI at work and people who run or advise businesses"
     profile: ~/writing/profiles/example-account.md        # Authority for topics, readers, length, style, banned words, title tests
-    published_folder: ~/writing/published/example/        # Learn tone and openings only; optional
+    published_folder: ~/writing/published/example/        # Learn tone and openings; read in full for collision scans; optional
     good_article_standard: ~/writing/standards/good-article.md   # Extends the built-in standard; its readability questions stay; optional
     banned_words_file: ~/writing/standards/banned-words.txt      # One word per line, passed to audit_draft.py; optional
     length: 2500-4000    # Usual body length in Chinese characters
@@ -28,10 +28,28 @@ topic_pool: ~/writing/topic-pool.md    # Used when the author gives no topic
 style_card_folders: []                 # Optional style cards (structure and moves only)
 
 drafts_folder: ~/writing/drafts/       # One folder per article: date plus topic
+ready_folder: ~/writing/ready/         # The ROOT of the ready-to-publish area, not an account folder: each account gets
+                                       # <ready_folder>/<account>/date_title.md with date_title·发布物料包.md beside it.
+                                       # If the visual Skill's ready-article entry is used, this root must be the one its
+                                       # ready-folder contract names (the ready-to-publish area itself, one level above the
+                                       # account folders); other roots work for writing only.
+                                       # Collision scans read published articles in full; drafts and this folder by title only
 web_access: allowed                    # "allowed": research checks the last three months online; "none": library only
 
 models:                  # Fill from your own tools; see references/model-routing.md
-  writer:                # e.g. Claude Opus 4.6, Qwen 3.8, DeepSeek V4.1 Flash
+  # Minimum rule: every review role (wording editor, reviewers, editor-in-chief) comes from a vendor
+  # other than the actual writer's (for example Anthropic, Google, Alibaba, DeepSeek, Moonshot).
+  # Review roles may share one vendor with each other; only the two structure judges, and the
+  # common-sense floor and red team, want two different vendors among themselves. Several agents of one
+  # model agreeing is not a cross-check. With only one model, record "same-vendor review" in the editor notes.
+  # The author may name any writer for an article (including the main conversation); that choice wins
+  # over this file, is recorded in the editor notes, and no review step is skipped because of it.
+  organizer:             # The main conversation that runs the workflow; e.g. whatever runs your session
+  writer:                # Default writer; e.g. Claude Opus 4.6, Qwen 3.8, DeepSeek V4.1 Flash
   second_writer:         # optional, another vendor
-  reviewers: []          # at least one vendor different from the writer's
-  layperson_reader:      # another vendor, or "colleague"
+  wording_editor:        # Checks the writer's text item by item, keeps what passes, proposes a line only where a standard fails; e.g. Gemini 3.8 Flash
+  reviewers: []          # Structure, red team, common-sense floor; at least one vendor different from the writer's
+  layperson_reader:      # Hunts stuck words and broken numbers; another vendor, or "colleague"
+  target_reader:         # Plays the account's real reader from the profile; another vendor
+  editor_in_chief:       # Review after the review chain, before approval 4; able to read long input
+  fact_checker:          # A model with web access

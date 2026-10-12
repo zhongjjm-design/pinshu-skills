@@ -13,3 +13,8 @@
 A visual plan records intent and constraints. The agent supplies editorial judgment and actual image inspection. The scripts check declared contracts and file properties; they cannot determine aesthetic or semantic truth.
 
 The special 3D mechanism-diorama method is reference-only in this public preview: use 3-5 physical modules and one actual relationship for mechanisms. It is not a default brand style. No public execution adapter for that method is bundled.
+
+
+## 公众号整篇：封面（2026-10-12）
+
+封面由本 Skill 自己设计。写稿只交标题和金句候选，不交封面方向。从注册表的正式视觉模式里挑 2 到 3 个方向，每个方向各出一张真样张让作者挑。不用别人的视频画面、截图或图片当封面；证据截图只放正文。整篇截图与排版见 `article-asset-handoff.md` 和 `ready-folder-contract.md`。

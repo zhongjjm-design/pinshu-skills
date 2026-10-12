@@ -29,7 +29,7 @@ jobs:
           tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP" gitleaks
           sudo install "$RUNNER_TEMP/gitleaks" /usr/local/bin/gitleaks
           gitleaks version
-          python3 -m pip install --quiet python-pptx==1.0.2
+          python3 -m pip install --quiet python-pptx==1.0.2 pillow markdown-it-py beautifulsoup4
       - name: Validate release bundle
         run: python3 scripts/validate_release.py
       - name: Validate course foundation
@@ -61,8 +61,14 @@ jobs:
           command -v pdftotext
           command -v pdfinfo
           python3 -m unittest discover -s pinshu-md2pdf/tests -v
+      - name: Pinshu Write 1.3 regression
+        run: python3 -m unittest discover -s pinshu-write/tests -v
       - name: Public visual-system regression
-        run: python3 -m unittest discover -s pinshu-visual-system/tests -v
+        run: |
+          python3 -m unittest discover -s pinshu-visual-system/tests -v
+          python3 -m unittest discover -s pinshu-visual-system/scripts -p 'test_*.py' -v
+      - name: WeChat layout regression
+        run: python3 -m unittest discover -s pinshu-wechat-layout/tests -v
       - name: Public visual-companion regression
         run: python3 -m unittest tests/test_visual_companions.py -v
       - name: Independent visual-review regressions

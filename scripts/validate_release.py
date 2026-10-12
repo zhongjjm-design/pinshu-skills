@@ -29,6 +29,7 @@ EXPECTED_SKILLS = {
     "pinshu-business-graphics",
     "pinshu-visual-learning",
     "pinshu-write",
+    "pinshu-wechat-layout",
 }
 TEXT_SUFFIXES = {
     ".bash", ".cfg", ".css", ".csv", ".html", ".ini", ".js", ".json",
@@ -245,8 +246,20 @@ def run_executable_gates(full: bool) -> None:
         timeout=240,
     )
     run_check(
+        "pinshu-write 1.3 regression",
+        [sys.executable, "-m", "unittest", "discover", "-s", "pinshu-write/tests", "-v"],
+    )
+    run_check(
         "public visual-system regression",
         [sys.executable, "-m", "unittest", "discover", "-s", "pinshu-visual-system/tests", "-v"],
+    )
+    run_check(
+        "public ready-article integration regression",
+        [sys.executable, "-m", "unittest", "discover", "-s", "pinshu-visual-system/scripts", "-p", "test_*.py", "-v"],
+    )
+    run_check(
+        "public WeChat layout regression",
+        [sys.executable, "-m", "unittest", "discover", "-s", "pinshu-wechat-layout/tests", "-v"],
     )
     run_check(
         "public visual-companion regression",

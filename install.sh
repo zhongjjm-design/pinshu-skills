@@ -43,6 +43,7 @@ EXPECTED_SKILLS=(
   pinshu-business-graphics
   pinshu-visual-learning
   pinshu-write
+  pinshu-wechat-layout
 )
 LEGACY_SKILLS=(
   transcript-cleaner
@@ -156,7 +157,7 @@ assert_safe_slug() {
 
 is_expected_skill() {
   case "$1" in
-    pinshu-course-capture|pinshu-content-assets|pinshu-course|pinshu-distill|pinshu-md2pdf|pinshu-study|pinshu-transcript|pinshu-visual-system|pinshu-video-core|pinshu-film-teardown|pinshu-infographic|pinshu-business-graphics|pinshu-visual-learning|pinshu-write)
+    pinshu-course-capture|pinshu-content-assets|pinshu-course|pinshu-distill|pinshu-md2pdf|pinshu-study|pinshu-transcript|pinshu-visual-system|pinshu-video-core|pinshu-film-teardown|pinshu-infographic|pinshu-business-graphics|pinshu-visual-learning|pinshu-write|pinshu-wechat-layout)
       return 0
       ;;
     *)

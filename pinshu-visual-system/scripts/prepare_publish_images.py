@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 from decimal import Decimal, InvalidOperation
 import json
 import shutil
@@ -12,6 +13,9 @@ import subprocess
 import sys
 from pathlib import Path
 import zlib
+
+sys.dont_write_bytecode = True
+from export_share import SAFE_CHUNKS, inspect as inspect_share_png
 
 
 BLOCKED_MARKERS = (
@@ -153,10 +157,33 @@ def pixel_difference(magick: str, source: Path, publish_copy: Path) -> str:
     return metric
 
 
+def restrict_share_chunks(path: Path) -> list[str]:
+    """Remove disallowed ancillary chunks only, without touching pixel payloads."""
+    chunks = png_chunks(path.read_bytes())
+    kept = []
+    removed = []
+    for kind, payload in chunks:
+        if kind in SAFE_CHUNKS:
+            kept.append((kind, payload))
+        elif kind[0] & 32:
+            removed.append(kind.decode("ascii", errors="replace"))
+        else:
+            raise PublishPrepError("Unsupported critical PNG chunk")
+    data = bytearray(b"\x89PNG\r\n\x1a\n")
+    for kind, payload in kept:
+        data.extend(struct.pack(">I", len(payload)))
+        data.extend(kind + payload)
+        data.extend(struct.pack(">I", zlib.crc32(kind + payload) & 0xffffffff))
+    path.write_bytes(data)
+    inspect_share_png(path.resolve())
+    return removed
+
+
 def prepare_one(magick: str, source: Path, output_dir: Path) -> dict[str, object]:
     if not source.is_file():
         raise PublishPrepError(f"Input does not exist: {source}")
 
+    source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
     frame_count = int(identify(magick, source, "%n").splitlines()[0])
     if frame_count != 1:
         raise PublishPrepError(
@@ -178,6 +205,7 @@ def prepare_one(magick: str, source: Path, output_dir: Path) -> dict[str, object
         )
 
     try:
+        removed_chunks = restrict_share_chunks(output)
         publish_geometry = identify(magick, output, "%wx%h")
         if publish_geometry != source_geometry:
             raise PublishPrepError(
@@ -188,6 +216,8 @@ def prepare_one(magick: str, source: Path, output_dir: Path) -> dict[str, object
         if not is_zero_pixel_difference(metric):
             raise PublishPrepError(f"Pixel data changed; AE metric is {metric}")
 
+        if hashlib.sha256(source.read_bytes()).hexdigest() != source_hash:
+            raise PublishPrepError("Source changed during publishing cleanup")
         residual = residual_provenance(output.read_bytes())
         if residual:
             raise PublishPrepError(
@@ -200,9 +230,14 @@ def prepare_one(magick: str, source: Path, output_dir: Path) -> dict[str, object
     return {
         "source": str(source.resolve()),
         "publish_copy": str(output.resolve()),
+        "source_sha256": source_hash,
+        "publish_copy_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
         "geometry": source_geometry,
         "pixel_difference_ae": 0,
         "c2pa_markers": [],
+        "metadata_policy": "share-png-chunk-whitelist",
+        "png_chunks": [kind.decode("ascii") for kind in png_chunk_types(output.read_bytes())],
+        "removed_after_conversion": removed_chunks,
         "status": "PASS",
     }
 

@@ -1,31 +1,40 @@
-# 好文章标准
+# Good-article standard
 
-每个问题只答“是”“否”或“无法判断”。发布决定看这些是/否问题，不看总分；模型在 1 到 5 分或 100 分上不稳定。账号若保留总分，只能看趋势。
+Answer each question yes, no or "cannot judge". Release decisions use these yes/no answers, not a total score: model judges are unstable on 1-to-5 or 100-point scales and more reliable on separate yes/no questions. A total score, if the account keeps one, is only a trend.
 
-任何“否”都要退回对应环节：判断、大纲、资料或句子。账号自有标准可以扩展本标准；重叠处由账号标准替代，但可读性问题除非作者明确删除，否则保留。
+Any "no" sends the draft back, with the step it returns to: judgment, outline, research, or sentences only. If the account has its own approved standard, it extends this one: its questions replace questions 1 to 8 where they overlap, and the readability questions 9 to 13 stay unless the author removes them.
 
-## 八个验收问题
+## Eight acceptance questions
 
-1. **一条主线。** 没参与写作的人读完后，能否说出本文的一句话判断？并列“三条路径”但彼此无牵引，失败。退回：大纲。
-2. **有新东西。** 读者以前不知道这个判断吗？默认模型不经提示就能回答的，不算新。新判断、新事实、新角度至少有一个。退回：判断。
-3. **往下一层。** 是否有表层答案被推翻、读者被带深一步的时刻？退回：判断或大纲。
-4. **读者有带走物。** 读者能说“我之前错在哪”或“我先改什么”吗？只有空泛方向失败。退回：大纲。
-5. **至少一处只有这个作者能写。** 内部视角、一手经验、亲测或原创计算至少一次。换成别的账号仍全部成立，则失败。退回：资料或判断。
-6. **数字推动论证且已核。** 数据不是装饰；每个数字、研究和机构都回源。自述和厂商说法在正文标身份；假设场景让读者看出是假设。退回：事实核查。
-7. **像人说话。** 长短句正常，有画面和判断，像懂行的人隔桌讲清楚；没有机器腔。退回：句子。
-8. **没有困在来源框架里。** 原材料只是跳板。若文章仍在替来源作者打同一场仗，失败。退回：判断。
+1. **One spine.** Can someone who did not see the writing process say, after reading, the one sentence this article says? A parallel list of "way one, way two, way three" with no pull between them fails. Return to: outline.
+2. **Something new.** Did the reader not know that sentence before? If a default model answers it unprompted, it does not count. New judgment, new fact or new angle, at least one. Return to: judgment.
+3. **Goes one level down.** Is there a moment where the surface answer is overturned and the reader is taken deeper ("so it is not only that")? Return to: judgment or outline.
+4. **The reader takes something away.** Can the reader say "where I was wrong" or "what I will change first"? Directions without actions or judgments ("build your judgment", "accumulate expertise") fail. Return to: outline.
+5. **Only this author could write one part.** An insider view, first-hand experience, a hands-on test or an original calculation, at least once. Swap the author's name for another account: if everything still holds, this fails. Also check that the author's own material (the items listed at seed confirmation) has not been flattened into generic statements anyone could make. If the author chose to proceed without such material, the review sheet says so. Return to: research or judgment.
+6. **Numbers push the argument and are checked.** Data moves the argument forward rather than standing as decoration. Every number, study and institution is checked against its source before release. Self-reports and vendor claims are labeled in the text. Hypothetical scenes are visibly hypothetical. Outside evidence stays within the budget (about one strong item per section, about five in the article, people and events before papers) and each item points to the sentence it supports. Return to: fact check, or outline if evidence has taken over the article.
+7. **Sounds like a person.** Normal long and short sentences, images and judgments, a knowledgeable person talking across the table. None of the machine patterns in the plain-writing reference. Return to: sentences.
+8. **Not trapped in the source's frame.** The original material (someone's video, article or trending topic) is a springboard. Is the article still fighting the source author's battle with their framing? Return to: judgment.
 
-## 可读性问题
+## Readability questions
 
-9. **不卡。** 外行扫描找不到让人停住的词或句子。
-10. **可扫读。** 只看标题、小标题和最后一节，也能得到判断和主要动作。
-11. **均衡。** 各节分量接近；没有薄到一段的节，也没有三倍长的节。
-12. **有弧线。** 开头、展开、转折、收束都可识别；转折处改变读者看法。
-13. **结尾落地。** 结尾回答开头，并给读者当场能用的东西；会议纪要式结尾失败。
-14. **标题说清对象。** 只看标题，读者能说文章关于什么。
-15. **小标题独立。** 每个小标题说明主题和变化，长度接近，顺序读完能讲出论证。
-16. **开头新鲜。** 开头不同于账号最近几篇；稿件中不能残留指向已删除段落的句子。
+Added after demonstration articles that were accurate but hard to read. Questions 13 to 17 cover the title points, which the author judges directly:
 
-## 选题新鲜与执行
+9. **No stuck points.** A layperson scan (prompt in the prompt kit) finds no word or sentence that makes the reader stop.
+10. **Scannable.** Reading only the title, the subheads and the last section, a reader gets the judgment and the main moves.
+11. **Balanced.** Sections are of similar weight (the audit script flags imbalance). No section is a single thin paragraph; none is three times longer than the others.
+12. **Clear arc.** Opening, development, turn and close are each identifiable; the turn is where the reader's view changes.
+13. **Ending lands.** The last section answers the opening and gives the reader something they can use at that exact moment. An ending that lists limits, reads like meeting minutes or restates the title fails.
+14. **Title says what it is about.** Seeing only the title, a reader can say what the article is about.
+15. **Subheads stand alone.** Each subhead names its subject and what happens, subheads are similar in length, and read in order they tell the argument.
+16. **Fresh opening.** The opening is a different kind from the account's last few articles, and nothing in the draft refers to a passage that was deleted.
+17. **Title answered.** The question or claim the title sets up is answered plainly in the body, and the ending states the answer; every subhead's promise is delivered by its section.
 
-老主题也可以写出高执行分。护城河在组织和一手材料，不在概念本身；主题可以旧，角度和材料不能旧。
+## The commissioned article
+
+Added after four test drafts of one seed, three of which quietly narrowed or replaced it. Asked first in the editor-in-chief review, before any question above:
+
+18. **Is this the article the author asked for?** First, every distinct point in the author's original seed text has a number in the point map (a point missing from the map fails here, because everything later is checked against the map). Then, against the point map: every point is kept, deepened, split into another article, or dropped with the author's recorded approval; the direction, article type and reader match the confirmed seed. A well-written article on a different subject fails here. Return to: judgment, with the author.
+
+## Topic freshness versus execution
+
+An article can score high on execution with an old theme. That is legitimate: execution is a moat. But know where the moat is: in arrangement and first-hand material, not in the novelty of the idea. The theme may be old; the angle and the first-hand material may not.
