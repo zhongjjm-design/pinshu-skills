@@ -2,15 +2,15 @@
 """Read-only article checks, local lightweight preview, and stage timing.
 
 Consumes already rendered HTML; never rewrites the manuscript or publish images.
-Text comparison supports plain paragraphs, headings, lists and inline links/bold.
-Complex Markdown must be reviewed separately, never silently marked PASS.
+Text comparison uses the sibling layout's real Markdown parser and checks the
+renderer's semantic blocks, including tables and prompt cards, before previewing.
 Requires ImageMagick only for preview raster transforms and ink-bound estimates.
 """
 from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
-import fcntl
+from portable import lock, ensure_utf8_mode
 import hashlib
 import html
 from html.parser import HTMLParser
@@ -36,23 +36,121 @@ def normalized(text):
     return re.sub(r"\s+", " ", text).strip()
 
 
-def manuscript_blocks(text):
-    if text.startswith("---\n"):
-        _, _, text = text.partition("\n---\n")
-    blocks = []
-    for chunk in re.split(r"\n\s*\n", text.strip()):
-        if chunk.strip() in {"---", "***", "___"} or re.match(r"^#\s", chunk):
-            continue  # H1 belongs to the cover/title, not article body.
-        if re.search(r"^\s*(?:```|~~~|>|\||!\[)", chunk, re.M):
-            raise CheckError("Unsupported Markdown block; use an explicit source-faithful renderer/check.")
-        lines = chunk.splitlines()
-        list_block = all(re.match(r"^\s*(?:[-*+] |\d+[.)] )", line) for line in lines)
-        for part in lines if list_block else [chunk]:
-            part = re.sub(r"^#{2,6}\s+|^\s*(?:[-*+] |\d+[.)] )", "", part)
-            part = re.sub(r"\[([^\]]+)\]\([^\n)]+\)", r"\1", part)
-            part = re.sub(r"\*\*([^*]+)\*\*|__([^_]+)__", lambda m: m[1] or m[2], part)
-            blocks.append(normalized(part))
-    return blocks
+def _source_blocks(source, layout_skill=None):
+    # One accepted Markdown language for handoff, layout and final comparison.
+    # Keep text callers compatible, but use the real source Path in the pipeline.
+    from prepare_article_handoff import load_layout
+    layout = load_layout(layout_skill or Path(__file__).resolve().parents[2] / "pinshu-wechat-layout")
+    if isinstance(source, str):
+        text = source
+        class TextSource:
+            def read_bytes(self):
+                return text.encode("utf-8")
+
+            def read_text(self, encoding="utf-8"):
+                return self.read_bytes().decode(encoding)
+        source = TextSource()
+    try:
+        return layout, layout.parse_markdown(source)[1]
+    except ValueError as exc:
+        raise CheckError(str(exc)) from exc
+
+
+def manuscript_blocks(source, layout_skill=None):
+    layout, blocks = _source_blocks(source, layout_skill)
+    return [normalized(value) for value in layout.visible(blocks)]
+
+
+def _prompt_text(quote):
+    """Plain-text projection of the renderer's validated prompt card, not Markdown parsing."""
+    lines, previous = [], None
+    for child in quote.find_all(recursive=False):
+        if child.name == "p":
+            if lines and previous == "p":
+                lines.append("")
+            lines.extend(x.strip() for x in child.get_text().splitlines() if x.strip())
+        else:  # The layout parser only permits flat ul/ol here.
+            for index, li in enumerate(child.find_all("li", recursive=False), 1):
+                parts = [x.strip() for x in li.get_text().splitlines() if x.strip()]
+                lines.extend([(f"{index}. " if child.name == "ol" else "- ") + parts[0], *parts[1:]])
+        previous = child.name
+    first, *lines = lines
+    head = re.match(r"^【(.+?)】(.*)$", first)
+    inner = head[1] if head else first
+    hint = re.match(r"^(.*?)\s*[（(](.*)[）)]$", inner)
+    title = hint[1] + hint[2] if hint else inner
+    if head and head[2].strip():
+        lines.insert(0, head[2].strip())
+    return normalized(title), normalized(" ".join(lines))
+
+
+def _reader_contract(blocks, source=False, heading_split=None):
+    """Compare semantic blocks, including cards/tables that the renderer marks decorative.
+
+    data-reading-role alone omits those blocks and double-counts nested lists/quotes.
+    Only the renderer's explicit presentation transforms are projected here: prompt
+    title brackets/hints, list markers, table time-range wrapping and heading splits.
+    """
+    from bs4 import BeautifulSoup
+    result = []
+    for block in blocks:
+        if block.name in {"h1", "hr"} or block.has_attr("data-picture"):
+            continue
+        table = block if block.name == "table" else block.find("table")
+        if table is not None:
+            rows = []
+            for row in table.find_all("tr"):
+                cells = []
+                for cell in row.find_all(["th", "td"]):
+                    # cellHTML wraps only time ranges over two lines on phones.
+                    text = normalized(cell.get_text())
+                    text = re.sub(r"^(\d+[.:]\d+)\s*-\s*(\d+[.:]\d+)$", r"\1-\2", text)
+                    cells.append(text)
+                rows.append(tuple(cells))
+            result.append(("table", tuple(rows)))
+        elif block.name == "blockquote" and re.match(r"^【.+】", block.get_text().strip()):
+            result.append(("prompt", *_prompt_text(block)))
+        elif block.has_attr("data-prompt-card"):
+            sections = block.find_all("section", recursive=False)
+            if len(sections) != 2:
+                raise CheckError("Rendered prompt card structure mismatch")
+            # br separates prompt lines; inline label spans do not add spaces.
+            body = BeautifulSoup(str(sections[1]), "html.parser")
+            for br in body.find_all("br"):
+                br.replace_with("\n")
+            result.append(("prompt", normalized(sections[0].get_text()), normalized(body.get_text())))
+        elif block.name in {"ul", "ol"}:
+            result.append((block.name, tuple(normalized(li.get_text()) for li in block.find_all("li", recursive=False))))
+        elif block.has_attr("data-chapter"):
+            title = BeautifulSoup(str(block), "html.parser")
+            for decoration in title.select("[data-decoration]"):
+                decoration.decompose()
+            result.append(("text", normalized(title.get_text())))
+        elif block.has_attr("data-decoration") and not block.get_text(strip=True):
+            continue  # Empty horizontal/source rules, never reader text.
+        elif block.find("img"):
+            continue
+        else:
+            text = normalized(block.get_text())
+            if source and block.name == "h2" and text in (heading_split or {}):
+                text = normalized("".join(heading_split[text]))
+            result.append(("text", text))
+    return result
+
+
+def check_rendered_text(source, rendered, layout_skill=None, heading_split=None):
+    """Fail closed on changed text in the actual rendered DOM, not browser metadata."""
+    from bs4 import BeautifulSoup, Tag
+    _, blocks = _source_blocks(source, layout_skill)
+    expected = _reader_contract(blocks, source=True, heading_split=heading_split)
+    soup = BeautifulSoup(rendered, "html.parser")
+    root = soup.select_one("#article-body") or soup.body or soup
+    paper = root.find(attrs={"data-paper": True}, recursive=False)
+    if paper is not None:
+        root = paper
+    actual = _reader_contract([node for node in root.children if isinstance(node, Tag)])
+    if actual != expected:
+        raise CheckError("Rendered body/source mismatch; no completed preview")
 
 
 class ArticleHTML(HTMLParser):
@@ -107,10 +205,8 @@ def build(args):
     before = {str(p): digest(p) for p in [source, rendered]}
     raw = rendered.read_text(encoding="utf-8")
     parsed = parse_html(raw)
-    expected = manuscript_blocks(source.read_text(encoding="utf-8"))
-    if expected != parsed.blocks:
-        first = next((i for i, (a, b) in enumerate(zip(expected, parsed.blocks)) if a != b), min(len(expected), len(parsed.blocks)))
-        raise CheckError(f"Body/source mismatch at block {first + 1}; no preview written.")
+    expected = manuscript_blocks(source)
+    check_rendered_text(source, raw)
     if not parsed.images:
         raise CheckError("No body images found.")
     magick = shutil.which("magick")
@@ -161,6 +257,7 @@ def build(args):
 
         preview = re.sub(r"<img\b[^>]*>", replace_tag, raw, flags=re.I)
         after = parse_html(preview)
+        check_rendered_text(source, preview)
         if after.blocks != parsed.blocks or after.links != parsed.links:
             raise CheckError("Preview changed visible text or links.")
         for p in [source, rendered]:
@@ -181,7 +278,7 @@ def timing(args):
         raise CheckError("Unknown timing stage.")
     args.log.parent.mkdir(parents=True, exist_ok=True)
     with args.log.open("a+", encoding="utf-8") as log:
-        fcntl.flock(log, fcntl.LOCK_EX)
+        lock(log)
         log.seek(0)
         rows = [json.loads(line) for line in log if line.strip()]
         matching = [r for r in rows if r["id"] == args.id]
@@ -226,4 +323,5 @@ def main():
 
 
 if __name__ == "__main__":
+    ensure_utf8_mode()
     raise SystemExit(main())

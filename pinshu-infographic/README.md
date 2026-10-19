@@ -1,4 +1,4 @@
-# Pinshu Infographic - public preview 0.1.4
+# Pinshu Infographic - public preview 0.1.5
 
 Create readable source-faithful knowledge diagrams with one main relationship: processes, comparisons, hierarchy, components or genuine feedback loops. This independent companion adds diagram-specific source anchors, density and visual checks while reusing the public visual core.
 

@@ -15,7 +15,7 @@ description: "用于来源忠实的中文信息图、文章配图、文档讲解
 
 # 品叔信息图
 
-版本：v3.6
+公开版本：0.1.5（沿用本机 3.6 的通用信息逻辑与密度规则，不包含私有人物资产）
 
 视觉方向与最终取舍：Aidan（品叔）
 
@@ -27,10 +27,10 @@ Skill 架构与实现：Codex
 
 开始前：
 
-1. 完整读取 `baoyu-infographic/SKILL.md`。
+1. 已安装可选上游时，完整读取 `baoyu-infographic/SKILL.md`。
    - 当前运行时不可见但安装了 `skill-router` 时，运行 `skill-router exact "baoyu-infographic"`。
-   - 未安装上游时，先按上游仓库说明安装：`npx skills add jimliu/baoyu-skills`。
-2. 采用上游的内容分析、结构化内容、布局推荐、确认门禁、提示词留档、图像后端和版本保留规则。
+   - 未安装时，手动完成内容分析、结构化内容、布局比较、确认门禁、提示词留档和版本保留；如确需安装，先按使用者环境的安装规则和上游许可处理，不静默安装。
+2. 上游可用时采用其内容分析、结构化内容、布局推荐、确认门禁、提示词留档、图像后端和版本保留规则；缺失时明确记录为手动分析，不假称已运行上游。
 3. 完整读取同仓公开 `pinshu-visual-system/SKILL.md`。若用户提供自有授权角色参考，按公开角色配置接入；没有授权参考时只生成非特定人物或无角色图解。
 4. 读取 `references/mode-routing.md` 和 `references/logic-and-density.md`。
 5. 从总控注册表读取并完整加载所选模式的 `mode_card`。
@@ -39,12 +39,7 @@ Skill 架构与实现：Codex
    - `lively-vector` → `pinshu-visual-system/references/mode-cards/lively-vector.md`
    - `character-presenter` → `pinshu-visual-system/references/mode-cards/character-presenter.md`
 
-旧名称 `pinshu-presenter` 只作为兼容别名，固定解析为：
-
-- 角色：`pingge`
-- 模式：`character-presenter`
-
-不得把别名解释成成熟品叔、和光先生、Aidan 本人或品妹。
+旧名称 `pinshu-presenter` 仅作为 `character-presenter` 的模式别名，不提供任何人物身份。需要人物时，必须由使用者显式提供其自有授权参考，缺少参考时停止特定身份生图，或由使用者改选无人物方案。
 
 缺少必需依赖时明确报告，不要凭记忆复写，也不要静默换成另一套风格。
 
@@ -67,7 +62,7 @@ Skill 架构与实现：Codex
 |---|---|---|
 | `warm-paper` | 文章、知识库、课程讲义、温暖的人文或方法论内容 | 浅暖纸、深海军蓝手写字、陶土橙强调、克制胶带与手绘线 |
 | `lively-vector` | 流程、架构、对比、分层、产品机制和课程图解 | 暖白底、低饱和牛仔蓝、鼠尾草绿、陶土橙、几何叠压与流动曲线 |
-| `character-presenter` | 已获准角色讲知识、课程、公众号重点图、直播/PPT | 角色身份由注册表锁定；信息板承担逻辑，人物承担信任与亲和力；`pingge` 与 `pinmei` 均已完成横竖样张并可正式生产 |
+| `character-presenter` | 使用者自有授权角色讲知识、课程、公众号重点图、直播/PPT | 角色身份由显式配置锁定；信息板承担逻辑，人物承担信任与亲和力；公开包不附人物图，也不宣称任意角色组合已验证 |
 
 本 Skill 只使用这三种模式；每种能否进自动生产，以 `pinshu-visual-system` 注册表的状态为准（注册表标为候选时只做测试，不进自动生产）。候选视觉模式统一在 `pinshu-visual-system` 中孵化，通过参考拆解、样张测试和用户确认后，才能进入本 Skill。
 
@@ -134,21 +129,9 @@ Skill 架构与实现：Codex
 
 ## 7. 使用参考资产
 
-三张用户确认样张只用于锁定视觉语言：
+使用同仓模式卡和本包公开示例理解视觉语言；示例只是范围锚点，不代表该模式已在任意题材与平台上稳定。公开包不附带私人样张、角色母版或第三方参考截图。
 
-- `assets/approved-examples/warm-paper-v4.png`
-- `assets/approved-examples/lively-vector-muted-blue-v2.png`
-- `assets/approved-examples/character-presenter-pingge-v1.png`
-
-第二至第四轮的稳定回归基准由总控模式卡统一登记，当前包括：
-
-- 暖纸：真实品牌内容横版；既有朋友圈竖版已被用户否决，不再列为稳定基准；
-- 灵动矢量：真实品牌内容流程；既有 PPT 四层能力版因通用模板感被否决，第五轮编辑式折带仍是候选；
-- 角色讲解：品哥跨主题横版；品妹短发通勤版已否决，长发、珊瑚红短夹克与雾蓝灰牛仔裤版已完成横竖回归并获品叔确认。
-
-公开包不附带第三方参考截图。暖纸模式只使用已确认样张作为风格锚点；若用户另外提供参考图，只学习材质、色彩、密度和构图语言，不复制原文、品牌标志或完整构图。
-
-角色身份始终以 `pinshu-visual-system/references/system-registry.json` 中登记的身份资产为最高优先级；本 Skill 的样张不能替代身份母版。旧路径 `pinshu-visual-system/assets/pinshu-identity-master.png` 仅为兼容入口，其规范角色是 `pingge`。
+用户另行提供授权参考时，只学习许可范围内的材质、色彩、密度和构图语言，不复制原文、品牌标志或完整构图。特定角色必须使用当前任务显式配置的授权身份参考；图解风格样张不能替代身份母版。
 
 ## 8. 视觉验收
 
@@ -190,21 +173,8 @@ Skill 架构与实现：Codex
 
 未通过用户确认时标为候选稿，不宣称定稿。
 
-`pinmei` 已于 2026-07-26 由品叔确认并转为正式角色。调用时通过：
+## 11. 公开边界
 
-```bash
-python3 ../pinshu-visual-system/scripts/registry_guard.py resolve \
-  --character pinmei \
-  --task infographic \
-  --structure process \
-  --layout presenter-board \
-  --mode character-presenter \
-  --platform xiaohongshu \
-  --density document
-```
-
-## 11. 私有边界
-
-本版本属于品叔内部视觉系统，默认不推送 GitHub，不导出身份母版、账号映射、私有样张、内部提示词和反馈记录。未来若需要开源，只从 `pinshu-visual-system` 提取不含角色资产的通用结构、版式、质量门禁和工作流。
+本版本是独立抽取的公开通用层。角色身份、账号配置和私有反馈由使用者保存在自己的项目内，不与本包混装。公开包按仓库 LICENSE 分发，不因公开可见而变成无限制开源许可。
 
 署名：Codex

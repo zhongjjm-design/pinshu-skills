@@ -17,7 +17,7 @@ const ReadingBase=Object.freeze({
   const type=(e,size,line,weight=400,align='justify',tracking=0)=>{
    Object.assign(e.style,{fontFamily:font,fontSize:size+'px',lineHeight:String(line),fontWeight:String(weight),letterSpacing:tracking+'px',wordSpacing:'0px',textIndent:'0px',textAlign:align,textAlignLast:'left',textJustify:'inter-ideograph',overflowWrap:'break-word'});
    for(const c of e.querySelectorAll('span,strong,b,a,em,i,code')){
-    if(c.closest('[data-decoration]'))continue;
+    if(c.closest('[data-decoration]')||c.dataset.subtitle!==undefined)continue;
     Object.assign(c.style,{fontFamily:'inherit',fontSize:'inherit',lineHeight:'inherit',letterSpacing:'inherit',wordSpacing:'0px',fontWeight:c.matches('strong,b')?'600':'inherit'});
    }
   };
@@ -55,9 +55,23 @@ const ReadingBase=Object.freeze({
    group.replaceChildren(number,title);
    if(style==='double-rule')Object.assign(title.style,{padding:'11px 2px 12px',borderTop:'1px solid #90a99a',borderBottom:'1px solid #90a99a',background:'none'});
    if(style==='approved')Object.assign(group.style,{borderTop:'1px solid #b7c0ad',paddingTop:'12px'});
-   if(style==='warm')Object.assign(group.style,{borderTop:'1px solid #cdbba7',paddingTop:'12px'});
-   if(style==='orange')Object.assign(group.style,{borderTop:'2px solid #d27d4b',paddingTop:'11px'});
-   if(style==='blue')Object.assign(group.style,{backgroundColor:'#e3edf5',borderLeft:'4px solid #7895aa',padding:'14px 14px 16px'});
+   if(style==='warm'||style==='orange'){ // Aidan 2026-10-15: a line floating above the number separated nothing and the 2px orange one glared; use the double-rule structure of 松绿双线 with lines paler than the text.
+    const rule=style==='warm'?'#d9c9b4':'#eccdb9';
+    Object.assign(number.style,{fontSize:'28px',fontWeight:'400',margin:'0 0 8px'});
+    Object.assign(title.style,{padding:'11px 2px 12px',borderTop:'1px solid '+rule,borderBottom:'1px solid '+rule,background:'none'});
+   }
+
+   if(style==='split'){ // WeChat-safe single H2 (columns 22/78, Aidan 2026-10-15: 25% left a visible gap before the rule). Inline blocks survive WeChat cleaning; no flex/table/grid/positioned cells for a replaced video to enter.
+    const numberSpan=root.ownerDocument.createElement('span'),titleText=root.ownerDocument.createElement('span');
+    numberSpan.textContent=number.textContent;numberSpan.dataset.decoration='true';numberSpan.dataset.chapterNumber='true';numberSpan.dataset.readingRole='chapter-number';
+    Object.assign(numberSpan.style,{display:'inline-block',boxSizing:'border-box',width:'22%',margin:'0',padding:'0 12px 0 0',border:'0',borderRight:'1px solid #dfe1e4',background:'none',fontFamily:font,fontSize:'42px',fontWeight:'300',lineHeight:'1.18',letterSpacing:'-2px',color:'#8a8f98',verticalAlign:'middle',whiteSpace:'nowrap',wordBreak:'keep-all',overflowWrap:'normal',textAlign:'left'});
+    while(title.firstChild)titleText.append(title.firstChild);titleText.dataset.chapterTitle='true';Object.assign(titleText.style,{display:'inline-block',boxSizing:'border-box',width:'78%',margin:'0',padding:'0 0 0 16px',verticalAlign:'middle'});
+    delete title.dataset.chapterTitle;Object.assign(title.style,{display:'block',boxSizing:'border-box',width:'100%',margin:'0',padding:'0',fontSize:'20px',lineHeight:'1.45',whiteSpace:'normal'});
+    title.append(numberSpan,titleText);group.replaceChildren(title);group.style.marginTop='48px';
+   }
+   if(style==='blue'){ // Aidan 2026-10-15: no tinted block (heavy, and a light fill turns grey in WeChat dark mode); one thin blue line between number and title, like the line-divided templates.
+    Object.assign(number.style,{color:'#7895aa',margin:'0 0 10px',padding:'0 0 8px',borderBottom:'1px solid #7895aa'});Object.assign(title.style,{padding:'2px 0 0'});
+   }
    if(style==='classic')Object.assign(group.style,{background:'none',border:'0',padding:'0',marginBottom:'45px'});
    if(style==='classic')title.style.color='#111111';
   });
@@ -66,11 +80,12 @@ const ReadingBase=Object.freeze({
   type(root,this.body,this.line,400,'justify',this.letterSpacing);
   let source=false;
   for(const e of root.querySelectorAll('p,li,blockquote,h2,h3,h4,[data-chapter-title]')){
+   if(e.dataset&&e.dataset.videoSlot!==undefined){Object.assign(e.style,{fontSize:'0',lineHeight:'0',marginTop:'0',marginBottom:this.paragraphGap+'px'});continue;}
    if(/^(资料来源|参考文章|参考资料)$/.test(e.textContent.trim()))source=true;
    if(e.closest('[data-decoration]')){if(e.closest('[data-picture],[data-hero],figure')){type(e,this.caption,1.5,400,'center');e.style.textAlignLast='center';e.dataset.readingRole='caption';}continue;}
    if(e.matches('[data-chapter-title],h2,h3,h4')){
     const classic=!!e.closest('[data-chapter-style="classic"]');
-    type(e,classic?21:this.heading,classic?34.4/21:this.headingLine,classic?400:700,'left',classic?1:0);
+    const split=!!e.closest('[data-chapter-style="split"]');type(e,classic?21:split?20:this.heading,classic?34.4/21:split?1.45:this.headingLine,classic?400:700,'left',classic?1:0);
     if(classic){e.style.lineHeight='34.4px';for(const c of e.querySelectorAll('strong,b')){c.style.fontWeight='400';c.style.lineHeight='inherit';}}
     e.dataset.readingRole='heading';continue;
    }
@@ -80,7 +95,7 @@ const ReadingBase=Object.freeze({
    }
    const size=source?this.source:this.body,line=source?this.sourceLine:this.line;
    const emphasis=e.dataset.role==='judgment'||Number(e.style.fontWeight)>=600;
-   type(e,size,line,emphasis?600:400,'justify',source?0:this.letterSpacing);e.dataset.readingRole=source?'source':'body';
+   type(e,size,line,emphasis?600:400,source?'left':'justify',source?0:this.letterSpacing);e.dataset.readingRole=source?'source':'body';
    // Keep the light face, while preserving the shared justified body baseline.
    if(classicLayout&&!source){
     Object.assign(e.style,{fontFamily:this.classicFont,fontWeight:emphasis?'600':'300',letterSpacing:this.classicTracking+'px',textAlign:'justify'});
@@ -91,7 +106,7 @@ const ReadingBase=Object.freeze({
    }
    if(!source&&!emphasis&&!e.closest('blockquote'))e.style.color=this.bodyColor;
    // References read as a quiet appendix: a different face, grey, smaller, italic.
-   if(source)Object.assign(e.style,{fontFamily:this.sourceFont,fontStyle:'italic',color:this.sourceColor,fontWeight:'400'});
+   if(source)Object.assign(e.style,{fontFamily:this.sourceFont,fontStyle:'italic',color:this.sourceColor,fontWeight:'400',textAlign:'left',textAlignLast:'left'});
    e.style.marginTop='0';e.style.marginBottom=(source||e.tagName==='LI'?8:this.paragraphGap)+'px';
   }
   root.dataset.readingBase=this.version;return root;

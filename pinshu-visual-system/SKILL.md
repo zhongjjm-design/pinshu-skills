@@ -11,7 +11,7 @@ description: "用于来源忠实的文章配图、封面、社交卡片、演示
 
 默认能力不能依赖本机私有素材。视觉验收分为来源语义、画面审美、平台裁切、文字可读、身份一致和人工接受；脚本 PASS、生成成功或模型自评都不是发布验收。商业图和信息图优先交给本仓两个 companion，文化海报候选方法只在明确请求时测试。
 
-公开候选版本：**0.3.0**。原创方法归属 Aidan（品叔），实现与文档由项目维护者协作完成。此版是可移植共享层，不含私人角色资产、账号映射或内部样张；规则正文以中文为主，稳定 ID、脚本参数、文件名和机器字段保留英文。
+公开候选版本：**0.4.0**。原创方法归属 Aidan（品叔），实现与文档由项目维护者协作完成。此版是可移植共享层，不含私人角色资产、账号映射或内部样张；规则正文以中文为主，稳定 ID、脚本参数、文件名和机器字段保留英文。
 
 ## 运行环境（先跑自查）
 
@@ -30,7 +30,11 @@ description: "用于来源忠实的文章配图、封面、社交卡片、演示
 2. **做图。** 证据截图只用截图工具，最小命令（先在 ego 里打开一个空间，拿到空间号）：
    `python3 scripts/capture_evidence.py --space-id <空间号> --url <原帖网址> --selector <唯一选择器> --purpose quote --describe "<大白话：截哪一块>" --output-dir <过程文件夹/配图/截图_01>`
    选择器不好写就把 `--selector` 换成 `--clip X Y 宽 高`。失败了用同一条命令重跑，第 3 次失败会自动生成人工截图指引并停下。其他规矩见 `references/article-asset-handoff.md` 开头九条。封面出 2 到 3 张真样张让作者挑。每张图都要打开看。
-3. **排版。** `python3 scripts/run_ready_article.py --article <正文> --kit <物料包> --output-dir <过程文件夹里的新目录> --space-id <ego空间号>`（没浏览器用 `--prepare-only`）。它会生成六款排版预览，并回写物料包进度。
+3. **排版。** `python3 scripts/run_ready_article.py --article <正文> --kit <物料包> --output-dir <过程文件夹里的新目录> --space-id <ego空间号>`（没浏览器用 `--prepare-only`）。它会生成七款排版预览，并回写物料包进度。
+
+## 返修与局部审看续跑
+
+需要整批看图、登记截图拒绝、只替换一图或沿用未变图片的审看时，先读 `references/release-notes-0.4.0.md`，使用其中的 contact_sheet、replace_asset、--reject 与 --carry-reviews-from 入口。旧回执信息不足就重审，当前轮拒绝不被旧通过覆盖。
 
 ## 出错了怎么办
 
@@ -119,7 +123,7 @@ For native SVG/PPTX composition, read `references/editable-rendering.md`. Render
 - `references/release-notes-0.2.3.md`。
 - `references/release-notes-0.2.4.md`。
 
-修订记录：`references/release-notes-0.3.0.md`（本版）、`references/release-notes-0.2.5-rc.1.md`。
+修订记录：`references/release-notes-0.3.0.md`（历史版）、`references/release-notes-0.2.5-rc.1.md`。
 
 ## Share finished images safely
 

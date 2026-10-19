@@ -180,22 +180,24 @@ if (JOB.action === 'capture' && JOB.clip) {
       pictures:document.querySelectorAll('[data-picture]').length})));
   }
   await metrics(375,3);await page.reload();await settle();
-  const count=await page.evaluate(()=>document.querySelectorAll('[data-picture]').length);
+  // Body figures only: the lead image (cover, data-hero) is seen in top.png and is not a body figure.
+  const BODY='[data-picture]:not([data-hero])';
+  const count=await page.evaluate(sel=>document.querySelectorAll(sel).length,BODY);
   for(let i=-1;i<count;i++){
-    const data=await page.evaluate(async i=>{
-      const figures=[...document.querySelectorAll('[data-picture]')],fig=i<0?null:figures[i];
+    const data=await page.evaluate(async ({i,sel})=>{
+      const figures=[...document.querySelectorAll(sel)],fig=i<0?null:figures[i];
       if(fig){fig.scrollIntoView({block:'start'});await fig.querySelector('img').decode();}else scrollTo(0,0);
       await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
       if(!fig)return{position:'top'};
       const im=fig.querySelector('img'),r=im.getBoundingClientRect();
       return {position:i+1,image_width_css:r.width,image_height_css:r.height,loaded:im.complete&&im.naturalWidth>0};
-    },i);
+    },{i,sel:BODY});
     const files=[],parts=i<0?1:Math.max(1,Math.ceil(data.image_height_css/900));
     for(let part=0;part<parts;part++){
-      if(part)await page.evaluate(({index,part})=>{
-        const fig=document.querySelectorAll('[data-picture]')[index];
+      if(part)await page.evaluate(({index,part,sel})=>{
+        const fig=document.querySelectorAll(sel)[index];
         const top=fig.getBoundingClientRect().top+scrollY;scrollTo(0,top+part*900);
-      },{index:i,part});
+      },{index:i,part,sel:BODY});
       await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
       const filename=i<0?'top.png':String(i+1).padStart(2,'0')+(part?'-part'+(part+1):'')+'.png';
       const raw=await page.cdp('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false});

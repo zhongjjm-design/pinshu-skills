@@ -19,7 +19,13 @@ def check(ok, name, fix, required=True, skipped=''):
         (missing_required if required else missing_optional).append(name)
 
 
-print(f'Python：{sys.executable}（{sys.version.split()[0]}）')
+import platform
+print(f'Python：{sys.executable}（{sys.version.split()[0]}）；系统：{platform.system()} {platform.release()}')
+print('[说明] 依赖装在哪个 Python 里，就要用哪个 Python 跑本 Skill。终端里的 python3 若被别名到另一个版本（例如没装 Pillow 的 3.12），'
+      '会出现“自查全有、一跑就缺库”；用上面这行显示的路径跑所有命令。')
+if os.name == 'nt':
+    print('[说明] Windows：脚本会自动以 UTF-8 模式重跑自己（读写中文文件需要）；也可设置环境变量 PYTHONUTF8=1。'
+          '本 Skill 只在 macOS 上实测过，Windows 尚未实机验证，遇到问题请带上本自查输出反馈。')
 check(sys.version_info >= (3, 10), 'Python 3.10 或更高', 'Mac 上运行 brew install python；装完用 python3 --version 确认版本，不对就改用 /opt/homebrew/bin/python3 跑本 Skill 的所有命令')
 pip = f'{sys.executable} -m pip install -r {SKILL/"requirements.txt"}'
 check(importlib.util.find_spec('PIL') is not None, 'Pillow（截图、拼图、导出都要）', pip)

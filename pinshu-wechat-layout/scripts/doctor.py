@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """环境自查：只用标准库。必需项缺失退出码 1，否则 0。"""
 import importlib
+import platform
 import sys
 from pathlib import Path
 
 missing = 0
+print("系统：%s %s；Python：%s（只在 macOS 实测过，Windows 尚未实机验证）" % (platform.system(), platform.release(), sys.executable))
 HERE = Path(__file__).resolve().parent.parent
 
 if sys.version_info >= (3, 10):

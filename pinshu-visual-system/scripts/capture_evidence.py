@@ -136,6 +136,24 @@ def write_manual_guide(out, url, args, items):
     return guide
 
 
+def reject_capture(out, url, args, reason):
+    """The script said success but the image failed a look (cover, cut-off, blank, wrong post). That counts as a
+    failed attempt toward the same limit; the rejected files move aside and are kept, never deleted."""
+    if not reason.strip():raise ValueError('--reject needs a reason: what was wrong when you opened the image')
+    files=[f for f in out.glob('*') if f.is_file() and (f.name in {'截图.png','原始截图.png','截图回执.json'} or f.name.startswith('来源原图'))]
+    if not (out/'截图.png').is_file():raise ValueError('No successful capture to reject in '+str(out))
+    stamp=time.strftime('%Y%m%d-%H%M%S');aside=out/('看过不合格_'+stamp);n=1
+    while aside.exists():n+=1;aside=out/('看过不合格_%s_%d'%(stamp,n))
+    aside.mkdir()
+    for f in files:f.rename(aside/f.name)
+    count=record_failure(out,url,args,'opened and rejected: '+reason.strip())
+    if count>=MAX_ATTEMPTS:
+        _,items=failures_for(out,url)
+        guide=write_manual_guide(out,url,args,items)
+        raise SystemExit('STOP_MANUAL: 第 %d 次失败（含看过不合格），停止自动截图。人工截图指引：%s'%(count,guide))
+    return count,aside
+
+
 def translated_url(url, target):
     """Google Translate proxy page, e.g. note.com -> note-com.translate.goog. Some sites block it; that counts as a failure."""
     from urllib.parse import urlsplit, urlunsplit
@@ -146,14 +164,16 @@ def translated_url(url, target):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--space-id',type=int,required=True);p.add_argument('--page',default='p1')
-    p.add_argument('--url',required=True);p.add_argument('--selector',help='CSS selector of the observed evidence; use --start to make it unique')
+    p.add_argument('--space-id',type=int,help='existing ego TaskSpace (not needed with --reject)');p.add_argument('--page',default='p1')
+    p.add_argument('--reject',metavar='REASON',help='after opening the image: it failed the look (cover, cut-off, blank, wrong post); counts as a failed attempt')
+    p.add_argument('--url',required=True);p.add_argument('--selector',help='CSS selector of the observed evidence. Whole card (e.g. an X post with author and views): selector alone. One passage only: add --start/--end')
     p.add_argument('--clip',nargs=4,type=float,metavar=('X','Y','WIDTH','HEIGHT'),help='Capture a page region by CSS-pixel coordinates instead of a selector')
     p.add_argument('--purpose',choices=['visual','quote'],default='visual',help='quote = proves words/numbers, low-res embedded video is recorded not rejected')
     p.add_argument('--translate-to',help='e.g. zh-CN: capture the machine-translated page for Chinese readers; caption must say it is a machine translation')
     p.add_argument('--describe',help='Plain-language region for a human, e.g. 主帖整张卡片，从头像到浏览量那一行; used in the manual guide')
     p.add_argument('--allow-more-attempts',action='store_true',help='Only when the user asks to keep trying after %d failures'%MAX_ATTEMPTS)
-    p.add_argument('--start',default='');p.add_argument('--end',default='')
+    p.add_argument('--start',default='',help='exact text where the capture BEGINS (it also picks the one matching element); anything above it, such as an avatar or author name, is cut off. With --clip: only waited for')
+    p.add_argument('--end',default='',help='exact text where the capture ends (needs --start)')
     p.add_argument('--hide',action='append',default=[]);p.add_argument('--viewport',type=int,default=390)
     p.add_argument('--output-dir',type=Path,required=True)
     p.add_argument('--media-timeout-ms',type=int,default=15000)
@@ -162,6 +182,10 @@ def main():
     p.add_argument('--image-source-url',help='An observed same-asset original URL, e.g. X CDN name=orig')
     p.add_argument('--native-crop',nargs=4,type=int,metavar=('X','Y','WIDTH','HEIGHT'))
     args=p.parse_args()
+    if args.reject is not None:
+        count,aside=reject_capture(args.output_dir.resolve(),args.url,args,args.reject)
+        print('已记为第 %d 次失败（满 %d 次转人工），不合格的图移到：%s。用同一条命令重截。'%(count,MAX_ATTEMPTS,aside));return
+    if args.space_id is None:p.error('--space-id is required (open an ego TaskSpace first)')
     expected_media=parse_media_expectations(args.expect_media)
     if bool(args.selector)==bool(args.clip):raise ValueError('Give exactly one of --selector or --clip')
     if args.clip and (args.native_image or args.hide or args.end or expected_media):raise ValueError('--clip only works with --start (wait text) and --purpose')
@@ -212,4 +236,7 @@ def main():
             raise
 
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    from portable import ensure_utf8_mode
+    ensure_utf8_mode()
+    main()

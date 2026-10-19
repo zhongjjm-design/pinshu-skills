@@ -12,7 +12,7 @@ from article_file_info import split_header
 class ReadyTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
-        self.root=Path(self.temp.name)/'30_内容工厂/08_定稿待发/测试账号';self.root.mkdir(parents=True)
+        self.root=Path(self.temp.name)/'workspace/08_定稿待发/测试账号';self.root.mkdir(parents=True)
         self.process=self.root/'过程';self.process.mkdir()
         self.article=self.root/'2026-10-11_九步实操.md'
         self.article.write_text('---\n账号: "测试账号"\n定稿日期: "2026-10-11"\n写手模型: "测试写手"\n过程文件夹: '+json.dumps(str(self.process))+'\n配图排版进度: "详见物料包"\n---\n# 九步实操\n\n开篇。\n\n'+''.join(f'## 第{i}步\n\n步骤{i}的完整段落。\n\n' for i in range(1,10))+'### 资料来源\n\n[来源](https://example.com)\n')
@@ -119,12 +119,15 @@ class ReadyTests(unittest.TestCase):
         for raw in [b'---\na: bare\n---\nbody',b'---\n: "bad"\n---\nbody',b"---\na: 'single'\n---\nbody"]:
             with self.assertRaises(ValueError):read_metadata(raw)
 
-    def test_table_without_outer_pipes_or_with_alignment_refused(self):
+    def test_tables_of_two_to_four_columns_parse_and_wider_ones_are_refused(self):
         from prepare_article_handoff import load_layout
         parser=load_layout(Path(__file__).resolve().parents[2]/'pinshu-wechat-layout')
-        for table in ['名称 | 数值\n--- | ---\n甲 | 1','名称 | 数值\n:--- | ---:\n甲 | 1','| 名称 | 数值 |\n| --- | --- |\n| 甲 | 1 |']:
+        for table in ['名称 | 数值\n--- | ---\n甲 | 1','名称 | 数值\n:--- | ---:\n甲 | 1','| 名称 | 数值 |\n| --- | --- |\n| 甲 | 1 |','| 一 | 二 | 三 | 四 |\n| - | - | - | - |\n| 1 | 2 | 3 | 4 |']:
             source=self.process/'table.md';source.write_text('# 表格\n\n'+table+'\n')
-            with self.assertRaisesRegex(ValueError,'tables'):parser.parse_markdown(source)
+            title,blocks=parser.parse_markdown(source)
+            self.assertEqual(title,'表格');self.assertTrue(any(b.name=='table' for b in blocks))
+        source=self.process/'table.md';source.write_text('# 表格\n\n| a | b | c | d | e |\n| - | - | - | - | - |\n| 1 | 2 | 3 | 4 | 5 |\n')
+        with self.assertRaisesRegex(ValueError,'2 to 4 columns'):parser.parse_markdown(source)
 
     def test_markdown_capture_anchor_works_without_layout_parser(self):
         self.article.write_text(self.article.read_text().replace('步骤1的完整段落。','**步骤1**的完整段落。'))

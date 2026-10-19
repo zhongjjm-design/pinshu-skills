@@ -1,4 +1,4 @@
 interface:
   display_name: "品叔公众号排版"
-  short_description: "从明确正文与配图交接生成六款可切换排版预览，保留原文并交可复制正文"
-  default_prompt: "使用 $pinshu-wechat-layout 读取明确指定的正文和发布物料包，核对配图交接，生成六款本地试排并回写实际进度和预览链接。"
+  short_description: "从明确正文与配图交接生成七款可切换排版预览，保留原文并交可复制正文"
+  default_prompt: "使用 $pinshu-wechat-layout 读取明确指定的正文和发布物料包，核对配图交接，生成七款本地试排并回写实际进度和预览链接。"

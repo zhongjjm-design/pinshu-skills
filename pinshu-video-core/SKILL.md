@@ -10,12 +10,12 @@ description: "品叔视频类 Skill 的公共底座：整篇一次合成配音�
 - 维护者：Aidan（品叔）
 - 上游依赖：FFmpeg（转码、响度、静音检测）；BaoCut（https://github.com/JimLiu/baocut，MIT，中文转写取逐字时间）；Gemini TTS（Google 接口，各人用自己的钥匙）；HyperFrames（https://github.com/heygen-com/hyperframes，Apache-2.0，`render.py` 调它的命令行渲染）；librosa（ISC，`fit_music.py`、`patch_voice.py` 用）；numpy（BSD-3-Clause）、soundfile（BSD-3-Clause）、Pillow（MIT-CMU）；Demucs（https://github.com/adefossez/demucs，MIT，可选，环境检查只查装没装）
 - 原创能力：各类品叔视频共用的做法：整篇旁白一次合成、只在真实静音处切段（防声音漂移成两个人），按请求签名拦住重复花钱；念急的字局部放慢而不重新合成；配乐自动接缝让原曲收尾和弦落在片尾卡；省内存渲染并核对时间和帧数（防混进旧渲染）；固定增益混音到 -14 LUFS、真峰值不超过 -1 dBTP；成片九项体检；一次查全的环境检查。2026-10-07 从 `pinshu-film-teardown` 抽出，代码原样搬家
-- 分发状态：14 项统一公开候选之一；与 `pinshu-film-teardown` 同仓分发，`bundled`
-- 调用方：`pinshu-film-teardown`（品牌片拆解）
+- 分发状态：`bundled`，与品牌片拆解 Skill 同仓的公开试用版。
+- 调用方：`pinshu-film-teardown`（品牌片拆解）、`pinshu-business-explainer`（商业现象讲解，2026-10-09 起，用 gen_voice.py、render.py、qc.py）
 
 # 品叔视频公共底座
 
-这是供 `pinshu-*` 视频类型 Skill 调用的公共底座，一般不直接给用户调用。用户说"做个品牌片拆解"，用的是 `pinshu-film-teardown`；以后的商业讲解片、东方文化可视化片也各有自己的类型 Skill。
+这是供 `pinshu-*` 视频类型 Skill 调用的公共底座，一般不直接给用户调用。用户说"做个品牌片拆解"，用的是 `pinshu-film-teardown`；商业讲解片用 `pinshu-business-explainer`；以后的东方文化可视化片等也各有自己的类型 Skill。各片型的成熟度与实测范围以其自身说明为准。
 
 分工：类型 Skill 管"这一类片子长什么样"（场景种类、版式、样式、封面、项目模板、规矩和坑）；本底座管"每类片子都要做、而且做法一样"的那几步。
 
@@ -29,10 +29,14 @@ description: "品叔视频类 Skill 的公共底座：整篇一次合成配音�
 | `fit_music.py` | 配乐按片尾卡位置自动接缝，让原曲收尾和弦落在片尾卡；章节卡上太安静的段落托起来；最后一句旁白之后收尾音提 10 分贝 | `spec.BGM`、`spec.OUT_VOICE_SUBDIR`、`timeline.json`、`wide/index.html` |
 | `render.py` | 省内存渲染 HyperFrames 工程，失败自动重试；成片比工程新、帧数对得上才算成功；工程引用的文件缺了就拒绝渲染 | 工程目录的 `index.html` |
 | `mix.py` | 无配乐渲染加配乐出成片：固定增益到 -14 LUFS，真峰值不超过 -1 dBTP；`soft` 是解说片默认 | 命令行参数 |
-| `qc.py` | 成片九项体检：时长、黑场、首帧、响度和片尾卡有没有声、切点和镜头尾截图、字幕压黑画面、画面静止超 2 秒、切点首帧异常、句中卡顿 | 成片、`timeline.json`、无配乐渲染 |
+| `qc.py` | 成片九项体检：时长、黑场、首帧、响度和片尾卡有没有声、切点和镜头尾截图、字幕压黑画面、画面静止超 2 秒、切点首帧异常、句中卡顿。没有 `timeline.json` 的片子（如 kinetic-reel、animate 做的）第二个参数写 `-`，只跑不依赖时间轴的黑场、首帧、响度与真峰值、手机尺寸截图和画面静止检查 | 成片、`timeline.json`（或 `-`）、无配乐渲染 |
 | `doctor.py` | 环境检查：Python 模块、ffmpeg 滤镜、node、HyperFrames、BaoCut、Demucs、Gemini 钥匙、磁盘；给项目目录时查 `spec.py`；类型 Skill 可以加自己的项目文件检查 | 可选的项目目录 |
 
 各脚本开头的英文说明写了完整用法和参数。
+
+## 参考文件
+
+- `references/publish-text.md`：视频发布时各平台要填哪些文字、封面文字怎么写、哪些字数上限已核实哪些没有。类型 Skill 的"封面和文案"一步照它写。
 
 ## 类型 Skill 怎么接
 
@@ -50,13 +54,28 @@ description: "品叔视频类 Skill 的公共底座：整篇一次合成配音�
 - **三种场景类型有固定含义**：`end` 是片尾卡（`fit_music.py` 要求有一个，体检单独量它的响度）；`chapter` 是章节卡（前 2.9 秒是卡、之后是画面，要带 `vo`，配乐在卡上会被托起）；`full`、`story`、`chips`、`chapter` 没有镜头列表时，体检在场景开头（章节卡在卡之后）查切点首帧。新片型用别的类型名不会出错，只是不享受这几项特殊处理。
 - **体检截图标签**用项目里的 `wide/assets/fonts/SourceHanSerif-VF.ttf`，没有就用默认字体。
 
+## Python 环境
+
+脚本需要 numpy、soundfile、pillow 三个包（`fit_music.py`、`patch_voice.py` 另需 librosa）。macOS 上 Homebrew 的 Python 受系统保护，`pip install` 直接报错，别用 `--break-system-packages`。做法是建一个独立环境，用它的 Python 跑本 Skill 的脚本和自测：
+
+```
+python3 -m venv ~/.local/share/pinshu-video-venv
+~/.local/share/pinshu-video-venv/bin/pip install numpy soundfile pillow
+~/.local/share/pinshu-video-venv/bin/python scripts/qc.py <成片> - <输出目录>
+```
+
+`doctor.py` 查到当前 Python 缺包、而这个环境里有时，会直接告诉你改用它；两边都没有时，会给出上面的建环境命令。
+
 ## 自测
 
-`python3 tests/self_test.py`：用合成素材离线跑通全部 8 个脚本（转写和 HyperFrames 用替身，Gemini 用假钥匙，不会花钱）。缺 librosa 时跳过 `patch_voice.py`、`fit_music.py` 两项。整条线用同一个装齐 numpy、soundfile、pillow、librosa 的 Python。
+`python3 tests/self_test.py`（要用上一节的环境里的 Python）：用合成素材离线跑通全部 8 个脚本（转写和 HyperFrames 用替身，Gemini 用假钥匙，不会花钱），并检查代码全是英文字符（公开版要求）。缺 librosa 时跳过 `patch_voice.py`、`fit_music.py` 两项。整条线用同一个装齐 numpy、soundfile、pillow、librosa 的 Python。
 
 ## 已知局限
 
 - `render.py` 按每秒 30 帧核对帧数，别的帧率要改脚本。
+- `gen_voice.py` 两个配音引擎：默认 Gemini「Charon」；`--engine doubao` 用豆包语音合成 2.0，默认声音「刘飞」（`--voice liufei`；使用者可按任务更换声音），默认指令"声音饱满有底气，语气自然放松"，钥匙 `VOLC_SPEECH_API_KEY` 或 `~/.config/volcengine/speech.env`。
 - `gen_voice.py` 默认风格是"像跟同行朋友聊一个案例，松弛，有观点"（拆解片定的），别的片型用 `--style` 换；`--dry-run` 报的字数把段与段之间的空行也算进去了，比纯文字多几个。
 - `qc.py`、`fit_music.py` 依赖上面的 `timeline.json` 和 `wide/index.html` 约定，新片型的生成脚本要照约定写出这两个文件。
 - 自测覆盖不到真渲染和真配音，那两步还是要看成片、听配音。
+
+公开包版本：0.2.0。豆包与 Gemini 真接口调用需各自合法访问与费用授权；本次离线自测不代表已执行付费配音。

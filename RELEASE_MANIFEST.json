@@ -4,12 +4,12 @@
     ".git/**",
     "RELEASE_MANIFEST.json"
   ],
-  "file_count": 333,
+  "file_count": 351,
   "files": [
     {
-      "bytes": 3951,
+      "bytes": 4219,
       "path": ".github/workflows/validate.yml",
-      "sha256": "28e082f68d8e7ed7bfafd947a7f2d6bec88ba9326e99a52dcff02b85bf7d80dc"
+      "sha256": "9444560a28a8c643fef436b8cc5415976b1489454f3d013518a336e986ca5efc"
     },
     {
       "bytes": 42,
@@ -17,9 +17,9 @@
       "sha256": "b8dd6844c806a034448aa95a06e4e1886023a82e423e4fbd176b37429bb672e9"
     },
     {
-      "bytes": 5607,
+      "bytes": 6899,
       "path": "CHANGELOG.md",
-      "sha256": "9def2afeedce01fe324eecd5ab9bce58b43590c2bcf060a91d3bf505d68a3485"
+      "sha256": "9b2b5d7ca147755e6003e5ae23200dcf9a98309763bcc28d5d013cc80b8c8243"
     },
     {
       "bytes": 628,
@@ -52,14 +52,14 @@
       "sha256": "94c684812d34e4e189816fb28305f1ac63483fb8001216b911317bdd4e196533"
     },
     {
-      "bytes": 23838,
+      "bytes": 24341,
       "path": "README.md",
-      "sha256": "77edefb6383e984e0562e658774e115284fae1182380a86669e2b0db81076d34"
+      "sha256": "6f777285850a6de5a24795a8e076d5ae9c05b0a63e0571e7547f9f2c24a74738"
     },
     {
-      "bytes": 4385,
+      "bytes": 4740,
       "path": "README.zh-CN.md",
-      "sha256": "9105af3b2a0d8d6955cd6a4805f4568d6ff64b6106d7b3cdd2915fd3f7156999"
+      "sha256": "9611e0b8d49326f700b532308f7e670be7e8c8481f428eb96fb4b1f1e29e8503"
     },
     {
       "bytes": 28246,
@@ -79,17 +79,17 @@
     {
       "bytes": 2356,
       "path": "pinshu-business-graphics/README.md",
-      "sha256": "3d4f608c31f446710d5b8e511ade400fc53dfe62e88975dec457becef70a1405"
+      "sha256": "bfb7366cd53764859adbcbc42fe63c83d2894637d9c2f16634ce302fc39fc977"
     },
     {
-      "bytes": 5777,
+      "bytes": 6592,
       "path": "pinshu-business-graphics/SKILL.md",
-      "sha256": "8ee51c3b5fa1c535123854414207439565946af8cf73b1e2e8c761a3c25015a0"
+      "sha256": "a09734caecbe873c31ad64cd293704e1101061d68bd30cf75c3c51f39784c20b"
     },
     {
       "bytes": 6,
       "path": "pinshu-business-graphics/VERSION",
-      "sha256": "8a3dad16d348c163566a456fcf650d85d7aeeda5e53d01ee1fa8dc15212915a7"
+      "sha256": "800cf1c0392b24de7c0a1c6ea6778ecb433dec71c49a150bce96a98477527b2f"
     },
     {
       "bytes": 237,
@@ -179,12 +179,12 @@
     {
       "bytes": 11919,
       "path": "pinshu-business-graphics/scripts/plan_business_graphic.py",
-      "sha256": "be1ede0d18c3bf2440e12c6f0d159ab566da9d9993951b87e74511bbf1f05a5c"
+      "sha256": "4e3f1959af678f965b050f2672c478eaa917ae18b19bcd0ce5db46d01c444e75"
     },
     {
-      "bytes": 10536,
+      "bytes": 10525,
       "path": "pinshu-content-assets/SKILL.md",
-      "sha256": "ad3e902390c5462a8d54ee7cc1b62b065694282f4f5ca7db73600d9809ee8b68"
+      "sha256": "4fdf7cc2d6c570e2f640b312ac5170ae01bef42879f49fd5af7e9ee4b7f49d2c"
     },
     {
       "bytes": 1027,
@@ -220,111 +220,6 @@
       "bytes": 2961,
       "path": "pinshu-content-assets/tests/test_route.py",
       "sha256": "d9e44290aa844f0586b0dc575724c147b323061847b958cddbd757f0b807ed5a"
-    },
-    {
-      "bytes": 23241,
-      "path": "pinshu-course-capture/SKILL.md",
-      "sha256": "b7aa8c71ec6c616d1341f4cd0c0383a667d64d6edcc9af93d65152e3d2ffbf95"
-    },
-    {
-      "bytes": 366,
-      "path": "pinshu-course-capture/agents/openai.yaml",
-      "sha256": "455e5d1d02d59c6df874cd3a03ffc7296ea84acefcf7a871e8f9a33257f3a97a"
-    },
-    {
-      "bytes": 1325,
-      "path": "pinshu-course-capture/references/aliyun-capture-adapter.md",
-      "sha256": "e40145ec6cd247db3b0b28e7d8cff29a716e4615efd2232b6974fe429a688481"
-    },
-    {
-      "bytes": 2913,
-      "path": "pinshu-course-capture/references/baidu-capture-adapter.md",
-      "sha256": "2ffdd153174ccd7972b64ea796b7e32a859730de03a5a35df3b872e64a777e7c"
-    },
-    {
-      "bytes": 1429,
-      "path": "pinshu-course-capture/references/capture-adapter-contract.md",
-      "sha256": "c8219144a81376a5f6d7492e207b05eb8badd994eb7299ecd68753b5bfd819ac"
-    },
-    {
-      "bytes": 5269,
-      "path": "pinshu-course-capture/references/core-quality-contract.md",
-      "sha256": "58bdc5afac83872356fef510de29ae1a0825fb09ee55ce4e331b02ceedc8d3ae"
-    },
-    {
-      "bytes": 1789,
-      "path": "pinshu-course-capture/references/default-production-workflow.md",
-      "sha256": "26e93740ee101b26419569c43978fdeb659d8147cfbc86c2537078d9cf966e2f"
-    },
-    {
-      "bytes": 3244,
-      "path": "pinshu-course-capture/references/domain-and-content-routing.md",
-      "sha256": "1a13ff943c2f28c3cb2ecf8b0cac1ba586aa86651ba9bcb185e00571c9b824a5"
-    },
-    {
-      "bytes": 1386,
-      "path": "pinshu-course-capture/references/external-use-gate.md",
-      "sha256": "4ef43956508ca4660a559098c0ff1d1929716bcc936f27f80fbf1c2c7c6c7b5a"
-    },
-    {
-      "bytes": 4727,
-      "path": "pinshu-course-capture/references/orchestration-and-model-routing.md",
-      "sha256": "185e1a35c05ed269349d4991e4344a416d221c61971f21566949c662eef815b2"
-    },
-    {
-      "bytes": 5761,
-      "path": "pinshu-course-capture/references/production-modes-and-budgets.md",
-      "sha256": "3a173c54ff1d364411a34e016d568809b6e0fa3e89be6cc523411a3857c17553"
-    },
-    {
-      "bytes": 3081,
-      "path": "pinshu-course-capture/references/quark-capture-adapter.md",
-      "sha256": "8ff067db3d0d419fbd82cf72c9ceaa747286d09bf46b22e1bd245966474e5d70"
-    },
-    {
-      "bytes": 7640,
-      "path": "pinshu-course-capture/references/semantic-qa-contract.md",
-      "sha256": "80b7457dc2edb46c8066b9985bedd61883e2defd04dcf33117a8312fc8975399"
-    },
-    {
-      "bytes": 121981,
-      "path": "pinshu-course-capture/scripts/course_pipeline.py",
-      "sha256": "f0dc9fc40adb45ea1087e26cfc478acb1ea0361d14d6f2109b78ac4538069818"
-    },
-    {
-      "bytes": 18196,
-      "path": "pinshu-course-capture/scripts/self_test.py",
-      "sha256": "9dd0b9dc748de43a0ed272353979bd40cd5cf65ed467e4cb1df7819961c8a549"
-    },
-    {
-      "bytes": 9382,
-      "path": "pinshu-course-capture/scripts/validate_lesson.py",
-      "sha256": "7609fe1c30c6cfd154130df90dae39024f0c45968a47c900d1829016cfef61e7"
-    },
-    {
-      "bytes": 2948,
-      "path": "pinshu-course-capture/templates/course-manifest.example.json",
-      "sha256": "8c9109f227edc36c558c81fe895c816a7b2349f1c56075132ab867ebfd3ee582"
-    },
-    {
-      "bytes": 810,
-      "path": "pinshu-course-capture/templates/external-use-record.example.json",
-      "sha256": "184f9fb4ef81ed50f5dc4bbafd556fba9bd6544050f430369ea98d43aa3d171e"
-    },
-    {
-      "bytes": 4868,
-      "path": "pinshu-course-capture/templates/lesson-work-order.md",
-      "sha256": "2a225e9ba7d7e079b0bb7f8565d16028f42c3602c5b63cdffec04198181445b5"
-    },
-    {
-      "bytes": 1111,
-      "path": "pinshu-course-capture/templates/qa-report.example.json",
-      "sha256": "3ea1f276249b1d295f6b45f4c14ecba07e431cdd3ba08d9028d4d731fdf787a0"
-    },
-    {
-      "bytes": 31005,
-      "path": "pinshu-course-capture/tests/test_production_foundation.py",
-      "sha256": "3f602654dec0703f900a6f5b58769a0e462e86dfeff0402954fb4c03a0005489"
     },
     {
       "bytes": 18709,
@@ -578,17 +473,17 @@
     },
     {
       "bytes": 3909,
-      "path": "pinshu-course/references/专业课程学习资产流水线.md",
+      "path": "pinshu-course/references/\u4e13\u4e1a\u8bfe\u7a0b\u5b66\u4e60\u8d44\u4ea7\u6d41\u6c34\u7ebf.md",
       "sha256": "6efb0737dcb61a52622e696fa8b1935a9953eadb70a47e26ca46aed718e646ef"
     },
     {
       "bytes": 3744,
-      "path": "pinshu-course/references/课程完成后的学习传播与应用闭环.md",
+      "path": "pinshu-course/references/\u8bfe\u7a0b\u5b8c\u6210\u540e\u7684\u5b66\u4e60\u4f20\u64ad\u4e0e\u5e94\u7528\u95ed\u73af.md",
       "sha256": "6674747818d27a33d41782ce4c370fb4cfeade52f6808a43d7db16a2eb15a45b"
     },
     {
       "bytes": 3908,
-      "path": "pinshu-course/references/跨课线索与独立QA规则.md",
+      "path": "pinshu-course/references/\u8de8\u8bfe\u7ebf\u7d22\u4e0e\u72ec\u7acbQA\u89c4\u5219.md",
       "sha256": "3b9eedde062ef6f93b95ec89d04bdab6561656a8345c8c87f83324b0d3c8a396"
     },
     {
@@ -615,6 +510,111 @@
       "bytes": 4173,
       "path": "pinshu-course/tests/self_test_validate_learning_assets.py",
       "sha256": "9e0abec887559a555b1ff9347dbee93b303c426766730ac4e4205329d3e028b5"
+    },
+    {
+      "bytes": 23241,
+      "path": "pinshu-course-capture/SKILL.md",
+      "sha256": "b7aa8c71ec6c616d1341f4cd0c0383a667d64d6edcc9af93d65152e3d2ffbf95"
+    },
+    {
+      "bytes": 366,
+      "path": "pinshu-course-capture/agents/openai.yaml",
+      "sha256": "455e5d1d02d59c6df874cd3a03ffc7296ea84acefcf7a871e8f9a33257f3a97a"
+    },
+    {
+      "bytes": 1325,
+      "path": "pinshu-course-capture/references/aliyun-capture-adapter.md",
+      "sha256": "e40145ec6cd247db3b0b28e7d8cff29a716e4615efd2232b6974fe429a688481"
+    },
+    {
+      "bytes": 2913,
+      "path": "pinshu-course-capture/references/baidu-capture-adapter.md",
+      "sha256": "2ffdd153174ccd7972b64ea796b7e32a859730de03a5a35df3b872e64a777e7c"
+    },
+    {
+      "bytes": 1429,
+      "path": "pinshu-course-capture/references/capture-adapter-contract.md",
+      "sha256": "c8219144a81376a5f6d7492e207b05eb8badd994eb7299ecd68753b5bfd819ac"
+    },
+    {
+      "bytes": 5269,
+      "path": "pinshu-course-capture/references/core-quality-contract.md",
+      "sha256": "58bdc5afac83872356fef510de29ae1a0825fb09ee55ce4e331b02ceedc8d3ae"
+    },
+    {
+      "bytes": 1789,
+      "path": "pinshu-course-capture/references/default-production-workflow.md",
+      "sha256": "26e93740ee101b26419569c43978fdeb659d8147cfbc86c2537078d9cf966e2f"
+    },
+    {
+      "bytes": 3244,
+      "path": "pinshu-course-capture/references/domain-and-content-routing.md",
+      "sha256": "1a13ff943c2f28c3cb2ecf8b0cac1ba586aa86651ba9bcb185e00571c9b824a5"
+    },
+    {
+      "bytes": 1386,
+      "path": "pinshu-course-capture/references/external-use-gate.md",
+      "sha256": "4ef43956508ca4660a559098c0ff1d1929716bcc936f27f80fbf1c2c7c6c7b5a"
+    },
+    {
+      "bytes": 4727,
+      "path": "pinshu-course-capture/references/orchestration-and-model-routing.md",
+      "sha256": "185e1a35c05ed269349d4991e4344a416d221c61971f21566949c662eef815b2"
+    },
+    {
+      "bytes": 5761,
+      "path": "pinshu-course-capture/references/production-modes-and-budgets.md",
+      "sha256": "3a173c54ff1d364411a34e016d568809b6e0fa3e89be6cc523411a3857c17553"
+    },
+    {
+      "bytes": 3081,
+      "path": "pinshu-course-capture/references/quark-capture-adapter.md",
+      "sha256": "8ff067db3d0d419fbd82cf72c9ceaa747286d09bf46b22e1bd245966474e5d70"
+    },
+    {
+      "bytes": 7640,
+      "path": "pinshu-course-capture/references/semantic-qa-contract.md",
+      "sha256": "80b7457dc2edb46c8066b9985bedd61883e2defd04dcf33117a8312fc8975399"
+    },
+    {
+      "bytes": 121981,
+      "path": "pinshu-course-capture/scripts/course_pipeline.py",
+      "sha256": "f0dc9fc40adb45ea1087e26cfc478acb1ea0361d14d6f2109b78ac4538069818"
+    },
+    {
+      "bytes": 18196,
+      "path": "pinshu-course-capture/scripts/self_test.py",
+      "sha256": "9dd0b9dc748de43a0ed272353979bd40cd5cf65ed467e4cb1df7819961c8a549"
+    },
+    {
+      "bytes": 9382,
+      "path": "pinshu-course-capture/scripts/validate_lesson.py",
+      "sha256": "7609fe1c30c6cfd154130df90dae39024f0c45968a47c900d1829016cfef61e7"
+    },
+    {
+      "bytes": 2948,
+      "path": "pinshu-course-capture/templates/course-manifest.example.json",
+      "sha256": "8c9109f227edc36c558c81fe895c816a7b2349f1c56075132ab867ebfd3ee582"
+    },
+    {
+      "bytes": 810,
+      "path": "pinshu-course-capture/templates/external-use-record.example.json",
+      "sha256": "184f9fb4ef81ed50f5dc4bbafd556fba9bd6544050f430369ea98d43aa3d171e"
+    },
+    {
+      "bytes": 4868,
+      "path": "pinshu-course-capture/templates/lesson-work-order.md",
+      "sha256": "2a225e9ba7d7e079b0bb7f8565d16028f42c3602c5b63cdffec04198181445b5"
+    },
+    {
+      "bytes": 1111,
+      "path": "pinshu-course-capture/templates/qa-report.example.json",
+      "sha256": "3ea1f276249b1d295f6b45f4c14ecba07e431cdd3ba08d9028d4d731fdf787a0"
+    },
+    {
+      "bytes": 31005,
+      "path": "pinshu-course-capture/tests/test_production_foundation.py",
+      "sha256": "3f602654dec0703f900a6f5b58769a0e462e86dfeff0402954fb4c03a0005489"
     },
     {
       "bytes": 9684,
@@ -774,17 +774,17 @@
     {
       "bytes": 1988,
       "path": "pinshu-infographic/README.md",
-      "sha256": "1a52207a7f4e1b58bb8834dcd9291100c67ccde3a10886fc0cf87470a8096d6a"
+      "sha256": "b0d42c615606c69542f536e43ff7a26bfecc60e76b61cafe7b5f4d9d3ac7501e"
     },
     {
-      "bytes": 10924,
+      "bytes": 10166,
       "path": "pinshu-infographic/SKILL.md",
-      "sha256": "e824e3f655d1569af628c4839d87cdaff15f2c9be5afd873b2b7397c54ff0ee3"
+      "sha256": "628a1055213942fc439d77140b1ff973670a0d92e52980c293495a74fd91815f"
     },
     {
       "bytes": 6,
       "path": "pinshu-infographic/VERSION",
-      "sha256": "8a3dad16d348c163566a456fcf650d85d7aeeda5e53d01ee1fa8dc15212915a7"
+      "sha256": "800cf1c0392b24de7c0a1c6ea6778ecb433dec71c49a150bce96a98477527b2f"
     },
     {
       "bytes": 227,
@@ -822,9 +822,9 @@
       "sha256": "7ed0d3eae4dd2f32e11ff67b24f6043da91752f41e7bf4922b40e2ae0e2f1537"
     },
     {
-      "bytes": 3185,
+      "bytes": 2997,
       "path": "pinshu-infographic/references/mode-routing.md",
-      "sha256": "6294f64164cb86128978c38e863f83d65de4c96f7796f00a7b582210c3da8e3b"
+      "sha256": "896ef2b1fbf55b12610598b531909bf1418e31db7892da47c9d238c9d7751474"
     },
     {
       "bytes": 3597,
@@ -839,12 +839,12 @@
     {
       "bytes": 6053,
       "path": "pinshu-infographic/scripts/plan_infographic.py",
-      "sha256": "b963a38a2988c79f7d031220586d303eb3fc5ecf9d282fe6d44253a06624af97"
+      "sha256": "1ff4f6c546ad63dfabfc61c8849f691c28817682cd8643fb8283ca0f8bfdba85"
     },
     {
-      "bytes": 3495,
+      "bytes": 3514,
       "path": "pinshu-manifest.yaml",
-      "sha256": "3708a1c9a643168f8b4152fea36f63d293c5162b1fa1707d636d4572f9b90bba"
+      "sha256": "7215ace03daf2075d0681db2491f581df2f6296f7cd145794aaa2ba09f8406d1"
     },
     {
       "bytes": 5008,
@@ -897,9 +897,14 @@
       "sha256": "39ad1f560f8469be9bf66d0ebe1c9a27f45382a1a00413e3c7a0375f2ecad130"
     },
     {
-      "bytes": 30539,
+      "bytes": 31014,
       "path": "pinshu-transcript/SKILL.md",
-      "sha256": "d90ecff9d9ac3d3c53be044e3d1c97a51afefb250b1981b7c334691e07284524"
+      "sha256": "9a5d07f70db93143a8f752f33b6b2b271fa0c721a76460a2271dbfd218a1c7c5"
+    },
+    {
+      "bytes": 6,
+      "path": "pinshu-transcript/VERSION",
+      "sha256": "1f930dd1f133c1f97a94fe3acb8db34372cf4c01ffdb2b3ff4ca72f9494121e9"
     },
     {
       "bytes": 542,
@@ -942,9 +947,14 @@
       "sha256": "21835b0bed1bdc1f9b182935f6f6cc8cc09c12dc96d5051dbe7640ea2988de02"
     },
     {
-      "bytes": 7863,
+      "bytes": 9750,
       "path": "pinshu-video-core/SKILL.md",
-      "sha256": "67b23983bc66e533091118153176f4424313aae37915af7384fc270b553f89a9"
+      "sha256": "7e7f1d1607395ff5503fba2085dc67c6386fd390d1065e2747ca65c2df71decc"
+    },
+    {
+      "bytes": 6,
+      "path": "pinshu-video-core/VERSION",
+      "sha256": "1f930dd1f133c1f97a94fe3acb8db34372cf4c01ffdb2b3ff4ca72f9494121e9"
     },
     {
       "bytes": 304,
@@ -952,14 +962,19 @@
       "sha256": "fbb5098a5429901458ef167965a6a7c1712e0a12be08b782903f774542adaffd"
     },
     {
-      "bytes": 5411,
-      "path": "pinshu-video-core/scripts/common.py",
-      "sha256": "ce838822658f9e567acebc99423f18b11935d8ac6f09a6319f010ea7cf7e8b74"
+      "bytes": 3490,
+      "path": "pinshu-video-core/references/publish-text.md",
+      "sha256": "72b83b7446b718c4f3c1d15230d804dc1af9c51529e2b4868a78fba7e44deabc"
     },
     {
-      "bytes": 3570,
+      "bytes": 6047,
+      "path": "pinshu-video-core/scripts/common.py",
+      "sha256": "37ff3e95d28efb3b46282e74b204bc7c973c4abe2b68dacd392b1e53ef8c339a"
+    },
+    {
+      "bytes": 4398,
       "path": "pinshu-video-core/scripts/doctor.py",
-      "sha256": "f56ab761e484ee7c496159da5369191dbe94ea109afbdd716f26098333eb672c"
+      "sha256": "2ee56dfe45794f9e79a72fead47d515b9098c74a42368f7651dc6cd1458198a6"
     },
     {
       "bytes": 7828,
@@ -967,9 +982,9 @@
       "sha256": "2713992bf7da212287d3df67e3003517d54a280e65dd2e78856a03fc2d3a03ca"
     },
     {
-      "bytes": 7791,
+      "bytes": 10168,
       "path": "pinshu-video-core/scripts/gen_voice.py",
-      "sha256": "4d5be19ce9aa54519e422e2276a3adc886601502e667eb40235f88459240e695"
+      "sha256": "ba7d36832cc0f642d3e7e11b6f55d10d3b2920effdd7d50984b629a0d03f89de"
     },
     {
       "bytes": 4310,
@@ -982,9 +997,9 @@
       "sha256": "f24b6490b2043e43d5d3a18a07988b18bea870404fece1af4ded6b27a32cf093"
     },
     {
-      "bytes": 13000,
+      "bytes": 14577,
       "path": "pinshu-video-core/scripts/qc.py",
-      "sha256": "d41d0e081cd7b0adb572ec825f64e55c0f125a712344bc880dd3191b498e6a6f"
+      "sha256": "f6cd229d8ab6ccf6215569a0f9e15129154bb425fb7fd50c4a3b146eebd35cbb"
     },
     {
       "bytes": 3174,
@@ -992,9 +1007,9 @@
       "sha256": "16ae25323c5c8ab54e1542aa3814e4441891c39ddf0688d40ee584d626d5502b"
     },
     {
-      "bytes": 11856,
+      "bytes": 13855,
       "path": "pinshu-video-core/tests/self_test.py",
-      "sha256": "105c2550c7035410cd3dfc5fab92b6c48a9996e64769716f13c53c5ace2542f8"
+      "sha256": "3ec43fbeee209d6cc18a56b5444bf30b25cc0937b210a77a606f35cf62924cfa"
     },
     {
       "bytes": 8201,
@@ -1008,7 +1023,7 @@
     },
     {
       "bytes": 4033,
-      "path": "pinshu-visual-learning/references/图解选型与验收.md",
+      "path": "pinshu-visual-learning/references/\u56fe\u89e3\u9009\u578b\u4e0e\u9a8c\u6536.md",
       "sha256": "6bf0f5498b95004119d4139bdef9953d0a2b2cd8380c16dc5682a661bc93321b"
     },
     {
@@ -1027,24 +1042,24 @@
       "sha256": "f05efcb1ba1e663492c8ba47b3c3234d901eee20968c6caaf8d8e0ed10860bd1"
     },
     {
-      "bytes": 628,
+      "bytes": 627,
       "path": "pinshu-visual-system/NOTICE",
-      "sha256": "57fcc9b7921b369e18ff803451df1484c020291045b01ef0972c0fe4cc5c6038"
+      "sha256": "567496cb55f342ac833da20057130f5befe36e5f59bdaa6413ee102a0924209f"
     },
     {
-      "bytes": 8331,
+      "bytes": 8389,
       "path": "pinshu-visual-system/README.md",
-      "sha256": "a42a741d70811171d92f68eb8b593659d32804fbd23d34d23ea360c993c6ae1b"
+      "sha256": "03d671e31d38382943d15f41491547dd33a74aa0999d39ebde565047a419a918"
     },
     {
-      "bytes": 12302,
+      "bytes": 12640,
       "path": "pinshu-visual-system/SKILL.md",
-      "sha256": "4aef54bec4eb7dceffad436b3b01639f0dbbe8b970d69a87e6b7c73722666fa1"
+      "sha256": "5320c77e3855b8ac906dc8dad64a5f75153df660e3471f64e03b552d1ee40b07"
     },
     {
       "bytes": 6,
       "path": "pinshu-visual-system/VERSION",
-      "sha256": "d915cc95d6ca8f47ae297713ed46d4e5c5d99ddd29fc3c61e263bdf305f2b5b0"
+      "sha256": "40b8eb4000a913a7791090535f291d3d369874162a89ef3c9e3d4e887a1b9e79"
     },
     {
       "bytes": 249,
@@ -1112,9 +1127,9 @@
       "sha256": "b4c759f3abe6b90aa680d80bd32ef4496d94a95edb3aa8589564f4f00dc65d70"
     },
     {
-      "bytes": 30125,
+      "bytes": 30343,
       "path": "pinshu-visual-system/references/article-asset-handoff.md",
-      "sha256": "884235afea1d4f179378f14b22983dc470931bcb9fe121828735f8039db0056b"
+      "sha256": "e86a8ab734e592f335f9b80d687ca5a1ad1d1428f244c517edda9a1100a0f614"
     },
     {
       "bytes": 1198,
@@ -1214,12 +1229,12 @@
     {
       "bytes": 4423,
       "path": "pinshu-visual-system/references/quickstart.md",
-      "sha256": "3bf123040b32ebcd4f776d7d4c03fe98383ae0d184323f9ec9525ab1ee29b51d"
+      "sha256": "fe8f819910787d3346daa67e91a359970ceb20b4591a2ca9e9afcf6291a3647a"
     },
     {
-      "bytes": 5438,
+      "bytes": 5597,
       "path": "pinshu-visual-system/references/ready-folder-contract.md",
-      "sha256": "b95d543c6e0ad4091a9aaaf032a77eb639b5f8d3b384b7e9c9b3004df69a311e"
+      "sha256": "1a643138a95c73ec0b1a3fd27194440adda453fa00f4db77da55ef18729b437b"
     },
     {
       "bytes": 3068,
@@ -1252,6 +1267,11 @@
       "sha256": "285d9658b3cd4ad7d57d337786a5a3ae6a87183fba34b0179c6ac6574f610e1c"
     },
     {
+      "bytes": 3870,
+      "path": "pinshu-visual-system/references/release-notes-0.4.0.md",
+      "sha256": "40f28a32b2ec591d6f65252e5f5eeaa65ab88f937a49c096f652f53cadf566db"
+    },
+    {
       "bytes": 1862,
       "path": "pinshu-visual-system/references/sharing-boundary.md",
       "sha256": "aac38bc99b9b73fac239cfc2be57b62cc0158f27224ee02f5c1b41efb632e6b1"
@@ -1259,7 +1279,7 @@
     {
       "bytes": 6559,
       "path": "pinshu-visual-system/references/system-registry.json",
-      "sha256": "fbb1b0718e46aa66a31a64e4966fa103456d9a998a4dcf59e85fa683e026c350"
+      "sha256": "7657826e95f7951e10f0643559e774f8a576c565ba10d5494ccba4a387de76d2"
     },
     {
       "bytes": 2514,
@@ -1272,9 +1292,9 @@
       "sha256": "45d4b9724c9316d37645a49864e97b5b50070bb6bea018a01531e2669d867862"
     },
     {
-      "bytes": 2391,
+      "bytes": 2810,
       "path": "pinshu-visual-system/references/workflow.md",
-      "sha256": "e1986ea02020577066600ff001fdf17295d0ca0f8d245e619a00a4255f1b1bf2"
+      "sha256": "33657a71a8a0d4fca184bcf5694f1e500aab901b85667035d6423c579505be4b"
     },
     {
       "bytes": 60,
@@ -1282,9 +1302,9 @@
       "sha256": "23b29b8e3ef853dbcf7fd0f85b7eefbf28198ab99d468fcce97621759d784849"
     },
     {
-      "bytes": 15280,
+      "bytes": 15430,
       "path": "pinshu-visual-system/scripts/article_browser.mjs",
-      "sha256": "91c6a9add69e89b972f5bdf95de7b76c7fbaca8da57298de6675b8792d356a79"
+      "sha256": "ad0dc13430b7f0c18089f0baa237ace7224bc30773d15b9b88bd304e03e7764d"
     },
     {
       "bytes": 400,
@@ -1292,14 +1312,14 @@
       "sha256": "75f07609dea19941f66af9fa515da96f81b7d9ec3fe5583b577b95740f21d224"
     },
     {
-      "bytes": 11035,
+      "bytes": 15578,
       "path": "pinshu-visual-system/scripts/article_preview.py",
-      "sha256": "3d8e2ffac4d58fcaf6aed51e264f6069af809e66ff2c91969fd11fd090832dcb"
+      "sha256": "9fd7899f7abd770c966542581980a50f32ba8d6d05a878d0de507109c447de42"
     },
     {
-      "bytes": 14082,
+      "bytes": 16265,
       "path": "pinshu-visual-system/scripts/capture_evidence.py",
-      "sha256": "81dacbc7c3b7dd47b0d6a47573f46b853ff934b3fb3101fdb3c1d8413ba01ac1"
+      "sha256": "3d0adc9e2749ac102c67f478f08f132c6e7c22c14bcb82fd4db0e00efe10352a"
     },
     {
       "bytes": 5600,
@@ -1307,14 +1327,19 @@
       "sha256": "d87529e32759010635f2f4b7ace423eabdc4fa050f8844760ea9d022f41ede5d"
     },
     {
-      "bytes": 6537,
+      "bytes": 6602,
       "path": "pinshu-visual-system/scripts/compose_evidence.py",
-      "sha256": "96ff72739da05b68ec87fc8a6021099549d3e6d5969b7af9098152eb244c3701"
+      "sha256": "1f18b18cceea4cc7894e8b65960009f07060b6273976271c224abf5c0c9f3e98"
     },
     {
-      "bytes": 3050,
+      "bytes": 9704,
+      "path": "pinshu-visual-system/scripts/contact_sheet.py",
+      "sha256": "c2706fc16aa58edaec495dbe4e71f4bff284999f61adf5472c7f1e7f9ece13cd"
+    },
+    {
+      "bytes": 3694,
       "path": "pinshu-visual-system/scripts/doctor.py",
-      "sha256": "4cce71cc84b8ba6354101d4867977d0131beb4257885e1295476d03907f64c4a"
+      "sha256": "7d52b6d4fe9fcb0b044f07d4f70d2b07bddc82b1acf970c29ea1302663d7f7b5"
     },
     {
       "bytes": 8511,
@@ -1332,9 +1357,14 @@
       "sha256": "07a2ec6c655b8834f4660f625e6c39f9c7e9ac26ea1190d9b32a2ae74bc412af"
     },
     {
-      "bytes": 19019,
+      "bytes": 2738,
+      "path": "pinshu-visual-system/scripts/portable.py",
+      "sha256": "b0369d4f8b83ff9ec246a4f6b6e70320e35cf50f184ec4824f3e91fe8da01a9a"
+    },
+    {
+      "bytes": 19756,
       "path": "pinshu-visual-system/scripts/prepare_article_handoff.py",
-      "sha256": "9b90022ac22d83afeb282887280724d6a16c91a641bd0c4da3846945384e5e46"
+      "sha256": "a4e8d4e7dbd086025f30e2658638dd6a63c501fe7929eefe7085b341a4584760"
     },
     {
       "bytes": 10972,
@@ -1347,9 +1377,9 @@
       "sha256": "8f55320f383cf20ae6ec93b24cc26fe0d431a00fbec2668f7329cc58e77181f0"
     },
     {
-      "bytes": 6736,
+      "bytes": 10603,
       "path": "pinshu-visual-system/scripts/record_article_review.py",
-      "sha256": "c570ac2d2e8d25c4e8d6fa919a8c13590fd15d177159d69a8cb5784e4ae73c02"
+      "sha256": "bd505e7b5e5bf199c0c32be8fffa3aaf934fdbb8820652c1d74f7278ffd3886b"
     },
     {
       "bytes": 17288,
@@ -1357,14 +1387,19 @@
       "sha256": "a89c77d39026c0696385bdb412060d667454a2d4d701c112ac6163e9ce429d81"
     },
     {
-      "bytes": 16208,
-      "path": "pinshu-visual-system/scripts/run_article_pipeline.py",
-      "sha256": "7f3108b51bb2113f33655c22774fe4c177a42f2d3791952c9d2b15f1743df240"
+      "bytes": 9148,
+      "path": "pinshu-visual-system/scripts/replace_asset.py",
+      "sha256": "3976ef32acb9708b089c4fe281526582266488ebc5fd72d661b354c313e029b1"
     },
     {
-      "bytes": 13324,
+      "bytes": 19421,
+      "path": "pinshu-visual-system/scripts/run_article_pipeline.py",
+      "sha256": "b832e42f45ab28f161446b0d1a2f632368852ab3b728a925cb64bcabf01508cc"
+    },
+    {
+      "bytes": 14179,
       "path": "pinshu-visual-system/scripts/run_ready_article.py",
-      "sha256": "63f5519f5b6411896feab9874b9b7491112a6fafd9553fdaf5f19a39e30172fb"
+      "sha256": "5e8844e3fc89ca69534d31d6c0761f095d33745d6db287030aa67e11da428c5c"
     },
     {
       "bytes": 6990,
@@ -1392,9 +1427,19 @@
       "sha256": "285e65d114d64c606d38d3bd8625d43de60792c59d41536a97c25c34e0d09699"
     },
     {
-      "bytes": 11037,
+      "bytes": 11408,
       "path": "pinshu-visual-system/scripts/test_ready_article.py",
-      "sha256": "9bb964f57f5f2882b8015df8e18b89b0109c7d45ebbfd887146485fd38d1ddf9"
+      "sha256": "bec693b0bd2d63b461a0c6d1dc090ec72f255b18f3553d165ea1aeec9a50b254"
+    },
+    {
+      "bytes": 17529,
+      "path": "pinshu-visual-system/scripts/test_reflow_1012.py",
+      "sha256": "4b694321985d84acb1dbedf385f63511e2215c464e9e781951aec1480cdec871"
+    },
+    {
+      "bytes": 16204,
+      "path": "pinshu-visual-system/scripts/test_release_integration_330.py",
+      "sha256": "475777da4f6964159c19a12d3fe0d9022d60f50bc41a5e288c620ec5cb0f3fda"
     },
     {
       "bytes": 13092,
@@ -1407,29 +1452,34 @@
       "sha256": "d9c26dfdfd3236c18a614f9644c08cf4abb3291ae8cba52ab9a575e2d0ccd380"
     },
     {
+      "bytes": 6404,
+      "path": "pinshu-visual-system/templates/cjk-diagram-text-layout.py",
+      "sha256": "62a6d3319bf3a5e2e2989d99cc793828071523899f3d045adf857196ce9a2285"
+    },
+    {
       "bytes": 11988,
       "path": "pinshu-visual-system/tests/test_visual_system.py",
       "sha256": "beb529458be1299c7173adfd12a43822f3c0ec7ce2f6b6bd2786d6f1e844a55e"
     },
     {
-      "bytes": 2881,
+      "bytes": 3338,
       "path": "pinshu-wechat-layout/README.md",
-      "sha256": "41a89c016e71de2f43eca6cf211358ec3a6acdaa3372f579a6a577facb6c32c3"
+      "sha256": "7050d2633cb6b12fca1603589836d29b7f1bae6301df5190ee5a81b9bcf50f6e"
     },
     {
-      "bytes": 3248,
+      "bytes": 11155,
       "path": "pinshu-wechat-layout/SKILL.md",
-      "sha256": "ce83ba006bd19cd4aeafe49a9b04d81ccc5da4c26a730adbd5ee488e2998a1b9"
+      "sha256": "08248ce3a3cf380dd161c3ee968e633bd1546720abe178ddc483c03e809f4f2a"
     },
     {
       "bytes": 11,
       "path": "pinshu-wechat-layout/VERSION",
-      "sha256": "6efb6ae82cca32df15976cba95312e30ea1b8d7668909072ea1a0b3ec93d25fa"
+      "sha256": "9cf43ab58459ac405d39d725f82321d127bf5e9cd6dfc9c5373bd3d7c6cef4e3"
     },
     {
       "bytes": 356,
       "path": "pinshu-wechat-layout/agents/openai.yaml",
-      "sha256": "a4c4cca1a7ee80122fbeb1afec56db26f251e726cce8d051a5abadc91b224962"
+      "sha256": "f2da8f1c1d30d1676c0ae15bcf6388b72382e63a45d47f054d482d835a0bbf8c"
     },
     {
       "bytes": 17277,
@@ -1462,24 +1512,24 @@
       "sha256": "767073f276bf3eaaf55924d3496ea9bdf56c5fcd1f654e452560306e26218041"
     },
     {
-      "bytes": 14744,
+      "bytes": 14794,
       "path": "pinshu-wechat-layout/assets/preview.html",
-      "sha256": "6a1f09d1d5cce65b5fd740973ce6a76cdd8be7fd6cca5c55abd802ea55161a35"
+      "sha256": "81e99d2ac21b1c9f0e423ac31f58439fc36d5f2c8f76370081e3c2188876b5d7"
     },
     {
-      "bytes": 7845,
+      "bytes": 10163,
       "path": "pinshu-wechat-layout/assets/reading-base.js",
-      "sha256": "33637adaabc062a3342c6bcd531bb7998f3c951ed37f2159c16fc143612c8309"
+      "sha256": "c50903befb547a2cf4de282687a79cda9ad2b1981eba409f20711f138c76153d"
     },
     {
-      "bytes": 10658,
+      "bytes": 19586,
       "path": "pinshu-wechat-layout/assets/renderer.js",
-      "sha256": "0a038ad18306131e2c306dd1add1490884eaa634a028b8a8c75bc258a9925de9"
+      "sha256": "f8f99707740e2965b1ee3ee10df7da2df189760eb10f19cfc016b75191f9d36a"
     },
     {
-      "bytes": 6513,
+      "bytes": 18151,
       "path": "pinshu-wechat-layout/references/handoff-and-rules.md",
-      "sha256": "41a8c68b20e904e405e0da19d810acb4349d89cd25ce9f84b239a4d886b58d01"
+      "sha256": "9984c94d51bf8ba780006ee6a8cd4d0fbcd29ccf85d94bc95cae842cfe8fa9ad"
     },
     {
       "bytes": 960,
@@ -1497,104 +1547,104 @@
       "sha256": "990716211785930d5fda929e3070fb1fc5eab1b48d8de2cad4342072e7fcb23c"
     },
     {
-      "bytes": 9174,
+      "bytes": 14886,
       "path": "pinshu-wechat-layout/scripts/build.py",
-      "sha256": "10e8906bafbac9f39c7380bf42a0acec1e6d9860298e435e38e27f69b0404194"
+      "sha256": "e5a7bc7da598d253d4138eee2835452de47b6993a40444f2ed133fcbe4871b29"
     },
     {
-      "bytes": 1381,
+      "bytes": 1550,
       "path": "pinshu-wechat-layout/scripts/doctor.py",
-      "sha256": "7f0a2caa7e0601efca397d4cf264e5e08ecead21b6cd25839979bc2201cc2706"
+      "sha256": "aedab5d1c121c02a46f3a5f269a2587241b0a73071a8fb9ba6922f937bc65983"
     },
     {
-      "bytes": 8820,
+      "bytes": 9948,
       "path": "pinshu-wechat-layout/scripts/engine.py",
-      "sha256": "96c83e44d9993b008a41ef1ccc7c3f0272f6dec68c707f08a818a57800738ea0"
+      "sha256": "0a61dacd6306655990e5131efca2f346b2304e3e4429c111d47860e2b9154742"
     },
     {
-      "bytes": 6101,
+      "bytes": 14143,
       "path": "pinshu-wechat-layout/tests/test_wechat_layout.py",
-      "sha256": "3f78dc442beafa01c51ded01d81c42d353cb3e2b0964cab2a3e7b42752d349b6"
+      "sha256": "c87cdb7a98aaec856bef7816cbf85447930d76aceb290bc4d89f7cecb9a4e79a"
     },
     {
-      "bytes": 8942,
+      "bytes": 13825,
       "path": "pinshu-write/SKILL.md",
-      "sha256": "8c0324b6e93438a9888b214167b8ca800eb2d9f7e72e66b28c8fa1f65f525f8c"
+      "sha256": "2d3cc2d838e332d62c353243728a4064c0f05d02ad09a3e9f43f0b4357a2f948"
     },
     {
       "bytes": 6,
       "path": "pinshu-write/VERSION",
-      "sha256": "64d23f858ef51b0f996e4966d4e27c0371b437e2d2787890b1f7ad22d4ec5663"
+      "sha256": "5eee6c0c5c6901f5e523f0a434bca4106e1ff7136deb451f982b0bb1a7b13716"
     },
     {
-      "bytes": 1137,
+      "bytes": 334,
       "path": "pinshu-write/agents/openai.yaml",
-      "sha256": "1b88328849a19665b2ecf3718fae2a0d0ae59066e339be2ca074fd344a605cb8"
+      "sha256": "219a44d6568078f1c30e6d059a389a6f06c7acdb8f80b466cb7b76858862945d"
     },
     {
-      "bytes": 3308,
-      "path": "pinshu-write/references/approvals.md",
-      "sha256": "3b647aeca101ebe843d2046c95292600ed8c9b212f31458df4bc7f588abe5fae"
+      "bytes": 8707,
+      "path": "pinshu-write/references/1-topic.md",
+      "sha256": "20ecf915087d9413b40ef19cf4d61b1c17ced5b21839367b80e5d67e6a1fca0a"
     },
     {
-      "bytes": 5008,
-      "path": "pinshu-write/references/article-types.md",
-      "sha256": "5955da555a9fe7150687120811d790d16abcbdef2c77ff9413c56126acb14c21"
+      "bytes": 9756,
+      "path": "pinshu-write/references/2-research-and-counter.md",
+      "sha256": "4a62297949a7f9788bfbf5e511cd8b7d38c9585bf478119958b53fad2def8c37"
     },
     {
-      "bytes": 22943,
-      "path": "pinshu-write/references/delivery-and-audit.md",
-      "sha256": "9a18190d9f9538fb7e76adda2661fe0bf9c0adcf2dd1b935381e3cc00e274ea0"
+      "bytes": 16953,
+      "path": "pinshu-write/references/3-structure.md",
+      "sha256": "e042b7a5c2dcc29feca8af22a77accc697245733cc900d6fbe18bc91790042dc"
     },
     {
-      "bytes": 5514,
-      "path": "pinshu-write/references/good-article-standard.md",
-      "sha256": "1ac39d3bb5e780fb28d3d5cb72ebb96c3f665af787444984783a7a63d5cc0882"
+      "bytes": 17742,
+      "path": "pinshu-write/references/4-writing.md",
+      "sha256": "4b3241b8ddcc77a665e09d6e7c9d32ea7405b7ac31397cab13fdabb887015100"
     },
     {
-      "bytes": 26111,
-      "path": "pinshu-write/references/model-routing.md",
-      "sha256": "ef699e0df6d107ea0418715577dc237ed17e03b959d0251ee9c1b4bc6d352769"
+      "bytes": 23106,
+      "path": "pinshu-write/references/5-review.md",
+      "sha256": "2d5a1a1902f1baaf0121d007b66b3e44de2fc319db490c40adb6f7581e90bbe4"
     },
     {
-      "bytes": 31751,
-      "path": "pinshu-write/references/plain-writing.md",
-      "sha256": "a0dfed6a2dc196529569f5758792b6e324f163301076f705432ec6a0a4608b79"
+      "bytes": 19126,
+      "path": "pinshu-write/references/6-deliver.md",
+      "sha256": "5fa9a997af7c189c2c1c1a182f198fefc584b980ce4250493de63f2822b1d0d7"
     },
     {
-      "bytes": 25915,
-      "path": "pinshu-write/references/prompt-kit.md",
-      "sha256": "04472d0ad8a66727c2d87138b4e0550639aa76f9cd41593e3e61083e3fac71f2"
+      "bytes": 10213,
+      "path": "pinshu-write/references/models.md",
+      "sha256": "9a633f6f0d7fb80a66b5daa1f9c811e94df868fd2ba47aaf0d20200cb964db15"
     },
     {
-      "bytes": 16135,
-      "path": "pinshu-write/references/review-chain.md",
-      "sha256": "cd57388f4e3506dc6317c02c5d05818350ce58d343144cd0450767468cc7ce36"
+      "bytes": 24366,
+      "path": "pinshu-write/references/prompts.md",
+      "sha256": "cc9fc57c9de4ca88187e582ac0609d59bce03ed3476db401bd09eb1a2b69df40"
     },
     {
-      "bytes": 33649,
-      "path": "pinshu-write/references/topic-and-judgment.md",
-      "sha256": "1d0d376b4cc142d64b11c77499c93f03cd06f3caa6046273e82d29d4af30c5cf"
+      "bytes": 5956,
+      "path": "pinshu-write/references/stops.md",
+      "sha256": "09ea991143c78e025b3325bf263ca702afe3faee0ed53d4935ccd5adc9b1e110"
     },
     {
-      "bytes": 11422,
-      "path": "pinshu-write/references/worked-example.md",
-      "sha256": "7ac6d6792bb642044d6b57eb43e4f4e29186d959baee334fba1d957629de5e17"
+      "bytes": 15136,
+      "path": "pinshu-write/references/write.md",
+      "sha256": "45d845371c71b68b84e90a9da0a6d1ceaf55a330dbc6ce9763e8bf2a3891c117"
     },
     {
-      "bytes": 38535,
+      "bytes": 44969,
       "path": "pinshu-write/scripts/audit_draft.py",
-      "sha256": "56d41f980b80fd36a131363b9cdd542ce9c51474494967470a3d3dcd51d1340a"
+      "sha256": "d645bddb615c2b1f0bc705e6b99e4fdf6d1a3f97b18636b15d405062a126b889"
     },
     {
-      "bytes": 10357,
+      "bytes": 26735,
       "path": "pinshu-write/scripts/check_env.py",
-      "sha256": "d9d5c286c2c2dcefd0b529a2ce4ad5ff95a5ef7bd3f5dc3c39a0721da7470410"
+      "sha256": "37537d9aaf164f24aad946077eb9d8ab04da32d9ff2175643951af3ce875e8c5"
     },
     {
-      "bytes": 15583,
+      "bytes": 21968,
       "path": "pinshu-write/scripts/export_article.py",
-      "sha256": "cab1c55cb11eda503a43e3766fe1c7191fa123ee7cdcc6e72d8ea342900c6db0"
+      "sha256": "36668fc67e7c6f9c807aaad6346be81a5552e07387a70d9edcf5fd4cca567f40"
     },
     {
       "bytes": 4135,
@@ -1602,29 +1652,69 @@
       "sha256": "b411a3de645d89b137b1432174e2af075cbeb41d919cca8fa964e374bf0e2f66"
     },
     {
-      "bytes": 4465,
+      "bytes": 25110,
+      "path": "pinshu-write/scripts/market_reference.py",
+      "sha256": "cefe536fd745ee36334910cf127293cfabe822bdd510d215391081755c24169a"
+    },
+    {
+      "bytes": 7179,
+      "path": "pinshu-write/scripts/run_watched.py",
+      "sha256": "67ad520920b8a60d33f03eec552e59bc6aee8b7aad34444b32161469ea8539a4"
+    },
+    {
+      "bytes": 13271,
+      "path": "pinshu-write/scripts/stage_log.py",
+      "sha256": "505e1b8a2746462a5c76794e5b4aed668cf5a293f771d9412218916d907364e9"
+    },
+    {
+      "bytes": 9992,
       "path": "pinshu-write/templates/config.example.yaml",
-      "sha256": "f1eb623c59dd3efd21f23f264f4c932e08daf6a0d3801512df7a25c46b2d9087"
+      "sha256": "13d883c1437db90921774fb0edeae46450038065a4d8928a6aaa6129e9c5ee38"
     },
     {
-      "bytes": 30598,
+      "bytes": 1665,
+      "path": "pinshu-write/templates/exemplar-index.example.md",
+      "sha256": "b6db61b068d01435651e9280b0615155273f75f8c1e2260d07313b8007dbfe60"
+    },
+    {
+      "bytes": 35682,
       "path": "pinshu-write/tests/test_audit_draft.py",
-      "sha256": "b832bf8bfbff88769c1788a1768ac9c9f30a999cc89a75344862d9b8e3a12306"
+      "sha256": "fe95321a4e7f4279bf96c927768d5a1eb8fb51f5c6e6903626664f062a1e51a7"
     },
     {
-      "bytes": 8721,
+      "bytes": 23308,
       "path": "pinshu-write/tests/test_check_env.py",
-      "sha256": "f2aa940d8a86f466e8c6edf292cd626f085c6d34f114a1727e5d6203de9daf2e"
+      "sha256": "c763da702735cc5de4caa19cb2559364fe9cfbc4cbd0a982fa23902dff3e0c43"
     },
     {
-      "bytes": 10624,
+      "bytes": 19094,
       "path": "pinshu-write/tests/test_export_article.py",
-      "sha256": "03339265600c001b12832875f2eb84b246466b1dbc9badd7af19ca2e59ce91ef"
+      "sha256": "4e06d0340a88f243e945fa2c1133faae59000ec000518e5818404776a3b0cfc3"
     },
     {
       "bytes": 2476,
       "path": "pinshu-write/tests/test_fix_quotes.py",
       "sha256": "428405c62834e9cc7b18cd28ba8c4180333c5c61d3a9ba4d99515380811a117f"
+    },
+    {
+      "bytes": 12194,
+      "path": "pinshu-write/tests/test_market_reference.py",
+      "sha256": "4254e86c62497218409a4edd45106c1e466358af1c7038b6e6d6d00875d42fc2"
+    },
+    {
+      "bytes": 4503,
+      "path": "pinshu-write/tests/test_run_watched.py",
+      "sha256": "d1a4bf9d29dbd4b6ed1e9a4cead126717ff18f6190723e30300392f924d2d391"
+    },
+    {
+      "bytes": 12066,
+      "path": "pinshu-write/tests/test_seed_discovery_route.py",
+      "sha256": "59141c0c81c4123e7bebd042216de464a04c9ec8add43d709c5d3f24f844b400"
+    },
+    {
+      "bytes": 8511,
+      "path": "pinshu-write/tests/test_stage_log.py",
+      "sha256": "a1c7ee20a15ba75d6bd747514c53e0becc26bb7ba549a8ddeb6a8d47a589d2c2"
     },
     {
       "bytes": 8578,
@@ -1637,9 +1727,9 @@
       "sha256": "12661fb98891e0683a54990245a4748dcb5ff9eccc3936109bf538f51ff1ff87"
     },
     {
-      "bytes": 13112,
+      "bytes": 13124,
       "path": "scripts/validate_release.py",
-      "sha256": "fd147b7e9cf2aa62b27a87748e611afc3c71f794afc55fbacf70f49366fe9087"
+      "sha256": "dc93140aabe25af7e9024988c86802567ef21d55d384d5a000171be0cc14c150"
     },
     {
       "bytes": 52417,
@@ -1671,5 +1761,6 @@
       "path": "tests/test_visual_review_regressions.py",
       "sha256": "ee0b479d963a3df3c14500a4dbe72968b280787ebe485a08e2d722a98b3a7bc5"
     }
-  ]
+  ],
+  "schema_version": 1
 }

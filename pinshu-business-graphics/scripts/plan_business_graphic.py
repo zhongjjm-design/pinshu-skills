@@ -153,8 +153,8 @@ def compile_business(brief_path: Path) -> tuple[dict, str]:
         "Show a true loop only with a supported return path. Proposed metaphors are design interpretations, not facts. No invented data, pseudo-sources or generic technology decoration."
     ])
     return {
-        "schema_version": "public-visual-plan-v1", "version": "0.1.4", "status": "candidate-plan",
-        "workflow": {"kind": "pinshu-business-graphics", "version": "0.1.4"},
+        "schema_version": "public-visual-plan-v1", "version": "0.1.5", "status": "candidate-plan",
+        "workflow": {"kind": "pinshu-business-graphics", "version": "0.1.5"},
         "source": {"path": str(source_path), "sha256": hashlib.sha256(source.encode()).hexdigest(),
                    "file_sha256": digest(source_path)},
         "registry_sha256": digest(CORE / "references/system-registry.json"),

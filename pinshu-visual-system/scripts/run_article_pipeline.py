@@ -14,7 +14,7 @@ from pathlib import Path
 import time
 from PIL import Image
 from bs4 import BeautifulSoup
-from article_preview import manuscript_blocks, normalized
+from article_preview import manuscript_blocks, normalized, check_rendered_text
 from prepare_article_handoff import prepare, load_layout, export_capture_requests
 from capture_evidence import browser, sha
 from record_article_review import summarize
@@ -46,11 +46,40 @@ def rebind_plan(plan_path, draft, exported):
     return plan
 
 
-def make_light(render, handoff, output, expected):
-    if [normalized(x) for x in render['readingBlocks']]!=expected:
+def visible_caption(image):
+    """Bind review context to the final caption DOM (including explicit suppression).
+
+    The renderer resolves caption -> source label -> alt. Reading its result avoids
+    a second implementation drifting from that precedence; hidden ancestors suppress it.
+    """
+    figure = image.find_parent(attrs={'data-picture': True})
+    if figure is None:
+        return ''
+    def hidden(element):
+        style = {}
+        for declaration in str(element.get('style', '')).lower().split(';'):
+            if ':' in declaration:
+                key, value = declaration.split(':', 1)
+                style[key.strip()] = value.split('!')[0].strip()
+        return (element.has_attr('hidden') or style.get('display') == 'none'
+                or style.get('visibility') in {'hidden', 'collapse'})
+
+    if any(hidden(parent) for parent in figure.parents if getattr(parent, 'attrs', None) is not None):
+        return ''
+    copy = BeautifulSoup(str(figure), 'html.parser')
+    for element in list(copy.find_all(True)):
+        if element.attrs is not None and hidden(element):
+            element.decompose()
+    return normalized(' '.join(e.get_text() for e in copy.select('[data-reading-role="caption"], figcaption')))
+
+
+def make_light(render, handoff, output, expected, source=None, layout_skill=None):
+    if source is not None:
+        check_rendered_text(source, render['html'], layout_skill, handoff.get('heading_split'))
+    elif [normalized(x) for x in render['readingBlocks']]!=expected:
         raise ValueError('Rendered body/source mismatch; no completed preview')
     if any(x['caption_links'] for x in render['themes']):raise ValueError('Caption contains external links')
-    soup=BeautifulSoup(render['html'],'html.parser');images=soup.select('[data-picture]:not([data-hero]) img')
+    soup=BeautifulSoup(render['html'],'html.parser');images=soup.select('[data-picture]:not([data-hero]) img')  # lead image (cover) is checked as a cover, not a body figure
     if len(images)!=len(handoff['body_images']):raise ValueError('Figure count mismatch')
     (output/'轻量图片').mkdir();rows=[]
     remaining=list(handoff['body_images'])
@@ -73,9 +102,13 @@ def make_light(render, handoff, output, expected):
         image['loading']='eager' if i==1 else 'lazy';image['decoding']='sync' if i==1 else 'async'
         # Local zoom is a preview aid. It is not a caption or an external source link.
         a=soup.new_tag('a',href='配图交接/'+item['filename']);a['target']='_blank';a['aria-label']='放大查看截图';image.wrap(a)
-        rows.append({'filename':item['filename'],'sha256':sha(original),'preview_size':size,'preview_bytes':dest.stat().st_size})
-    actual=[normalized(e.get_text()) for e in soup.select('#article-body [data-reading-role]') if not e.find_parent(attrs={'data-decoration':'true'}) and not e.has_attr('data-decoration')]
-    if actual!=expected:raise ValueError('Light preview changed source text')
+        rows.append({'filename':item['filename'],'sha256':sha(original),'preview_size':size,'preview_bytes':dest.stat().st_size,
+                     'caption':visible_caption(image)})
+    if source is not None:
+        check_rendered_text(source, str(soup), layout_skill, handoff.get('heading_split'))
+    else:
+        actual=[normalized(e.get_text()) for e in soup.select('#article-body [data-reading-role]') if not e.find_parent(attrs={'data-decoration':'true'}) and not e.has_attr('data-decoration')]
+        if actual!=expected:raise ValueError('Light preview changed source text')
     css='''*{box-sizing:border-box}body{margin:0;background:#f2f3f4;font-family:-apple-system,"PingFang SC",sans-serif}.paper{width:375px;max-width:100%;margin:auto;background:white}.paper header{padding:25px 22px 0}.paper header h1{font-size:25px;line-height:1.4;margin:0 0 12px}.paper header p{font-size:13px;color:#8b8b81;margin:0 0 25px}#article-body{padding:0 36px 24px;overflow-wrap:break-word}#article-body img{max-width:100%}[data-picture] a{display:block;line-height:0}.preview-note{max-width:375px;margin:auto;padding:16px 20px;font-size:12px;line-height:1.7;color:#65705f}'''
     dest=output/'整篇效果预览.html'
     dest.write_text('<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+html.escape(render['title'])+'</title><style>'+css+'</style></head><body><div class="preview-note">整篇本地试排 · 点击图片可放大 · 未发布</div>'+str(soup)+'</body></html>')
@@ -133,7 +166,7 @@ def _run_pipeline(args):
         return request
     handoff_path=step('配图交接',lambda:prepare(out/'配图任务.json',out/'配图交接',args.layout_skill))
     layout=load_layout(args.layout_skill)
-    workbench=step('六款试排',lambda:layout.run(handoff_path,out/'六款试排'))
+    workbench=step('七款试排',lambda:layout.run(handoff_path,out/'六款试排'))
     if args.prepare_only:
         write_json(out/'流程核验.json',{'status':'PREPARED_ONLY','browser_check':'pending','user_acceptance':'pending','source_sha256':sha(source),
             'original_sha256':sha(draft),'plan_sha256':sha(plan_path),'preview':str(workbench),'preview_sha256':sha(workbench),'timings':timings,'ready_for_user_review':False})
@@ -141,9 +174,9 @@ def _run_pipeline(args):
     render_path=out/'浏览器渲染记录.json'
     step('实际模板渲染',lambda:browser(dict(action='render',space_id=args.space_id,page=args.page,
         url=workbench.as_uri()+'?template='+args.template,result=str(render_path))))
-    expected=manuscript_blocks(source.read_text(encoding='utf-8-sig').replace('\r\n','\n'))
+    expected=manuscript_blocks(source, args.layout_skill)
     handoff=json.loads(handoff_path.read_text());render=json.loads(render_path.read_text())
-    preview,images=step('轻量整篇预览',lambda:make_light(render,handoff,out,expected))
+    preview,images=step('轻量整篇预览',lambda:make_light(render,handoff,out,expected,source,args.layout_skill))
     screens=out/'手机检查';screens.mkdir()
     step('手机取景检查',lambda:browser(dict(action='check',space_id=args.space_id,page=args.page,
         url=preview.as_uri(),result=str(out/'浏览器核验.json'),screen_dir=str(screens))))
@@ -153,14 +186,23 @@ def _run_pipeline(args):
     manifest=json.loads((out/'配图交接/配图清单.json').read_text())
     mobile=[]
     figures=[s for s in checked['screens'] if s['position']!='top']
+    # zip() would silently drop or shift images; each body image must have exactly its own phone view.
+    if len(figures)!=len(images):raise ValueError('Phone views (%d) do not match body images (%d); the lead image must not be counted as a body figure'%(len(figures),len(images)))
     by_name={f['filename']:f for f in manifest['files']}
+    placed={b['filename']:b for b in handoff['body_images']}
     for image_info,figure in zip(images,figures):
         item=by_name[image_info['filename']]
+        placement=placed.get(item['filename'],{})
+        prefix=normalized(placement.get('after_prefix',''))
+        # Where the picture sits and what the reader sees under it; a review only carries over if this is unchanged.
+        slot={'after_prefix':placement.get('after_prefix',''),'caption':image_info['caption'],
+              'source_label':placement.get('source_label'),
+              'after_paragraph':next((b for b in expected if prefix and b.startswith(prefix)),None)}
         receipt=item.get('capture_receipt',{});width=receipt.get('width') or receipt.get('region',{}).get('width')
         font=receipt.get('min_source_font_px');effective=round(font*figure['image_width_css']/width,1) if font and width else None
         mobile.append({'filename':item['filename'],'acquisition':item.get('acquisition','unknown'),
             'asset_kind':item['asset_kind'],
-            'evidence_context':item.get('evidence_context'),
+            'evidence_context':item.get('evidence_context'),'slot_context':slot,
             'review_requirements':{'meaning':True,'legibility':True,
                 'composition':bool(item.get('composition_disclosure'))} if item['asset_kind']=='evidence-screenshot' else {},
             'composition_disclosure':item.get('composition_disclosure'),
@@ -203,20 +245,28 @@ def run(args):
             timings_path=out/'阶段耗时.json'
             timings=json.loads(timings_path.read_text()).get('timings',[]) if timings_path.exists() else []
             stage=timings[-1]['stage'] if timings else 'initialization'
-            failure={'status':'FAILED','stage':stage,'error':str(exc),'ready_for_user_review':False,
+            done=[t['stage'] for t in timings if t['state']=='completed']
+            # Same field names as pinshu-write's stage log, so one reader understands both.
+            failure={'status':'FAILED','stage':stage,'failed_stage':stage,'last_successful_stage':done[-1] if done else None,
+                     'error':str(exc),'error_code':type(exc).__name__,'ready_for_user_review':False,
+                     'input_paths':[str(args.draft.resolve()),str(args.plan.resolve())],
+                     'existing_outputs':sorted(p.name for p in out.iterdir()),
+                     'resume_from':'fix the cause above, then run the same command into a NEW output folder; prepared assets are reused, nothing is re-captured',
                      'partial_outputs':True,'publication':'none','timings':timings}
             write_json(out/'流程核验.json',failure);write_json(out/'交付状态.json',failure)
         raise
 
 
 if __name__=='__main__':
+    from portable import ensure_utf8_mode
+    ensure_utf8_mode()
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--draft',type=Path,required=True);p.add_argument('--plan',type=Path,required=True)
     p.add_argument('--output-dir',type=Path,required=True);p.add_argument('--space-id',type=int)
-    p.add_argument('--page',default='p1');p.add_argument('--template',choices=['approved','warm','green','orange','blue','classic'],default='approved')
+    p.add_argument('--page',default='p1');p.add_argument('--template',choices=['approved','warm','green','orange','blue','classic','split'],default='approved')
     p.add_argument('--writer-skill',type=Path,default=SKILLS/'pinshu-write')
     p.add_argument('--layout-skill',type=Path,default=SKILLS/'pinshu-wechat-layout')
-    p.add_argument('--prepare-only',action='store_true',help='Explicit fallback: output six-template workbench; browser/visual checks remain pending')
+    p.add_argument('--prepare-only',action='store_true',help='Explicit fallback: output seven-template workbench; browser/visual checks remain pending')
     args=p.parse_args()
     if not args.prepare_only and args.space_id is None:p.error('Use the current ego TaskSpace --space-id; do not create extra spaces')
     print(run(args))

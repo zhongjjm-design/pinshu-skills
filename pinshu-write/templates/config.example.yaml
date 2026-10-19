@@ -1,6 +1,9 @@
 # pinshu-write configuration example
 # Copy this file to pinshu-write.yaml in your writing folder, or tell the agent where it is.
 # Use paths on your own computer. Leave unknown items empty; the agent will ask when it needs them.
+# Older files that use `account:` (one account) and `paths:` (folders) are still read by scripts/check_env.py.
+# All account names and paths below are placeholders, not bundled profiles or assets.
+# Supply your own readable profile/standard, or leave it empty and resolve the needed account rules with the author.
 
 author_names:            # Names that refer to the author in materials; the article writes them as first person
   - Example Author
@@ -11,45 +14,88 @@ accounts:                # One or more accounts; say which one at the start of e
     reader: "One sentence on who reads it, e.g. people who use AI at work and people who run or advise businesses"
     profile: ~/writing/profiles/example-account.md        # Authority for topics, readers, length, style, banned words, title tests
     published_folder: ~/writing/published/example/        # Learn tone and openings; read in full for collision scans; optional
-    good_article_standard: ~/writing/standards/good-article.md   # Extends the built-in standard; its readability questions stay; optional
+    good_article_standard: ~/writing/standards/good-article.md   # The account's own standard: the structure editor answers its parts on titles,
+                                                                 # openings and structure (references/3-structure.md); the good-article check answers
+                                                                 # its checks (references/5-review.md, prompt 11); optional
+    good_article_parts: "titles, openings, structure; checks"   # Replace with headings/sections in your own standard; optional
+                                                               # If empty, the organizer selects the relevant sections after reading it;
+                                                               # ambiguous choices go to stop 2. Reader-feeling checks go only to the author.
+    writer_parts: "sharing, titles, openings"   # Sections/headings of your good_article_standard pasted into the writer's brief
+                                               # Optional selector, not bundled section numbers. If empty, select the standard's
+                                               # sharing/title/opening guidance by heading; if ambiguous, ask at stop 2.
+                                               # With no standard, keep write.md's guidance and record the missing account asset.
     banned_words_file: ~/writing/standards/banned-words.txt      # One word per line, passed to audit_draft.py; optional
-    length: 2500-4000    # Usual body length in Chinese characters
-    hard_max: 6000
+    length: 2000-2500    # Default body length in Chinese characters; copy the account's actual range word for word into the brief
+    hard_max: 2700       # Default final ceiling; the account's configured ceiling wins
     ai_drafting_allowed: yes   # "no" means this Skill declines the account
 
-author_style_profile: ~/writing/profiles/author-style.md   # Title habits, openings, endings, voice traits
+author_style_profile: ~/writing/profiles/author-style.md   # Title habits, openings, endings, voice traits; not pasted into the writer's brief
+
+exemplar_index: ~/writing/exemplars/index.md   # The writers' main input: whole articles by mature writers the author approved,
+                                               # two picked per article by type (format: templates/exemplar-index.example.md;
+                                               # references/4-writing.md, "Exemplars"). Keep article texts in your own library.
+edit_pairs_folder:   # Folder with 原稿库/ (writer drafts), 终稿库/ (author hand edits) and 修改规律.md (rules learned from the edits) (references/write.md)
+exemplar_fallback:       # Used while the index is empty or has no approved exemplar of the type: articles the author approved for briefs
+  - ~/writing/library/some-author/good-article-1.md
+  - ~/writing/library/some-author/good-article-2.md
 edit_patterns: ~/writing/standards/edit-patterns.md         # What the author keeps changing; optional
 
 material_folders:        # Searched during research: notes, courses, work logs, classic texts
   - ~/writing/library/
 
-source_list: ~/writing/sources.md      # Media and authors to check first; optional
-topic_pool: ~/writing/topic-pool.md    # Used when the author gives no topic
+# Topic scan (references/1-topic.md): used only when the author brings no topic. Both optional;
+# without them the agent runs the public source map online. Relative paths are read from this file's folder.
+source_list: ~/writing/sources.md      # Your own sources to scan first (media, podcasts, channels, communities); any readable list
+topic_pool: ~/writing/topic-pool.md    # A file, or a folder of files, of ready topic leads. State the generation time near the top
+                                       # (format: "generated: YYYY-MM-DD"); older than 7 days or undated counts as historical leads,
+                                       # checked online before use. A dashboard export can be pointed at here; nothing is searched for.
 style_card_folders: []                 # Optional style cards (structure and moves only)
 
 drafts_folder: ~/writing/drafts/       # One folder per article: date plus topic
+preview_folder:                        # Optional: a folder the author's own tool opens with one click; drafts and messages
+                                       # are copied here when the author cannot open drafts_folder (references/stops.md)
 ready_folder: ~/writing/ready/         # The ROOT of the ready-to-publish area, not an account folder: each account gets
                                        # <ready_folder>/<account>/date_title.md with date_title·发布物料包.md beside it.
                                        # If the visual Skill's ready-article entry is used, this root must be the one its
                                        # ready-folder contract names (the ready-to-publish area itself, one level above the
                                        # account folders); other roots work for writing only.
-                                       # Collision scans read published articles in full; drafts and this folder by title only
+                                       # Collision scans read published articles in full and leave drafts and this folder out
 web_access: allowed                    # "allowed": research checks the last three months online; "none": library only
+                                       # (with "none" and no source_list or topic_pool, an author with no seed is told discovery cannot run)
 
-models:                  # Fill from your own tools; see references/model-routing.md
-  # Minimum rule: every review role (wording editor, reviewers, editor-in-chief) comes from a vendor
-  # other than the actual writer's (for example Anthropic, Google, Alibaba, DeepSeek, Moonshot).
-  # Review roles may share one vendor with each other; only the two structure judges, and the
-  # common-sense floor and red team, want two different vendors among themselves. Several agents of one
-  # model agreeing is not a cross-check. With only one model, record "same-vendor review" in the editor notes.
-  # The author may name any writer for an article (including the main conversation); that choice wins
-  # over this file, is recorded in the editor notes, and no review step is skipped because of it.
-  organizer:             # The main conversation that runs the workflow; e.g. whatever runs your session
-  writer:                # Default writer; e.g. Claude Opus 4.6, Qwen 3.8, DeepSeek V4.1 Flash
-  second_writer:         # optional, another vendor
-  wording_editor:        # Checks the writer's text item by item, keeps what passes, proposes a line only where a standard fails; e.g. Gemini 3.8 Flash
-  reviewers: []          # Structure, red team, common-sense floor; at least one vendor different from the writer's
-  layperson_reader:      # Hunts stuck words and broken numbers; another vendor, or "colleague"
-  target_reader:         # Plays the account's real reader from the profile; another vendor
-  editor_in_chief:       # Review after the review chain, before approval 4; able to read long input
-  fact_checker:          # A model with web access
+hit_review_file: ~/writing/standards/hit-reviews.md   # Where anomaly reviews go (references/6-deliver.md, "After publishing"); optional
+
+market_reference:        # Optional paid data, run only when the author names it: real read counts of same-topic WeChat articles
+                         # (scripts/market_reference.py). The script does not read this file: the organizer passes these values as flags.
+  provider: dajiala      # The only provider the script supports today
+  key_env: DAJIALA_API_KEY                 # Environment variable holding the key
+  env_file:                                # Or a KEY=value file that holds it; never paste the key into this file
+  cap_per_article: 3                       # Yuan; checked before every paid call
+  ledger:                                  # Optional shared spend log (jsonl) to append every paid call to
+  cache: ~/writing/market-baselines.json   # Account baselines reused for 90 days, so repeat accounts cost nothing
+
+models:                  # One entry per role; fill from your own tools (references/models.md, references/5-review.md)
+  # These are organizer routing notes, not automatic schema defaults or installed-command claims.
+  # Blank required roles: select/probe an authorized capable interface under models.md; never silently skip.
+  # Blank second_writer/originality/good_article entries do not disable their documented triggers.
+  # The vendor rule for writer and reviewing roles, and the one-model fallback, are in references/models.md.
+  # The author may name any writer for an article (including the main conversation); that
+  # choice wins over this file, is recorded in the editor notes, and no review is skipped because of it.
+  organizer:             # The main conversation that runs the route; e.g. whatever runs your session
+  research:              # Scan and research jobs, several at once (references/models.md, "Scan and research"); list commands,
+                         # e.g. ["<model with web access A> <brief>", "<model with web access B> <brief>"]; public material only
+  writer:                # The one writer, picked by the author; if unset, ask at stop 2
+  second_writer:         # Optional; only when the author asks for two drafts
+  counter:               # Argues the other side with the seven questions; another vendor
+  structure_editor:      # Checks the line (how the piece moves) before stop 2; another vendor
+  managing_editor:       # Two models of vendors other than the picked writer's, on the calibrated card (prompt 10);
+                         # Fill with two available model/interface choices meeting that vendor rule, or record the fallback
+  reader:                # Where a reader outside the trade, who uses AI at work, gets stuck; another vendor, or "colleague"
+  attraction:            # Required draft review, prompt 13: title/opening appeal, retention and sharing; another vendor, advice only
+  originality:           # Required only when someone else's article is the seed, prompt 14; otherwise not applicable
+  expert:                # Marketing, finance or applied-AI practitioner by topic; a model with web access
+  facts_risk:            # Hard facts against sources and the author's words, what may not be said; fitting feelings and detail are not faults
+  language:              # Machine flavor and wording, then a separate flow-read call; another vendor
+  good_article:          # Prompt 11; runs when this account supplies a readable good_article_standard, otherwise record not run
+  after_revision:        # Required once after revision, prompt 12; revised body alone, another vendor
+  seed_check:            # The author's original text against the point map, key words still present; able to read long input

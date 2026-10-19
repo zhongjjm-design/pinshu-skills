@@ -5,7 +5,7 @@ no real rendering.
 Covers: common helpers; gen_voice.py (dry run, and the guard that refuses to overwrite a paid take made from different
 text); patch_voice.py (local slow-down and pause, with a stand-in BaoCut); mix.py (soft and plain); render.py (with a
 stand-in HyperFrames CLI: a good render passes, a wrong frame count fails); qc.py on a minimal timeline.json;
-fit_music.py on a synthetic track; doctor.py (machine check, and a video-type skill's project hook).
+fit_music.py on a synthetic track; doctor.py (machine check, and a video-type skill's project hook); every script ASCII.
 Needs ffmpeg/ffprobe and the Python modules numpy, soundfile and pillow; librosa for patch_voice and fit_music
 (those two are skipped without it). A dummy GEMINI_API_KEY is set so no test can ever spend money.
 Usage: python3 tests/self_test.py
@@ -129,6 +129,21 @@ try:
     rep = json.load(open(f"{P}/qc/qc_report.json")) if os.path.isfile(f"{P}/qc/qc_report.json") else {}
     check(r.returncode == 0 and "QC PASS" in out and abs(rep.get("duration_diff", 9)) <= 0.2 and os.path.isfile(f"{P}/qc/phone_size.jpg"),
           "qc.py passes a clean synthetic film and writes its report and contact sheets")
+    # video-only mode ("-" instead of a timeline): the same clean film passes and no cut sheets are written; a vertical film that
+    # opens on black fails on the black stretch and the first frame, and its phone-size sheet keeps the film's own aspect
+    r, out = run("qc.py", [final, "-", f"{P}/qc_vo"], P)
+    rep = json.load(open(f"{P}/qc_vo/qc_report.json")) if os.path.isfile(f"{P}/qc_vo/qc_report.json") else {}
+    check(r.returncode == 0 and "QC PASS" in out and rep.get("mode") == "video-only" and os.path.isfile(f"{P}/qc_vo/phone_size.jpg")
+          and not os.path.exists(f"{P}/qc_vo/shot_starts.jpg"), "qc.py video-only mode passes a clean film without a timeline and writes no cut sheets")
+    bad = f"{P}/bad_vertical.mp4"
+    subprocess.run([FF, "-v", "error", "-y", "-f", "lavfi", "-i", "color=c=black:s=360x640:r=30:d=1", "-f", "lavfi", "-i", "testsrc2=size=360x640:rate=30:duration=3",
+                    "-f", "lavfi", "-i", "sine=frequency=200:duration=4", "-filter_complex", "[0:v][1:v]concat=n=2:v=1:a=0[v];[2:a]volume=-14dB[a]", "-map", "[v]", "-map", "[a]",
+                    "-c:v", "libx264", "-preset", "ultrafast", "-pix_fmt", "yuv420p", "-c:a", "aac", bad], check=True)
+    r, out = run("qc.py", [bad, "-", f"{P}/qc_bad"], P)
+    from PIL import Image
+    sheet = Image.open(f"{P}/qc_bad/phone_size.jpg") if os.path.isfile(f"{P}/qc_bad/phone_size.jpg") else None
+    check(r.returncode != 0 and "QC FAIL" in out and "nearly black" in out and "black stretches" in out and sheet is not None and sheet.height > 400,
+          "qc.py video-only mode fails a vertical film that opens on black, and the phone sheet is not squashed to 16:9")
 
     # ---------- fit_music.py on a synthetic track ----------
     if HAS_LIBROSA:
@@ -161,6 +176,9 @@ try:
     r = subprocess.run([PY, hook, P], cwd=P, capture_output=True, text=True, env={**os.environ, **SAFE_ENV, "CORE_DOCTOR": os.path.join(SCRIPTS, "doctor.py")})
     check(r.returncode == 1 and "FAIL project custom.file missing (type skill check)" in r.stdout, "doctor.main(project_checks) lets a video-type skill add its own project files")
 
+    # ---------- the code stays ASCII (public English edition) ----------
+    non_ascii = [f for f in sorted(os.listdir(SCRIPTS)) if f.endswith(".py") and re.search(r"[^\x00-\x7f]", open(os.path.join(SCRIPTS, f), encoding="utf-8").read())]
+    check(not non_ascii, f"scripts are ASCII only {non_ascii or ''}")
 finally:
     if os.environ.get("PINSHU_KEEP_TEST_PROJECT"): print("kept", P)
     else: shutil.rmtree(P, ignore_errors=True)

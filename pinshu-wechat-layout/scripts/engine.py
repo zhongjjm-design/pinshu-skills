@@ -26,7 +26,8 @@ def image_url(path):
 class ArticleInput(HTMLParser):
     """Keep source text and image order, remove input presentation styles."""
     allowed = {'p', 'h2', 'h3', 'h4', 'img', 'hr', 'br', 'strong', 'b', 'em',
-               'i', 'a', 'span', 'ul', 'ol', 'li', 'blockquote', 'code'}
+               'i', 'a', 'span', 'ul', 'ol', 'li', 'blockquote', 'code',
+               'table', 'thead', 'tbody', 'tr', 'th', 'td'}
 
     def __init__(self, folder):
         super().__init__(convert_charrefs=False)
@@ -39,6 +40,7 @@ class ArticleInput(HTMLParser):
         if tag in {'h2', 'p'}:
             self.current = (tag, [])
         attrs = [(k, v) for k, v in attrs if k in {'alt', 'title', 'href', 'src'} or
+                 (tag == 'p' and k == 'data-video-slot') or
                  (tag == 'img' and k in {'data-frame-baked', 'data-caption', 'data-hero',
                                          'data-source-url', 'data-source-label'})]
         source_url = dict(attrs).get('data-source-url', '')
@@ -50,7 +52,9 @@ class ArticleInput(HTMLParser):
                 raise ValueError('Unsupported link scheme')
         if tag == 'img':
             src = dict(attrs).get('src', '')
-            parsed = urlparse(src)
+            # A Windows path such as E:\\pics\\a.png parses as scheme "e"; it is a local file, not a URL
+            # (colleague's Windows run, 2026-10-13: every image failed to load).
+            parsed = urlparse('' if re.match(r'^[A-Za-z]:[\\/]', src) else src)
             if parsed.scheme not in {'', 'file'}:
                 raise ValueError('Expected an original local image')
             path = Path(unquote(parsed.path if parsed.scheme else src))
@@ -97,6 +101,12 @@ def validate_layout(layout, parser):
     for title, phrases in layout.get('headingPhrases', {}).items():
         if title not in parser.titles or ''.join(phrases) != title:
             raise ValueError('Heading phrases must exactly reproduce an input heading: ' + title)
+    for title, parts in layout.get('headingSplit', {}).items():
+        # Subtitle split: main + one separator + sub must reproduce the heading, so no wording is added or lost.
+        if title not in parser.titles or len(parts) != 2 or not all(parts):
+            raise ValueError('Heading split must name an input heading with two non-empty parts: ' + title)
+        if not any(parts[0] + sep + parts[1] == title for sep in ('，', ',', '：', ':', '｜', '|', '；', ';', '')):
+            raise ValueError('Heading split must satisfy big + one separator (， ： ｜ ； or none) + small == heading. Heading: %s; got: %s | %s' % (title, parts[0], parts[1]))
     for prefix, anchors in layout.get('readingBreaks', []):
         matches = [p for p in parser.paragraphs if p.startswith(prefix)]
         if len(matches) != 1:
@@ -118,8 +128,8 @@ def build(input_path, meta_path, layout_path, output_path):
         body = body[first_title.end():]
     # Subsequent first-level headings become chapter headings.
     body = re.sub(r'<(/?)h1\b', r'<\1h2', body, flags=re.I)
-    meta = json.loads(meta_path.read_text()) if meta_path else {}
-    layout = json.loads(layout_path.read_text()) if layout_path else {}
+    meta = json.loads(meta_path.read_text(encoding='utf-8')) if meta_path else {}
+    layout = json.loads(layout_path.read_text(encoding='utf-8')) if layout_path else {}
     parser = ArticleInput(input_path.parent)
     parser.feed(body)
     parser.close()
@@ -146,27 +156,27 @@ def build(input_path, meta_path, layout_path, output_path):
                    layout=layout, judgment=layout.get('judgment', []), quote=layout.get('quote', []))
     if output_path in protected or output_path.with_suffix('.build.json') in protected:
         raise ValueError('Output must not overwrite an input, metadata, layout plan or original image')
-    shell = (ENGINE / 'preview.html').read_text()
+    shell = (ENGINE / 'preview.html').read_text(encoding='utf-8')
     config = json.dumps({'articles': [article]}, ensure_ascii=False).replace('<', '\\u003c')
     chapter_files = [ENGINE / 'chapter' / f'{number:02}.png' for number in range(1, 7)]
     chapter_images = {path.stem: image_url(path) for path in chapter_files}
     chapter_js = 'const CHAPTER_IMAGES=' + json.dumps(chapter_images) + ';\n'
-    page = shell.replace('@@CONFIG@@', config).replace('@@RENDERER@@', chapter_js + (ENGINE / 'reading-base.js').read_text() + '\n' + (ENGINE / 'renderer.js').read_text())
+    page = shell.replace('@@CONFIG@@', config).replace('@@RENDERER@@', chapter_js + (ENGINE / 'reading-base.js').read_text(encoding='utf-8') + '\n' + (ENGINE / 'renderer.js').read_text(encoding='utf-8'))
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(page, encoding='utf-8')
-    record = dict(template_set='six-layout-review', version='0.4.0-rc.1', reading_base='1.10.0',
-                  templates=['青灰手记','暖纸杂志','青绿刊页','橙线手记','蓝白专题','首席品牌官经典版'],
+    record = dict(template_set='seven-layout-review', version='0.4.0-rc.2', reading_base='1.10.0',
+                  templates=['松绿双线','青灰手记','暖纸杂志','橙线手记','蓝白专题','首席品牌官经典版','数字分栏'],
                   default_template='青灰手记', template_selection_status='pending-per-article',
                   article_specific_acceptance=False, wechat_phone_tested=False,
                   template_source=str(ENGINE), input=str(input_path), output=str(output_path),
                   source_files=[dict(path=str(p), sha256=hashlib.sha256(p.read_bytes()).hexdigest())
                                 for p in dict.fromkeys([*protected,*chapter_files])])
-    output_path.with_suffix('.build.json').write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n')
+    output_path.with_suffix('.build.json').write_text(json.dumps(record, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     return output_path
 
 
 if __name__ == '__main__':
-    cli = argparse.ArgumentParser(description='六款同级版式：从本地正文生成可复制的图文模板预览')
+    cli = argparse.ArgumentParser(description='七款同级版式：从本地正文生成可复制的图文模板预览')
     cli.add_argument('--input', type=Path, required=True, help='HTML 正文；配图可用相对路径')
     cli.add_argument('--meta', type=Path, help='标题、作者、摘要和原封面 JSON，可省略')
     cli.add_argument('--layout', type=Path, help='该篇文章的断行、分段、强调计划，可省略')

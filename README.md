@@ -40,15 +40,27 @@ curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/
 | 视频与图解配套 | pinshu-video-core、pinshu-visual-learning |
 | 公众号排版（试用版） | pinshu-wechat-layout |
 
-`pinshu-wechat-layout`：把定稿 Markdown 和配图生成六款可切换的公众号排版预览，可复制正文（试用版）。整篇入口依赖同仓库的`pinshu-visual-system`；单独运行排版脚本不依赖它。
+`pinshu-wechat-layout`：把定稿 Markdown 和配图生成七款可切换的公众号排版预览，可复制正文（试用版）。整篇入口依赖同仓库的`pinshu-visual-system`；单独运行排版脚本不依赖它。
 
 `pinshu-md2pdf`的数字保持原样。配套包随统一安装交付，不需要在不同Agent的仓库中分别拼装。
 
 安装后可对Agent说：
 
-> 使用pinshu-write，把我给的选题和材料写成中文商业分析文章，先提炼判断和大纲，再起草、审稿。
+> 使用pinshu-write，把我给的选题和材料写成中文商业分析文章，先保留我的完整素材、形成主线并选择标题与开头，再起草、审稿。
 
 > 使用pinshu-course-capture，把这门课程整理成知识资产，先推荐用途、审核方式与最终资产，确认后执行。
+
+## 本次更新版本（2026-10-19）
+
+| Skill | 公开版本 |
+|---|---|
+| `pinshu-write` | 3.3.0 |
+| `pinshu-visual-system` | 0.4.0 |
+| `pinshu-wechat-layout` | 0.4.0-rc.2 |
+| `pinshu-video-core` | 0.2.0 |
+| `pinshu-business-graphics` | 0.1.5 |
+| `pinshu-infographic` | 0.1.5 |
+| `pinshu-transcript` | 0.2.0 |
 
 ## 使用前准备
 
@@ -124,9 +136,9 @@ This is a sharing trial for one image at a time with an Agent and actual human r
 
 | Package | Version | Best use |
 |---|---|---|
-| [pinshu-visual-system](pinshu-visual-system/README.md) | 0.2.4 | Choose among twelve scoped visual modes, plan a platform composition, render and prepare a reviewed candidate |
-| [pinshu-infographic](pinshu-infographic/README.md) | 0.1.4 | Explain knowledge through source-anchored processes, comparison, hierarchy, components and real loops |
-| [pinshu-business-graphics](pinshu-business-graphics/README.md) | 0.1.4 | Express a business argument with one of seven distinct visual method families |
+| [pinshu-visual-system](pinshu-visual-system/README.md) | 0.4.0 | Choose among twelve scoped visual modes, plan a platform composition, render and prepare a reviewed candidate |
+| [pinshu-infographic](pinshu-infographic/README.md) | 0.1.5 | Explain knowledge through source-anchored processes, comparison, hierarchy, components and real loops |
+| [pinshu-business-graphics](pinshu-business-graphics/README.md) | 0.1.5 | Express a business argument with one of seven distinct visual method families |
 
 All three use eleven platform presets. Work without a fixed character or supply your own approved references to a supported core mode. Planning uses Python 3; generation needs an image-capable agent; raster export uses ImageMagick 7. The companions require the public core 0.2.4 or later beside them, installed together by the repository installer. Precision charts need an editable chart tool and separate data review. Native SVG delivery requires an installed CJK font; PPTX delivery additionally uses LibreOffice and Poppler, with a render receipt and actual re-render pixel verification.
 
@@ -181,7 +193,7 @@ Historical pilots in this repository document the origin of rules and lessons fr
 
 ### Language and runtime-path contract
 
-Chinese is the primary language of Skill operating instructions; this README is the English international entry point. Both entries use the same scripts, state contracts and tests. Learner-facing output follows `output_language` in the production manifest: a short BCP-47 tag such as `en`, `en-US`, or `zh-Hans`, or the selector `match-user` or `match-source`. Old manifests that omit the field behave as `match-user`; when the user's language is unavailable, use the source language. Stable IDs, frontmatter keys, enum values, and other program fields remain English.
+Most Skill operating instructions are maintained in Chinese; pinshu-write 3.3 keeps its source's English workflow rules and Chinese writing/review prompts. The default homepage starts with Chinese installation and usage; the following section is the English guide. Both entries use the same scripts, state contracts and tests. Learner-facing output follows `output_language` in the production manifest: a short BCP-47 tag such as `en`, `en-US`, or `zh-Hans`, or the selector `match-user` or `match-source`. Old manifests that omit the field behave as `match-user`; when the user's language is unavailable, use the source language. Stable IDs, frontmatter keys, enum values, and other program fields remain English.
 
 When a course-capture manifest or state file exists, every Skill uses its path templates through `course_pipeline.py paths`; no Skill translates or invents a parallel directory tree. For a new course without a manifest, create and confirm the manifest or an explicit path map before writing.
 
@@ -217,7 +229,7 @@ For batches larger than three lessons, deliver one representative lesson first. 
 | `pinshu-md2pdf` | Convert Markdown into a professionally typeset PDF |
 | `pinshu-course-capture` | Capture source material from supported course video or transcript platforms and route it into the production pipeline |
 | `pinshu-write` | Grow a Chinese business-writing idea into a sourced judgment, title, outline, draft, review sheet and final article candidate |
-| `pinshu-wechat-layout` | Trial edition: turn an approved Markdown article and its image handoff into six switchable WeChat article layout previews with copyable body text; works standalone, and its whole-article entry uses the sibling `pinshu-visual-system` |
+| `pinshu-wechat-layout` | Trial edition: turn an approved Markdown article and its image handoff into seven switchable WeChat article layout previews with copyable body text; works standalone, and its whole-article entry uses the sibling `pinshu-visual-system` |
 
 ### Quality boundaries
 

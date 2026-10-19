@@ -40,15 +40,27 @@ curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/
 | 视频与图解配套 | pinshu-video-core、pinshu-visual-learning |
 | 公众号排版（试用版） | pinshu-wechat-layout |
 
-`pinshu-wechat-layout`：把定稿 Markdown 和配图生成六款可切换的公众号排版预览，可复制正文（试用版）。整篇入口依赖同仓库的`pinshu-visual-system`；单独运行排版脚本不依赖它。
+`pinshu-wechat-layout`：把定稿 Markdown 和配图生成七款可切换的公众号排版预览，可复制正文（试用版）。整篇入口依赖同仓库的`pinshu-visual-system`；单独运行排版脚本不依赖它。
 
 `pinshu-md2pdf`的数字保持原样。配套包随统一安装交付，不需要在不同Agent的仓库中分别拼装。
 
 安装后可对Agent说：
 
-> 使用pinshu-write，把我给的选题和材料写成中文商业分析文章，先提炼判断和大纲，再起草、审稿。
+> 使用pinshu-write，把我给的选题和材料写成中文商业分析文章，先保留我的完整素材、形成主线并选择标题与开头，再起草、审稿。
 
 > 使用pinshu-course-capture，把这门课程整理成知识资产，先推荐用途、审核方式与最终资产，确认后执行。
+
+## 本次更新版本（2026-10-19）
+
+| Skill | 公开版本 |
+|---|---|
+| `pinshu-write` | 3.3.0 |
+| `pinshu-visual-system` | 0.4.0 |
+| `pinshu-wechat-layout` | 0.4.0-rc.2 |
+| `pinshu-video-core` | 0.2.0 |
+| `pinshu-business-graphics` | 0.1.5 |
+| `pinshu-infographic` | 0.1.5 |
+| `pinshu-transcript` | 0.2.0 |
 
 ## 使用前准备
 

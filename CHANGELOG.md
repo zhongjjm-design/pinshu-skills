@@ -1,5 +1,15 @@
 # Changelog
 
+## 七项 Skill 更新 - 2026-10-19
+
+- pinshu-write 3.3.0：完整替换旧流程，保留作者种子、整篇主线、开头选择、跨厂商角色审稿、修订对比与导出；不分发私人维护档案和账号配置。207 项 pytest 回归使用与本机同一测试收集器。
+- pinshu-visual-system 0.4.0：抽取通用整篇配图与排版更新、截图返修、逐图审核续跑、跨平台锁和 UTF-8 处理；继续保留公开版的来源、身份、元数据与原生文本安全合同。私有角色资产和账号映射不分发。
+- pinshu-wechat-layout 0.4.0-rc.2：七款模板，支持双栏标题、2–4 列表格和提示词卡；视频卡片面向读者安全，微信后台效果仍需发布者逐款真机验收。
+- pinshu-video-core 0.2.0：无需时间轴的独立视频 QC、可选配音接口和发布文案参考；付费 API 与真实平台发布不由离线自测证明。
+- pinshu-business-graphics 0.1.5、pinshu-infographic 0.1.5：明确视觉总控调用顺序和自有授权角色边界，保留独立商业图解与信息图入口。
+- pinshu-transcript 0.2.0：明确原始 ASR、校对中间稿和忠实整理的边界，底稿永久保留。
+- 本次只更新上述七项，统一安装名单仍为 15 项；未增加其他本机 Skill。
+
 ## Unreleased - 2026-10-12
 
 - Add pinshu-wechat-layout 0.4.0-rc.1 (trial edition): turn an approved Markdown article and its image handoff into six equal-status, switchable WeChat layout previews with copyable body text, including the Chief Brand Officer classic edition and its six authorized chapter-number images. The lead image is unframed; body images retain thin template-specific frames; references and author-selected emphasis use separate reading treatments.

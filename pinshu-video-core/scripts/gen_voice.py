@@ -6,7 +6,10 @@ Why one call: synthesizing section by section lets the voice drift between calls
 Output folder (default voice/gemini_<voice><tag>/): secNN.mp3, secNN.words.json (per-character pronunciation times from
 BaoCut), sections.json.
 
-Usage: python3 gen_voice.py <sections.json> [--voice Charon] [--style "..."] [--warm "..."] [--tag _v2] [--out DIR]
+Usage: python3 gen_voice.py <sections.json> [--engine gemini|doubao] [--voice Charon] [--style "..."] [--warm "..."] [--tag _v2] [--out DIR]
+  --engine doubao: Doubao (Volcengine) TTS 2.0, one call for the whole text. --voice takes a short name from DOUBAO_VOICES
+          (e.g. liufei) or a raw voice_type id; --style becomes the Doubao voice instruction (context_texts).
+          Key: VOLC_SPEECH_API_KEY or ~/.config/volcengine/speech.env.
   sections.json: {"sections": [{"j": 0, "text": "..."}, ...]} - one entry per topic section, in order.
   --warm: a throwaway warm-up sentence read before the narration and cut off afterwards (the first sentence otherwise
           tends to start low and flat).
@@ -30,17 +33,27 @@ import common as C
 
 ap = argparse.ArgumentParser()
 ap.add_argument("sections")
-ap.add_argument("--voice", default="Charon")
+ap.add_argument("--engine", choices=["gemini", "doubao"], default="gemini")
+ap.add_argument("--voice", default=None)
 ap.add_argument("--model", default="gemini-3.8-flash-tts")
-ap.add_argument("--style", default="\u50cf\u8ddf\u540c\u884c\u670b\u53cb\u804a\u4e00\u4e2a\u6848\u4f8b\uff0c\u677e\u5f1b\uff0c\u6709\u89c2\u70b9")  # "like chatting with a peer about a case: relaxed, opinionated"
+ap.add_argument("--style", default=None)
 ap.add_argument("--warm", default="")
 ap.add_argument("--tag", default="")
 ap.add_argument("--out", default=None)
 ap.add_argument("--dry-run", action="store_true")
 args = ap.parse_args()
+# Optional public Doubao voice aliases; users select their own authorized voice.
+DOUBAO_VOICES = {"liufei": "zh_male_liufei_uranus_bigtts", "yunzhou": "zh_male_m191_uranus_bigtts", "xiaoming": "zh_male_jieshuoxiaoming_uranus_bigtts"}
+if args.engine == "doubao":
+    args.voice = args.voice or "liufei"
+    args.style = args.style if args.style is not None else "\u58f0\u97f3\u9971\u6ee1\u6709\u5e95\u6c14\uff0c\u8bed\u6c14\u81ea\u7136\u653e\u677e"  # "full voice with backbone, natural and relaxed"
+    args.model = "seed-tts-2.0"
+else:
+    args.voice = args.voice or "Charon"
+    args.style = args.style if args.style is not None else "\u50cf\u8ddf\u540c\u884c\u670b\u53cb\u804a\u4e00\u4e2a\u6848\u4f8b\uff0c\u677e\u5f1b\uff0c\u6709\u89c2\u70b9"  # "like chatting with a peer about a case: relaxed, opinionated"
 
 H = C.project_dir(); FF = C.ffmpeg()
-OUT = os.path.abspath(args.out or os.path.join(H, "voice", f"gemini_{args.voice}{args.tag}"))
+OUT = os.path.abspath(args.out or os.path.join(H, "voice", f"{args.engine}_{args.voice}{args.tag}"))
 secs = json.load(open(args.sections, encoding="utf-8"))["sections"]
 PUNC, strip = C.PUNC, C.strip
 text = (args.warm + "\n\n" if args.warm else "") + "\n\n".join(s["text"] for s in secs)  # a blank line between sections invites a natural pause
@@ -59,6 +72,24 @@ if os.path.exists(full):
     elif old != sig:
         sys.exit(f"The narration text, voice, style or model changed since {full} was made. Use --tag for a new take (the old one stays "
                  f"for comparison), or move {OUT} to the Trash.")
+if not os.path.exists(full) and args.engine == "doubao":
+    import uuid
+    rp = {"text": text, "speaker": DOUBAO_VOICES.get(args.voice, args.voice), "audio_params": {"format": "mp3", "sample_rate": 24000}}
+    if args.style: rp["additions"] = json.dumps({"context_texts": [args.style]}, ensure_ascii=False)
+    req = urllib.request.Request("https://openspeech.bytedance.com/api/v3/tts/unidirectional",
+                                 data=json.dumps({"user": {"uid": "pinshu-video"}, "req_params": rp}, ensure_ascii=False).encode(),
+                                 headers={"X-Api-Key": C.volc_speech_key(), "X-Api-Resource-Id": "seed-tts-2.0",
+                                          "X-Api-Request-Id": str(uuid.uuid4()), "Content-Type": "application/json"})
+    audio = b""
+    try:
+        with urllib.request.urlopen(req, timeout=600) as resp:
+            for line in resp:
+                if not line.strip(): continue
+                d = json.loads(line)
+                if d.get("data"): audio += base64.b64decode(d["data"])
+                if d.get("code") not in (0, 20000000, None): sys.exit(f"Doubao error {d.get('code')} {d.get('message')}")
+    except urllib.error.HTTPError as ex: sys.exit(f"HTTP {ex.code} {ex.read()[:300]}")
+    open(full, "wb").write(audio); open(sig_file, "w").write(sig + "\n")
 if not os.path.exists(full):
     body = {"model": args.model, "input": [{"type": "user_input", "content": [{"type": "text", "text": text, "annotations": [{"type": "speech_metadata", "style": args.style}]}]}],
             "response_format": {"type": "audio"}, "generation_config": {"speech_config": [{"voice": args.voice}]}}
@@ -121,6 +152,6 @@ for n, s in enumerate(secs):
     o = f"{OUT}/sec{s['j']:02d}.mp3"
     subprocess.run([FF, "-v", "error", "-y", "-ss", f"{bounds[n]:.3f}", "-to", f"{bounds[n+1]:.3f}", "-i", full, "-b:a", "192k", o], check=True)
     json.dump(C.transcribe(o, OUT), open(f"{OUT}/sec{s['j']:02d}.words.json", "w"), ensure_ascii=False)
-json.dump({"source": f"gemini_{args.voice}", "model": args.model, "style": args.style, "sections": [{"j": s["j"], "text": s["text"], "file": f"sec{s['j']:02d}.mp3"} for s in secs]},
+json.dump({"source": f"{args.engine}_{args.voice}", "model": args.model, "style": args.style, "sections": [{"j": s["j"], "text": s["text"], "file": f"sec{s['j']:02d}.mp3"} for s in secs]},
           open(f"{OUT}/sections.json", "w"), ensure_ascii=False, indent=1)
 print("ok", OUT, "cuts", [round(c, 2) for c in cuts])

@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 import re
 import sys
-from zoneinfo import ZoneInfo
+from portable import local_now, ensure_utf8_mode
 
 SKILLS = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(SKILLS/'pinshu-wechat-layout/scripts'))
@@ -81,8 +81,8 @@ def binding(article, kit, output=None, require_kit_hash=True):
         raise ValueError('定稿日期 must be YYYY-MM-DD')
     if article.parent.name!=info['账号'] or not article.name.startswith(info['定稿日期']+'_'):
         raise ValueError('Ready article account/date differs from folder or filename')
-    if article.parent.parent.name!='08_定稿待发' or article.parent.parent.parent.name!='30_内容工厂':
-        raise ValueError('Ready article must be in 30_内容工厂/08_定稿待发/[账号]')
+    if article.parent.parent.name!='08_定稿待发':
+        raise ValueError('Ready article must be in <workspace>/08_定稿待发/[账号]')
     material, _ = read_metadata(kit.read_bytes())
     if resolve(kit.parent, material.get('正文路径', '')) != article:
         raise ValueError('Publishing kit points to another article')
@@ -115,7 +115,7 @@ def record_progress(kit, state, preview=None, note='', expected=None):
     if expected is not None and raw != expected:
         raise ValueError('Publishing kit changed during this run; progress was not overwritten')
     text = raw.decode('utf-8-sig')
-    timestamp = datetime.now(ZoneInfo('Asia/Kuala_Lumpur')).isoformat(timespec='seconds')
+    timestamp = local_now().isoformat(timespec='seconds')
     block = START+'\n更新：'+timestamp+'\n\n'+state+'\n'
     if preview:
         preview = preview.resolve()
@@ -160,7 +160,7 @@ def check_format(article, kit):
     if day and not re.fullmatch(r'\d{4}-\d{2}-\d{2}',day): problems.append('定稿日期要写成 YYYY-MM-DD')
     if info.get('账号') and article.parent.name!=info['账号']: problems.append('正文所在文件夹名和「账号」不一致')
     if day and not article.name.startswith(day+'_'): problems.append('正文文件名要以「定稿日期_」开头')
-    if article.parent.parent.name!='08_定稿待发': problems.append('正文要放在 30_内容工厂/08_定稿待发/[账号]/ 下')
+    if article.parent.parent.name!='08_定稿待发': problems.append('正文要放在 <workspace>/08_定稿待发/[账号]/ 下')
     if info.get('过程文件夹') and not resolve(article.parent, info['过程文件夹']).is_dir(): problems.append('「过程文件夹」指向的目录不存在')
     try:
         material, _ = read_metadata(kit.read_bytes())
@@ -203,17 +203,29 @@ def execute(args):
     except Exception as exc:
         record_progress(args.kit, '配图/排版：本轮失败', note=str(exc), expected=before)
         raise
-    flow = json.loads((args.output_dir/'流程核验.json').read_text())
+    flow = json.loads((args.output_dir/'流程核验.json').read_text(encoding='utf-8'))
     status = flow['status']
+    carried = None
+    if getattr(args,'carry_reviews_from',None) and status.startswith('TECHNICAL_CHECKS_PASS'):
+        from record_article_review import carry_over
+        previous=args.carry_reviews_from.resolve()
+        if not previous.is_relative_to(process):
+            raise ValueError('--carry-reviews-from must be an earlier output folder of this article')
+        carried=carry_over(previous,args.output_dir)
     if status == 'CAPTURE_PENDING':
         record_progress(args.kit, '配图：待截图；排版：待配图', note='待截图清单：'+str(result)+'；交能截图的 Agent 或 CleanShot X；禁止 AI 顶替。', expected=before)
     else:
-        record_progress(args.kit, '配图：已生成交接；排版：'+status, result,
-            '本地试排已生成，当前图意、手机可读性和用户选择仍按回执待审。', before)
+        note='本地试排已生成，当前图意、手机可读性和用户选择仍按回执待审。'
+        if carried:
+            note+='沿用上一轮审看 %d 张；需重新看图：%s。'%(len(carried['carried_over']),'、'.join(carried['needs_review']) or '无')
+        record_progress(args.kit, '配图：已生成交接；排版：'+status, result, note, before)
+    if carried:
+        print(json.dumps(carried,ensure_ascii=False))
     return result
 
 
 if __name__ == '__main__':
+    ensure_utf8_mode()
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--article', type=Path, required=True)
     p.add_argument('--kit', type=Path, required=True)
@@ -221,7 +233,8 @@ if __name__ == '__main__':
     p.add_argument('--prepare-only', action='store_true')
     p.add_argument('--space-id', type=int)
     p.add_argument('--page', default='p1')
-    p.add_argument('--template', choices=['approved','warm','green','orange','blue','classic'], default='approved')
+    p.add_argument('--template', choices=['approved','warm','green','orange','blue','classic','split'], default='approved')
+    p.add_argument('--carry-reviews-from',type=Path,help='earlier output folder of this article: images whose bytes, template, slot and paragraph did not change keep their review; only changed ones need a new look')
     p.add_argument('--bind-kit',action='store_true',help='Agent has reconciled the kit image needs and plan; bind their current version')
     p.add_argument('--check-format',action='store_true',help='Only check the 08 article/kit file information and pairing; generates nothing')
     p.add_argument('--record-progress', help='Record actual partial progress without rendering')

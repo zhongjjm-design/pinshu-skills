@@ -5,9 +5,10 @@ maintainer: Aidan
 repository: https://github.com/zhongjjm-design/pinshu-skills
 runtime_layout: flat
 runtime_glob: ~/.agents/skills/pinshu-*
-updated: 2026-10-12
+updated: 2026-10-19
 skills:
   - name: pinshu-transcript
+    version: 0.2.0
     origin: original
     distribution: bundled
     present_in_repository: true
@@ -47,7 +48,7 @@ skills:
     origin: original
     distribution: bundled-sanitized
     present_in_repository: true
-    version: 0.3.0
+    version: 0.4.0
     status: public-preview
     depends_on: []
     runtime_dependencies: [python3, imagemagick-7, image-capable-agent]
@@ -63,7 +64,7 @@ skills:
     origin: original
     distribution: bundled
     present_in_repository: true
-    version: 0.1.0
+    version: 0.2.0
     status: public-preview
     depends_on: []
     runtime_dependencies: [python3, ffmpeg, numpy, soundfile, pillow, librosa]
@@ -71,7 +72,7 @@ skills:
     origin: original
     distribution: bundled-sanitized
     present_in_repository: true
-    version: 0.1.4
+    version: 0.1.5
     status: public-preview
     depends_on: [pinshu-visual-system]
     minimum_core_version: 0.2.4
@@ -80,7 +81,7 @@ skills:
     origin: original
     distribution: bundled-sanitized
     present_in_repository: true
-    version: 0.1.4
+    version: 0.1.5
     status: public-preview
     depends_on: [pinshu-visual-system]
     minimum_core_version: 0.2.4
@@ -89,7 +90,7 @@ skills:
     origin: original
     distribution: bundled
     present_in_repository: true
-    version: 1.3.0
+    version: 3.3.0
     status: public-preview
     depends_on: []
     runtime_dependencies: [python3]
@@ -105,7 +106,7 @@ skills:
     origin: original
     distribution: bundled
     present_in_repository: true
-    version: 0.4.0-rc.1
+    version: 0.4.0-rc.2
     status: public-preview
     depends_on: []
     optional_companions: [pinshu-visual-system]

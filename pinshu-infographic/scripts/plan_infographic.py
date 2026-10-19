@@ -59,7 +59,7 @@ def compile_infographic(brief_path: Path, *, candidate_test: bool = False,
     if delivery["text_route"] == "editable-text-layer":
         plan["prompt"] += "\nGenerate only a text-free supporting illustration. All final titles, unit labels and arrow verbs belong in the editable source, not in the bitmap."
     plan["visual_card"]["density"] = density
-    plan["workflow"] = {"kind": "pinshu-infographic", "version": "0.1.4"}
+    plan["workflow"] = {"kind": "pinshu-infographic", "version": "0.1.5"}
     plan["structured_content"] = {"claim": claim, "units": units, "relations": relations,
                                   "wording_review": "pending", "semantic_source_review": "pending"}
     plan["required_checks"] += ["information-relationships", "density-and-reading", "text-delivery"]

@@ -59,15 +59,38 @@ class AuditDraftTests(unittest.TestCase):
         text = CLEAN.replace("## \u7b2c\u4e00\u8282\n\n", "## \u7b2c\u4e00\u8282\n\n\u4ef7\u683c\u662f\u4e0d\u662f\u53ef\u4ee5\u5f80\u4e0b\u8c03\u4e00\u8c03\uff1f\u4e0d\u662f\u3002\u662f\u5148\u62c6\u5f00\u3002\n\n")
         self.assertFalse(any(r.startswith("single-sentence reversal") for r in rules(run(text))))
 
-    def test_inline_source_bold_and_straight_quotes_need_fixing(self):
+    def test_inline_source_and_straight_quotes_need_fixing_and_bold_passes(self):
         text = CLEAN.replace("## \u7b2c\u4e8c\u8282\n\n", '## \u7b2c\u4e8c\u8282\n\n\u91c7\u8d2d\u8bf4"\u90a3\u5c31\u964d\u4ef7"\uff08\u67d0\u5468\u520a 2026-02\uff09\uff0c**\u8fd9\u5f88\u5173\u952e**\u3002\n\n')
         found = rules(run(text), "fix")
         self.assertIn("move inline source to the end source list", found)
-        self.assertIn("no bold in body text", found)
+        self.assertFalse(any("bold" in r for r in rules(run(text))))
         self.assertIn("use curly Chinese quotes \u201c \u201d", found)
 
     def test_two_h1_titles_block(self):
         self.assertIn("exactly one H1 title", rules(run("# \u4e00\n\n# \u4e8c\n\n\u6b63\u6587\u3002\n")))
+
+    def test_first_draft_over_hard_maximum_is_a_reminder(self):
+        draft = run(CLEAN, hard_max=200, first_draft=True)
+        self.assertFalse(any(r.startswith("body longer than the hard maximum") for r in rules(draft)))
+        self.assertTrue(any(r.startswith("first draft longer than the hard maximum") for r in rules(draft, "warn")))
+        final = run(CLEAN, hard_max=200)
+        self.assertTrue(any(r.startswith("body longer than the hard maximum") for r in rules(final, "blocker")))
+
+    def test_same_word_opening_three_sentences_in_a_row(self):
+        para = "\u6211\u4eec\u5148\u628a\u6750\u6599\u6574\u7406\u597d\u3002\u6211\u4eec\u518d\u53bb\u627e\u6848\u4f8b\u3002\u6211\u4eec\u6700\u540e\u5199\u521d\u7a3f\u3002"
+        found = rules(run(f"# \u6807\u9898\u5728\u8fd9\u91cc\n\n{para}\n"), "warn")
+        self.assertTrue(any("open with the same word" in r for r in found), found)
+        varied = "\u6211\u4eec\u5148\u628a\u6750\u6599\u6574\u7406\u597d\u3002\u7136\u540e\u53bb\u627e\u6848\u4f8b\u3002\u6211\u4eec\u6700\u540e\u5199\u521d\u7a3f\u3002"
+        self.assertFalse(any("open with the same word" in r for r in rules(run(f"# \u6807\u9898\u5728\u8fd9\u91cc\n\n{varied}\n"))))
+
+    def test_sections_of_near_equal_length(self):
+        def section(n):
+            return "\u5ba2\u6237\u6309\u4eba\u5934\u6bd4\u4ef7\uff0c\u5c31\u4f1a\u538b\u4f4e\u62a5\u4ef7\u3002" * n
+        even = "# \u6807\u9898\u5728\u8fd9\u91cc\n\n" + "".join(f"## \u5c0f\u6807\u9898{i}\n\n{section(10)}\n\n" for i in range(3))
+        self.assertTrue(any(r.startswith("sections are nearly the same length") for r in rules(run(even), "warn")))
+        uneven = ("# \u6807\u9898\u5728\u8fd9\u91cc\n\n## \u5c0f\u6807\u9898\u7532\n\n" + section(10) + "\n\n## \u5c0f\u6807\u9898\u4e59\n\n"
+                  + section(16) + "\n\n## \u5c0f\u6807\u9898\u4e19\n\n" + section(12) + "\n")
+        self.assertFalse(any(r.startswith("sections are nearly the same length") for r in rules(run(uneven))))
 
     def test_extra_banned_words_and_hard_maximum(self):
         report = run(CLEAN, banned=["\u7b97\u6cd5"], hard_max=200)
@@ -138,8 +161,43 @@ class AuditDraftTests(unittest.TestCase):
         card = "# \u5224\u65ad\u5361\n\n\u5047\u8bbe\u4f60\u662f\u8001\u677f\u3002\u6548\u7387\u4e0d\u662f\u5356\u70b9\uff0c\u800c\u662f\u7b79\u7801\u3002\n\n## \u4e00\n\n\u77ed\u3002\n"
         found = rules(run(card, card=True))
         self.assertTrue(any(r.startswith("single-sentence reversal") for r in found), found)
-        for skipped in ("opening uses", "section outside", "subhead length", "body outside"):
+        for skipped in ("opening uses", "section outside", "subhead length", "body outside", "single-sentence paragraphs"):
             self.assertFalse(any(r.startswith(skipped) for r in found), (skipped, found))
+
+    def test_single_sentence_paragraphs_block_only_two_in_a_row(self):
+        one = "\u8fd9\u4e00\u53e5\u8bdd\u81ea\u5df1\u5360\u4e86\u4e00\u6bb5\u3002"
+        apart = CLEAN.replace("## \u7b2c\u4e00\u8282\n\n", "## \u7b2c\u4e00\u8282\n\n" + one + "\n\n")
+        apart = apart.replace("## \u7b2c\u4e8c\u8282\n\n", "## \u7b2c\u4e8c\u8282\n\n" + one + "\n\n")
+        self.assertFalse(any(r.startswith("single-sentence paragraphs") for r in rules(run(apart))))
+        together = CLEAN.replace("## \u7b2c\u4e00\u8282\n\n", "## \u7b2c\u4e00\u8282\n\n" + one + "\n\n" + one + "\n\n")
+        self.assertTrue(any(r.startswith("single-sentence paragraphs in a row") for r in rules(run(together), "blocker")))
+        listed = CLEAN.replace("## \u7b2c\u4e00\u8282\n\n", "## \u7b2c\u4e00\u8282\n\n1. " + one + "\n2. " + one + "\n\n\u4e00\u3001" + one + "\n\n\u4e8c\u3001" + one + "\n\n")
+        self.assertFalse(any(r.startswith("single-sentence paragraphs") for r in rules(run(listed))))
+
+    def test_numbered_subhead_warns_and_plain_subhead_does_not(self):
+        text = CLEAN.replace("## \u7b2c\u4e00\u8282", "## 01 \u4f1a\u7528\u8d8a\u6765\u8d8a\u5bb9\u6613")
+        self.assertIn("numbered subhead: write the heading as a sentence without a number", rules(run(text)))
+        plain = CLEAN.replace("## \u7b2c\u4e00\u8282", "## \u4e09\u4e2a\u4eba\u7684\u90e8\u95e8\uff0c\u600e\u4e48\u5206\u5de5")
+        self.assertFalse(any(r.startswith("numbered subhead") for r in rules(run(plain))))
+
+    def test_default_subhead_limit_is_sixteen_characters(self):
+        heading = "\u4f1a\u7528\u8d8a\u6765\u8d8a\u5bb9\u6613\uff0c\u7528\u597d\u8d8a\u6765\u8d8a\u96be\u4e86\u554a"  # 15 characters
+        text = CLEAN.replace("## \u7b2c\u4e00\u8282", "## " + heading).replace("## \u7b2c\u4e8c\u8282", "## " + heading)
+        with tempfile.TemporaryDirectory() as tmp:
+            draft = Path(tmp) / "d.md"
+            draft.write_text(text, encoding="utf-8")
+            done = subprocess.run([sys.executable, str(SCRIPT), str(draft), "--length", "100-4000", "--json"], capture_output=True, text=True)
+        found = [f["rule"] for f in json.loads(done.stdout)["findings"]]
+        self.assertFalse(any(r.startswith("subhead length outside") for r in found), found)
+
+    def test_short_subhead_is_not_flagged_by_default(self):
+        text = CLEAN.replace("## \u7b2c\u4e00\u8282", "## \u5148\u7b97\u8d26").replace("## \u7b2c\u4e8c\u8282", "## \u518d\u5b9a\u4ef7")
+        with tempfile.TemporaryDirectory() as tmp:
+            draft = Path(tmp) / "d.md"
+            draft.write_text(text, encoding="utf-8")
+            done = subprocess.run([sys.executable, str(SCRIPT), str(draft), "--length", "100-4000", "--json"], capture_output=True, text=True)
+        found = [f["rule"] for f in json.loads(done.stdout)["findings"]]
+        self.assertFalse(any(r.startswith("subhead length outside") for r in found), found)
 
     def test_rules_print_chinese_patterns_without_a_draft(self):
         done = subprocess.run([sys.executable, str(SCRIPT), "--rules"], capture_output=True, text=True)
@@ -237,7 +295,8 @@ class ReadyExportTests(unittest.TestCase):
             draft = Path(tmp) / "draft.md"
             draft.write_text("---\nstatus: v3\n---\n\n# \u6807\u9898\n\n\u6b63\u6587\u3002\n\n===EDITOR NOTES===\n\u5907\u6ce8\n", encoding="utf-8")
             out = subprocess.run([sys.executable, str(EXPORT), "--source", str(draft), "--ready-dir", str(Path(tmp) / "ready"),
-                                  "--account", "\u54c1\u53d4", "--date", "2026-10-11", "--writer", "m1", "--process-dir", tmp],
+                                  "--account", "\u54c1\u53d4", "--date", "2026-10-11", "--writer", "m1", "--process-dir", tmp,
+                                  "--approval", "\u5b9a\u7a3f"],
                                  capture_output=True, text=True)
             self.assertEqual(out.returncode, 0, out.stderr)
             target = Path(tmp) / "ready" / "\u54c1\u53d4" / "2026-10-11_\u6807\u9898.md"
@@ -332,7 +391,8 @@ class ReadyExportLineEndingTests(unittest.TestCase):
         tmp = tempfile.mkdtemp()
         draft = Path(tmp) / "d.md"; draft.write_bytes(raw)
         out = subprocess.run([sys.executable, str(EXPORT), "--source", str(draft), "--ready-dir", str(Path(tmp) / "r"),
-                              "--account", "a", "--date", "2026-10-11", "--writer", "m", "--process-dir", tmp],
+                              "--account", "a", "--date", "2026-10-11", "--writer", "m", "--process-dir", tmp,
+                              "--approval", "\u5b9a\u7a3f"],
                              capture_output=True, text=True)
         self.assertEqual(out.returncode, 0, out.stderr)
         return next((Path(tmp) / "r" / "a").glob("*.md")).read_bytes()

@@ -5,7 +5,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
+from datetime import datetime
 from pathlib import Path
 
 
@@ -65,11 +67,48 @@ def strip_info_block(body: bytes) -> bytes:
     raise ValueError("Unclosed YAML block at the top of the draft")
 
 
-def ready(source: Path, ready_dir: Path, account: str, date: str, writer: str, process_dir: Path) -> Path:
+APPROVAL_LOG = "\u5b9a\u7a3f\u786e\u8ba4\u8bb0\u5f55.jsonl"  # 定稿确认记录.jsonl, in the article's process folder
+REPLACED_DIR = "\u5b9a\u7a3f\u66ff\u6362\u7559\u5e95"  # 定稿替换留底: older ready copies kept before a replacement
+# Anything that can turn 定稿 into "not yet", "if" or "is it?" makes the quote unclear; unclear is refused
+# (independent review 2026-10-12: 不是定稿, 是否定稿, 等改完再定稿 and 请不要直接定稿 slipped through a narrower list).
+_UNCLEAR = ("\u4e0d", "\u6ca1", "\u522b", "\u672a", "\u5426", "\u5417", "\u4e48", "?", "\uff1f", "\u7b49",
+            "\u518d", "\u5982\u679c", "\u8981\u662f", "\u5047\u5982", "\u8fd8", "\u5148", "\u5f85\u5b9a")  # 不 没 别 未 否 吗 么 ? ？ 等 再 如果 要是 假如 还 先 待定
+
+
+def approval_problem(quote) -> str | None:
+    """The ready folder holds only what the author called final. Returns None when the quote is an approval.
+
+    Only the author's own plain sentence saying 定稿 counts; 可以, 继续, 还行, 满意 do not (Aidan, 2026-10-12).
+    Any negation, condition or question in the sentence (不是定稿, 是否定稿, 等改完再定稿) makes it unclear,
+    and unclear is refused: ask the author again rather than guess."""
+    text = (quote or "").strip()
+    if not text:
+        return "No --approval: paste the author's own words that call this version final (they must say 定稿)"
+    if "\u5b9a\u7a3f" not in text:
+        return ("--approval does not say 定稿. 可以, 继续, 还行 or 满意 are not a final approval; "
+                "use --output-dir for a trial export, or ask the author")
+    found = [w for w in _UNCLEAR if w in text]
+    if found:
+        return ("--approval is not a plain final approval (contains " + " ".join(found) +
+                "): a negation, condition or question around 定稿 is refused. Ask the author for a plain 定稿")
+    return None
+
+
+def ready(source: Path, ready_dir: Path, account: str, date: str, writer: str, process_dir: Path,
+          approval: str | None = None, replace: bool = False) -> Path:
     """Write the approved article into <ready_dir>/<account>/ as <date>_<title>.md with the agreed header.
 
     ready_dir is the ROOT of the ready area (the config value ready_folder). If its last path
-    component already equals the account, it is used as is, so the account is never doubled."""
+    component already equals the account, it is used as is, so the account is never doubled.
+    approval is the author's verbatim final approval (must say 定稿); it is appended to the process
+    folder's approval log. An existing different ready copy is replaced only with replace=True, and
+    is first kept in the process folder."""
+    problem = approval_problem(approval)
+    if problem:
+        raise ValueError(problem)
+    process_dir = Path(process_dir).resolve()
+    if not process_dir.is_dir():
+        raise ValueError(f"--process-dir is not an existing folder: {process_dir}")
     data = source.resolve().read_bytes()
     lines = data.splitlines(keepends=True)
     markers = [i for i, line in enumerate(lines) if line.rstrip(b"\r\n") == b"===EDITOR NOTES==="]
@@ -96,10 +135,61 @@ def ready(source: Path, ready_dir: Path, account: str, date: str, writer: str, p
     # Body content and its internal line breaks are kept; leading blank lines after the header
     # are normalised (the header block ends with exactly one blank line).
     content = info_block(account, date, writer, process_dir) + body
-    target.write_bytes(content)
-    print(json.dumps({"ready_md": str(target), "article_sha256": hashlib.sha256(content).hexdigest(),
+    stamp = datetime.now().astimezone()
+    kept = None
+    # One export at a time per ready copy: the lock covers create, compare, keep-a-copy and replace
+    # (independent review 2026-10-12: two sessions exporting at once could overwrite without --replace).
+    lock = target.with_name("." + target.name + ".exporting")
+    try:
+        lock_fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
+        raise ValueError(f"Another export of this article is running (lock {lock}). Wait for it; if no export is running, "
+                         "delete that lock file and re-run") from None
+    try:
+        try:
+            with target.open("xb") as handle:  # first export: create only, never overwrite
+                handle.write(content)
+        except FileExistsError:
+            if target.read_bytes() != content:
+                if not replace:
+                    raise ValueError(f"A different ready copy already exists: {target}. Ask the author before replacing it, "
+                                     "then re-run with --replace (the old copy is kept in the process folder first)") from None
+                kept = process_dir / REPLACED_DIR / f"{stamp:%Y%m%d-%H%M%S}_{name}"
+                kept.parent.mkdir(exist_ok=True)
+                try:
+                    with kept.open("xb") as handle:
+                        handle.write(target.read_bytes())
+                except FileExistsError:
+                    raise ValueError(f"Backup name already taken, try again in a second: {kept}") from None
+                temporary = target.with_name("." + target.name + ".new")
+                temporary.write_bytes(content)
+                os.replace(temporary, target)
+    finally:
+        os.close(lock_fd)
+        lock.unlink()
+    digest = hashlib.sha256(content).hexdigest()
+    record = {"time": stamp.isoformat(timespec="seconds"), "approval": approval.strip(), "ready_md": str(target),
+              "article_sha256": digest, "draft_md": str(source.resolve()), "draft_sha256": hashlib.sha256(data).hexdigest(),
+              "replaced_copy_kept_at": str(kept) if kept else None}
+    with (process_dir / APPROVAL_LOG).open("a", encoding="utf-8") as log:
+        log.write(json.dumps(record, ensure_ascii=False) + "\n")
+    print(json.dumps({"ready_md": str(target), "article_sha256": digest,
                       "kit_md": str(ready_dir / f"{date}_{titles[0]}·发布物料包.md")}, ensure_ascii=False))
     return target
+
+
+def approval_recorded(process_dir: Path, ready_md: Path, digest: str) -> bool:
+    log = Path(process_dir).expanduser() / APPROVAL_LOG
+    if not log.is_file():
+        return False
+    for line in log.read_text(encoding="utf-8").splitlines():
+        try:
+            entry = json.loads(line)
+        except ValueError:
+            continue
+        if entry.get("article_sha256") == digest and Path(entry.get("ready_md", "")).resolve() == ready_md:
+            return True
+    return False
 
 
 KIT_SUFFIX = "\u00b7\u53d1\u5e03\u7269\u6599\u5305.md"  # "·发布物料包.md"
@@ -157,15 +247,18 @@ def _squash(text: str) -> str:
 
 
 def anchor_rows(kit_lines):
-    """Return [(row label, anchor text)] from the kit's image table whose header has a column
-    starting with the anchor column name. Empty list when there is no such table."""
+    """Return [(row label, anchor text)] from every kit table (images, videos) whose header has a
+    column starting with the anchor column name. Empty list when there is no such table."""
     rows = []
     column = None
+    in_table = False
     for line in kit_lines:
         if not line.strip().startswith("|"):
-            if column is not None:
-                break  # the table ended
+            column, in_table = None, False  # a table ended; look for the next one
             continue
+        if in_table and column is None:
+            continue  # a table without the anchor column
+        in_table = True
         cells = _cells(line)
         if column is None:
             found = [i for i, cell in enumerate(cells) if cell.startswith(ANCHOR_COLUMN)]
@@ -174,8 +267,8 @@ def anchor_rows(kit_lines):
             continue
         if all(re.fullmatch(r":?-{2,}:?", cell) for cell in cells if cell):
             continue  # separator row
-        if column < len(cells):
-            rows.append((cells[0], cells[column]))
+        # A row too short to have the anchor cell is reported as an empty anchor, never skipped.
+        rows.append((cells[0], cells[column] if column < len(cells) else ""))
     return rows
 
 
@@ -214,6 +307,9 @@ def check(path: Path, body_only: bool = False) -> dict:
         process = values.get(INFO_FIELDS[3])
         if process and not Path(process).expanduser().is_dir():
             problems.append(f"{INFO_FIELDS[3]} is not an existing folder: {process}")
+        elif process and not approval_recorded(Path(process), path, hashlib.sha256(path.read_bytes()).hexdigest()):
+            warnings.append(f"No {APPROVAL_LOG} entry for this exact file in the process folder: it was not exported with "
+                            "--approval (before 1.4, by hand, or edited afterwards). Confirm the author said 定稿 for this version")
     body_text = "\n".join(body_lines)
     titles = [line[2:].strip() for line in body_lines if line.startswith("# ")]
     if len(titles) != 1:
@@ -265,9 +361,9 @@ def check(path: Path, body_only: bool = False) -> dict:
             for label, raw in anchor_rows(kit_lines):
                 anchor = _clean_anchor(raw)
                 if not anchor:
-                    problems.append(f"Kit image row {label!r} has an empty anchor")
+                    problems.append(f"Kit row {label!r} has an empty anchor")
                 elif not any(par.startswith(anchor) for par in paragraphs):
-                    problems.append(f"Kit image row {label!r}: anchor not found at the start of any paragraph: {raw.strip()!r}")
+                    problems.append(f"Kit row {label!r}: anchor not found at the start of any paragraph: {raw.strip()!r}")
     return {"ok": not problems, "problems": problems, "warnings": warnings}
 
 
@@ -282,6 +378,8 @@ if __name__ == "__main__":
     parser.add_argument("--date", help="approval date, YYYY-MM-DD")
     parser.add_argument("--writer", help="the model that actually wrote the article")
     parser.add_argument("--process-dir", type=Path, help="the article's own process folder")
+    parser.add_argument("--approval", help="with --ready-dir: the author's verbatim words calling this version final; must say 定稿 (可以/继续/还行 do not count)")
+    parser.add_argument("--replace", action="store_true", help="with --ready-dir: replace a different existing ready copy (author asked); the old copy is kept in the process folder")
     args = parser.parse_args()
     if args.check:
         report = check(args.check, body_only=args.body_only)
@@ -294,7 +392,11 @@ if __name__ == "__main__":
     if args.ready_dir:
         if not all((args.account, args.date, args.writer, args.process_dir)):
             parser.error("--ready-dir needs --account, --date, --writer and --process-dir")
-        ready(args.source, args.ready_dir, args.account, args.date, args.writer, args.process_dir)
+        try:
+            ready(args.source, args.ready_dir, args.account, args.date, args.writer, args.process_dir,
+                  approval=args.approval, replace=args.replace)
+        except ValueError as exc:
+            parser.exit(1, f"export_article.py: refused: {exc}\n")
     elif args.output_dir:
         print(export(args.source, args.output_dir))
     else:

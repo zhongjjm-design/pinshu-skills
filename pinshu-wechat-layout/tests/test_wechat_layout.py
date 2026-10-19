@@ -69,7 +69,7 @@ class WeChatLayoutReleaseTests(unittest.TestCase):
         return handoff_path, article, article_bytes
 
     def test_package_version_and_six_authorized_chapter_images(self):
-        self.assertEqual((ROOT / "VERSION").read_text().strip(), "0.4.0-rc.1")
+        self.assertEqual((ROOT / "VERSION").read_text().strip(), "0.4.0-rc.2")
         self.assertEqual(
             [p.name for p in sorted((ROOT / "assets" / "chapter").glob("*.png"))],
             [f"{n:02}.png" for n in range(1, 7)],
@@ -77,8 +77,8 @@ class WeChatLayoutReleaseTests(unittest.TestCase):
 
     def test_public_preview_has_no_internal_or_ranked_template_label(self):
         shell = (ROOT / "assets" / "preview.html").read_text()
-        self.assertIn("公开试用版 v0.4.0-rc.1", shell)
-        self.assertIn("六款同级可选", shell)
+        self.assertIn("公开试用版 v0.4.0-rc.2", shell)
+        self.assertIn("七款同级可选", shell)
         for forbidden in ("内部试用", "已认可方向", "候选版式", "参考版式"):
             self.assertNotIn(forbidden, shell)
 
@@ -104,7 +104,7 @@ class WeChatLayoutReleaseTests(unittest.TestCase):
             self.assertTrue(preview.is_file())
             self.assertEqual(article.read_bytes(), before)
             page = preview.read_text()
-            for name in ("青灰手记", "暖纸杂志", "青绿刊页", "橙线手记", "蓝白专题", "首席品牌官经典版"):
+            for name in ("松绿双线", "青灰手记", "暖纸杂志", "橙线手记", "蓝白专题", "首席品牌官经典版"):
                 self.assertIn(name, page)
             source_html = (folder / "out" / "source.html").read_text()
             self.assertIn('data-hero="true"', source_html)
@@ -124,6 +124,133 @@ class WeChatLayoutReleaseTests(unittest.TestCase):
             handoff, _, _ = self.fixture(folder, ["一", "二", "三", "四"])
             with self.assertRaisesRegex(ValueError, "At most three emphasis"):
                 build.run(handoff, folder / "out")
+
+    def test_reference_h2_is_not_a_chapter_in_either_form(self):
+        """LAYOUT-01: 1.3 drafts send `## 参考文章`; older ones a plain paragraph. Neither is a numbered chapter."""
+        for heading in ("## 参考文章", "## 资料来源", "## 参考资料", "参考文章"):
+            with self.subTest(heading=heading), tempfile.TemporaryDirectory() as td:
+                folder = Path(td)
+                handoff, article, _ = self.fixture(folder)
+                text = article.read_text(encoding="utf-8").replace("参考文章\n", heading + "\n")
+                article.write_text(text, encoding="utf-8")
+                data = json.loads((folder / "images.json").read_text(encoding="utf-8"))
+                data["article_sha256"] = hashlib.sha256(article.read_bytes()).hexdigest()
+                (folder / "images.json").write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+                build.run(handoff, folder / "out")
+                report = json.loads((folder / "out" / "试排记录.json").read_text(encoding="utf-8"))
+                self.assertEqual(report["chapter_count"], 1)
+        renderer = (ROOT / "assets" / "renderer.js").read_text(encoding="utf-8")
+        self.assertIn("参考文章", renderer)
+
+    def test_windows_drive_path_is_a_local_image_not_a_url(self):
+        """Colleague's Windows run 2026-10-13: E:\\... was read as URL scheme "e" and every image failed."""
+        code = (SCRIPTS / "engine.py").read_text(encoding="utf-8")
+        self.assertIn("[A-Za-z]:", code)
+        import re as _re
+        pattern = _re.search(r"re\.match\(r'(.+?)', src\)", code).group(1)
+        for path in ("E:\\写作坊\\drafts\\a.png", "C:/fixtures/b.png"):
+            self.assertIsNotNone(_re.match(pattern, path))
+        for url in ("https://a.b/c.png", "file:///tmp/c.png", "relative/c.png"):
+            self.assertIsNone(_re.match(pattern, url))
+
+
+    def test_table_and_prompt_card_build_and_columns_are_capped(self):
+        """2026-10-15: tables (2-4 columns) and 【…提示词…】 blockquotes are layout blocks, not errors."""
+        def run_with(extra: str):
+            td = tempfile.TemporaryDirectory()
+            folder = Path(td.name)
+            handoff, article, _ = self.fixture(folder)
+            text = article.read_text(encoding="utf-8").replace("参考文章\n", extra + "\n参考文章\n", 1)
+            article.write_text(text, encoding="utf-8")
+            data = json.loads((folder / "images.json").read_text(encoding="utf-8"))
+            data["article_sha256"] = hashlib.sha256(article.read_bytes()).hexdigest()
+            (folder / "images.json").write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+            return td, folder, handoff
+        good = "\n\n| 时间 | 配音 | 画面 |\n| :--- | :--- | :--- |\n| 00.000 - 02.400 | 一句（音效） | 动作 |\n\n> 【测试提示词模板（可复制）】\n> 角色设定：你是导演。\n> 阶段规划：\n> - 第一段\n> 动效参数：慢。\n\n"
+        td, folder, handoff = run_with(good)
+        with td:
+            build.run(handoff, folder / "out")
+            page = (folder / "out" / "公众号图文排版预览.html").read_text(encoding="utf-8")
+            renderer = (ROOT / "assets" / "renderer.js").read_text(encoding="utf-8")
+            self.assertIn("<table>", (folder / "out" / "source.html").read_text(encoding="utf-8"))
+            self.assertIn("function promptCard", page)
+            self.assertIn("[22,38,40]", renderer.replace(" ", ""))
+            self.assertNotIn("font-weight:600", renderer[renderer.index("function promptCard"):renderer.index("function chapter")])
+        wide = "\n\n| a | b | c | d | e |\n| - | - | - | - | - |\n| 1 | 2 | 3 | 4 | 5 |\n\n"
+        td, folder, handoff = run_with(wide)
+        with td:
+            with self.assertRaisesRegex(ValueError, "2 to 4 columns"):
+                build.run(handoff, folder / "out")
+
+
+    def _build_with(self, extra: str, handoff_extra: dict | None = None):
+        td = tempfile.TemporaryDirectory()
+        folder = Path(td.name)
+        handoff, article, _ = self.fixture(folder)
+        text = article.read_text(encoding="utf-8").replace("参考文章\n", extra + "\n参考文章\n", 1)
+        article.write_text(text, encoding="utf-8")
+        data = json.loads((folder / "images.json").read_text(encoding="utf-8"))
+        data["article_sha256"] = hashlib.sha256(article.read_bytes()).hexdigest()
+        (folder / "images.json").write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+        if handoff_extra:
+            h = json.loads(handoff.read_text(encoding="utf-8"))
+            h.update(handoff_extra)
+            handoff.write_text(json.dumps(h, ensure_ascii=False), encoding="utf-8")
+        return td, folder, handoff
+
+    def test_content_that_would_be_lost_is_refused_not_dropped(self):
+        """2026-10-15 independent review: cells beyond the header, links in tables/cards and nested quotes were silently lost."""
+        cases = {
+            "Table row has 3 cells": "\n\n| a | b |\n| - | - |\n| 1 | 2 | 3 |\n\n",
+            "Links inside a table": "\n\n| a | b |\n| - | - |\n| [x](http://u.example) | 2 |\n\n",
+            "Links inside a prompt card": "\n\n> 【卡片】\n> 正文 [x](http://u.example)\n\n",
+            "only supports paragraphs and lists": "\n\n> 【卡片】\n> > 嵌套引用\n\n",
+        }
+        for message, extra in cases.items():
+            with self.subTest(message=message):
+                td, folder, handoff = self._build_with(extra)
+                with td, self.assertRaisesRegex(ValueError, message):
+                    build.run(handoff, folder / "out")
+
+    def test_heading_split_accepts_good_input_and_explains_bad_input(self):
+        good = {"heading_split": {"第一章": ["第一", "章"]}}
+        td, folder, handoff = self._build_with("", good)
+        with td:
+            build.run(handoff, folder / "out")
+            layout = json.loads((folder / "out" / "layout.json").read_text(encoding="utf-8"))
+            self.assertEqual(layout["headingSplit"], {"第一章": ["第一", "章"]})
+        bad = {
+            "not an H2 heading": {"heading_split": {"不存在的章": ["不", "存在的章"]}},
+            "must be an object": {"heading_split": ["第一章"]},
+            "two non-empty strings": {"heading_split": {"第一章": [1, 2]}},
+            "must satisfy big": {"heading_split": {"第一章": ["第", "二章"]}},
+        }
+        for message, extra in bad.items():
+            with self.subTest(message=message):
+                td, folder, handoff = self._build_with("", extra)
+                with td, self.assertRaisesRegex(ValueError, message):
+                    build.run(handoff, folder / "out")
+
+    def test_split_heading_has_no_layout_cells_for_video_to_enter(self):
+        """A real WeChat replacement put a video into the next flex heading's number cell."""
+        reading = (ROOT / "assets" / "reading-base.js").read_text(encoding="utf-8")
+        start = reading.index("if(style==='split')")
+        end = reading.index("if(style==='blue')", start)
+        split = reading[start:end]
+        self.assertNotIn("display:'flex'", split)
+        self.assertNotIn("display:'grid'", split)
+        self.assertNotIn("createElement('table')", split)
+        self.assertNotIn("position:'relative'", split)
+        self.assertNotIn("position:'absolute'", split)
+        self.assertIn("display:'inline-block'", split)
+        self.assertIn("borderRight:'1px solid #dfe1e4'", split)
+        self.assertIn("whiteSpace:'nowrap'", split)
+        self.assertIn("wordBreak:'keep-all'", split)
+        self.assertIn("overflowWrap:'normal'", split)
+        self.assertIn("width:'22%'", split)  # 2026-10-15: 22/78 after 25/75 left a visible gap before the rule; 22% is the floor for "01" on a 320px phone
+        self.assertIn("width:'78%'", split)
+        self.assertIn("padding:'0 12px 0 0'", split)
+        self.assertIn("title.append(numberSpan,titleText)", split)
 
 
 if __name__ == "__main__":

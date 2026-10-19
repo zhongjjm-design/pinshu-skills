@@ -16,7 +16,7 @@
 6. `platform`：文章、知识库、PPT、直播、课程或社交传播。
 7. `density`：`document` 或 `slide`。
 
-角色、任务、结构、版式和模式不得互相顶替。人物是谁，不决定信息必须画成什么结构；暖纸还是矢量，也不决定是否出现品哥。
+角色、任务、结构、版式和模式不得互相顶替。人物是谁，不决定信息必须画成什么结构；暖纸还是矢量，也不决定是否出现人物。
 
 ## 选 `warm-paper`
 
@@ -53,13 +53,13 @@
 必须同时满足：
 
 - 内容确实需要一个指定角色来讲，而不是人物装饰；
-- 正式生产时，该角色在注册表中为 `active` 且被当前模式列入 `tested_characters`；
-- 候选验证时，该角色在注册表中为 `candidate`、被列入 `candidate_characters`，并显式使用 `--candidate-test`；
+- 角色来自使用者显式提供的已授权参考，且当前任务已批准身份与模式的组合；
+- 未验证的组合先做有记录的样张测试，不能把测试写成正式生产；
 - 人物手势、视线和信息板可以形成明确阅读路径。
 
-当前生产状态以 `pinshu-visual-system/references/system-registry.json` 为准：角色看 `characters` 里的 `status`，讲解模式能用哪些角色看 `character-presenter` 的 `tested_characters`。本文件不再抄录状态，避免过期；不在 `tested_characters` 里的角色，不得生成替代形象。
+模式状态以公开核心的注册表为准；自有角色使用核心的显式角色配置。缺少授权参考或组合批准时，不生成替代身份。
 
-旧调用 `pinshu-presenter` 固定迁移为 `character-presenter + pingge`。
+旧调用 `pinshu-presenter` 仅迁移为模式 `character-presenter`，不自动指定人物。
 
 ## 模糊时怎么推荐
 

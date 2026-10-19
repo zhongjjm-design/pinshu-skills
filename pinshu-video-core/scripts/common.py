@@ -108,6 +108,18 @@ def load_spec(project=None):
     return mod
 
 
+def volc_speech_key():
+    """VOLC_SPEECH_API_KEY env var, else VOLC_SPEECH_API_KEY= line in ~/.config/volcengine/speech.env. Never written anywhere."""
+    if os.environ.get("VOLC_SPEECH_API_KEY"):
+        return os.environ["VOLC_SPEECH_API_KEY"]
+    env = os.path.expanduser("~/.config/volcengine/speech.env")
+    if os.path.isfile(env):
+        for line in open(env, encoding="utf-8"):
+            if line.startswith("VOLC_SPEECH_API_KEY="):
+                return line.split("=", 1)[1].strip()
+    raise SystemExit("No Doubao speech key: set VOLC_SPEECH_API_KEY or put VOLC_SPEECH_API_KEY=... in ~/.config/volcengine/speech.env")
+
+
 def gemini_key():
     """GEMINI_API_KEY env var, else GEMINI_API_KEY= line in ~/.config/gemini/.env. The key is never written anywhere."""
     if os.environ.get("GEMINI_API_KEY"):

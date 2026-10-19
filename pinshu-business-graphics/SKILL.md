@@ -10,11 +10,16 @@ description: "用于品叔商业图解、商业配图、概念图、商业信息
 - 维护者：Aidan（品叔）
 - 上游依赖：`baoyu-infographic` 仅作可选工作流参考，不打包其通用引擎
 - 分发状态：公开候选；不包含私人角色、内部品牌素材、真实客户资产或未获授权样张
+- 公开版本：0.1.5；使用者自己的角色与账号配置不随本包分发。
 - 原创边界：七类商业视觉母体、内容关系路由、中文与数据 QA 由品叔体系形成
 
 # Pinshu Business Graphics
 
 把商业内容做成有判断、有证据、有画面秩序的静态图解。先选视觉母体，再选隐喻；样张只做质量锚点，不是模板。
+
+## 调用顺序与范围
+
+本 Skill 是商业图解渲染与视觉语法库，不是账号视觉总控。任务已有账号视觉规范或用户自有角色时，先运行同仓 `pinshu-visual-system` 的公开路由，明确模式、平台、授权参考和视觉卡；只有路由选中非特定人物商业图解时才进入本流程。当前自动 planner 固定输出 `character:none`，不适配特定身份；已有角色任务返回总控，不承诺由本 planner 继承人物。继承上游已定的标题、色板和平台规格，不因内容能画成地图或蓝图，就把已有账号风格换成通用图解。无品牌约束的非人物商业图解可直接使用本 Skill。
 
 ## 必要伴随能力
 
@@ -91,7 +96,7 @@ Keep the full title in smaller text when a shorter visual thesis is used.
 
 ### 6. Persist the prompt before rendering
 
-Follow [output-contract.md](references/output-contract.md).
+Follow [quickstart.md](references/quickstart.md) for the public output contract.
 
 Write the complete final prompt under `prompts/` before calling an image backend. Include all exact visible text, composition, palette, typography, reference roles, source boundaries, and avoid rules.
 
@@ -99,7 +104,7 @@ Write the complete final prompt under `prompts/` before calling an image backend
 
 Render one candidate per distinct direction. Inspect the real output at original resolution.
 
-Run [qa.md](references/qa.md). Check:
+Run [visual-qa.md](references/visual-qa.md). Check:
 
 - Chinese accuracy and natural character width
 - title hierarchy and thumbnail readability

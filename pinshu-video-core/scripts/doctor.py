@@ -15,13 +15,25 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common as C  # noqa: E402
 
 
+VENV_PY = os.path.expanduser("~/.local/share/pinshu-video-venv/bin/python")  # the venv to use when the system python is managed (PEP 668) and cannot pip install
+
+
+def venv_has_core_modules():
+    return os.path.isfile(VENV_PY) and subprocess.run([VENV_PY, "-c", "import numpy, soundfile, PIL"], capture_output=True).returncode == 0
+
+
 def main(project_checks=None):
     ok, warn, bad = [], [], []
     v = sys.version_info
     (ok if v >= (3, 9) else bad).append(f"python {v.major}.{v.minor}" + ("" if v >= (3, 9) else " (need 3.9+)"))
     for mod, pip, need in [("numpy", "numpy", True), ("soundfile", "soundfile", True), ("PIL", "pillow", True), ("librosa", "librosa", False)]:
         if importlib.util.find_spec(mod): ok.append(f"python module {mod}")
-        else: (bad if need else warn).append(f"python module {mod} missing: pip install {pip}" + ("" if need else " (needed for fit_music.py and patch_voice.py)"))
+        elif need and venv_has_core_modules():
+            bad.append(f"python module {mod} missing in this python, but the pinshu-video venv has it: run the scripts with {VENV_PY} instead of python3")
+        elif need:
+            bad.append(f"python module {mod} missing: pip install {pip}. On a managed python (PEP 668) make a venv: python3 -m venv ~/.local/share/pinshu-video-venv && "
+                       "~/.local/share/pinshu-video-venv/bin/pip install numpy soundfile pillow, then run the scripts with that venv's python")
+        else: warn.append(f"python module {mod} missing: pip install {pip} (needed for fit_music.py and patch_voice.py)")
     try:
         ff = C.ffmpeg(); filters = subprocess.run([ff, "-hide_banner", "-filters"], capture_output=True, text=True).stdout
         miss = [f for f in ("ebur128", "silencedetect", "atempo", "signalstats", "tblend", "blackdetect", "alimiter", "sidechaincompress") if f" {f} " not in filters]

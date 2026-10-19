@@ -1,4 +1,4 @@
-# Pinshu Visual System 0.3.0（试用版）
+# Pinshu Visual System 0.4.0（试用版）
 
 ## 第一次运行（5 分钟）
 
@@ -37,7 +37,7 @@ Planning needs Python 3; image export needs ImageMagick 7. Whole-article screens
 
 - 整篇截图依赖 ego 浏览器；网站改版后定位写法可能失效，失败 3 次会自动转人工截图，不会卡死。
 - 外文截中文版走谷歌翻译中转页，部分网站（如 note.com）会挡，挡了就按人工指引用浏览器右键翻译后截。
-- 试稿模式使用同仓库 `pinshu-write` 1.3.0 的 `export_article.py`；正式“定稿待发”路线不需要。
+- 试稿模式使用同仓库 `pinshu-write` 3.3.0 的 `export_article.py`；正式“定稿待发”路线不需要。
 - 排版预览的微信后台粘贴效果还没在真机逐款验收。
 - 脚本检查通过只是最低要求，图意、审美、手机可读性要人看。
 
@@ -65,7 +65,7 @@ These two new AI-generated examples test [Oriental Material Craft](references/me
 
 Actual-image review checked title accuracy, material/action connection, thumbnail and safe export. Both remain method candidates pending human aesthetic review and further themes. The original external research references still need source recovery; no original prompt or reference image is redistributed. [Colorfield Landscape](references/method-cards/oriental-colorfield-landscape.md) is also a candidate card, with no new rendering or promotion claimed in this release.
 
-This local candidate repairs direct reference routing and the interface prompt. It has not been pushed or approved for release.
+本版的批次看图、单图替换、截图拒绝和局部审核沿用见 [0.4.0 说明](references/release-notes-0.4.0.md)。发布与安装验收状态以仓库本次回执为准。
 
 Candidate reproducibility: use requirements.txt for the PNG sharing exporter (tested Python 3.14 / Pillow 12.2.0). Existing render/export commands also need ImageMagick 7 and the installed font selected by the user; PPTX trials need LibreOffice and Poppler as documented. A clean installation and candidate repository CI have not yet been validated. Keep local audit receipts private and use the explicit share exporter described in SKILL.md.
 

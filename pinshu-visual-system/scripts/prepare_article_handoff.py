@@ -9,12 +9,19 @@ import json
 import re
 import shutil
 import sys
+import unicodedata
 from pathlib import Path
 from urllib.parse import urlparse
 
 
 KINDS = {"generated-visual", "evidence-screenshot", "real-photo", "rendered-graphic"}
 ROLES = {"body", "cover_landscape", "cover_square"}
+
+
+def name_key(name: str) -> str:
+    """macOS and Windows file systems treat 'A.png'/'a.png' and composed/decomposed Unicode as one file.
+    Two assets whose names collide this way would overwrite each other on copy (meeting 2026-10-12, IMG-02)."""
+    return unicodedata.normalize("NFC", name).casefold()
 
 
 def export_capture_requests(plan_path: Path, out: Path) -> Path:
@@ -42,9 +49,9 @@ def export_capture_requests(plan_path: Path, out: Path) -> Path:
             if not isinstance(asset.get(key), str) or not asset[key].strip():
                 raise ValueError("Capture request needs " + key)
         name = asset["filename"]
-        if Path(name).name != name or name in names or Path(name).suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}:
-            raise ValueError("Duplicate or nonlocal capture filename: " + name)
-        names.add(name)
+        if Path(name).name != name or name_key(name) in names or Path(name).suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}:
+            raise ValueError("Duplicate or nonlocal capture filename (names differing only by case count as the same file): " + name)
+        names.add(name_key(name))
         role = asset.get("role", "body")
         if role not in ROLES:
             raise ValueError("Unknown capture role")
@@ -72,7 +79,7 @@ def export_capture_requests(plan_path: Path, out: Path) -> Path:
             "requests": requests}
     lines = ["# 待截图清单", "", "状态：待截图；不是可发布的排版交接。", "",
              "正文：" + str(source), "正文 SHA256：" + source_hash, "",
-             "交给具备截图能力的 Agent，或人工用截图工具（如 CleanShot X）手动截。截图本身不加框。",
+             "交给具备截图能力的 Agent，或人工用授权截图工具手动截。截图本身不加框。",
              "2 倍捕获后核实际像素，再等比缩到 1080；保留原图，不放大低清图，不用 AI 顶替。", ""]
     for item in requests:
         lines.extend(["## " + item["filename"], "", "出处：" + item["source_url"],
@@ -120,11 +127,11 @@ def prepare(plan_path: Path, out: Path, layout_skill: Path) -> Path:
         if not file.is_file() or file.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}:
             raise ValueError("Expected a prepared local PNG/JPEG/WebP: " + str(file))
         name = asset.get("filename", file.name)
-        if not name or name in {".", ".."} or Path(name).name != name or name in names:
-            raise ValueError("Duplicate or nonlocal output filename: " + name)
+        if not name or name in {".", ".."} or Path(name).name != name or name_key(name) in names:
+            raise ValueError("Duplicate or nonlocal output filename (names differing only by case count as the same file): " + name)
         if Path(name).suffix.lower() != file.suffix.lower():
             raise ValueError("Output extension must match the prepared image")
-        names.add(name)
+        names.add(name_key(name))
         frame = asset.get("frame_baked", False)
         if type(frame) is not bool:
             raise ValueError("frame_baked must be a Boolean")
@@ -167,7 +174,9 @@ def prepare(plan_path: Path, out: Path, layout_skill: Path) -> Path:
                     item["acquisition_warning"] = "Claimed new capture lacks a bound, dated receipt"
                 elif receipt["captured_at"] != asset.get("captured_at"):
                     raise ValueError("Screenshot capture time differs from its receipt: " + name)
-                if receipt.get("source_url") and receipt["source_url"] != asset.get("source_url"):
+                # A translated capture records the proxy page as source_url and the real page as original_url.
+                captured_from = receipt.get("original_url") or receipt.get("source_url")
+                if captured_from and captured_from != asset.get("source_url"):
                     raise ValueError("Screenshot source URL differs from its receipt: " + name)
         # Editorial metadata is distinct from the seven-field visual card.
         if "image_function" in asset and asset["image_function"] not in {"evidence", "explanation", "concept"}:
@@ -281,7 +290,7 @@ def prepare(plan_path: Path, out: Path, layout_skill: Path) -> Path:
     handoff = {"source_md": str(source), "image_manifest": "配图清单.json",
                "body_images": body_images, **covers,
                "article_state": plan.get("article_state", "未提供；不得推断已定稿")}
-    for key in ("title", "author", "digest", "emphasis", "lead_image"):
+    for key in ("title", "author", "digest", "emphasis", "lead_image", "body_videos", "heading_split"):
         if key in plan:
             handoff[key] = plan[key]
     for name, data in (("配图清单.json", manifest), ("排版交接.json", handoff)):
@@ -292,6 +301,8 @@ def prepare(plan_path: Path, out: Path, layout_skill: Path) -> Path:
 
 
 if __name__ == "__main__":
+    from portable import ensure_utf8_mode
+    ensure_utf8_mode()
     parser = argparse.ArgumentParser(description="复用排版实际解析器生成配图清单和排版交接")
     parser.add_argument("--plan", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)

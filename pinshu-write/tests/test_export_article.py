@@ -5,6 +5,7 @@ import contextlib
 import importlib.util
 import io
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -20,6 +21,7 @@ ACCOUNT = "品叔"
 DATE = "2026-10-12"
 TITLE = "测试标题"
 WRITER = "Writer X"
+APPROVAL = "这版定稿，可以进待发"
 DRAFT = (
     "---\ntitle: old\n---\n\n\n# " + TITLE + "\n\n第一段。\n\n第二段。\n\n"
     "## 参考文章\n\n- 一\n- 二\n\n===EDITOR NOTES===\n\n备注\n"
@@ -33,7 +35,7 @@ def make_pair(root: Path, draft: str = DRAFT):
     process = root / "process"
     process.mkdir(exist_ok=True)
     with contextlib.redirect_stdout(io.StringIO()):
-        md = export_article.ready(source, root / "ready", ACCOUNT, DATE, WRITER, process)
+        md = export_article.ready(source, root / "ready", ACCOUNT, DATE, WRITER, process, approval=APPROVAL)
     kit = md.with_name(md.stem + export_article.KIT_SUFFIX)
     (process / "配图任务.json").write_text("{}", encoding="utf-8")
     kit.write_text(f'---\n正文路径: "{md}"\n配图任务路径: "{process / "配图任务.json"}"\n---\n# kit\n', encoding="utf-8")
@@ -54,7 +56,7 @@ class ReadyFolderTests(unittest.TestCase):
             source.write_text(DRAFT, encoding="utf-8")
             target = root / "ready" / ACCOUNT
             with contextlib.redirect_stdout(io.StringIO()):
-                md = export_article.ready(source, target, ACCOUNT, DATE, WRITER, root)
+                md = export_article.ready(source, target, ACCOUNT, DATE, WRITER, root, approval=APPROVAL)
             self.assertEqual(md.parent, target.resolve())
             self.assertFalse((target / ACCOUNT).exists())
 
@@ -63,7 +65,8 @@ class ReadyFolderTests(unittest.TestCase):
             root = Path(tmp)
             (root / "d.md").write_text(DRAFT, encoding="utf-8")
             out = subprocess.run([sys.executable, str(SCRIPT), "--source", str(root / "d.md"), "--ready-dir", str(root / "r"),
-                                  "--account", ACCOUNT, "--date", DATE, "--writer", WRITER, "--process-dir", str(root)],
+                                  "--account", ACCOUNT, "--date", DATE, "--writer", WRITER, "--process-dir", str(root),
+                                  "--approval", APPROVAL],
                                  capture_output=True, text=True, check=True).stdout
             self.assertEqual(set(json.loads(out)), {"ready_md", "article_sha256", "kit_md"})
 
@@ -163,6 +166,22 @@ class CheckContractTests(unittest.TestCase):
             kit_with_table(md, kit, [("04 图", "段。")])  # a substring in the middle is not a paragraph start
             self.assertIn("04 图", self.problems(md))
 
+    def test_video_table_anchors_are_checked_too(self):
+        """1.4: a second table (videos) after the image table is checked as well; a table
+        without the anchor column in between is skipped."""
+        with tempfile.TemporaryDirectory() as tmp:
+            md, kit = make_pair(Path(tmp))
+            kit_with_table(md, kit, [("01 图", "第一段")])
+            base = kit.read_text(encoding="utf-8")
+            other = "\n## 其他\n\n| 平台 | 转发语 |\n|---|---|\n| 微博 | 第二段之外的话 |\n"
+            videos = "\n## 视频\n\n| 视频 | 放在哪段后面（段落开头） | 原始链接 |\n|---|---|---|\n| V1 Min Choi 原片 | {} | https://x.com/a |\n"
+            kit.write_text(base + other + videos.format("第二段"), encoding="utf-8")
+            self.assertTrue(export_article.check(md)["ok"], export_article.check(md))
+            kit.write_text(base + other + videos.format("正文里没有的段落"), encoding="utf-8")
+            problems = self.problems(md)
+            self.assertIn("V1 Min Choi 原片", problems)
+            self.assertNotIn("微博", problems)
+
     def test_source_count_rules(self):
         with tempfile.TemporaryDirectory() as tmp:
             md, _ = make_pair(Path(tmp))  # two entries: as many as the article used, no warning
@@ -188,7 +207,7 @@ class CheckContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             md, kit = make_pair(Path(tmp))
             (Path(tmp) / "process" / "配图任务.json").unlink()
-            (Path(tmp) / "process").rmdir()
+            shutil.rmtree(Path(tmp) / "process")
             problems = self.problems(md)
             self.assertIn("过程文件夹", problems)
 
@@ -207,6 +226,128 @@ class CheckContractTests(unittest.TestCase):
     def test_body_only_needs_check(self):
         proc = subprocess.run([sys.executable, str(SCRIPT), "--body-only", "--source", "x"], capture_output=True, text=True)
         self.assertEqual(proc.returncode, 2)
+
+
+class FinalApprovalGateTests(unittest.TestCase):
+    """Meeting 2026-10-12: only the author's 定稿 puts an article in the ready folder; 可以/继续/还行 do not."""
+
+    def cli(self, root: Path, *extra):
+        source = root / "d.md"
+        if not source.exists():
+            source.write_text(DRAFT, encoding="utf-8")
+        (root / "p").mkdir(exist_ok=True)
+        return subprocess.run([sys.executable, str(SCRIPT), "--source", str(source), "--ready-dir", str(root / "r"),
+                               "--account", ACCOUNT, "--date", DATE, "--writer", WRITER, "--process-dir", str(root / "p"), *extra],
+                              capture_output=True, text=True)
+
+    def test_casual_go_ahead_words_are_refused(self):
+        for words in (None, "可以", "继续", "还行", "挺满意的，继续"):
+            with self.subTest(words=words), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                out = self.cli(root, *(["--approval", words] if words else []))
+                self.assertEqual(out.returncode, 1, out.stdout)
+                self.assertIn("refused", out.stderr)
+                self.assertFalse((root / "r").exists())
+                self.assertFalse((root / "p" / export_article.APPROVAL_LOG).exists())
+
+    def test_negated_or_questioning_dinggao_is_refused(self):
+        for words in ("先别定稿", "还没定稿", "这版能定稿吗", "不算定稿",
+                      "不是定稿", "是否定稿", "等改完再定稿", "请不要直接定稿", "如果没问题就定稿", "待定稿"):
+            with self.subTest(words=words):
+                self.assertIsNotNone(export_article.approval_problem(words))
+
+    def test_plain_dinggao_sentences_pass(self):
+        for words in ("定稿", "这版定稿，可以进待发", "改完这版定稿", "可以，定稿"):
+            with self.subTest(words=words):
+                self.assertIsNone(export_article.approval_problem(words))
+
+    def test_dinggao_exports_and_logs_the_exact_file(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            out = self.cli(root, "--approval", "定稿")
+            self.assertEqual(out.returncode, 0, out.stderr)
+            info = json.loads(out.stdout)
+            log = [json.loads(l) for l in (root / "p" / export_article.APPROVAL_LOG).read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(len(log), 1)
+            self.assertEqual(log[0]["approval"], "定稿")
+            self.assertEqual(log[0]["article_sha256"], info["article_sha256"])
+            md = Path(info["ready_md"])
+            self.assertTrue(export_article.approval_recorded(root / "p", md.resolve(), info["article_sha256"]))
+
+    def test_trial_export_still_works_without_approval(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "d.md").write_text(DRAFT, encoding="utf-8")
+            out = subprocess.run([sys.executable, str(SCRIPT), "--source", str(root / "d.md"), "--output-dir", str(root / "trial")],
+                                 capture_output=True, text=True)
+            self.assertEqual(out.returncode, 0, out.stderr)
+            record = json.loads((root / "trial" / "正文导出记录.json").read_text(encoding="utf-8"))
+            self.assertIn("导出不代表定稿", record["article_state"])
+
+    def test_different_ready_copy_is_never_silently_overwritten(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.assertEqual(self.cli(root, "--approval", "定稿").returncode, 0)
+            target = next((root / "r" / ACCOUNT).glob("*.md"))
+            first = target.read_bytes()
+            (root / "d.md").write_text(DRAFT.replace("第一段。", "第一段改过。"), encoding="utf-8")
+            out = self.cli(root, "--approval", "定稿")
+            self.assertEqual(out.returncode, 1)
+            self.assertIn("--replace", out.stderr)
+            self.assertEqual(target.read_bytes(), first)
+            out = self.cli(root, "--approval", "改完这版定稿", "--replace")
+            self.assertEqual(out.returncode, 0, out.stderr)
+            kept = list((root / "p" / export_article.REPLACED_DIR).glob("*.md"))
+            self.assertEqual(len(kept), 1)
+            self.assertEqual(kept[0].read_bytes(), first)
+            self.assertIn("第一段改过。", target.read_text(encoding="utf-8"))
+            entries = (root / "p" / export_article.APPROVAL_LOG).read_text(encoding="utf-8").splitlines()
+            self.assertEqual(len(entries), 2)
+            self.assertEqual(json.loads(entries[1])["replaced_copy_kept_at"], str(kept[0].resolve()))
+
+    def test_same_bytes_re_export_needs_no_replace(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.assertEqual(self.cli(root, "--approval", "定稿").returncode, 0)
+            self.assertEqual(self.cli(root, "--approval", "定稿").returncode, 0)
+            self.assertFalse((root / "p" / export_article.REPLACED_DIR).exists())
+
+    def test_check_warns_when_no_approval_record(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            md, _ = make_pair(Path(tmp))
+            self.assertTrue(export_article.check(md)["ok"])
+            self.assertFalse(any("定稿确认记录" in w for w in export_article.check(md)["warnings"]))
+            (Path(tmp) / "process" / export_article.APPROVAL_LOG).unlink()
+            report = export_article.check(md)
+            self.assertTrue(report["ok"])
+            self.assertTrue(any("定稿确认记录" in w for w in report["warnings"]))
+
+
+class ReviewFixes14Tests(unittest.TestCase):
+    """Independent review of 1.4.0 (Codex, 2026-10-12)."""
+
+    def test_running_export_lock_refuses_a_second_export(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "d.md").write_text(DRAFT, encoding="utf-8"); (root / "p").mkdir()
+            target_dir = root / "r" / ACCOUNT; target_dir.mkdir(parents=True)
+            lock = target_dir / f".{DATE}_{TITLE}.md.exporting"
+            lock.write_text("", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Another export"):
+                export_article.ready(root / "d.md", root / "r", ACCOUNT, DATE, WRITER, root / "p", approval="定稿")
+            self.assertFalse((target_dir / f"{DATE}_{TITLE}.md").exists())
+            lock.unlink()
+            with contextlib.redirect_stdout(io.StringIO()):
+                md = export_article.ready(root / "d.md", root / "r", ACCOUNT, DATE, WRITER, root / "p", approval="定稿")
+            self.assertTrue(md.is_file())
+            self.assertFalse(lock.exists())
+
+    def test_kit_row_without_anchor_cell_is_reported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            md, kit = make_pair(Path(tmp))
+            kit_with_table(md, kit, [("01 图", "第一段")])
+            kit.write_text(kit.read_text(encoding="utf-8") + "\n| 视频 | 放在哪段后面（段落开头） |\n|---|---|\n| V1 |\n", encoding="utf-8")
+            self.assertIn("V1", " ".join(export_article.check(md)["problems"]))
 
 
 if __name__ == "__main__":

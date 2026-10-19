@@ -47,14 +47,25 @@ NUMBER = re.compile(r"\d+(?:[.,]\d+)?%?")
 ORDINAL_OPENERS = ("\u9996\u5148", "\u5176\u6b21")
 HYPOTHETICAL_OPENERS = ("\u5047\u8bbe", "\u8bbe\u60f3")
 CARD_SKIPPED = (
-    "exactly one H1", "body longer", "body outside", "second person", "section outside", "sections are unbalanced",
+    "exactly one H1", "body longer", "first draft longer", "sections are nearly the same length", "body outside", "second person", "section outside", "sections are unbalanced",
     "subhead length", "subhead lengths", "opening uses", "paragraph lengths", "5 paragraphs in a row",
-    "long paragraph", "more than three numbers", "meta narration",
+    "long paragraph", "more than three numbers", "meta narration", "single-sentence paragraphs", "numbered subhead",
 )
 LIST_MARKERS = ("- ", "* ", "> ", "|", "!")
+NUMBERED_ITEM = re.compile(r"^(\d+[.、．)]|[一二三四五六七八九十]+、)")
+# 2.4 (the author, 2026-10-17): core claims and punchlines may stand alone as one-sentence paragraphs,
+# never two in a row (2.1 had capped them at two per article); subheads carry no number (2.1).
+SENTENCE_END = re.compile(r"[\u3002\uff01\uff1f]")
+NUMBERED_SUBHEAD = re.compile(r"^(?:\d{1,2}|[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341])\s*[.\u3001\uff0e:\uff1a ]|^0\d")
 EVEN_SPREAD = 0.35
 EVEN_RUN = 5
 EVEN_RATIO = 1.3
+# Two habits 得到大脑's writing process names (2026-10-19): the same word opening
+# sentence after sentence reads like an echo; sections of equal length read like a form.
+SENTENCE_SPLIT = re.compile(r"[\u3002\uff01\uff1f\uff1b]")
+OPENER_STRIP = "\u201c\u201d\u2018\u2019\"'\uff08\uff09()\u3010\u3011*\u300c\u300d \t"
+SAME_OPENER_RUN = 3
+SECTION_EVEN_RATIO = 1.2
 LATIN_TERM = re.compile(r"[A-Za-z][A-Za-z0-9.'-]*(?: [A-Za-z][A-Za-z0-9.'-]*)*")
 COMMON_LATIN = {"AI", "CEO", "PPT", "APP", "App", "app"}
 # A foreign term counts as explained when a bracket right after it holds Chinese
@@ -89,12 +100,12 @@ RULES_TEXT = """
   \u4e0d\u662f\u2026\u2026\uff0c\u662f\u2026\u2026
   \u4e0d\u5728\u4e8e\u2026\u2026\u800c\u5728\u4e8e\u2026\u2026
   \u2026\u2026\uff0c\u800c\u4e0d\u662f\u2026\u2026
-  \u53ef\u4ee5\u5076\u5c14\u7528\u53e5\u53f7\u65ad\u5f00\u7684\u77ed\u53cd\u8f6c\uff1a\u201c\u4e0d\u662f A\u3002\u662f B\u3002\u201d
+  \u786e\u5b9e\u9700\u8981\u65f6\u5168\u7bc7\u6700\u591a\u4e00\u6b21\uff0c\u7528\u53e5\u53f7\u65ad\u5f00\uff1a\u201c\u4e0d\u662f A\u3002\u662f B\u3002\u201d
 
 \u6807\u70b9\uff1a
   \u4e0d\u7528\u7834\u6298\u53f7\uff08\u2014\u2014\uff09\uff0c\u6539\u7528\u5192\u53f7\u3001\u62ec\u53f7\u6216\u62c6\u53e5
   \u4e2d\u6587\u6807\u70b9\u5168\u89d2\uff0c\u5f15\u53f7\u7528\u201c\u201d\uff0c\u4e0d\u7528\u82f1\u6587\u5f15\u53f7
-  \u6b63\u6587\u4e0d\u52a0\u7c97\uff0c\u4e0d\u7528 emoji\uff0c\u5168\u6587\u53ea\u6709\u4e00\u4e2a\u4e00\u7ea7\u6807\u9898
+  \u91cd\u70b9\u53e5\u548c\u91d1\u53e5\u53ef\u4ee5\u52a0\u7c97\uff0c\u5e2e\u8bfb\u8005\u626b\u8bfb\uff0c\u522b\u6ee1\u7bc7\uff1b\u4e0d\u7528 emoji\uff0c\u5168\u6587\u53ea\u6709\u4e00\u4e2a\u4e00\u7ea7\u6807\u9898
 
 \u4e0d\u5199\u5143\u89e3\u8bf4\uff1a
   {meta}
@@ -103,6 +114,7 @@ RULES_TEXT = """
 \u6bb5\u9996\u522b\u7a81\u5140\u70b9\u8bc4\uff1a\u503c\u5f97\u6ce8\u610f\u3001\u95ee\u9898\u5728\u4e8e\u3001\u5173\u952e\u5728\u4e8e\u3001\u66f4\u91cd\u8981\u7684\u662f\u3001\u8bf4\u5230\u5e95\u8fd9\u7c7b\u5f00\u5934\uff0c\u53c8\u6ca1\u7528\u8fd9\u3001\u90a3\u3001\u4f46\u3001\u6240\u4ee5\u63a5\u4e0a\u6587\u7684\uff08\u63d0\u9192\uff09
 
 \u4e0d\u7528\u5217\u8868\u8154\u5f00\u5934\uff1a\u9996\u5148\u3001\u5176\u6b21\u3001\u6700\u540e
+\u5c0f\u6807\u9898\u5148\u8fc7\u4f5c\u8005\u8fd9\u4e00\u5173\uff1a\u4e0d\u770b\u6b63\u6587\uff0c\u53ea\u770b\u6807\u9898\uff0c\u5c31\u77e5\u9053\u4e0b\u4e00\u90e8\u5206\u8981\u8bf4\u4ec0\u4e48\uff0c\u6807\u9898\u662f\u9898\u773c\uff1b\u5e26\u81ea\u7136\u7684\u9017\u53f7\uff0c\u5341\u516d\u5b57\u4ee5\u5185\uff0c\u4e0d\u52a0\u7f16\u53f7\u3002
 \u6807\u9898\u548c\u5c0f\u6807\u9898\uff1a\u76f4\u63a5\u6392\u7b2c\u4e00\uff0c\u51c6\u786e\u7b2c\u4e8c\uff0c\u597d\u8bb0\u7b2c\u4e09\uff0c\u6709\u4eae\u70b9\u7b2c\u56db\uff1b\u540e\u9762\u7684\u548c\u524d\u9762\u7684\u51b2\u7a81\uff0c\u540e\u9762\u7684\u8ba9\u8def\u3002
   \u68c0\u9a8c\uff1a\u906e\u4f4f\u6b63\u6587\uff0c\u53ea\u770b\u8fd9\u4e00\u884c\uff0c\u5916\u884c\u80fd\u4e0d\u80fd\u4e00\u53e5\u8bdd\u8bf4\u51fa\u8fd9\u4e00\u8282\u6559\u4ec0\u4e48\u6216\u4e3b\u5f20\u4ec0\u4e48\uff1b\u8bf4\u4e0d\u51fa\u5c31\u91cd\u5199\u3002
   \u5b9e\u64cd\u7a3f\uff08\u52a8\u4f5c\uff0b\u8fd9\u4e00\u6b65\u4e3a\u4ec0\u4e48\u8981\u505a\uff0c\u6700\u597d\u662f\u4e00\u4e2a\u80fd\u8bb0\u4f4f\u7684\u8bf4\u6cd5\uff09\uff1a
@@ -119,24 +131,25 @@ RULES_TEXT = """
   \u65b0\u95fb\u5206\u6790\u7a3f\uff08\u8fd9\u4ef6\u4e8b\u5bf9\u8bfb\u8005\u610f\u5473\u7740\u4ec0\u4e48\uff09\uff1a
     \u5bf9\uff1a\u6a21\u578b\u964d\u4ef7\u4e00\u534a\uff0c\u6309\u5b57\u6570\u62a5\u4ef7\u7684\u5199\u7a3f\u5916\u5305\u8981\u91cd\u65b0\u7b97\u8d26
     \u9519\uff1a\u4e00\u573a\u53d1\u5e03\u4f1a\u5e26\u6765\u7684\u542f\u793a
-  \u5927\u6807\u9898\uff1a\u53ea\u770b\u6807\u9898\u5c31\u77e5\u9053\u201c\u5199\u7ed9\u6211\u3001\u6211\u80fd\u5f97\u5230\u4ec0\u4e48\u201d\uff1b\u8bfb\u8005\u719f\u6089\u3001\u8ddf\u6b63\u6587\u7d27\u76f8\u5173\u7684\u70ed\u8bcd\uff08\u65b0\u6a21\u578b\u540d\uff09\u8981\u7559\u5728\u6807\u9898\u91cc
+  \u5927\u6807\u9898\uff1a\u53ea\u770b\u6807\u9898\u5c31\u77e5\u9053\u201c\u5199\u7ed9\u6211\u3001\u6211\u80fd\u5f97\u5230\u4ec0\u4e48\u201d\uff1b15 \u5230 25 \u5b57\uff1b\u8bfb\u8005\u719f\u6089\u3001\u8ddf\u6b63\u6587\u7d27\u76f8\u5173\u7684\u70ed\u8bcd\uff08\u65b0\u6a21\u578b\u540d\uff09\u8981\u7559\u5728\u6807\u9898\u91cc\uff1b\u63d0\u95ee\u3001\u60ac\u5ff5\u3001\u53cd\u5dee\u548c\u300c\u300d\uff1f\u2026\u2026\uff01\u8fd9\u4e9b\u7b26\u53f7\u90fd\u53ef\u4ee5\u7528\uff0c\u524d\u63d0\u662f\u4e00\u773c\u770b\u5f97\u51fa\u8bf4\u7684\u662f\u4ec0\u4e48\u4e8b
   \u6807\u9898\u91cc\u7684\u6bcf\u4e2a\u540d\u8bcd\uff0c\u6ca1\u8bfb\u6b63\u6587\u7684\u4eba\u4e5f\u8bf4\u5f97\u51fa\u6307\u4ec0\u4e48\uff1b\u6587\u7ae0\u81ea\u5df1\u8d77\u7684\u8bf4\u6cd5\u4e0d\u8fdb\u6807\u9898
     \u9519\uff1a\u770b\u61c2\u8fd9\u628a\u5c3a\uff0c\u5c31\u770b\u61c2\u4e86\u52aa\u529b\uff08\u201c\u8fd9\u628a\u5c3a\u201d\u53ea\u6709\u8bfb\u8fc7\u6b63\u6587\u624d\u77e5\u9053\u6307\u4ec0\u4e48\uff09
   \u6bd4\u55bb\u8981\u5148\u5728\u6b63\u6587\u91cc\u7528\u5177\u4f53\u4f8b\u5b50\u8bb2\u6e05\uff0c\u624d\u80fd\u8fdb\u6807\u9898\u3001\u5c0f\u6807\u9898\uff1b\u4e0d\u8bb8\u5728\u6807\u9898\u3001\u5c0f\u6807\u9898\u91cc\u7b2c\u4e00\u6b21\u51fa\u73b0
   \u5c0f\u6807\u9898\u4e0d\u7528\u6b63\u6587\u624d\u5b9a\u4e49\u7684\u8bf4\u6cd5\u548c\u4ee3\u8bcd\uff08\u201c\u5b83\u201d\u201c\u8fd9\u4e00\u6761\u201d\u201c\u7b2c\u4e8c\u79cd\u201d\uff09
   \u6807\u9898\u8981\u6709\u7279\u8272\uff1a\u95ee\u4e00\u53e5\u201c\u8fd9\u53e5\u8bdd\u662f\u4e0d\u662f\u53ea\u6709\u8fd9\u7bc7\u6587\u7ae0\u4f1a\u8bf4\u201d\u3002\u653e\u5728\u54ea\u7bc7\u90fd\u80fd\u7528\u7684\uff0c\u7b97\u6ca1\u7279\u8272\uff1a
-    \u9519\uff1a\u6548\u7387\u4e0a\u53bb\u4e86\uff0c\u4ef7\u503c\u4e0b\u6765\u4e86\uff08\u5bf9\u4ed7\u53e5\uff0c\u653e\u54ea\u7bc7\u90fd\u884c\uff09
+    \u9519\uff1a\u6548\u7387\u4e0a\u53bb\u4e86\uff0c\u4ef7\u503c\u4e0b\u6765\u4e86\uff08\u8bf4\u4e0d\u51fa\u8fd9\u7bc7\u7684\u5177\u4f53\u610f\u601d\uff0c\u653e\u54ea\u7bc7\u90fd\u884c\uff1b\u5bf9\u4ed7\u3001\u4e09\u6bb5\u7684\u5199\u6cd5\u672c\u8eab\u53ef\u4ee5\u7528\uff09
     \u9519\uff1aAI \u65f6\u4ee3\uff0c\u662f\u65f6\u5019\u91cd\u65b0\u770b\u5f85\u52aa\u529b\u4e86\uff08\u7a7a\u558a\uff0c\u6362\u4e2a\u9898\u76ee\u7167\u6837\u80fd\u7528\uff09
     \u9519\uff1aAI \u65f6\u4ee3\u7684\u52aa\u529b\u89c2\uff08\u8bdd\u9898\u8bcd\uff0c\u6ca1\u6709\u5224\u65ad\uff09
     \u7279\u8272\u6765\u81ea\u8fd9\u7bc7\u81ea\u5df1\u7684\u5224\u65ad\u3001\u6570\u5b57\u3001\u4e8b\u4ef6\u6216\u8bfb\u8005\u7684\u95ee\u9898\uff0c\u4e0d\u9760\u5b57\u9762\u82b1\u6837\uff1b\u4e00\u773c\u61c2\u4ecd\u7136\u6392\u7b2c\u4e00
   \u6807\u9898\u5019\u9009\u7ed9\u4e09\u4e2a\uff0c\u5199\u6cd5\u5404\u4e0d\u76f8\u540c\uff1a\u4e00\u4e2a\u76f4\u8bf4\u7ed3\u8bba\uff0c\u4e00\u4e2a\u662f\u8bfb\u8005\u81ea\u5df1\u7684\u95ee\u9898\uff0c\u4e00\u4e2a\u7528\u5177\u4f53\u6570\u5b57\u6216\u4e8b\u5b9e\uff1b\u540c\u4e00\u4e2a\u94a9\u5b50\u6362\u4e09\u79cd\u8bf4\u6cd5\u53ea\u7b97\u4e00\u4e2a
   \uff08\u4ee5\u4e0a\u201c\u5bf9\u201d\u7684\u53e5\u5b50\u53ea\u662f\u683c\u5f0f\u793a\u8303\uff0c\u4e0d\u662f\u4e8b\u5b9e\uff09
-\u5f00\u5934\uff1a\u624b\u91cc\u6709\u771f\u4e8b\u5c31\u7528\u771f\u4e8b\u5f00\u5934\uff1b\u201c\u5047\u8bbe\u201d\u201c\u8bbe\u60f3\u201d\u5f00\u5934\u5fc5\u987b\u6539\uff08\u5bf9\u7167\u8d26\u53f7\u6700\u8fd1\u51e0\u7bc7\uff0c\u540c\u4e00\u79cd\u5f00\u5934\u4e0d\u8fde\u7740\u7528\uff09
+\u5f00\u5934\uff1a\u89c2\u70b9\u7280\u5229\u6216\u53cd\u5e38\u8bc6\u3001\u8bfb\u8005\u6ca1\u542c\u8fc7\u7684\uff0c\u5f00\u95e8\u89c1\u5c71\u3001\u91d1\u53e5\u5b9a\u8c03\uff0c\u540e\u9762\u4e00\u5c42\u5c42\u8bb2\u5f00\uff1b\u89c2\u70b9\u5e73\u6de1\u3001\u8bfb\u8005\u8033\u719f\u80fd\u8be6\u7684\uff0c\u5148\u5199\u8bfb\u8005\u5171\u540c\u7684\u611f\u53d7\u6216\u73b0\u8c61\u3001\u629b\u51fa\u95ee\u9898\uff0c\u4e0d\u628a\u7b54\u6848\u8bf4\u5b8c\uff0c\u7b54\u6848\u4e00\u8282\u4e00\u8282\u63ed\u5f00\uff0c\u7ed3\u5c3e\u8bf4\u5b8c\u6574\uff1b\u4e0d\u662f\u5f53\u5929\u70ed\u70b9\u7684\u6848\u4f8b\u4e0d\u62ff\u6765\u5f00\u5934\uff0c\u653e\u8fdb\u6b63\u6587\u5f53\u4f50\u8bc1\uff1b\u5f00\u5934\u7b2c\u4e00\u53e5\u4e3b\u8bed\u8981\u6e05\u695a\uff1b\u201c\u5047\u8bbe\u201d\u201c\u8bbe\u60f3\u201d\u5f00\u5934\u5fc5\u987b\u6539\uff08\u5bf9\u7167\u8d26\u53f7\u6700\u8fd1\u51e0\u7bc7\uff0c\u540c\u4e00\u79cd\u5f00\u5934\u4e0d\u8fde\u7740\u7528\uff09
 \u6bb5\u843d\u957f\u77ed\u522b\u6574\u9f50\u5212\u4e00\uff1a\u8fde\u7eed\u597d\u51e0\u6bb5\u4e00\u6837\u957f\uff0c\u6362\u6389\u6240\u6709\u8bcd\u4e5f\u4e00\u773c\u50cf\u673a\u5668\u5199\u7684\uff08\u63d0\u9192\uff09
+\u6bb5\u843d\uff1a\u4e00\u6bb5\u4e09\u5230\u4e94\u53e5\u3001\u516b\u5341\u5230\u4e24\u767e\u5b57\uff0c\u6838\u5fc3\u89c2\u70b9\u548c\u91d1\u53e5\u53ef\u4ee5\u5355\u72ec\u6210\u6bb5\uff0c\u522b\u8fde\u7740\u4e24\u6bb5\u90fd\u662f\u4e00\u53e5\uff1b\u6bcf\u6bb5\u7b2c\u4e00\u53e5\u4e3b\u8bed\u6e05\u695a\uff0c\u8bfb\u8005\u4e0d\u7528\u731c\u5728\u8bf4\u8c01\uff08\u63d0\u9192\uff09
 
-\u5916\u6587\u8bcd\u7b2c\u4e00\u6b21\u51fa\u73b0\u8981\u7528\u5927\u767d\u8bdd\u89e3\u91ca\uff0c\u7d27\u8ddf\u62ec\u53f7\u4e14\u62ec\u53f7\u91cc\u5199\u4e2d\u6587\uff0c\u6216\u7d27\u8ddf\u7740\u8bf4\u201c\u662f\u4e00\u79cd\u201d\u201c\u4e5f\u5c31\u662f\u201d\uff1b\u7a7a\u62ec\u53f7\u3001\u62ec\u53f7\u91cc\u53ea\u6709\u5916\u6587\u3001\u9694\u5f00\u534a\u53e5\u518d\u89e3\u91ca\u90fd\u4e0d\u7b97\uff1b\u6807\u9898\u548c\u5c0f\u6807\u9898\u91cc\u7684\u5916\u6587\u8bcd\u4e5f\u8981\u67e5\uff1b\u89e3\u91ca\u8fc7\u7684\u4e0d\u518d\u63d0\u9192
+\u5916\u6587\u8bcd\u6309\u8d26\u53f7\u8bfb\u8005\u5224\u65ad\uff1a\u8bfb\u8005\u5929\u5929\u5728\u7528\u7684\u8bcd\uff08\u6bd4\u5982\u7528 AI \u7684\u8bfb\u8005\u773c\u91cc\u7684 Token\u3001Agent\u3001Skill\uff09\u4e0d\u89e3\u91ca\uff0c\u811a\u672c\u5bf9\u8fd9\u7c7b\u8bcd\u7684\u63d0\u9192\u53ef\u4ee5\u4e0d\u7ba1\uff1b\u8bfb\u8005\u53ef\u80fd\u4e0d\u61c2\u7684\uff0c\u7b2c\u4e00\u6b21\u51fa\u73b0\u8981\u7528\u5927\u767d\u8bdd\u89e3\u91ca\uff0c\u7d27\u8ddf\u62ec\u53f7\u4e14\u62ec\u53f7\u91cc\u5199\u4e2d\u6587\uff0c\u6216\u7d27\u8ddf\u7740\u8bf4\u201c\u662f\u4e00\u79cd\u201d\u201c\u4e5f\u5c31\u662f\u201d\uff1b\u7a7a\u62ec\u53f7\u3001\u62ec\u53f7\u91cc\u53ea\u6709\u5916\u6587\u3001\u9694\u5f00\u534a\u53e5\u518d\u89e3\u91ca\u90fd\u4e0d\u7b97\uff1b\u6807\u9898\u548c\u5c0f\u6807\u9898\u91cc\u7684\u5916\u6587\u8bcd\u4e5f\u8981\u67e5\uff1b\u89e3\u91ca\u8fc7\u7684\u4e0d\u518d\u63d0\u9192
 \u6b63\u6587\u4e0d\u5939\u62ec\u53f7\u51fa\u5904\uff1b\u4e00\u6bb5\u6700\u591a\u4e00\u4e2a\u4f8b\u5b50\u3001\u4e00\u7ec4\u6570\u5b57\u3002
-\u6587\u672b\u6765\u6e90\u533a\u53eb\u201c\u53c2\u8003\u6587\u7ae0\u201d\uff0c\u53ea\u5217\u771f\u6b63\u7528\u5230\u3001\u8bfb\u8005\u503c\u5f97\u53bb\u8bfb\u7684\u5b8c\u6574\u957f\u6587\uff08\u6807\u9898\u3001\u4f5c\u8005\u3001\u5e73\u53f0\u3001\u65e5\u671f\uff09\uff0c\u6709\u51e0\u7bc7\u5217\u51e0\u7bc7\uff0c\u522b\u628a\u6240\u6709\u51fa\u5904\u5806\u6210\u4e00\u957f\u4e32\uff1b\u67e5\u8bc1\u6e05\u5355\u653e\u7f16\u8f91\u5907\u6ce8\u540e\uff0c\u4e0d\u8fdb\u6b63\u6587\u3002
+\u6587\u672b\u6765\u6e90\u533a\u53eb\u201c\u53c2\u8003\u6587\u7ae0\u201d\uff0c\u5217\u771f\u6b63\u7528\u5230\u3001\u8bfb\u8005\u503c\u5f97\u53bb\u8bfb\u7684\u5b8c\u6574\u957f\u6587\uff0c\u4ee5\u53ca\u6b63\u6587\u7528\u5230\u3001\u627e\u5f97\u5230\u6765\u6e90\u7684\u4e3b\u8981\u7814\u7a76\u62a5\u544a\uff08\u6807\u9898\u3001\u4f5c\u8005\u6216\u673a\u6784\u3001\u5e73\u53f0\u3001\u65e5\u671f\uff09\uff0c\u6709\u51e0\u7bc7\u5217\u51e0\u7bc7\uff0c\u522b\u628a\u6240\u6709\u51fa\u5904\u5806\u6210\u4e00\u957f\u4e32\uff1b\u67e5\u8bc1\u6e05\u5355\u653e\u7f16\u8f91\u5907\u6ce8\u540e\uff0c\u4e0d\u8fdb\u6b63\u6587\u3002
 \u5c0f\u6807\u9898\u548c\u6807\u9898\u5c11\u7528\u8bf4\u70c2\u7684\u62bd\u8c61\u8bcd\uff08\u5224\u65ad\u3001\u8ba4\u77e5\u3001\u5e95\u5c42\u903b\u8f91\u7b49\uff09\uff0c\u7528\u8bfb\u8005\u751f\u6d3b\u91cc\u7684\u8bcd\u3002
 \u5c0f\u6807\u9898\u8bfb\u4e00\u904d\uff0c\u770b\u6709\u6ca1\u6709\u80fd\u88ab\u65ad\u9519\u7684\u8bcd\uff08\u201c\u8bb2\u4eba\u624d\u7528\u751f\u6210\u201d\u88ab\u8bfb\u6210\u201c\u4eba\u624d\u201d\uff09\uff1b\u5916\u884c\u8bfb\u8005\u62a5\u51fa\u7684\u65ad\u8bcd\u6b67\u4e49\u5fc5\u987b\u6539\u3002
 \u8bfb\u8005\u4f1a\u5361\u4f4f\u7684\u4e03\u5904\uff1a
@@ -148,7 +161,8 @@ RULES_TEXT = """
   \u81ea\u9020\u7684\u8bf4\u6cd5\uff08\u201c\u6700\u5c0f\u7684\u7ebf\u201d\uff09\u6362\u6210\u5927\u767d\u8bdd
   \u4f1a\u53d8\u7684\u6570\u5b57\uff08\u6d4f\u89c8\u91cf\u3001\u64ad\u653e\u91cf\uff09\u6309\u53d1\u7a3f\u5f53\u5929\u590d\u6d4b\uff0c\u53e5\u5b50\u91cc\u5199\u4e0a\u65e5\u671f
 \u6807\u9898\u8bb8\u8bfa\u4e86\u4ec0\u4e48\uff08\u201c\u662f\u4e2a\u8bef\u4f1a\u201d\uff09\uff0c\u7ed3\u5c3e\u5c31\u660e\u767d\u8bf4\u51fa\u6765\uff08\u8bef\u4f1a\u5728\u54ea\uff09\u3002
-\u4e0d\u7f16\u201c\u5f88\u591a\u4eba\u8bf4\u201d\u201c\u670b\u53cb\u8ddf\u6211\u8bf4\u201d\u8fd9\u7c7b\u6ca1\u51fa\u5904\u7684\u4eba\uff1b\u4e0d\u7f16\u6599\u91cc\u6ca1\u6709\u7684\u7ea6\u6570\uff08\u201c\u524d\u4e24\u5e74\u201d\u201c\u4e09\u5230\u56db\u6210\u201d\uff09\u3002
+\u5199\u51fa\u5927\u5bb6\u5171\u540c\u7684\u611f\u53d7\u53ef\u4ee5\uff08\u201c\u591a\u6570\u4eba\u90fd\u6709\u8fd9\u79cd\u611f\u89c9\u201d\uff09\uff1b\u62ff\u7f16\u51fa\u6765\u7684\u4eba\u7fa4\u5f53\u8bba\u636e\u4e0d\u884c\uff08\u6ca1\u51fa\u5904\u7684\u201c\u5f88\u591a\u4eba\u8bf4\u201d\u201c\u670b\u53cb\u8ddf\u6211\u8bf4\u201d\uff09\u3002\u4e0d\u7f16\u6599\u91cc\u6ca1\u6709\u7684\u7ea6\u6570\uff08\u201c\u524d\u4e24\u5e74\u201d\u201c\u4e09\u5230\u56db\u6210\u201d\uff09\uff1b\u4e00\u822c\u751f\u6d3b\u7ecf\u9a8c\u7684\u63cf\u5199\uff08\u6bd4\u5982\u71ac\u591c\u8d76\u65b9\u6848\uff09\u53ef\u4ee5\u5199\u3002
+\u6587\u7ae0\u91cc\u4e0d\u900f\u9732\u7528 AI \u5199\u7a3f\uff1a\u4e0d\u5199\u5199\u7a3f\u6d41\u7a0b\u3001\u5199\u7a3f\u5de5\u5177\u3001\u7528 AI \u5199\u7a3f\u8fd9\u4ef6\u4e8b\u3002
 """
 
 
@@ -222,7 +236,7 @@ def source_section(text: str) -> tuple[str | None, int | None, int]:
 
 def audit(text: str, banned: list[str], length: tuple[int, int], hard_max: int,
           section_min: int, section_max: int, you_per_k: float, para_max: int,
-          subhead_range: tuple[int, int] = (8, 14), card: bool = False) -> dict:
+          subhead_range: tuple[int, int] = (1, 16), card: bool = False, first_draft: bool = False) -> dict:
     findings: list[dict] = []
 
     def add(level: str, rule: str, line_no: int | None, detail: str) -> None:
@@ -265,8 +279,6 @@ def audit(text: str, banned: list[str], length: tuple[int, int], hard_max: int,
     for number, para in paragraphs:
         if '"' in para and CJK.search(para):
             add("fix", "use curly Chinese quotes \u201c \u201d", number, excerpt(para, para.index('"')))
-        if "**" in para:
-            add("fix", "no bold in body text", number, excerpt(para, para.index("**")))
         for match in INLINE_SOURCE.finditer(para):
             add("fix", "move inline source to the end source list", number, match.group(0))
         for phrase in META_PHRASES:
@@ -280,6 +292,29 @@ def audit(text: str, banned: list[str], length: tuple[int, int], hard_max: int,
         numbers = set(NUMBER.findall(para))
         if len(numbers) > 3:
             add("warn", "more than three numbers in one paragraph", number, ", ".join(sorted(numbers))[:60])
+
+    sentences: list[tuple[int, str]] = []
+    for number, para in paragraphs:
+        if para.startswith(LIST_MARKERS):
+            continue
+        for piece in SENTENCE_SPLIT.split(para):
+            opener = piece.strip(OPENER_STRIP)[:2]
+            if len(opener) == 2 and all(CJK.match(ch) for ch in opener):
+                sentences.append((number, opener))
+            elif piece.strip(OPENER_STRIP):
+                sentences.append((number, ""))
+    reported = 0
+    index = 0
+    while index < len(sentences) and reported < 3:
+        number, opener = sentences[index]
+        run = 1
+        while opener and index + run < len(sentences) and sentences[index + run][1] == opener:
+            run += 1
+        if opener and run >= SAME_OPENER_RUN:
+            add("warn", f"{run} sentences in a row open with the same word: change the subject or the sentence shape",
+                number, opener)
+            reported += 1
+        index += run
 
     for index, (number, para) in enumerate(paragraphs):
         if index and COMMENT_OPENING.match(para) and not ANAPHOR_OPENING.match(para):
@@ -296,13 +331,26 @@ def audit(text: str, banned: list[str], length: tuple[int, int], hard_max: int,
             if size < subhead_range[0] or size > subhead_range[1]:
                 add("warn", f"subhead length outside {subhead_range[0]}-{subhead_range[1]} characters", s["line"],
                     f"{s['title'][:24]}: {size}")
+        for s in titles:
+            if NUMBERED_SUBHEAD.match(s["title"]):
+                add("warn", "numbered subhead: write the heading as a sentence without a number", s["line"], s["title"][:24])
         if len(lengths) >= 2 and max(lengths) - min(lengths) > 5:
             add("warn", "subhead lengths differ by more than 5 characters", None,
                 f"shortest {min(lengths)}, longest {max(lengths)}")
 
+    single = [not p.startswith(LIST_MARKERS) and not NUMBERED_ITEM.match(p) and cjk_len(p) >= 4
+              and len(SENTENCE_END.findall(p.rstrip("\u201d\u2019\uff09)"))) <= 1 for _, p in paragraphs]
+    heading_lines = [n for n, _ in headings]
+    in_a_row = [paragraphs[i][0] for i in range(len(paragraphs) - 1)
+                if single[i] and single[i + 1]
+                and not any(paragraphs[i][0] < h < paragraphs[i + 1][0] for h in heading_lines)]
+    if in_a_row:
+        add("blocker", "single-sentence paragraphs in a row: a lone line stands out only when its neighbours are full paragraphs",
+            in_a_row[0], "lines " + ", ".join(str(n) for n in in_a_row[:12]))
+
     opening = [p for n, p in paragraphs if n < (sections[1]["line"] if len(sections) > 1 else 10**9)][:2]
     if any(p.startswith(HYPOTHETICAL_OPENERS) or (HYPOTHETICAL_OPENERS[0] + SECOND_PERSON) in p for p in opening):
-        add("fix", "opening uses a hypothetical scene; open on a real event if one exists, and vary from recent articles", None,
+        add("fix", "opening uses a hypothetical scene; open on a feeling or scene the reader shares (or the day's news), and vary from recent articles", None,
             opening[0][:30] if opening else "")
 
     # Even paragraph lengths read as machine-made even after every word is fixed.
@@ -352,16 +400,19 @@ def audit(text: str, banned: list[str], length: tuple[int, int], hard_max: int,
                 add("warn", "overused abstract word in a title or subhead: use the reader's everyday words",
                     number, word)
 
-    # End-of-article source list: current name; list only the complete long reads actually used (no quota).
+    # End-of-article source list: current name; list the long reads and main research reports actually used (no quota).
     src_name, src_line, src_entries = source_section(text)
     if src_name and src_name != SOURCES_CURRENT:
         add("warn", f"source section should be headed {SOURCES_CURRENT}, not the old name", src_line, src_name)
     if src_name == SOURCES_CURRENT and src_entries > SOURCES_MAX_ENTRIES:
-        add("warn", f"{SOURCES_CURRENT} lists more than {SOURCES_MAX_ENTRIES} entries: check each is a complete long read readers need, not a pile of every source",
+        add("warn", f"{SOURCES_CURRENT} lists more than {SOURCES_MAX_ENTRIES} entries: check each is a long read or a main research report readers can find, not a pile of every source",
             src_line, f"{src_entries} entries")
 
     total = sum(cjk_len(p) for _, p in paragraphs)
-    if total > hard_max:
+    if total > hard_max and first_draft:
+        add("warn", f"first draft longer than the hard maximum {hard_max}: put trimming at the head of the merged list; the revision must come back inside the range",
+            None, f"{total} characters")
+    elif total > hard_max:
         add("blocker", f"body longer than the hard maximum {hard_max}", None, f"{total} characters")
     elif not length[0] <= total <= length[1]:
         add("warn", f"body outside the usual range {length[0]}-{length[1]}", None, f"{total} characters")
@@ -381,6 +432,9 @@ def audit(text: str, banned: list[str], length: tuple[int, int], hard_max: int,
         if sizes and max(sizes) > 2.5 * max(1, min(sizes)):
             add("warn", "sections are unbalanced (largest > 2.5x smallest)", None,
                 f"min {min(sizes)}, max {max(sizes)}, median {statistics.median(sizes):g}")
+        elif len(sizes) >= 3 and max(sizes) <= SECTION_EVEN_RATIO * min(sizes):
+            add("warn", "sections are nearly the same length: let the section that matters most run longer", None,
+                ", ".join(str(size) for size in sizes))
 
     if card:
         # Cards, outlines and other process texts shown to the author follow the
@@ -498,8 +552,10 @@ def main() -> int:
     parser.add_argument("--section-min", type=int, default=300)
     parser.add_argument("--section-max", type=int, default=900)
     parser.add_argument("--para-max", type=int, default=200)
-    parser.add_argument("--subhead", type=parse_range, default=(8, 14), help="usual subhead length, e.g. 8-14")
+    parser.add_argument("--subhead", type=parse_range, default=(1, 16), help="subhead length range; the author set only the upper limit, 16")
     parser.add_argument("--you-per-k", type=float, default=10.0)
+    parser.add_argument("--first-draft", action="store_true",
+                        help="first draft: a body over --hard-max is a reminder, not a blocker; the revised and final text run without it")
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--seed", type=Path,
                         help="the author's verbatim seed: also flag scope wording (no longer, replace, only...) not in it")
@@ -520,7 +576,8 @@ def main() -> int:
         parser.error("a draft path is required unless --rules is given")
     text = args.draft.read_text(encoding="utf-8")
     report = audit(text, banned, args.length, args.hard_max, args.section_min,
-                   args.section_max, args.you_per_k, args.para_max, args.subhead, card=args.card)
+                   args.section_max, args.you_per_k, args.para_max, args.subhead, card=args.card,
+                   first_draft=args.first_draft)
     seed_flags = 0
     if args.seed:
         extra = seed_scope_findings(text, args.seed.read_text(encoding="utf-8"))

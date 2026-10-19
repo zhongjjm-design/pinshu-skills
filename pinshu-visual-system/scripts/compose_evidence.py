@@ -118,6 +118,8 @@ def compose(plan_path, filename, recipe_path, out):
 
 
 if __name__ == '__main__':
+    from portable import ensure_utf8_mode
+    ensure_utf8_mode()
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--plan', type=Path, required=True)
     p.add_argument('--filename', required=True)
