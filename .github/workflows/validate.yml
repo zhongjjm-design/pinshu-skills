@@ -7,8 +7,6 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    env:
-      NODE_PATH: ${{ runner.temp }}/pinshu-dom-tests/node_modules
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -33,7 +31,9 @@ jobs:
           gitleaks version
           python3 -m pip install --quiet python-pptx==1.0.2 pillow markdown-it-py beautifulsoup4 pytest
       - name: Install offline DOM regression dependency
-        run: npm install --prefix "$RUNNER_TEMP/pinshu-dom-tests" --ignore-scripts --no-audit --no-fund linkedom@0.16.11
+        run: |
+          npm install --prefix "$RUNNER_TEMP/pinshu-dom-tests" --ignore-scripts --no-audit --no-fund linkedom@0.16.11
+          printf 'NODE_PATH=%s\n' "$RUNNER_TEMP/pinshu-dom-tests/node_modules" >> "$GITHUB_ENV"
       - name: Validate release bundle
         run: python3 scripts/validate_release.py
       - name: Validate course foundation
