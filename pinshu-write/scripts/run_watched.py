@@ -40,8 +40,49 @@ def parse_cputime(text):
     return days * 86400 + secs
 
 
+def linux_tree_cpu(root_pid, proc_root=Path("/proc")):
+    """Read subsecond Linux CPU ticks; ps TIME truncates to seconds on procps.
+
+    Return None if procfs or the root is unavailable so other systems retain ps.
+    Names may contain spaces and ')' characters: fields follow the final ')'.
+    """
+    try:
+        ticks = os.sysconf("SC_CLK_TCK")
+        if ticks <= 0:
+            return None
+        entries = list(proc_root.iterdir())
+    except (OSError, ValueError, AttributeError):
+        return None
+    children, cpu = {}, {}
+    for entry in entries:
+        if not entry.name.isdigit():
+            continue
+        try:
+            fields = (entry / "stat").read_text().rsplit(")", 1)[1].split()
+            pid, parent = int(entry.name), int(fields[1])
+            cpu[pid] = (int(fields[11]) + int(fields[12])) / ticks
+        except (OSError, ValueError, IndexError):
+            continue  # A process can exit between directory enumeration and reading stat.
+        children.setdefault(parent, []).append(pid)
+    if root_pid not in cpu:
+        return None
+    total, stack, seen = 0.0, [root_pid], set()
+    while stack:
+        pid = stack.pop()
+        if pid in seen:
+            continue
+        seen.add(pid)
+        total += cpu.get(pid, 0.0)
+        stack.extend(children.get(pid, []))
+    return total
+
+
 def tree_cpu(root_pid):
-    """CPU seconds used by root_pid and all its live descendants, from ps; None when ps fails."""
+    """CPU seconds of the live process tree: Linux procfs ticks, portable ps fallback."""
+    if sys.platform.startswith("linux"):
+        precise = linux_tree_cpu(root_pid)
+        if precise is not None:
+            return precise
     try:
         out = subprocess.run(["ps", "-A", "-o", "pid=,ppid=,time="], capture_output=True, text=True, timeout=10).stdout
     except (OSError, subprocess.SubprocessError):
