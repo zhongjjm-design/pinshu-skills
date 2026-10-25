@@ -44,6 +44,41 @@ class AuditDraftTests(unittest.TestCase):
         self.assertEqual(report["counts"]["fix"], 0, report["findings"])
         self.assertGreater(report["stats"]["body_characters"], 300)
 
+    def test_more_than_seven_paragraphs_in_a_section_is_a_reminder(self):
+        short = "\u7532\u65b9\u91c7\u8d2d\u6309\u4eba\u5934\u6bd4\u4ef7\u3002"
+        eight = "\n\n".join([short] * 8)
+        seven = "\n\n".join([short] * 7)
+        rule = "more than seven paragraphs in a section: reread whether it should split"
+        warned = run(f"# \u9898\u76ee\n\n{FILLER}\n\n## \u7b2c\u4e00\u8282\n\n{eight}\n")
+        self.assertIn(rule, rules(warned, "warn"))
+        self.assertNotIn(rule, rules(warned, "blocker"))
+        passed = run(f"# \u9898\u76ee\n\n{FILLER}\n\n## \u7b2c\u4e00\u8282\n\n{seven}\n")
+        self.assertNotIn(rule, rules(passed))
+
+    def test_divider_in_the_body_blocks(self):
+        text = CLEAN.replace("## \u7b2c\u4e8c\u8282", "---\n\n## \u7b2c\u4e8c\u8282")
+        self.assertIn("no divider in the body", rules(run(text), "blocker"))
+        self.assertNotIn("no divider in the body", rules(run(CLEAN)))
+
+    def test_divider_at_the_end_of_the_body_blocks(self):
+        text = CLEAN.replace("\u8d44\u6599\u6765\u6e90", "---\n\n\u8d44\u6599\u6765\u6e90")
+        self.assertIn("no divider in the body", rules(run(text), "blocker"))
+
+    def test_soft_line_breaks_stay_one_paragraph(self):
+        short = "\u7532\u65b9\u91c7\u8d2d\u6309\u4eba\u5934\u6bd4\u4ef7\u3002"
+        one_block = "\n".join([short] * 9)
+        report = run(f"# \u9898\u76ee\n\n{FILLER}\n\n## \u7b2c\u4e00\u8282\n\n{one_block}\n")
+        self.assertNotIn("more than seven paragraphs in a section: reread whether it should split", rules(report))
+
+    def test_heavy_and_flat_sentences_are_warned_not_blocked(self):
+        heavy = "\u6211\u4eec\u7684\u56e2\u961f\u7684\u540c\u4e8b\u7684\u5ba2\u6237\u7684\u65b9\u6848\u5f88\u957f\u3002"
+        flat = "\u7532\u65b9\u91c7\u8d2d\u6309\u4eba\u5934\u3002" * 5
+        report = run(f"# \u9898\u76ee\n\n{FILLER}\n\n## \u7b2c\u4e00\u8282\n\n{heavy}{flat}\n")
+        warned = rules(report, "warn")
+        self.assertTrue(any(r.startswith("reads heavy") for r in warned))
+        self.assertTrue(any(r.startswith("reads flat") for r in warned))
+        self.assertFalse(any(r.startswith("reads") for r in rules(report, "blocker")))
+
     def test_sources_list_is_excluded_from_body(self):
         report = run(CLEAN)
         self.assertNotIn("move inline source to the end source list", rules(report))
@@ -278,12 +313,21 @@ class AuditDraftTests(unittest.TestCase):
 
 class QuestionFormTests(unittest.TestCase):
     def test_shi_bu_shi_question_is_not_a_reversal(self):
-        text = CLEAN.replace(FILLER, FILLER + "\u6210\u679c\u662f\u4e0d\u662f\u7ecf\u5f97\u8d77\u68c0\u67e5\uff0c\u662f\u4e0d\u662f\u6709\u4ef7\u503c\uff1f", 1)
-        self.assertNotIn("single-sentence reversal: not X, (it) is Y", rules(run(text)))
+        text = CLEAN.replace(FILLER, FILLER + "\u6210\u679c\u662f\u4e0d\u662f\u7ecf\u5f97\u8d77\u68c0\u67e5\uff0c\u662f\u4e0d\u662f\u6709\u4ef7\u503c\uff1f" * 4, 1)
+        self.assertNotIn(audit_draft.COMMA_REVERSAL_RULE, rules(run(text)))
 
-    def test_plain_not_x_is_y_still_flagged(self):
-        text = CLEAN.replace(FILLER, FILLER + "\u8fd9\u4e0d\u662f\u5de5\u5177\u7684\u95ee\u9898\uff0c\u662f\u4eba\u7684\u95ee\u9898\u3002", 1)
-        self.assertIn("single-sentence reversal: not X, (it) is Y", rules(run(text)))
+    def test_comma_not_x_is_y_is_a_reminder_only_past_three(self):
+        line = "\u8fd9\u4e0d\u662f\u5de5\u5177\u7684\u95ee\u9898\uff0c\u662f\u4eba\u7684\u95ee\u9898\u3002"
+        three = run(CLEAN.replace(FILLER, FILLER + line * 3, 1))
+        self.assertNotIn(audit_draft.COMMA_REVERSAL_RULE, rules(three))
+        self.assertEqual(three["counts"]["blocker"], 0, three["findings"])
+        four = run(CLEAN.replace(FILLER, FILLER + line * 4, 1))
+        self.assertEqual(rules(four, "warn").count(audit_draft.COMMA_REVERSAL_RULE), 4)
+        self.assertEqual(four["counts"]["blocker"], 0, four["findings"])
+
+    def test_er_shi_reversal_still_blocks_once(self):
+        text = CLEAN.replace(FILLER, FILLER + "\u8fd9\u4e0d\u662f\u5de5\u5177\u7684\u95ee\u9898\uff0c\u800c\u662f\u4eba\u7684\u95ee\u9898\u3002", 1)
+        self.assertIn("single-sentence reversal: not X but Y", rules(run(text), "blocker"))
 
 
 EXPORT = Path(__file__).resolve().parents[1] / "scripts" / "export_article.py"
@@ -382,8 +426,8 @@ class SeedScopeEdgeTests(unittest.TestCase):
             self.assertEqual(out.returncode, 0)
 
     def test_shi_fou_question_is_not_a_reversal(self):
-        text = CLEAN.replace(FILLER, FILLER + "他问的不是效率，是否值得继续？", 1)
-        self.assertNotIn("single-sentence reversal: not X, (it) is Y", rules(run(text)))
+        text = CLEAN.replace(FILLER, FILLER + "他问的不是效率，是否值得继续？" * 4, 1)
+        self.assertNotIn(audit_draft.COMMA_REVERSAL_RULE, rules(run(text)))
 
 
 class ReadyExportLineEndingTests(unittest.TestCase):

@@ -5,7 +5,7 @@ maintainer: Aidan
 repository: https://github.com/zhongjjm-design/pinshu-skills
 runtime_layout: flat
 runtime_glob: ~/.agents/skills/pinshu-*
-updated: 2026-10-19
+updated: 2026-10-25
 skills:
   - name: pinshu-transcript
     version: 0.2.0
@@ -90,7 +90,7 @@ skills:
     origin: original
     distribution: bundled
     present_in_repository: true
-    version: 3.3.0
+    version: 4.0.0
     status: public-preview
     depends_on: []
     runtime_dependencies: [python3]

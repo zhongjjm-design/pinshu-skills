@@ -246,7 +246,7 @@ def run_executable_gates(full: bool) -> None:
         timeout=240,
     )
     run_check(
-        "pinshu-write 3.3 regression",
+        "pinshu-write 4.0 regression",
         [sys.executable, "-B", "-m", "pytest", "-p", "no:cacheprovider", "-q", "pinshu-write/tests"],
     )
     run_check(

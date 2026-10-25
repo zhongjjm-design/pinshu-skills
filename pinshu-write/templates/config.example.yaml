@@ -1,9 +1,8 @@
 # pinshu-write configuration example
 # Copy this file to pinshu-write.yaml in your writing folder, or tell the agent where it is.
 # Use paths on your own computer. Leave unknown items empty; the agent will ask when it needs them.
+# Minimum to start the first time: author_names; in accounts: name, reader, profile, good_article_standard; drafts_folder and ready_folder (check_env.py requires them); in models: writer. Leave the rest empty; the agent asks when it needs them.
 # Older files that use `account:` (one account) and `paths:` (folders) are still read by scripts/check_env.py.
-# All account names and paths below are placeholders, not bundled profiles or assets.
-# Supply your own readable profile/standard, or leave it empty and resolve the needed account rules with the author.
 
 author_names:            # Names that refer to the author in materials; the article writes them as first person
   - Example Author
@@ -14,27 +13,21 @@ accounts:                # One or more accounts; say which one at the start of e
     reader: "One sentence on who reads it, e.g. people who use AI at work and people who run or advise businesses"
     profile: ~/writing/profiles/example-account.md        # Authority for topics, readers, length, style, banned words, title tests
     published_folder: ~/writing/published/example/        # Learn tone and openings; read in full for collision scans; optional
-    good_article_standard: ~/writing/standards/good-article.md   # The account's own standard: the structure editor answers its parts on titles,
-                                                                 # openings and structure (references/3-structure.md); the good-article check answers
-                                                                 # its checks (references/5-review.md, prompt 11); optional
-    good_article_parts: "titles, openings, structure; checks"   # Replace with headings/sections in your own standard; optional
-                                                               # If empty, the organizer selects the relevant sections after reading it;
-                                                               # ambiguous choices go to stop 2. Reader-feeling checks go only to the author.
-    writer_parts: "sharing, titles, openings"   # Sections/headings of your good_article_standard pasted into the writer's brief
-                                               # Optional selector, not bundled section numbers. If empty, select the standard's
-                                               # sharing/title/opening guidance by heading; if ambiguous, ask at stop 2.
-                                               # With no standard, keep write.md's guidance and record the missing account asset.
+    good_article_standard: ~/.agents/skills/pinshu-write/references/good-article-standard.md   # Bundled public default. Replace with the team's own standard when it has one.
+                                                                                              # If the Skill is installed elsewhere, adjust this path.
+    workflow_doc:                                                # Optional: why a team's route and review positions are shaped this way
+    editor_parts: "the sections the editor's first pass names in references/5-review.md, plus the edit rules still in force"   # What the editor position gets from the standard; the writer's brief carries none of it
     banned_words_file: ~/writing/standards/banned-words.txt      # One word per line, passed to audit_draft.py; optional
-    length: 2000-2500    # Default body length in Chinese characters; copy the account's actual range word for word into the brief
-    hard_max: 2700       # Default final ceiling; the account's configured ceiling wins
+    length: 2000-2500    # Usual body length in Chinese characters; copied word for word into the writer's brief
+    hard_max: 6000
     ai_drafting_allowed: yes   # "no" means this Skill declines the account
 
 author_style_profile: ~/writing/profiles/author-style.md   # Title habits, openings, endings, voice traits; not pasted into the writer's brief
 
-exemplar_index: ~/writing/exemplars/index.md   # The writers' main input: whole articles by mature writers the author approved,
-                                               # two picked per article by type (format: templates/exemplar-index.example.md;
-                                               # references/4-writing.md, "Exemplars"). Keep article texts in your own library.
-edit_pairs_folder:   # Folder with 原稿库/ (writer drafts), 终稿库/ (author hand edits) and 修改规律.md (rules learned from the edits) (references/write.md)
+exemplar_index: ~/writing/exemplars/index.md   # Whole articles by mature writers the author approved, picked by type, for the fallback writer's
+                                               # brief (format: templates/exemplar-index.example.md; references/write.md,
+                                               # "When the session cannot write"). Keep article texts in your own library.
+edit_pairs_folder:   # Folder with 原稿库/ (writer drafts), 终稿库/ (author hand edits) and 修改规律.md (rules learned from the edits); the editor checks voice against them (references/write.md)
 exemplar_fallback:       # Used while the index is empty or has no approved exemplar of the type: articles the author approved for briefs
   - ~/writing/library/some-author/good-article-1.md
   - ~/writing/library/some-author/good-article-2.md
@@ -47,7 +40,7 @@ material_folders:        # Searched during research: notes, courses, work logs, 
 # without them the agent runs the public source map online. Relative paths are read from this file's folder.
 source_list: ~/writing/sources.md      # Your own sources to scan first (media, podcasts, channels, communities); any readable list
 topic_pool: ~/writing/topic-pool.md    # A file, or a folder of files, of ready topic leads. State the generation time near the top
-                                       # (format: "generated: YYYY-MM-DD"); older than 7 days or undated counts as historical leads,
+                                       # (e.g. "generated: 2026-10-14"); older than 7 days or undated counts as historical leads,
                                        # checked online before use. A dashboard export can be pointed at here; nothing is searched for.
 style_card_folders: []                 # Optional style cards (structure and moves only)
 
@@ -75,27 +68,14 @@ market_reference:        # Optional paid data, run only when the author names it
   cache: ~/writing/market-baselines.json   # Account baselines reused for 90 days, so repeat accounts cost nothing
 
 models:                  # One entry per role; fill from your own tools (references/models.md, references/5-review.md)
-  # These are organizer routing notes, not automatic schema defaults or installed-command claims.
-  # Blank required roles: select/probe an authorized capable interface under models.md; never silently skip.
-  # Blank second_writer/originality/good_article entries do not disable their documented triggers.
-  # The vendor rule for writer and reviewing roles, and the one-model fallback, are in references/models.md.
-  # The author may name any writer for an article (including the main conversation); that
-  # choice wins over this file, is recorded in the editor notes, and no review is skipped because of it.
-  organizer:             # The main conversation that runs the route; e.g. whatever runs your session
-  research:              # Scan and research jobs, several at once (references/models.md, "Scan and research"); list commands,
+  # Every reviewing position comes from a vendor other than the writer's (references/models.md).
+  writer:                # The session that talks with the author writes, from step 1 to the last edit; e.g. "main session"
+  writer_fallback:       # Writes when the session cannot write a long Chinese article; use an authorized model from another provider
+  research:              # Research jobs, several at once (references/models.md, "Who does what"); list commands,
                          # e.g. ["<model with web access A> <brief>", "<model with web access B> <brief>"]; public material only
-  writer:                # The one writer, picked by the author; if unset, ask at stop 2
-  second_writer:         # Optional; only when the author asks for two drafts
-  counter:               # Argues the other side with the seven questions; another vendor
-  structure_editor:      # Checks the line (how the piece moves) before stop 2; another vendor
-  managing_editor:       # Two models of vendors other than the picked writer's, on the calibrated card (prompt 10);
-                         # Fill with two available model/interface choices meeting that vendor rule, or record the fallback
-  reader:                # Where a reader outside the trade, who uses AI at work, gets stuck; another vendor, or "colleague"
-  attraction:            # Required draft review, prompt 13: title/opening appeal, retention and sharing; another vendor, advice only
-  originality:           # Required only when someone else's article is the seed, prompt 14; otherwise not applicable
-  expert:                # Marketing, finance or applied-AI practitioner by topic; a model with web access
-  facts_risk:            # Hard facts against sources and the author's words, what may not be said; fitting feelings and detail are not faults
-  language:              # Machine flavor and wording, then a separate flow-read call; another vendor
-  good_article:          # Prompt 11; runs when this account supplies a readable good_article_standard, otherwise record not run
-  after_revision:        # Required once after revision, prompt 12; revised body alone, another vendor
-  seed_check:            # The author's original text against the point map, key words still present; able to read long input
+  hook_second:           # Drafts title-and-opening candidates beside the writer; a vendor other than the writer's
+  fact_sheet_names:      # Lists names in the draft for the fact sheet; any cheap model
+  editor:                # The strongest writing model, a vendor other than the writer's; two passes, each a fresh call
+  reader:                # A plain model, a vendor other than the writer's; one fresh call per section
+  expert:                # A model with web access; plays a practitioner of the field named at step 1; every item with a source
+  fact_checker:          # A rigorous model with web access that says 查不到; pass one (sheet only), pass two (copying, what may be written), two re-checks; add a backup, used when a call has no result 20 minutes after sending (run_watched.py --deadline 1200)

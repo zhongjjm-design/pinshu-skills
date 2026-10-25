@@ -78,7 +78,7 @@ _UNCLEAR = ("\u4e0d", "\u6ca1", "\u522b", "\u672a", "\u5426", "\u5417", "\u4e48"
 def approval_problem(quote) -> str | None:
     """The ready folder holds only what the author called final. Returns None when the quote is an approval.
 
-    Only the author's own plain sentence saying 定稿 counts; 可以, 继续, 还行, 满意 do not (Aidan, 2026-10-12).
+    Only the author's own plain sentence saying 定稿 counts; 可以, 继续, 还行, 满意 do not.
     Any negation, condition or question in the sentence (不是定稿, 是否定稿, 等改完再定稿) makes it unclear,
     and unclear is refused: ask the author again rather than guess."""
     text = (quote or "").strip()

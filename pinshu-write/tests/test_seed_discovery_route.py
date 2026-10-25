@@ -1,6 +1,6 @@
-"""Structure checks for the 3.1.0 route: one route, four stops (topic, the line, the opening, final), every reviewing role kept, hard gates, no dangling pointers.
-These prove the documents are wired together, not that their topics or articles are good: that is judged only by
-real forward tests."""
+"""Structure checks for the 3.5.0 route: the master gate, ten steps and three gates, one writer and four positions,
+a fact sheet the writer never makes, and no dangling pointers. These prove the documents are wired together, not
+that the articles are good: that is judged only by real articles."""
 from __future__ import annotations
 
 import re
@@ -9,15 +9,14 @@ from pathlib import Path
 
 SKILL = Path(__file__).resolve().parents[1]
 REFERENCES = SKILL / "references"
-# Role and step names removed in 2.0.0; they may appear only in the maintainers' archive.
-REMOVED_NAMES = ("wording editor", "judgment gate", "skeleton gate", "skeleton re-read", "cold reader", "cold-reader",
-                 "five-step", "common-sense floor", "red team", "seed-discovery", "Approval 1", "approval 3",
-                 # removed in 2.1.0
-                 "editor-in-chief", "editor_in_chief", "Rules for every writer", "Style layers")
-ROLES = ("Organizer", "Writer", "Counter", "Structure editor", "Managing editor", "Reader", "Expert", "Facts and risk",
-         "Language and flow", "Good-article check", "After-revision read", "Seed check",
-         "Attraction reader", "Originality check")
-LEGACY = ("3-structure.md", "4-writing.md")
+MAINTAINERS = ("lessons.md", "changelog.md", "proven.md")
+# Role, step and file names retired up to 3.5.0; they may appear only in the maintainers' files.
+REMOVED_NAMES = ("wording editor", "judgment gate", "skeleton gate", "cold reader", "red team", "editor-in-chief",
+                 "Structure editor", "Managing editor", "Seed check", "Attraction reader", "After-revision read",
+                 "Good-article check", "AI-flavor reader and flow", "Facts and risk", "Originality check",
+                 "Stop 2", "Stop 3", "Stop 4", "stop 4", "2-research-and-counter.md", "3-structure.md", "4-writing.md",
+                 "writer_parts", "second_writer", "seven questions")
+POSITIONS = ("Editor", "Reader", "Expert", "Fact checker")
 
 
 def read(rel):
@@ -28,81 +27,200 @@ def doc_files():
     return [SKILL / "SKILL.md"] + sorted(REFERENCES.glob("*.md"))
 
 
+def section(text, start, end):
+    return text.split(start, 1)[1].split(end, 1)[0]
+
+
 class RouteTests(unittest.TestCase):
-    def test_entry_table_routes_every_entry(self):
+    def test_master_gate_comes_first(self):
         text = read("SKILL.md")
-        table = text.split("| The author brings | Enter at |", 1)[1].split("\n\n", 1)[0]
-        self.assertRegex(table, r"\| Nothing[^|]*\| 1 Topic: scan, three topics, stop 1 \|")
-        for row in ("| An idea, topic, link or article, any length | 2 Research, the author's words kept whole as the seed",
-                    "| A line or a title | 3 The line", "| A draft to look at | 6 The read and the fact check",
+        self.assertLess(text.index("## The master gate"), text.index("## The route"))
+        gate = section(text, "## The master gate", "## What it is for")
+        for must in ("动笔前先答三问", "第十六节", "why does the reader open this article", "The Skill keeps no set of its own"):
+            self.assertIn(must, gate)
+
+    def test_entry_table_routes_every_entry(self):
+        table = section(read("SKILL.md"), "| The author brings | Enter at |", "\n\n")
+        for row in ("| Nothing", "| An idea, a link, someone else's article or title, any length | Step 1",
+                    "| A title or an outline | Step 3", "| A draft to look at | Step 6",
                     "| Comments on a draft | Revision by size", "| The author's own hand edit of a draft | Edit pairs"):
             self.assertIn(row, table)
 
-    def test_route_has_exactly_four_stops(self):
-        text = read("SKILL.md")
-        route = text.split("## The route", 1)[1].split("## The roles", 1)[0]
-        stops = re.findall(r"^\|[^|]*\*\*Stop (\d)\*\*", route, re.M)
-        self.assertEqual(stops, ["1", "2", "3", "4"])
-        headings = re.findall(r"^## Stop (\d): (.+)$", read("references/stops.md"), re.M)
-        self.assertEqual([h[0] for h in headings], ["1", "2", "3", "4"])
-        self.assertEqual([h[1].split(" (")[0] for h in headings], ["topic", "the line", "the opening", "final"])
+    def test_route_has_ten_steps_and_three_gates(self):
+        route = section(read("SKILL.md"), "## The route", "## The roles")
+        steps = re.findall(r"^\| (\d+) [A-Z]", route, re.M)
+        self.assertEqual(steps, [str(n) for n in range(1, 11)])
+        self.assertEqual(re.findall(r"\*\*Gate (\d)\*\*", route), ["1", "2", "3"])
+        headings = re.findall(r"^## (Topic|Gate \d)", read("references/stops.md"), re.M)
+        self.assertEqual(headings, ["Topic", "Gate 1", "Gate 2", "Gate 3"])
 
-    def test_every_reviewing_role_is_on_the_route(self):
-        main = read("SKILL.md").split("## The roles", 1)[1].split("## Rules that do not bend", 1)[0]
-        self.assertEqual(len(re.findall(r"^\| [A-Z]", main, re.M)) - 1, 14)  # minus the header row; 3.3 added the attraction reader and the originality check
-        review = read("references/5-review.md")
-        for role in ROLES:
-            self.assertIn(f"| {role} |", main)
-            if role not in ("Organizer", "Writer"):
-                self.assertIn(role, review)
+    def test_gate_two_sees_title_outline_and_opening(self):
+        self.assertIn("Title, outline, opening and first section", read("SKILL.md"))
+        gate2 = section(read("references/stops.md"), "## Gate 2", "## Gate 3")
+        self.assertIn("The opening and first section, written in full", gate2)
+        self.assertIn("The last place anything is overturned", gate2)
 
     def test_hard_gates_are_on_the_route(self):
-        route = read("SKILL.md").split("## The route", 1)[1].split("## The roles", 1)[0]
-        self.assertIn("--length 2000-2500 --hard-max 2700", route)
-        self.assertIn("One-sentence paragraphs in a row", route)
+        text = read("SKILL.md")
+        self.assertIn("--length 2000-2500 --hard-max 2500", text)
+        self.assertIn("One-sentence paragraphs in a row", text)
 
-    def test_writer_brief_has_the_seed_whole_and_five_bottom_lines(self):
-        write = read("references/write.md")
-        brief = write.split("## The writer's brief", 1)[1].split("## The opening", 1)[0]
-        bottom = brief.split("**Five bottom lines**", 1)[1].split("```text", 1)[1].split("```", 1)[0]
-        self.assertEqual(re.findall(r"^(\d)\. ", bottom, re.M), ["1", "2", "3", "4", "5"])
-        for must in ("The seed, whole and verbatim", "The line the author approved", "exemplars", "How the author edits",
-                     "The material pack", "no rule book, no audit list, no per-section template, no sample sentences"):
-            self.assertIn(must, brief)
 
-    def test_line_is_not_four_boxes_and_titles_carry_news(self):
-        write = read("references/write.md")
-        line = write.split("## The line (stop 2)", 1)[1].split("## The writer's brief", 1)[0]
-        self.assertIn("not four labelled boxes", line)
-        self.assertIn("谁不知道", line)
-
-    def test_revision_is_whole_sections_and_facts_are_hard_facts(self):
+class RoleTests(unittest.TestCase):
+    def test_one_writer_and_four_positions(self):
+        roles = section(read("SKILL.md"), "## The roles", "## Rules that do not bend")
+        rows = re.findall(r"^\| ([A-Z][a-z]+(?: [a-z]+)?) \|", roles, re.M)
+        self.assertEqual(rows[1:], ["Writer", *POSITIONS])  # the first match is the header row
         review = read("references/5-review.md")
-        self.assertIn("rewrites whole sections", review)
-        self.assertIn("is not a fault", review)
-        write = read("references/write.md")
-        self.assertIn("## Review and revision", write)
+        for position in POSITIONS:
+            self.assertIn(f"| {position} |", review)
 
-    def test_organizer_reads_first_and_learns_from_edits(self):
-        write = read("references/write.md")
-        self.assertIn("**Read like a reader first.**", write)
-        self.assertIn("## After 定稿: learn from the author's edits", write)
-        self.assertIn("never from the account's old articles", write)
+    def test_writer_never_makes_the_fact_sheet(self):
+        review = read("references/5-review.md")
+        self.assertIn("never by the writer", review)
+        self.assertIn("scripts/extract_facts.py", review)
+        self.assertTrue((SKILL / "scripts" / "extract_facts.py").is_file())
 
-    def test_legacy_references_are_marked_off_the_route(self):
-        main = read("SKILL.md").split("## References", 1)[1]
-        for name in LEGACY:
-            row = [line for line in main.splitlines() if f"`references/{name}`" in line][0]
-            self.assertIn("2.x, off the route", row)
-        route = read("SKILL.md").split("## The route", 1)[1].split("## The roles", 1)[0]
-        for name in LEGACY:
-            self.assertNotIn(name, route)
+    def test_positions_get_only_their_own_material(self):
+        review = read("references/5-review.md")
+        self.assertIn("Pass one never sees the draft", review)
+        self.assertIn("one fresh call per step", review.replace("The reader runs as one call per step", "one fresh call per step"))
+        self.assertIn("Each call is fresh, so the reader cannot know what comes next", review)
+
+    def test_only_facts_and_copying_force_a_change(self):
+        self.assertIn("Only hard facts and copying force a change.", read("SKILL.md"))
+        review = read("references/5-review.md")
+        self.assertIn("锋利的话、冲突、钩子一样不许磨软", review)
+        self.assertIn("listed apart", review)
+
+    def test_prompts_cover_every_position(self):
+        prompts = read("references/prompts.md")
+        for heading in ("## Editor", "## Reader", "## Expert", "## Fact checker, pass one: the fact sheet",
+                        "## Fact checker, pass two: copying", "## Fact sheet: names", "## Fallback writer: revise"):
+            self.assertIn(heading, prompts)
+
+
+class WritingTests(unittest.TestCase):
+    def test_three_questions_point_at_the_standard(self):
+        step1 = section(read("references/write.md"), "## Step 1", "## Step 3")
+        self.assertIn("动笔前先答三问", step1)
+        self.assertIn("第十六节", step1)
+
+    def test_title_candidates_pass_two_checks_before_showing(self):
+        step3 = section(read("references/write.md"), "## Step 3", "## Step 4")
+        self.assertIn("an ordinary reader understands it at a glance", step3)
+        self.assertIn("with the company and case names removed, the reader still cares", step3)
+
+    def test_core_changed_stops_otherwise_write_through(self):
+        step4 = section(read("references/write.md"), "## Step 4", "## Step 7")
+        self.assertIn("Changed: stop and go back to gate 2. Unchanged: write to the end without stopping.", step4)
+
+    def test_fallback_brief_carries_what_to_write_not_rules(self):
+        brief = section(read("references/write.md"), "## When the session cannot write", "## After 定稿")
+        bottom = brief.split("```text", 1)[1].split("```", 1)[0]
+        self.assertEqual(re.findall(r"^(\d)\. ", bottom, re.M), ["1", "2", "3"])
+        self.assertIn("The seed, whole and verbatim", brief)
+        self.assertIn("not a rule book", brief)
+
+    def test_exemplars_are_found_offered_and_read_before_writing(self):
+        write = read("references/write.md")
+        step3 = section(write, "## Step 3", "## Step 4")
+        self.assertIn("**Exemplars.**", step3)
+        self.assertIn("**How the piece moves**", step3)
+        step4 = section(write, "## Step 4", "## Step 7")
+        self.assertIn("**Read before writing.** The standard's 利他 paragraph first", step4)
+        self.assertIn("Then the picked exemplars, whole", step4)
+        self.assertIn("exemplar candidates", section(read("references/stops.md"), "## Gate 2", "## Gate 3"))
+
+    def test_titles_come_from_two_vendors_and_changes_are_read_again(self):
+        step3 = section(read("references/write.md"), "## Step 3", "## Step 4")
+        self.assertIn("Title and opening candidates from two vendors", step3)
+        review = read("references/5-review.md")
+        self.assertIn("**The editor's second pass** replaces the old read of what changed", review)
+        prompts = read("references/prompts.md")
+        for heading in ("## Title and opening candidates", "## Editor: pass two"):
+            self.assertIn(heading, prompts)
+
+    def test_edit_rules_reach_the_editor(self):
+        self.assertIn("The edit rules reach the editor position", read("references/write.md"))
+        self.assertIn("修改规律.md", read("references/5-review.md"))
+
+
+class ReviewOrderTests(unittest.TestCase):
+    """3.6: the editor runs after grading, re-checks come before grading, and the writer hands in a change list."""
+
+    def test_rechecks_come_before_grading_and_grading_waits(self):
+        review = read("references/5-review.md")
+        self.assertLess(review.index("### The two re-checks (补核)"), review.index("### Grading"))
+        self.assertLess(review.index("### Grading"), review.index("### The editor's first pass"))
+        self.assertIn("Grading waits for both.", review)
+        self.assertIn("20 minutes after sending", review)
+
+    def test_grading_can_stop_the_route_before_the_editor(self):
+        self.assertIn("stop and take it to the author before the editor runs", read("references/5-review.md"))
+        self.assertIn("## When review stops the route", read("references/stops.md"))
+        self.assertIn("grading puts a finding at 动骨架", read("SKILL.md"))
+
+    def test_editor_first_pass_never_gets_the_outline_or_findings(self):
+        review = read("references/5-review.md")
+        editor = section(review, "### The editor's first pass", "## Merging")
+        for withheld in ("The reader's record", "the outline", "the three answers", "self-check record"):
+            self.assertIn(withheld, editor)
+        self.assertIn("built only after the first pass has been delivered", review)
+
+    def test_expert_never_gets_the_fact_sheet(self):
+        review = read("references/5-review.md")
+        row = next(line for line in review.splitlines() if line.startswith("| Expert |"))
+        never = row.split("|")[3]
+        self.assertIn("The fact sheet", never)
+        self.assertIn("第十五节", never)
+
+    def test_writer_hands_in_a_change_list_and_self_checks(self):
+        write = read("references/write.md")
+        self.assertIn("**The change list**", section(write, "## Step 7", "## When the session cannot write"))
+        self.assertIn("**One question, one answer.**", section(write, "## Step 1", "## Step 3"))
+
+    def test_fact_checker_has_five_statuses_and_a_second_recheck_card(self):
+        prompts = read("references/prompts.md")
+        self.assertIn("## Fact checker: second re-check", prompts)
+        for status in ("有出处", "对不上", "待补", "查不到", "无需核"):
+            self.assertIn(status, section(prompts, "## Fact checker, pass one", "## Fact checker, pass two"))
+        self.assertTrue((SKILL / "scripts" / "check_fact_notes.py").is_file())
+
+
+class WriterSideTests(unittest.TestCase):
+    """3.7: the writer reads the exemplars and the standard's writing sections, reads its draft through, never lengthens a sentence."""
+
+    def test_writer_reads_the_standard_on_writing_and_reads_the_draft_through(self):
+        step4 = section(read("references/write.md"), "## Step 4", "## Step 7")
+        self.assertIn("第五节", step4)
+        self.assertIn("第九节", step4)
+        self.assertIn("**Read it through, then fix by the paragraph.**", step4)
+
+    def test_writer_tables_of_3_6_are_gone(self):
+        write = read("references/write.md")
+        for table in ("Split the third answer into small sentences", "**所以呢**", "Who is speaking", "Register the core words"):
+            self.assertNotIn(table, write)
+
+    def test_length_is_held_by_the_maximum_not_sentence_by_sentence(self):
+        # 3.9 (the author, 2026-10-23): no rule that a revised sentence may not grow; a condition still goes in its own sentence.
+        for rel in ("references/write.md", "references/5-review.md", "references/prompts.md"):
+            text = read(rel)
+            for gone in ("never makes a sentence longer", "keeps or shortens the sentence", "不比原句长"):
+                self.assertNotIn(gone, text, rel)
+        self.assertIn("Length is held by the configuration's maximum, not sentence by sentence", read("references/write.md"))
+        self.assertIn("goes into a sentence of its own", read("references/5-review.md"))
+
+    def test_exemplars_are_mature_writers_and_reach_the_editor(self):
+        step3 = section(read("references/write.md"), "## Step 3", "## Step 4")
+        self.assertIn("Never the account's own old articles", step3)
+        self.assertIn("{{EXEMPLAR}}", read("references/prompts.md"))
+        self.assertIn("动作十一｜和参照范文比", read("references/prompts.md"))
 
 
 class PointerTests(unittest.TestCase):
     def test_every_reference_is_listed_in_the_main_file_and_exists(self):
-        main = read("SKILL.md")
-        listed = set(re.findall(r"\| `references/([\w.-]+\.md)` \|", main))
+        listed = set(re.findall(r"\| `references/([\w.-]+\.md)` \|", read("SKILL.md")))
         present = {p.name for p in REFERENCES.glob("*.md")}
         self.assertEqual(listed, present)
 
@@ -123,14 +241,13 @@ class PointerTests(unittest.TestCase):
             for name in re.findall(r"references/([\w.-]+\.md)", path.read_text(encoding="utf-8")):
                 self.assertIn(name, known, f"{path.name} points at missing references/{name}")
 
-    def test_no_step_points_at_the_maintainers_archive(self):
+    def test_no_step_points_at_the_maintainers_files(self):
         for path in doc_files():
-            if path.name == "lessons.md":
+            if path.name in MAINTAINERS or path.name == "SKILL.md":
                 continue
             text = path.read_text(encoding="utf-8")
-            if path.name == "SKILL.md":
-                text = text.replace("| `references/lessons.md` |", "").replace("`references/lessons.md`, which only the maintainer reads", "")
-            self.assertNotIn("lessons.md", text, path.name)
+            for name in MAINTAINERS:
+                self.assertNotIn(name, text, path.name)
 
 
 class TopicReferenceTests(unittest.TestCase):
@@ -139,80 +256,39 @@ class TopicReferenceTests(unittest.TestCase):
         for route in range(1, 5):
             self.assertIn(f"Route {route}:", text)
         self.assertEqual(len(re.findall(r"^\| [1-4] ", text, re.M)), 4, "four source families")
-        for word in ("source route", "Public source map", "Entry rule", "Stop 1 offers three topics", "S1, S2, S3"):
-            self.assertIn(word.lower(), text.lower())
 
-    def test_discovery_method_lives_in_one_place(self):
-        self.assertIn("1-topic.md", read("references/stops.md"))
-        for name in ("2-research-and-counter.md", "3-structure.md", "4-writing.md", "5-review.md"):
-            self.assertNotIn("Public source map.", read(f"references/{name}"), name)
+    def test_someone_elses_article_is_a_seed_only(self):
+        topic = read("references/1-topic.md")
+        self.assertIn("### Someone else's article as the seed", topic)
+        self.assertIn("never names the article or its author", topic)
 
 
 class CleanSkillTests(unittest.TestCase):
-    def test_removed_role_names_are_not_steps_anywhere_but_the_archive(self):
+    def test_removed_names_only_in_the_maintainers_files(self):
         for path in doc_files() + [SKILL / "agents" / "openai.yaml", SKILL / "templates" / "config.example.yaml"]:
-            if path.name == "lessons.md":
+            if path.name in MAINTAINERS:
                 continue
-            text = path.read_text(encoding="utf-8").lower()
+            text = path.read_text(encoding="utf-8")
             for name in REMOVED_NAMES:
-                self.assertNotIn(name.lower(), text, f"{path.name} still mentions {name!r}")
+                self.assertNotIn(name, text, f"{path.name} still mentions {name!r}")
 
     def test_no_private_paths_in_the_skill(self):
         for path in SKILL.rglob("*"):
             if path.is_file() and path.suffix in (".md", ".yaml", ".py") and "tests" not in path.parts:
                 self.assertNotIn("/Users/", path.read_text(encoding="utf-8"), str(path))
 
-    def test_config_template_names_the_exemplar_index(self):
-        text = read("templates/config.example.yaml")
-        self.assertRegex(text, re.compile(r"^exemplar_index:", re.M))
-        self.assertRegex(text, re.compile(r"^exemplar_fallback:", re.M))
-        self.assertRegex(text, re.compile(r"^edit_pairs_folder:", re.M))
-        self.assertTrue((SKILL / "templates" / "exemplar-index.example.md").is_file())
-
     def test_config_template_has_one_model_entry_per_role(self):
-        text = read("templates/config.example.yaml")
-        models = text.split("models:", 1)[1]
-        for key in ("organizer", "research", "writer", "second_writer", "counter", "structure_editor", "managing_editor",
-                    "reader", "expert", "facts_risk", "language", "seed_check"):
+        models = read("templates/config.example.yaml").split("models:", 1)[1]
+        for key in ("writer", "writer_fallback", "research", "hook_second", "fact_sheet_names", "editor", "reader", "expert", "fact_checker"):
             self.assertRegex(models, re.compile(rf"^  {key}:", re.M), f"models.{key}")
-        for old in ("wording_editor", "layperson_reader", "target_reader", "fact_checker", "reviewers", "editor_in_chief"):
-            self.assertNotIn(old, models)
+        for old in ("organizer", "counter", "structure_editor", "managing_editor", "facts_risk", "language", "seed_check"):
+            self.assertNotRegex(models, re.compile(rf"^  {old}:", re.M), f"models.{old}")
+
+    def test_config_template_names_the_exemplar_index_and_edit_pairs(self):
+        text = read("templates/config.example.yaml")
+        for key in ("exemplar_index", "exemplar_fallback", "edit_pairs_folder"):
+            self.assertRegex(text, re.compile(rf"^{key}:", re.M))
 
 
 if __name__ == "__main__":
     unittest.main()
-
-
-class HookFirstTests(unittest.TestCase):
-    """3.3 (2026-10-19): reach comes first; only facts and copying force a change."""
-
-    def test_hook_is_chosen_before_the_line(self):
-        write = read("references/write.md")
-        self.assertLess(write.index("## The hook (before the line, stop 2)"), write.index("## The line (stop 2)"))
-        hook = write.split("## The hook", 1)[1].split("## The line (stop 2)", 1)[0]
-        for must in ("One sentence the whole piece says", "Candidates from two vendors", "The author picks", "never replaced without asking"):
-            self.assertIn(must, hook)
-        self.assertIn("0. **The hook first**", read("references/stops.md"))
-
-    def test_writer_is_told_what_grips(self):
-        brief = read("references/write.md").split("## The writer's brief", 1)[1].split("## The opening", 1)[0]
-        self.assertIn("让人忍不住点开、看完、转出去", brief)
-        self.assertIn("The title and opening the author chose", brief)
-
-    def test_only_facts_and_copying_force_a_change(self):
-        review = read("references/5-review.md")
-        self.assertIn("Only hard facts and copying force a change", review)
-        self.assertIn("锋利的话、冲突、钩子一样不许磨软", review)
-        self.assertIn("Reach comes first; only facts and copying force a change.", read("SKILL.md"))
-        self.assertIn("three sharpest lines beside the previous version", read("references/write.md"))
-
-    def test_new_prompts_exist(self):
-        prompts = read("references/prompts.md")
-        for h in ("## 13. Attraction reader", "## 14. Originality check", "## 15. Title and opening candidates"):
-            self.assertIn(h, prompts)
-
-    def test_someone_elses_article_is_a_seed_only(self):
-        topic = read("references/1-topic.md")
-        self.assertIn("### Someone else's article as the seed", topic)
-        self.assertIn("never names the article or its author", topic)
-        self.assertNotIn("resembling a hit earns nothing", read("references/3-structure.md"))

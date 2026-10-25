@@ -85,6 +85,24 @@ class RunWatchedTests(unittest.TestCase):
         self.assertLess(took, 10)
         self.assertEqual(self.out.read_text(encoding="utf-8").strip(), "答完了")
 
+    def test_deadline_stops_a_busy_call_with_no_result(self):
+        rc, line, took = run(self.out, "--deadline", "1", "--check-after", "60",
+                             code="import time\nwhile True: sum(range(10000))")
+        self.assertEqual(rc, 125)
+        self.assertIn("no result", line)
+        self.assertLess(took, 10)
+
+    def test_deadline_stops_a_call_that_only_printed_progress(self):
+        rc, line, took = run(self.out, "--deadline", "1", "--check-after", "60",
+                             code="import sys,time\nwhile True: print('思考中'); sys.stdout.flush(); time.sleep(0.2)")
+        self.assertEqual(rc, 125)
+        self.assertLess(took, 10)
+
+    def test_call_finishing_before_the_deadline_is_untouched(self):
+        rc, line, _ = run(self.out, "--deadline", "30", code="print('有结果')")
+        self.assertEqual(rc, 0)
+        self.assertIn("exited with code 0", line)
+
     def test_nothing_stops_before_check_time(self):
         rc, line, _ = run(self.out, "--check-after", "30", "--silent", "0.2", code="import time; time.sleep(1.5)")
         self.assertEqual(rc, 0)

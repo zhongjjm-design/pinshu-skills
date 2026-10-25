@@ -36,10 +36,14 @@ SECOND_PERSON = "\u4f60"
 CJK = re.compile(r"[\u4e00-\u9fff]")
 REVERSALS = (
     ("single-sentence reversal: not X but Y", re.compile(r"\u4e0d\u662f[^\u3002\uff01\uff1f\uff1b\n]{1,40}?\u800c\u662f")),
-    ("single-sentence reversal: not X, (it) is Y", re.compile(r"(?<!\u662f)\u4e0d\u662f[^\u3002\uff01\uff1f\uff1b\n\uff0c]{1,30}\uff0c\u662f(?!\u4e0d\u662f|\u5426)")),
     ("single-sentence reversal: lies not in X but in Y", re.compile(r"\u4e0d\u5728\u4e8e[^\u3002\uff01\uff1f\uff1b\n]{1,40}?\u800c\u5728\u4e8e")),
     ("single-sentence reversal: A rather than B", re.compile(r"\uff0c\u800c\u4e0d\u662f")),
 )
+# 3.9 (the author, 2026-10-23): the standard's \u7b2c\u5341\u4e94\u8282 bans only the "\u800c\u662f" form; the comma form
+# "\u4e0d\u662f X\uff0c\u662f Y" reads naturally and is a reminder only when an article uses it more than three times.
+COMMA_REVERSAL = re.compile(r"(?<!\u662f)\u4e0d\u662f[^\u3002\uff01\uff1f\uff1b\n\uff0c]{1,30}\uff0c\u662f(?!\u4e0d\u662f|\u5426)")
+COMMA_REVERSAL_MAX = 3
+COMMA_REVERSAL_RULE = "comma reversal \"\u4e0d\u662f X\uff0c\u662f Y\" more than three times in the article: reread them"
 DASH = re.compile(r"[\u2014\u2015]")
 EMOJI = re.compile(r"[\U0001F300-\U0001FAFF\u2600-\u27bf]")
 INLINE_SOURCE = re.compile(r"[\uff08(][^\uff09)\n]{0,30}(?:19|20)\d{2}[^\uff09)\n]{0,15}[\uff09)]")
@@ -50,7 +54,12 @@ CARD_SKIPPED = (
     "exactly one H1", "body longer", "first draft longer", "sections are nearly the same length", "body outside", "second person", "section outside", "sections are unbalanced",
     "subhead length", "subhead lengths", "opening uses", "paragraph lengths", "5 paragraphs in a row",
     "long paragraph", "more than three numbers", "meta narration", "single-sentence paragraphs", "numbered subhead",
+    "more than seven paragraphs", "no divider", "reads heavy", "reads flat",
 )
+HEAVY_COMMAS = 3  # more than three commas in one sentence
+HEAVY_DE = 3  # more than three 的 in one sentence
+EVEN_SENTENCE_RUN = 4
+SECTION_PARAGRAPH_MAX = 7  # 3.6 blocked a section of more than seven paragraphs; 3.9 (the author, 2026-10-23) made it a reminder
 LIST_MARKERS = ("- ", "* ", "> ", "|", "!")
 NUMBERED_ITEM = re.compile(r"^(\d+[.、．)]|[一二三四五六七八九十]+、)")
 # 2.4 (the author, 2026-10-17): core claims and punchlines may stand alone as one-sentence paragraphs,
@@ -60,8 +69,8 @@ NUMBERED_SUBHEAD = re.compile(r"^(?:\d{1,2}|[\u4e00\u4e8c\u4e09\u56db\u4e94\u516
 EVEN_SPREAD = 0.35
 EVEN_RUN = 5
 EVEN_RATIO = 1.3
-# Two habits 得到大脑's writing process names (2026-10-19): the same word opening
-# sentence after sentence reads like an echo; sections of equal length read like a form.
+# Two machine-shaped habits: the same word opening sentence after sentence reads
+# like an echo; sections of equal length read like a form.
 SENTENCE_SPLIT = re.compile(r"[\u3002\uff01\uff1f\uff1b]")
 OPENER_STRIP = "\u201c\u201d\u2018\u2019\"'\uff08\uff09()\u3010\u3011*\u300c\u300d \t"
 SAME_OPENER_RUN = 3
@@ -97,10 +106,10 @@ RULES_TEXT = """
 
 \u4e0d\u7528\u7684\u53e5\u5f0f\uff08\u8fde\u6210\u4e00\u53e5\u7684\u53cd\u8f6c\uff09\uff1a
   \u4e0d\u662f\u2026\u2026\u800c\u662f\u2026\u2026
-  \u4e0d\u662f\u2026\u2026\uff0c\u662f\u2026\u2026
   \u4e0d\u5728\u4e8e\u2026\u2026\u800c\u5728\u4e8e\u2026\u2026
   \u2026\u2026\uff0c\u800c\u4e0d\u662f\u2026\u2026
-  \u786e\u5b9e\u9700\u8981\u65f6\u5168\u7bc7\u6700\u591a\u4e00\u6b21\uff0c\u7528\u53e5\u53f7\u65ad\u5f00\uff1a\u201c\u4e0d\u662f A\u3002\u662f B\u3002\u201d
+  \u7528\u53e5\u53f7\u65ad\u5f00\u7684\u201c\u4e0d\u662f A\u3002\u662f B\u3002\u201d\u53ef\u4ee5
+  \u9017\u53f7\u9694\u5f00\u7684\u201c\u4e0d\u662f\u2026\u2026\uff0c\u662f\u2026\u2026\u201d\u4e0d\u62e6\uff0c\u4e00\u7bc7\u8d85\u8fc7\u4e09\u5904\u63d0\u9192
 
 \u6807\u70b9\uff1a
   \u4e0d\u7528\u7834\u6298\u53f7\uff08\u2014\u2014\uff09\uff0c\u6539\u7528\u5192\u53f7\u3001\u62ec\u53f7\u6216\u62c6\u53e5
@@ -189,7 +198,7 @@ def split_body(text: str) -> tuple[list[tuple[int, str]], int]:
             cut = index
             break
         body.append((index, line))
-    while body and body[-1][1].strip() in {"", "---"}:
+    while body and body[-1][1].strip() == "":
         body.pop()
     return body, cut
 
@@ -249,20 +258,39 @@ def audit(text: str, banned: list[str], length: tuple[int, int], hard_max: int,
 
     paragraphs: list[tuple[int, str]] = []
     headings: list[tuple[int, str]] = []
-    sections: list[dict] = [{"title": "(opening)", "line": 1, "chars": 0}]
+    sections: list[dict] = [{"title": "(opening)", "line": 1, "chars": 0, "paras": 0}]
+    new_block = True  # a paragraph is a block between blank lines; soft line breaks stay inside it
     for number, line in body:
         stripped = line.strip()
-        if not stripped or stripped == "---":
+        if stripped == "---":
+            add("blocker", "no divider in the body", number, "---")
+            new_block = True
+            continue
+        if not stripped:
+            new_block = True
             continue
         if stripped.startswith("#"):
             headings.append((number, stripped.lstrip("#").strip()))
         if stripped.startswith("## "):
-            sections.append({"title": stripped[3:].strip(), "line": number, "chars": 0})
+            sections.append({"title": stripped[3:].strip(), "line": number, "chars": 0, "paras": 0})
+            new_block = True
             continue
         if stripped.startswith("#"):
             continue
         paragraphs.append((number, stripped))
         sections[-1]["chars"] += cjk_len(stripped)
+        if new_block:
+            sections[-1]["paras"] += 1
+            new_block = False
+    for section in sections:
+        if section["paras"] > SECTION_PARAGRAPH_MAX:
+            add("warn", "more than seven paragraphs in a section: reread whether it should split", section["line"],
+                f"{section['title'][:24]}: {section['paras']} paragraphs")
+
+    comma_reversals = [(number, match.group(0)[:40]) for number, line in body for match in COMMA_REVERSAL.finditer(line)]
+    if len(comma_reversals) > COMMA_REVERSAL_MAX:
+        for number, found in comma_reversals:
+            add("warn", COMMA_REVERSAL_RULE, number, found)
 
     for number, line in body:
         for match in DASH.finditer(line):
@@ -315,6 +343,29 @@ def audit(text: str, banned: list[str], length: tuple[int, int], hard_max: int,
                 number, opener)
             reported += 1
         index += run
+
+    # 3.7 (2026-10-21): countable signs that a sentence reads heavy; places to reread, never rules.
+    heavy = 0
+    plain: list[tuple[int, int]] = []
+    for number, para in paragraphs:
+        if para.startswith(LIST_MARKERS):
+            continue
+        for piece in SENTENCE_SPLIT.split(para):
+            sentence = piece.strip()
+            if not sentence:
+                continue
+            plain.append((number, cjk_len(sentence)))
+            if heavy < 5 and (sentence.count("\uff0c") > HEAVY_COMMAS or sentence.count("\u7684") > HEAVY_DE):
+                add("warn", "reads heavy: a sentence packed with commas or \u7684; reread it and split or simplify", number,
+                    excerpt(sentence, 0))
+                heavy += 1
+    runs = 0
+    for start in range(len(plain) - EVEN_SENTENCE_RUN + 1):
+        window = [size for _, size in plain[start:start + EVEN_SENTENCE_RUN]]
+        if min(window) >= 6 and max(window) <= 1.3 * min(window) and runs < 3:
+            add("warn", f"reads flat: {EVEN_SENTENCE_RUN} sentences in a row of nearly the same length; mix long and short",
+                plain[start][0], ", ".join(str(size) for size in window))
+            runs += 1
 
     for index, (number, para) in enumerate(paragraphs):
         if index and COMMENT_OPENING.match(para) and not ANAPHOR_OPENING.match(para):

@@ -1,0 +1,42 @@
+# Step 2: research, the matter found out in full
+
+Research comes after step 1 (the author's points) and before the thinking-through and the three questions (gate 1, `write.md`). Its purpose is material: the matter itself found out in full, so the article has enough true facts and cases to be written from, the way a writer gathers before writing. It is not led by the three answers or by a conclusion: the three answers are written after it, and which material goes into the article is chosen when the piece is built (`write.md`, step 3, item 6). Searching for "the evidence that holds up the conclusion" is what put an outside study in as two sections' main material and made articles read as pieced together (3.7 trial, 2026-10-22).
+
+**Find the matter whole**: how it came about and where it stands now; the people and companies in it and what they actually did; cases on every side; the numbers; what each party says; the voices against; what changed recently (freshness, below); and the items step 1 marked 待查, such as the tools the reader works in and where he gets stuck. The boundary is the matter, not the sentence we want to prove. A striking number stays in the pack with its status like any other item; whether it goes into the article is decided at step 3.
+
+Each job brief says what is wanted (which people, events, data or cases), which part of the matter it covers, and how fine (a one-line finding, or material the writer can use as it stands). Jobs go at once to the models the configuration's `research` routing names (`models.md`, "Who does what"); each says whether it read the full source or a fragment, and writes "not found" when it finds nothing. Close with one short summary page (the strongest items with their status) for the writer and gate 1.
+
+What to look for depends on what the piece hangs on (step 1's decision log). An opinion or self-dissection piece looks for five things: the author's own material (below); where the reader meets this question in his work and where he gets stuck; how others have written on it; how classic theory and people of real weight put it, with the book or source; others' concrete practice, with their names. A random person's line online is not among them. A piece built round one event, company, report or tool (after the news, case analysis, report reading and the like) finds that matter whole, in four kinds of job:
+
+1. **Facts**: names, numbers, quotes, dates, with links. For a tool or Skill: the repository's stars with the date they were read, creation and last-update dates, license, open issues that report failures, and others' published tests, marking which numbers are the maker's own claims.
+2. **Cases on every side**: real people and events doing concrete things, those that bear the author out and those that do not.
+3. **The reader's scene**: what this reader works in and how, and where people like him get stuck, from what they write and say themselves.
+4. **The closest published articles**: the few nearest to our angle, one line each (who wrote what, whether anyone argued it this way, what we add). The account's own published pieces are read in full; drafts are left out; articles recalled from model memory go under "leads to check".
+
+Research lays out material; the writer reads all of it before the thinking-through, and whether a section has what it needs is said at gate 2.
+
+Rules for the run:
+
+- **The author's own material comes first.** His views are not kept in one place and they deepen over time rather than flip: daily posts, longer notes, distilled learning, the courses and writers he chose to follow, and documents written up from his conversations all carry them (configuration `material_folders`). Look across them; where two say different things, the newer one is the upgraded view. If the author mentions conversations, notes or posts collected earlier, find those and go back to the original posts before any keyword search. Ask where they are if they cannot be found.
+- **Start from the configured sources** (leading business, technology and brand media, the author's notes), then search the last three months. Without web access write "no web access"; items recalled from memory are "leads to check, from model memory, not verified" and never enter the article as facts.
+- **Each item records**: date; source; its link and the exact sentence it is quoted for (so a screenshot can be taken straight from the list); what it supports; its status (independent report, company self-report, vendor press release, speaker's own account, repost of an unopened original); how it was read (original read in full, fragment only, paraphrased by a tool; never quote from a paraphrase); what kind it is: practice, view, classic theory or common sense, which decides at step 3 how it is cited (`write.md`, step 3, item 5).
+- **Freshness**: the selected account profile's freshness rule applies to everything collected. Where the profile says nothing, use current sources for AI tools and recent events while allowing older sources for clearly identified classic principles.
+- **When the author names a source**, find the original and read the fullest version. A thing that cannot be found is written "cannot be found"; no date or number is filled from memory. Anything passed on by a helper, another conversation or another AI goes back to its original before use.
+- **When the author asks to study a subject through this article** ("借这篇把 GEO 研究透"), that study is a fourth job: its notes are a document of their own, filed where the author says, and timed as their own stage. The three jobs above still prepare only the article.
+- **Close with one short summary page** (the strongest items with status) so the author and the writer read one page.
+
+### Paid data reference (market reference)
+
+Off by default. It runs only when the author names it, once per article, by the organizer alone: `python3 scripts/market_reference.py --dir <process folder> --keyword <word> [--keyword ...]` with two or three keywords written the way a reader would search; pass the configuration's `market_reference` values as flags. It returns one page of real read counts of same-topic articles beside each account's usual level. How to read it: mark each row on topic, adjacent or off topic and count only on-topic rows; an article read at 2 times or more of its account's usual level and at least 2,000 reads is a "small account, big response" sample, and only these may inform titles or openings. It is reference beside the closest-articles list and the titles, never a score and never a reason to retitle a finished article. A failed or skipped fetch is written down and the article goes on.
+
+## Seed outcomes
+
+When research is done the seed stands (keep the direction; use the material to make the claim precise and write its limits), is partly wrong (keep the direction; fix that part and say in the article when it does not hold), or has its core overturned. The core is overturned only when several independent, recent, first-hand sources directly contradict it, or when it is an agent inference and nothing supports it. Then bring the evidence and one proposed new direction to gate 1; the author decides. Someone else writing on the topic, a different mainstream view, a forceful objection without evidence and a model's common-sense answer do not overturn a seed.
+
+## Material pack
+
+Start it in step 2 as the research items are recorded; when the author has passed gate 2, lock every name, company, number, quote (with its Chinese wording), date and author experience the article may use into one table. The writers may use only the table for these. The table does not govern everyday description that anyone lives through (staying up late on a proposal) or a hypothetical scene marked as such.
+
+- Two kinds of entry are copied as whole sentences, never paraphrased: the author's own experiences and statements, word for word from the author's messages and the decision log (a gap is "[to confirm]" and asked); key statements from the account's own earlier articles, with title and date.
+- Each external entry keeps its link and quoted sentence. Mark the entries that need an evidence screenshot; the screenshot job captures from that column (`6-deliver.md`).
+- Keep it complete: whenever a fact is checked or re-measured later, write it in at once with source and date. The fact sheet for the fact checker is pulled from the draft by a third party (`5-review.md`, step 5); this pack is the writer's source, not the checker's.

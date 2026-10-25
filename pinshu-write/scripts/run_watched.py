@@ -5,14 +5,18 @@ The command runs in a fresh empty folder with no input; stdout goes to --out, st
 Until --check-after seconds pass the call is never stopped. After that it is stopped (SIGKILL to its
 whole process group) only once it has been silent for --silent seconds in a row: the output files and
 every --watch path unchanged, and its processes used less than --cpu-min seconds of CPU in that window.
---answer-idle N ends a call whose output is non-empty and unchanged for N seconds (some CLIs keep running
-after their answer). The last line of <out>.err and of stdout says how it ended.
+--answer-idle N ends a call whose output is non-empty and unchanged for N seconds (for interfaces that keep running
+after emitting their answer). --deadline N stops a call still running N seconds after it started, however busy it looks or whatever
+it has printed so far (the fact checker: no finished result in 20 minutes goes to the backup,
+references/models.md); what it printed stays in --out but counts as no result.
+The last line of <out>.err and of stdout says how it ended.
 
-Exit code: the command's own code when it exits; 0 when ended by --answer-idle; 124 when stopped silent.
+Exit code: the command's own code when it exits; 0 when ended by --answer-idle; 124 when stopped silent;
+125 when stopped at --deadline.
 
 Example:
-  python3 scripts/run_watched.py --out pens/06-draft-opus46-v1.md --check-after 1500 --watch-claude-log \\
-      -- env CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000 claude -p "$(cat pens/06-draft-brief.md)" --model claude-opus-4-6
+  python3 scripts/run_watched.py --out article/draft.md --check-after 1500 --silent 300 \\
+      -- MODEL_CLI "<brief text>"
 """
 import argparse
 import os
@@ -41,10 +45,11 @@ def parse_cputime(text):
 
 
 def linux_tree_cpu(root_pid, proc_root=Path("/proc")):
-    """Read subsecond Linux CPU ticks; ps TIME truncates to seconds on procps.
+    """Read subsecond Linux CPU ticks; procps may quantize ps TIME to seconds.
 
-    Return None if procfs or the root is unavailable so other systems retain ps.
-    Names may contain spaces and ')' characters: fields follow the final ')'.
+    Return None if procfs or the root is unavailable so other systems retain the
+    portable ps fallback. Process names may contain spaces and ')' characters;
+    the numeric fields follow the final ')'.
     """
     try:
         ticks = os.sysconf("SC_CLK_TCK")
@@ -62,7 +67,7 @@ def linux_tree_cpu(root_pid, proc_root=Path("/proc")):
             pid, parent = int(entry.name), int(fields[1])
             cpu[pid] = (int(fields[11]) + int(fields[12])) / ticks
         except (OSError, ValueError, IndexError):
-            continue  # A process can exit between directory enumeration and reading stat.
+            continue
         children.setdefault(parent, []).append(pid)
     if root_pid not in cpu:
         return None
@@ -78,7 +83,7 @@ def linux_tree_cpu(root_pid, proc_root=Path("/proc")):
 
 
 def tree_cpu(root_pid):
-    """CPU seconds of the live process tree: Linux procfs ticks, portable ps fallback."""
+    """CPU seconds of the live process tree: Linux procfs, portable ps fallback."""
     if sys.platform.startswith("linux"):
         precise = linux_tree_cpu(root_pid)
         if precise is not None:
@@ -140,7 +145,8 @@ def main(argv=None):
     ap.add_argument("--check-after", type=float, default=600, help="seconds before any stop is considered (default 600)")
     ap.add_argument("--silent", type=float, default=300, help="seconds of silence in a row that stop the call (default 300)")
     ap.add_argument("--cpu-min", type=float, default=1.0, help="CPU seconds within the silent window that still count as working (default 1.0)")
-    ap.add_argument("--answer-idle", type=float, default=0, help="end once output is non-empty and unchanged this long; 0 = off (agy: 90)")
+    ap.add_argument("--answer-idle", type=float, default=0, help="end once output is non-empty and unchanged this long; 0 = off")
+    ap.add_argument("--deadline", type=float, default=0, help="stop a call still running this many seconds after it started; 0 = off (fact checker: 1200)")
     ap.add_argument("--watch", action="append", default=[], help="file or folder whose growth counts as activity; repeatable")
     ap.add_argument("--watch-claude-log", action="store_true", help="also watch the Claude Code session log of the working folder")
     ap.add_argument("--poll", type=float, default=5, help="seconds between checks (default 5)")
@@ -183,6 +189,9 @@ def main(argv=None):
             cpu_samples.append((now, cpu))
             while len(cpu_samples) > 1 and cpu_samples[1][0] <= now - args.silent:
                 cpu_samples.popleft()
+        if args.deadline and now - start >= args.deadline:
+            ended, code = f"no result {now - start:.0f}s after start (deadline), stopped; send to the backup", 125
+            break
         if args.answer_idle and out_state[1] > 0 and now - out_changed_at >= args.answer_idle:
             ended, code = f"answer idle {now - out_changed_at:.0f}s, stopped", 0
             break

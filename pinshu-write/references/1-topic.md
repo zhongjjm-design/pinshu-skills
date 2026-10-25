@@ -8,31 +8,31 @@ A seed is what the author said, or a candidate the author explicitly accepted ("
 
 ## When the author brings words
 
-An idea, topic, link, article or loose message. No stop; the point map reaches the author inside the stop 2 message.
+An idea, topic, link, article or loose message. Keep and map it as below, then ask the author (`write.md`, step 1); his answers join the point map.
 
 1. **Keep the words.** Store the author's full text verbatim in the article folder. Corrected readings of misheard voice input go in a separate table beside it; the original is never edited.
-2. **Number the points (the point map).** Every distinct meaning the author expressed gets a number: S1, S2, S3 ... A long seed with eight points has eight numbers. Points on one line of reasoning (one leads to or explains the next) share a number, with the items listed under it in the author's words; points on separate lines of reasoning get separate numbers. A run of items the author wrote as a list that all serve one meaning is one number. Points serve the judgment: the map tells the writer what to carry, never a checklist to spread out item by item (over-fragmenting the seed can turn prose into a checklist).
+2. **Number the points (the point map).** Every distinct meaning the author expressed gets a number: S1, S2, S3 ... A long seed with eight points has eight numbers. Points on one line of reasoning (one leads to or explains the next) share a number, with the items listed under it in the author's words; points on separate lines of reasoning get separate numbers. A run of items the author wrote as a list that all serve one meaning is one number. Points serve the judgment: the map tells the writer what to carry, never a checklist to spread out item by item (a 3,500-character article mapped into 66 numbers came out as a heap of information).
 3. **List the author's own material separately**: passages that carry lived experience or a picture (a scene, a person, a moment), and insights only this author has (from their business, clients, years in the trade). Each keeps the author's words.
 4. **Who benefits first.** If it is the author's own team, also produce a separate internal improvement list (what we do, where we fall short, what to try); it never goes into the article.
-5. **One article, one line.** When the author's words hold several separate lines (a long voice message often does), the article follows the one the seed's own doubt points to; the others are offered at stop 2 as other articles (`stops.md`). Nothing is dropped silently: each stays in the point map with its destination.
-6. **Opinion pieces need that material.** With none, the stop 2 message asks for one real story. If the author says "none, write it anyway", the review sheet records "no part only this author could write" (`5-review.md`, "Review sheet").
+5. **One article, one line.** When the author's words hold several separate lines (a long voice message often does), the writer asks the author in step 1 which one this article follows (`write.md`, step 1, item 6); the others are marked "另一篇". Nothing is dropped silently: each stays in the point map with its destination.
+6. **Opinion pieces need that material.** With none, step 1 asks him for it (`write.md`, step 1). If the author says "none, write it anyway", the review sheet records "no part only this author could write" (`5-review.md`, "Review sheet").
 
 ### Someone else's article as the seed
 
-When the author brings another person's article (a post on X, a WeChat piece, a forum thread), it is the spark for a topic, not a ready-made frame or wording to copy. Keep the author's words about it as the seed and the article itself in the process folder as the source.
+When the author brings another person's article (a post on X, a WeChat piece, a forum thread), it is the spark for a topic, nothing more: "相当于路边有人说了一句话……我突然意识到这个好像也是个选题" (the author, 2026-10-19). Keep the author's words about it as the seed and the article itself in the process folder as the source.
 
 - Note what grips in it (its title, its opening, its sharpest lines, how it argues), so the hook candidates can learn from it.
 - Do not import its scenes, frame, checklists, signature phrases or data into the material pack; research the topic again from its own sources. A fact that appears in it may be used only when found and read at its original source, and even then it is better left out when it was the source article's own find.
-- The body never names the article or its author, and the 参考文章 block does not list it. The originality check (prompt 14) runs on every draft.
+- The body never names the article or its author, and the 参考文章 block does not list it. The fact checker's copying pass (`prompts.md`, "Fact checker, pass two") runs on every draft.
 - "写简单一点" about such an article means shorter, with fewer cases and numbers; its sharpest points and its hook are what to keep in our own words, never what to cut.
 
 ## When the author brings nothing
 
 The scan runs on this Skill alone. A dashboard, feed service or saved topic list only makes it faster.
 
-**Window**: the last 7 days; widen to 30 only when the 7-day scan finds nothing that meets the entry rule below, and say so.
+**Window**: recent first (the last 7 days, then 30). Freshness ranks a topic higher; it is not a gate. A question readers keep caring about may be offered whatever its date (classic judgments do not age), labeled "常青", with evidence that readers still care now.
 
-**Who scans.** The scan jobs go out at once to the models the configuration's `research` routing names (`models.md`, "Scan and research"); the organizer merges what comes back and writes stop 1.
+**Who scans.** The scan jobs go out at once to the models the configuration's `research` routing names (`models.md`, "Who does what"); the writer's session merges what comes back and writes the topic message.
 
 **Source route**, first that applies:
 
@@ -54,13 +54,13 @@ The scan runs on this Skill alone. A dashboard, feed service or saved topic list
 
 Start each family from what it ranks by reader behavior (hot list, most-read, most-played, top-voted) and open the list page itself; a search result describing a list is not the list. A keyword search shows what is written, not what is read: use it to find the same question in a second family. Outlets of one kind are one family. To widen a scan, add families, not reviewers.
 
-**Entry rule.** A signal counts when its date is inside the window and at least two of families 1 to 3 touch the same question, or one source runs clearly above its own usual level. Anything else may appear only labeled "single lead".
+**Entry rule.** A signal counts when at least two of families 1 to 3 touch the same question, or one source runs clearly above its own usual level. Anything else may appear only labeled "single lead". Recent signals rank first.
 
 **Before showing a topic**: open at least two sources from different families in full (a title or snippet is not reading), and search the author's side (`material_folders`, published articles, the author's earlier statements). The topic's core claim stands on a named source or on the author's material, with the quote and path or link. A claim that neither makes, reached by the agent stepping between them, is an inference: label it, and research later supports it or it counts as overturned.
 
-**What a topic needs.** The reader is already asking about it, and the article gives at least one of: resonance ("said what I felt"), a new view ("showed what I had not seen"), use ("I can act on this"), forwardability. Topics may collide with other writers; angles may not. Written as the reader's question, in words anyone understands at first reading. Other people's articles are triggers, not sources; the account's own work appears only as evidence inside a reader's problem; no topic pulls readers with greed or fear; "is AI useful?" is not a topic.
+**What a topic needs** is judged by the good-article standard, not by a list of this Skill's own (第一节, the reader opens, finishes and passes it on; 第二节 item 5, at least one kind of value; 第三节, why readers pass it on; 第十七节 item 3, something not seen elsewhere: a new judgment, a new fact or a new angle). Written as the reader's question, in words anyone understands at first reading. Three things the standard does not say: other people's articles are triggers, not sources; the account's own work appears only as evidence inside a reader's problem; "is AI useful?" is not a topic.
 
-**Stop 1 offers three topics**, each with exactly six lines:
+**The topic message offers three topics**, each with exactly six lines:
 
 - the topic in one sentence, as the reader would ask it (the core question);
 - the reader's shift: "读者原来以为……，看完知道……";

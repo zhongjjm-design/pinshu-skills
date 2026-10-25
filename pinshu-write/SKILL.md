@@ -7,109 +7,115 @@ description: "Use when the user wants to find a topic for, write, title, outline
 
 ## Provenance and maintenance
 
-- Original status: Pinshu original (`original`). Owner and maintainer: Aidan (Pinshu). Only the maintainer edits these files; writing sessions propose feedback candidates.
-- Version: 3.3.0 (2026-10-19), public preview.
-- 3.3.0: select the title/opening hook before the line; add attraction and originality reviews; retain force while checking facts and copying; compare revisions with the preceding version.
-- 3.2.0: carry the reader's shift through planning, drafting and review; make research briefs precise; distinguish optional revision advice from hard factual corrections.
-- 3.1.0: retain all review roles, revise whole sections with the same writer, and enforce final length and paragraph gates.
-- 3.0.0: pass the complete seed, plan one coherent line, and read each draft as a whole before review.
+- Original status: Pinshu original (`original`). Owner and maintainer: Aidan (Pinshu).
+- Version: 4.0.0 (2026-10-25), public preview. 4.0 照真稿测出的问题修改，修改后尚未跑过真稿验证。
+- Writing sessions may propose feedback candidates; only the maintainer changes the package. Maintainer-only histories, private feedback and local project records are not distributed.
 
 ## 中文使用入口
 
-用于把作者已给的选题、灵感、文章或材料写成中文商业分析长文，也支持找选题、标题开头候选与审稿。先读用户自己的配置和账号画像；作者决定选题、主线、开头与定稿。保留四个确认停点、跨厂商多角色审稿、同一写手整节修改、机械检查与定稿导出。以下主流程与参考文件保留与本机通用规则相同的英文规则及中文提示词；不附带发布者的账号画像、私下反馈或维护档案。
+用于把作者给出的选题、灵感、文章、材料或初稿写成中文商业分析长文，也支持找选题、标题开头和审稿。先读使用者自己的配置与账号画像；默认写作标准随包提供在 `references/good-article-standard.md`，配置可以指向团队自己的替代标准。作者决定选题、判断、标题、大纲、开头和是否定稿。公开版保留十步主流程、三道闸门、相互隔离的审稿位置、同一写手整节修改、机械检查与定稿导出；不附带发布者的账号画像、私下反馈、维护档案或本机模型配置。
 
-## What this Skill is for
+## The master gate
 
-**Reach comes first.** An article nobody opens helps nobody, and a new account with no followers gets readers only from strangers who see it pushed or forwarded: every article is first judged on whether a stranger scrolling past opens it, reads on and passes it on (the title and opening must earn attention). Facts, structure and rules serve that; none of them may be used to file the edge off a piece.
+Above every rule in this Skill: 利他, the root set by the bundled good-article standard (`references/good-article-standard.md`, 第一节): from the reader's side, what the reader takes away for the minutes spent. Before writing it takes the form of the standard's 动笔前先答三问 (第十六节): why does the reader open this article, where does the reader decide to continue, and what does the reader take away. The Skill keeps no set of its own. When the writer or a reviewer is unsure, return to these three first; steps that cannot answer them by nature (research, the fact sheet, export) do not stop on them. A number found in research answers "which of the three does it serve?" before it goes into the article; research itself finds the matter out in full and is not led by these three (`references/2-research.md`).
 
-It helps the author think the idea through first (the author is the first reader), and turns it into an article a busy reader enjoys reading to the end, finds useful and wants to pass on: one clear line, a person thinking out loud, cases that come in because the reader wants them, and facts that hold. The AI researches, checks and drafts; the author decides the topic, the line, the opening and whether it ships; a person publishes under the platform's AI-disclosure rules. Output is Simplified Chinese unless the account profile says otherwise.
+## What it is for
 
-## What it needs
+Articles a busy reader opens, reads to the end and passes on. A new account with no followers gets readers only from strangers who see it pushed or forwarded, so reach comes first; facts, structure and rules serve reach and never file the edge off a piece. The author decides the topic, the title, outline and opening, and whether it ships; models do the work in between. Output is Simplified Chinese unless the profile says otherwise.
 
-Python 3.9 or newer, no third-party packages. Web access, a second model vendor, the visual Skill `pinshu-visual-system` and a browser are optional; each has a named fallback, and a skipped or downgraded step is written down as such, never reported as done.
+An optional account workflow document (configuration `workflow_doc`) may explain why a team's route and roles are shaped a certain way. The good-article standard (configuration `good_article_standard`, default `references/good-article-standard.md`) says what a good article is. This Skill holds the steps and points at the standard rather than restating it.
 
 ## Start
 
-1. Run `python3 scripts/check_env.py --config <your config>` the first time. Read the configuration (`pinshu-write.yaml` in the author's writing folder, or the path the author gives; format in `templates/config.example.yaml`) and the account profile; the profile wins over this Skill on topics, reader, length, banned words and titles. Minimum to begin: the account and its reader; ask if either is unknown.
+1. First time on a computer: `python3 scripts/check_env.py --config <config>`. Read the configuration (format in `templates/config.example.yaml`), the account profile and the good-article standard. Minimum to begin: the account and its reader; ask if either is unknown.
 2. Enter where the author is:
 
 | The author brings | Enter at |
 |---|---|
-| Nothing ("find me a topic") | 1 Topic: scan, three topics, stop 1 |
-| An idea, topic, link or article, any length | 2 Research, the author's words kept whole as the seed |
-| A line or a title | 3 The line, then 4 |
-| A draft to look at | 6 The read and the fact check |
+| Nothing ("find me a topic") | Topic scan (`references/1-topic.md`), three seeds, the author picks one |
+| An idea, a link, someone else's article or title, any length | Step 1, the author's words kept whole as the seed |
+| A title or an outline | Step 3 |
+| A draft to look at | Step 6 |
 | Comments on a draft | Revision by size (`references/6-deliver.md`) |
 | The author's own hand edit of a draft | Edit pairs (`references/write.md`, "After 定稿") |
-| An old article to rewrite, continue or restyle | Read it whole; if the author did not say what to change, ask once: structure, tone, or continue; then 3 The line |
 
-## The route
+When the author only says "help me write" and does not say what he has, ask once, with four plain choices and not the whole table: 还没题，帮我找；我有个想法；我有篇别人的文章；我有初稿要改. Then enter by the table.
 
-One route for every article, four stops, every reviewing role kept. Each article has one folder (naming in `6-deliver.md`, "Folders and names") holding the author's verbatim words, the material pack (facts and cases with sources, started in step 2) and the decision log.
+## The route: ten steps, three gates
 
-| Step | What happens | Details |
-|---|---|---|
-| 1 Topic, **Stop 1** | Only when the author brought no topic: scan, offer three, the author picks one | `1-topic.md` |
-| 2 Research and counter | Facts with links and quoted sentences, cases with sources, the author's real experiences from the library, closest published articles; the counter role argues the other side | `2-research-and-counter.md` |
-| 3 The hook and the line, **Stop 2** | First the hook: two vendors write title-and-opening candidates with different hooks, the organizer shows the author four, the author picks one and the one sentence the whole piece says (`write.md`, "The hook"); then the core question, the reader's shift ("读者原来以为……看完知道……"), the opening scene, then one plain paragraph on how the piece moves from first paragraph to last with what each step stands on, and three titles that each carry something the reader does not know; the structure editor checks the line first; the author approves or reshapes it | `write.md`, `stops.md`, `prompts.md` |
-| 4 Draft | One writer (a second when the author asks), briefed with the seed whole, the chosen title and opening, the line, what makes it gripping, exemplars of the type, the author's edit rules and the material pack; the organizer reads the draft whole and runs the gates | `write.md`, `models.md` |
-| 5 Opening, **Stop 3** | The first 300 characters to the author: does the first sentence make sense, would you read on | `write.md`, `stops.md` |
-| 6 Review | Managing editor (two vendors), reader, attraction reader, expert, facts and risk, language and flow, the good-article check, and the originality check when the seed is someone else's article, review together; one merged list in which only hard facts and copying force a change | `5-review.md`, `prompts.md` |
-| 7 Revision | The same writer rewrites whole sections once from the merged list, the line and the full text; the organizer reads it whole and lays its title, opening and three sharpest lines beside the previous version's, sending back a version that went flatter; the gates again; the after-revision read and the seed check run once each | `write.md`, `5-review.md` |
-| 8 Final, **Stop 4** | The author reads it all, picks the title, says 定稿 or edits; export, publishing kit, images; the author's hand edits go into the edit rules | `stops.md`, `6-deliver.md`, `write.md` |
+One folder per article (`references/6-deliver.md`, "Folders and names") holding the author's words verbatim, the material, the decision log and every brief and output.
 
-**Gates** (`scripts/audit_draft.py --length 2000-2500 --hard-max 2700`, or the configuration's length): a blocker stops the draft until fixed. One-sentence paragraphs in a row, dashes, banned words and the other blocker rules block every draft. The hard maximum blocks the revised and final text; on the first draft add `--first-draft`, which turns it into a reminder that heads the merged list. A first draft may be a little over, not far over; review, revision and trimming must bring it back inside the range.
+| Step | Who | What happens | Gate | Details |
+|---|---|---|---|---|
+| 1 Ask the author | Writer asks, author answers | One question at a time: his point read back, the vaguest word, who it is for and where they get stuck, what happened to him, where the reasoning jumps. His words written down first; the writer never answers for him | | `write.md` |
+| 2 Research, then think it through | Research models, then the writer | The matter found out in full, not led by the three questions; then, with the material read, one page of thinking-through and the standard's 动笔前先答三问 (第十六节) as sentences someone could argue with | **Gate 1**: the author says it is thought through | `2-research.md`, `write.md` |
+| 3 Title, outline, opening and first section | Writer, plus a second vendor for title and opening candidates | Built from the three answers and the material, a section standing on a case uses one that passes two checks (matches the judgment; the reader meets it in his own work), and may stand instead on the author's experience, his reasoning, an everyday scene or a hypothetical example; exemplars by mature writers found and offered; how the piece moves in one paragraph; the opening and first section written in full | **Gate 2**: the author reviews all three and picks the exemplars; the last place anything is overturned, except by review's two stops (step 6 grading, step 8 建议推翻) | `write.md`, `stops.md` |
+| 4 The rest | Writer | Reads the standard's 利他 paragraph (第一节), the picked exemplars and the standard's 第五、九节 first; writes to the end, reads it through and fixes by the paragraph. Core changed after the first section: stop, back to gate 2 | | `write.md` |
+| 5 Fact sheet | Script or another model, never the writer | Every number, name, company, date, quote and citation in the draft pulled into one sheet | | `5-review.md` |
+| 6 Review | Expert, fact checker, reader at once; then the organizer; then the editor | The three run on the first draft; two re-checks (补核) of what they flagged; the organizer grades every finding by size; the editor's first pass | A finding graded 动骨架 stops for the author before the editor runs | `5-review.md`, `prompts.md` |
+| 7 Revision | Writer | One round: fact must-fixes, answers to the expert, the editor's items and the reader's spots together; a change list | | `write.md` |
+| 8 Facts again, the editor's second pass | Fact checker, editor | Facts on new and changed lines only; the editor checks whether each first-pass problem is gone and what the revision broke | 建议推翻 goes to the author | `5-review.md` |
+| 9 Final | Author | Reads the revised draft; decides whether it ships | **Gate 3** | `stops.md` |
+| 10 Edits, export, review | Writer, organizer | The author's edits, export after 定稿, every five articles a look back | | `6-deliver.md` |
 
-Besides the stops, ask the author when: the account or reader is unknown; there is no topic, no web access and no configured source; research overturned the core (said at stop 2); a draft says something about the author that his words do not; or the next action spends money, overwrites a file or re-exports.
+**Gates in the script** (`scripts/audit_draft.py --length 2000-2500 --hard-max 2500 --banned-file <the configuration's banned_words_file>`): One-sentence paragraphs in a row, dashes, banned words and the other blocker rules block every draft; on the first draft add `--first-draft`, which turns the length maximum into a reminder.
+
+Ask the author besides the gates when: grading puts a finding at 动骨架, or the editor's second pass says 建议推翻 (`stops.md`); the account or reader is unknown; there is no seed, no web access and no configured source; research overturned the core (bring it to gate 1); a draft says something about the author that his words do not; or the next action spends money, overwrites a file or re-exports.
 
 ## The roles
 
-| Role | Does |
-|---|---|
-| Organizer | Runs the route, builds the material pack, writes the line, reads every draft whole as a reader first, merges the findings, keeps the decision log |
-| Writer | Writes the article from the brief, and rewrites whole sections once from the merged list |
-| Counter | Holes and counter-evidence in the judgment, with the seven questions |
-| Structure editor | The line before stop 2: does it move, does each part join the next, do the titles carry something new |
-| Managing editor | The finished draft as a whole: a map of every section first, then repeats, set-ups never paid off, cases, the most valuable part, the ending, gaps; two vendors, no verdict on publishing |
-| Reader | Where a reader outside the trade, who uses AI at work, gets stuck; what they remember; where it jumped |
-| Attraction reader | A stranger scrolling a phone: would they open it from the title, were they caught in the first three lines, where they would leave, which line they would forward, what went soft |
-| Originality check | Only when the seed is someone else's article: where the draft sits too close to it (scenes, frame, signature phrases, data) |
-| Expert | Is it right: what a marketing, finance or applied-AI practitioner would catch, each with a source |
-| Facts and risk | Hard facts against sources and the author's words (who, what was done, numbers, quotes, outcomes); what may not be said; fitting feelings and detail are not faults |
-| Language and flow | Machine flavor and wording; a read from top to bottom marking every place the reading jolts |
-| Good-article check | The account's own standard of a good article, check by check, no overall verdict |
-| After-revision read | Faults the revision brought in: repeats, sentences that do not join, lost sources |
-| Seed check | The author's words present, the article the author asked for, the author's key words still there |
+| Role | Stands where | Delivers | Gets only |
+|---|---|---|---|
+| Writer | The whole article, one agent from step 1 to the last edit: the session that talks with the author, running on the configuration's `writer` model, with no handoff in between; another authorized session may dispatch research, review and fact checks, handing every file over verbatim (`references/models.md`) | The author's points, the thinking-through page and three answers, title, outline, opening, the draft, the revisions | Everything |
+| Editor | The editing desk, in two passes | Pass one: ten actions in three groups plus a comparison with the exemplar, each item with its group, place, problem and how to fix. Pass two: whether each pass-one problem is gone; 过, 退回写手 or 建议推翻 | Pass one: the first draft, the exemplars the author picked, the standard's sections named in `5-review.md`, the edit rules still in force; never the outline, the three answers or anyone's findings. Pass two: its pass-one list, the revised draft, the writer's change list, the reader's spots, the changes outside the change list (found by the organizer) |
+| Reader | A feed, knowing nothing | Per section: read on or not, why, the sentence it stuck on, what the section said, a guess at the next, and the sentence it does not believe or accept, quoted, with its reason as its own reaction; at the end what it remembers, what it would pass on to whom, how it would retell it, and what in its own work it could use the argument on and where it stops working | Who it is and the difficulty it is stuck on; the title, then one more section per call; nothing else |
+| Expert | A practitioner of this topic's field, named at step 1 | The core judgment and a verdict (站得住 / 说满了 / 站不住), a case table, the strongest counter-argument, where the author sounds like an outsider, a 交核查官 column; every item with a source | The draft, the reader in one sentence, its field, the standard's 第十七节 items 2 and 5 |
+| Fact checker | The fact sheet | Pass one: every point marked 有出处 / 对不上 / 待补 / 查不到 / 无需核. Pass two: copying, and sentences that may not be publishable. Two re-checks (补核) before grading | Pass one: the sheet only. Pass two: the draft, the seed and same-topic articles, the standard's 第十五节, the platform |
+
+Positions stay apart because each holds different information; four agents reading the same draft with the same standard would agree with each other, not check each other. The writer reads its own draft through and rewrites by the paragraph (`write.md`, step 4), and checks what can be counted (the script, the countable items of the standard's 第十八节); it never plays any of the four positions. Models per role: `references/models.md`.
 
 ## Rules that do not bend
 
-- **Reach comes first; only facts and copying force a change.** A finding about a hard fact (`5-review.md`, "Facts and risk") or about copying someone else's article must be fixed. Every other finding is advice: the organizer adopts it when it makes the piece more gripping or easier to read, and says in the merged list why it was or was not adopted. No rule, standard or reviewer is used to turn a sharp line into advice or a stand into a hedge.
-- **Someone else's article is a seed only.** The body never names it or its author, and takes none of its scenes, frame, signature phrases or data; what may be learned from it is how it grips. Its facts are researched again from their own sources or left out.
-- **The author's latest words win.** When the author's words at different times disagree, follow the most recent and mark the older one "已改" in the decision log.
-- **The seed is the author's words, kept whole.** It goes to the writer verbatim, doubts and attitudes included. Research sharpens claims inside its direction and never changes the direction, the article type or the reader; when evidence overturns the core, the author decides.
-- **The organizer passes the author's words, not translations of them**: no sample sentences, no quotas, no remark turned into a rule for every section.
-- **The organizer reads every draft whole before any script or reviewer**, and fixes a draft that reads badly at its root, not by patches.
-- **The organizer does not write reader-facing Chinese**, unless the author names it as writer or no writer model can be reached; it may correct a single wrong fact.
-- **The author's experiences, clients and data come only from the author's own words, the decision log and the library**; a gap is written "[待确认]" and asked; something the draft says about the author that is not there is asked, never ruled invented.
-- **Every claim carries its origin**: a named source, the author's material, or an inference worded as one.
-- **Exemplars come from mature writers of the same article type**, never from the account's own old articles; the author's voice is learned from his edit pairs.
-- **The ready folder is written only by `export_article.py`, and only after the author says 定稿.** "可以", "继续", "还行" and "满意" mean keep working.
-- **The author chooses the WeChat collection or column.**
-- **A failed or stalled step is reported as failed or stalled**; never report the article done while a step has failed.
-- **Revisions are sized**; small ones never rerun the route (`6-deliver.md`).
+- **How to write lives in the standard.** This Skill and its prompts point at the standard's sections; a writing rule restated here is a fault to remove. When two rules disagree, ask the author; never pick one.
+- **Only hard facts and copying force a change.** Hard facts include 查不到, 对不上 and 待补; the expert's verdict is graded by size (`5-review.md`, "Grading"), and its other sourced findings get a change or a reason. Every other finding is advice. Findings about the reader (does not care, does not know where to start, cannot understand) are listed apart, and one not adopted gets a reason the author sees at gate 3. Each adopted cut or narrowing carries one line: does the reader now want to read it more, or is it only more careful? Removing the sharpest number or scene waits for the author.
+- **Someone else's article or title is a seed only.** When the author picked it for its title, the question that title asks is the question the article answers. The body never names it or its author and takes none of its scenes, frame, signature phrases or data; its facts are researched again or left out.
+- **The seed is the author's words, kept whole**; research sharpens claims inside its direction. When evidence overturns the core, the author decides. The author's latest words win; mark the older one "已改" in the decision log.
+- **The author's experiences, clients and data come only from his own words, the decision log and the library**; a gap is "[待确认]" and asked.
+- **The ready folder is written only by `export_article.py`, and only after the author says 定稿.** "可以", "继续", "还行" and "满意" mean keep working. The author chooses the WeChat collection.
+- **A failed or stalled step is reported as failed or stalled**, never as done. A draft whose steps 6 to 8 did not all run is a first draft and is called one, never a final.
 - **The Skill stands alone.** A workbench, dashboard or paid data service only speeds it up.
+
+## dbs tools the writer may call
+
+Outside the ten steps: no article has to run any of them. Each is a Skill of that name in the shared Skill folder. What one returns is material or a second opinion; the author and the writer decide, and none stands in for one of the four review positions.
+
+| When | Tool | Call it for |
+|---|---|---|
+| Step 2, after asking the author, before the thinking-through page | `dbs-standard-answer` | A puzzle in the seed: which trades, fields and writers have worked it through, with cases that succeeded, failed or cut against it |
+| | `dbs-deconstruct` | A word in the seed nobody can pin down: draw its edges, or find that the word itself is the trouble |
+| | `dbs-theory-grounding` | An experience-based judgment: does it hold, what theory backs it, where it stops applying (the page's "why it holds") |
+| | `dbs-chatroom` | The author wants to hear sides argue it out; costly (about 80,000 tokens in one test) |
+| After the thinking-through, before the title | `dbs-content-value` | Is the topic worth writing for the reader: whom it draws, whether the opening holds, what the reader gains (the part the author weighs most), reach and business value |
+| | `dbs-jtbd` | What the reader is trying to move forward in his own work with this article |
+| After the draft | `dbs-resonate` | Where it misses its reader; lay it beside the reader position's record |
+| | `dbs-ai-check` | A diagnosis of AI flavor, nothing else |
+| | `dbs-content-risk-check` | Before publishing: risk, sentence by sentence |
+| After publishing, and other formats | `dbs-spread` | Why a piece that spread did |
+| | `dbs-content-value` | Why a piece was read little |
+| | `dbs-title-cover-intro` | Title, cover and opening when the article becomes a 小红书 note or a Channels video |
+| | `dbs-video-extract` | A video's transcript, taken as a seed |
+| | `dbs-benchmark` | Accounts to benchmark against |
 
 ## References
 
 | File | Read it when |
 |---|---|
-| `references/1-topic.md` | Step 1: seed rules, the scan for three topics |
-| `references/2-research-and-counter.md` | Step 2: research, the material pack, the counter role and the seven questions |
-| `references/write.md` | Steps 3 to 8: the hook, the line, titles, the writer's brief, the opening, how the organizer reads, the whole-section revision, the author's edit rules |
-| `references/stops.md` | Writing the message for any of the four stops |
-| `references/models.md` | Choosing models, calling another vendor, watching a call (`scripts/run_watched.py`) |
-| `references/6-deliver.md` | Revisions by size, export, publishing kit, screenshots, cleanup, after publishing |
-| `references/3-structure.md` | 2.x, off the route: the old outline rules, kept for comparison; its "Titles" section is still pasted into prompt 4 |
-| `references/4-writing.md` | 2.x, off the route: the old brief and after-check; `audit_draft.py --rules` still prints its Chinese rules |
-| `references/5-review.md` | Steps 6 and 7: role cards, merging the findings, severity, feedback candidates |
-| `references/prompts.md` | The prompts for the counter, structure editor and every reviewing role (prompts 3 to 14), plus title/opening candidates (15); prompts 1 and 2 are replaced by the brief in `write.md` |
+| `references/write.md` | Steps 1, 3, 4 and 7 and the end of step 2: asking the author, the thinking-through and three questions, title and outline, writing, revision; the fallback writer's brief; edit pairs |
+| `references/2-research.md` | Step 2: the matter found out in full, the material pack |
+| `references/5-review.md` | Steps 5, 6 and 8: the fact sheet, the three positions and the re-checks, grading, the editor's two passes, merging, facts again |
+| `references/prompts.md` | The briefs for the four positions (the editor's two passes, the fact checker's passes and re-check), the fact-sheet extraction and the fallback writer's revision |
+| `references/stops.md` | Writing the message for a gate or the topic scan |
+| `references/1-topic.md` | No seed: the topic scan |
+| `references/models.md` | Choosing and calling models, watching a call |
+| `references/6-deliver.md` | Revisions by size, export, publishing kit, screenshots, after publishing |
+| `references/good-article-standard.md` | The bundled public writing and review standard; a team may override it in configuration |

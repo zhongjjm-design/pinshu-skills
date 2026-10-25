@@ -4,20 +4,20 @@
 
 **First sort the comments into three kinds**: wording (words, punctuation, sentences, paragraphs), checking (re-measure a number, confirm a name or date) and images or downloads (screenshots, videos). Wording goes first and alone: revise, check, hand the draft back. Checking and images run as separate jobs that never hold the draft back; report them when they finish. Read a background result the moment it arrives.
 
-**One writer call per round.** All wording changes that need the writer, from the merged review list or from one reply of the author's, go to the writer together in one call; a change noticed after the call joins the next round instead of starting its own call.
+**One writer call per round.** All wording changes that need the writer, from the merged review list or from one reply of the author's, go to the writer together in one call; a change noticed after the call joins the next round instead of starting its own call. The 2.2 test article spent five revision calls on one draft.
 
 **Then size each wording change.** When unsure, take the smaller size, say so in one line, and let the author ask for more.
 
 | Size | What it looks like | What happens |
 |---|---|---|
-| 1 Swap | The author gave the exact words ("change X to Y", add a comma) | The organizer replaces them word for word, runs the audit, shows a before-and-after list. No writer, no review. Using the author's own words is not the organizer writing |
-| 2 Sentence | The author points at a few sentences without wording ("unclear who 'this' is") | The writer rewrites only those sentences (prompt 2, sentence version); the language role checks only them; run the audit |
-| 3 Paragraph | A paragraph rewritten, an example swapped, one section reworked | The writer revises only that part; the language role checks only that part; run the audit; rerun a matching reviewing role only if a fact or claim changed |
-| 4 Direction | The judgment, structure or title direction changes | Return to the matching step and run the route from there; stop 2 opens again |
+| 1 Swap | The author gave the exact words ("change X to Y", add a comma) | The writer's session replaces them word for word, runs the audit, shows a before-and-after list. No writer, no review. Using the author's own words is not the organizer writing |
+| 2 Sentence | The author points at a few sentences without wording ("unclear who 'this' is") | The writer rewrites only those sentences (`prompts.md`, "Fallback writer: revise", sentence version, when the fallback wrote it; otherwise in place); run the audit |
+| 3 Paragraph | A paragraph rewritten, an example swapped, one section reworked | The writer revises only that part; the editor checks only that part; run the audit; rerun a matching reviewing role only if a fact or claim changed |
+| 4 Direction | The judgment, structure or title direction changes | Return to the matching step and run the route from there; gate 2 opens again |
 
-The organizer applies accepted changes to the current full text and hands the author the complete article with a short before-and-after list, never a list of new subheads or a new outline. When the author sends several comments at once, number them as received and mark each done, not done (with why), or sent to checking or images. Facts touched by a change are re-checked one by one at their source and written into the fact table at once. A check whose answer cannot change the body gets about two minutes; if nothing turns up, write "not found; looked in: ...".
+The writer applies accepted changes to the current full text and hands the author the complete article with a short before-and-after list, never a list of new subheads or a new outline. When the author sends several comments at once, number them as received and mark each done, not done (with why), or sent to checking or images. Facts touched by a change are re-checked one by one at their source and written into the fact table at once. A check whose answer cannot change the body gets about two minutes; if nothing turns up, write "not found; looked in: ...".
 
-After 定稿, sizes 1 to 3 keep the seed check already done; the author reading the complete revised article and saying 定稿 for it approves that version. Size 4 reopens the matching stop.
+After 定稿, sizes 1 to 3 keep the facts pass already done (a changed number or quote goes through the fact checker once); the author reading the complete revised article and saying 定稿 for it approves that version. Size 4 reopens the matching gate.
 
 ## Export (after the author says 定稿)
 
@@ -35,7 +35,7 @@ Then write the publishing kit and the image task (below) and check the whole pai
 - The ready folder is written only by this script; a hand-copied file has the wrong header. The script adds the account folder itself, writes `YYYY-MM-DD_<title>.md` with a flat YAML block of five double-quoted fields (账号, 定稿日期, 写手模型, 过程文件夹, 配图排版进度 fixed as "详见配对发布物料包的配图排版进度"), then the H1, body and 参考文章 block without the editor notes, and prints the path, the SHA-256 (the article hash is always of this whole file, header included) and the paired kit name. It appends the author's sentence, time, file and hash to `定稿确认记录.jsonl` in the process folder; `--check` warns when the ready copy has no matching entry.
 - A changed article is re-exported with `--replace` and the author's 定稿 for the new version; the old copy is kept in the process folder (`定稿替换留底/`). Update the kit if it is affected, and say so.
 - `ready_folder` is the root of the ready-to-publish area; to use the visual Skill's ready-article entry, it must be the root that Skill's ready-folder contract names (one level above the account folders). Drafts and ready pieces do not yet speak for the account: collision scans leave them out.
-- Tables are not supported by the layout yet: a table in the body is flagged to the author to choose another form, never silently dropped. Tell the author before stop 4.
+- Tables are not supported by the layout yet: a table in the body is flagged to the author to choose another form, never silently dropped. Tell the author before gate 3.
 
 **Folders and names.** One folder per article, named with date and topic, in the configured drafts folder. Process files carry step numbers and versions (`03-outline-v2.md`); every body version inside carries a number (`draft-v13.md`), never a title-named body. The finished article's file name is the article title in exactly two places: the ready copy and any preview copy for the author.
 
@@ -47,7 +47,7 @@ A narrow polish after 定稿 happens only when the author requests it, as one at
 
 1. Lock the title, judgment, facts, numbers, dates, author experiences and the 参考文章 block; if any must change, reopen the matching stop.
 2. Produce an AI-flavor report first and change only confirmed problem sentences.
-3. Re-run the no-new-facts comparison and `audit_draft.py`.
+3. Pull a fresh fact sheet from the edited text and mark it against the previous one as step 8 does (`5-review.md`, step 8, item 1); a 改 or 新 line means a fact changed, which reopens the matching stop. Then run `audit_draft.py`.
 4. Re-run the export with `--replace` and the author's 定稿 for this version.
 5. Search the kit and the image task for old sentence prefixes, quote lines, repost lines, summaries, captions and video slots; update only the affected fields; write the new article hash into the task file; re-bind the kit through the visual Skill's ready-article entry (`--bind-kit`).
 6. Mark existing screenshots, illustrations and layout affected by the change "to re-check".
@@ -58,7 +58,7 @@ A narrow polish after 定稿 happens only when the author requests it, as one at
 Screenshots are evidence; the writing step knows which page and sentence each proves, and pages change, so this step captures them.
 
 1. **Capture from the fact table's marked column**, with the link and quoted sentence recorded during research; never re-search for the post.
-2. **When**: after stop 2, as a separate job that never blocks drafting or delivering a draft; in the background if the tool allows.
+2. **When**: after gate 2, as a separate job that never blocks drafting or delivering a draft; in the background if the tool allows.
 3. **How**: with the visual Skill's capture script, which alone writes the capture record (time, source link, file fingerprint) the visual entry needs. Framing, sharpness and scroll offsets live in that Skill's article asset handoff reference. Without the visual Skill or a browser, deliver the list and mark every item 待补截.
 4. **Time limits**: before the first capture, check the browser window is in front and try one capture of a simple page. Each attempt gets about one minute, and the visual Skill's attempt limit applies (no second number here). At the limit, stop, write a manual handoff (link to open, part to capture, how, where to save, file name) and carry on with everything that does not depend on it.
 5. **Open every image.** A script's "success" is a floor: check each image is not blank, cut off, covered by a floating bar, or showing the wrong post. Fix on the spot; a fixed image counts only once it is back in the article's own image folder and the kit, with one line on who fixed what and when.
@@ -70,7 +70,7 @@ After every new body version, once an image list or kit exists: does each anchor
 
 ## Publishing kit
 
-Made only after the seed check and the author's 定稿. An article ships as three files: the writing original with editor notes, the exported article, and the image task file defined in the visual Skill's handoff contract (agent-maintained; each image names the paragraph it follows, what it helps the reader understand and its kind: AI-generated visual, evidence screenshot, real photo, or program-rendered graphic). Alongside them, one human-readable page, `YYYY-MM-DD_<title>·发布物料包.md`, sits in the ready folder beside the body, opening with a flat YAML block of two double-quoted paths (正文路径, 配图任务路径). Images, screenshots and the task file stay in the process folder; the kit lists their paths. It is a view of the same data, not a second task list. Parts:
+Made only after the facts pass and the author's 定稿. An article ships as three files: the writing original with editor notes, the exported article, and the image task file defined in the visual Skill's handoff contract (agent-maintained; each image names the paragraph it follows, what it helps the reader understand and its kind: AI-generated visual, evidence screenshot, real photo, or program-rendered graphic). Alongside them, one human-readable page, `YYYY-MM-DD_<title>·发布物料包.md`, sits in the ready folder beside the body, opening with a flat YAML block of two double-quoted paths (正文路径, 配图任务路径). Images, screenshots and the task file stay in the process folder; the kit lists their paths. It is a view of the same data, not a second task list. Parts:
 
 1. **Images**: a table with a column 放在哪段后面（段落开头）, quoting that paragraph's opening words exactly so `--check` finds it. For every screenshot: source link, exactly which part to capture (only what the article comments on), the paragraph it follows, what it shows, the text credit, and its status (已截好 with path, 待补截, 发稿当天重截). Permission status on its own line. Never substitute an AI-generated image for a screenshot; data charts are drawn by program, never by an image model.
 2. **Captions** carry the text credit ("截图来源：<who> 在 <platform> 上的原帖"), never a link; a short Chinese gist in brackets only when it gives the reader something the image and body do not.
@@ -116,4 +116,4 @@ Not part of writing time.
 - **Ledger**: one row each at day 1, 3, 7 and 30: the core judgment, the analytical cuts used, reading and interaction numbers, main faults, what to feed back. The author reports the day-7 and day-30 read counts from the account's back end; write them beside what the market reference had suggested, if it ran.
 - **Every 8 articles**: take the day-7 read counts of the account's articles so far (at least 8), compute the mean and standard deviation, and set the account's normal band at the mean plus or minus one standard deviation (a starting assumption; re-set it at about thirty articles). Each article outside the band gets one anomaly review in the format of the account's hit-review file (configuration `hit_review_file`: why the title opened, the opening hook, the structure, the emotional line, reusable factors, source); articles inside get none. The band decides only whether to review; it never grades an article.
 - **Pass lines**: when the account's good-article standard (configuration `good_article_standard`) gives pass lines for open rate, read-through rate and the like, read the numbers against them; once the account has its own band, the account's own numbers win over borrowed lines.
-- Use the numbers to tune titles and openings, not prose style. Keep the AI draft and the author's final side by side; monthly, group the edits by type; an edit type seen three or more times becomes a feedback candidate for a bottom line or a rule.
+- Use the numbers to tune titles and openings, not prose style. Keep the AI draft and the author's final side by side; how the author's edits become rules is in `write.md`, "After 定稿", and nowhere else.

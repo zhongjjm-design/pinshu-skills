@@ -1,4 +1,4 @@
 interface:
   display_name: "Pinshu Writing"
   short_description: "Find or grow an author's seed into a plain, reviewed Chinese article"
-  default_prompt: "Use $pinshu-write to write an article for the configured account: read the account profile first, then follow SKILL.md, which holds the route, the stops and the reviewing roles."
+  default_prompt: "Use $pinshu-write to write an article for the configured account: read the account profile first, then follow SKILL.md, which holds the master gate, the route with its three gates, the writer and the four reviewing positions."

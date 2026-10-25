@@ -4,7 +4,7 @@
     ".git/**",
     "RELEASE_MANIFEST.json"
   ],
-  "file_count": 352,
+  "file_count": 355,
   "files": [
     {
       "bytes": 4307,
@@ -17,9 +17,9 @@
       "sha256": "b8dd6844c806a034448aa95a06e4e1886023a82e423e4fbd176b37429bb672e9"
     },
     {
-      "bytes": 7013,
+      "bytes": 7904,
       "path": "CHANGELOG.md",
-      "sha256": "db66d17fd2bb4786c8b889bbc0e8b8cecd72d398cf65fbb9e28eac0f3e7172d1"
+      "sha256": "3b8c7e51c34038b6a90e447eba6b9d20d45e0e27b7a047a6aac7e983128e75ac"
     },
     {
       "bytes": 628,
@@ -52,14 +52,14 @@
       "sha256": "94c684812d34e4e189816fb28305f1ac63483fb8001216b911317bdd4e196533"
     },
     {
-      "bytes": 24341,
+      "bytes": 24553,
       "path": "README.md",
-      "sha256": "6f777285850a6de5a24795a8e076d5ae9c05b0a63e0571e7547f9f2c24a74738"
+      "sha256": "0025ac30e820a8ecf37658ca8cf6bad8e097f81697d86b709a7d67481f5cdb19"
     },
     {
-      "bytes": 4740,
+      "bytes": 4897,
       "path": "README.zh-CN.md",
-      "sha256": "9611e0b8d49326f700b532308f7e670be7e8c8481f428eb96fb4b1f1e29e8503"
+      "sha256": "c5b30999ecf4b79887c4202a65269f2f5365c716a4b2ae32958aa6b454c07e3b"
     },
     {
       "bytes": 28246,
@@ -844,7 +844,7 @@
     {
       "bytes": 3514,
       "path": "pinshu-manifest.yaml",
-      "sha256": "7215ace03daf2075d0681db2491f581df2f6296f7cd145794aaa2ba09f8406d1"
+      "sha256": "a93bbd3eb85a6a6ca83afb423cba8f6f60a1dacd909a3ae85f622d5440653ef1"
     },
     {
       "bytes": 5008,
@@ -1567,74 +1567,69 @@
       "sha256": "c87cdb7a98aaec856bef7816cbf85447930d76aceb290bc4d89f7cecb9a4e79a"
     },
     {
-      "bytes": 13825,
+      "bytes": 16110,
       "path": "pinshu-write/SKILL.md",
-      "sha256": "2d3cc2d838e332d62c353243728a4064c0f05d02ad09a3e9f43f0b4357a2f948"
+      "sha256": "e6d552301b5bba294df2d5de8442403e9a28346dabeb2dbbf0a90e586bd5cf4d"
     },
     {
       "bytes": 6,
       "path": "pinshu-write/VERSION",
-      "sha256": "5eee6c0c5c6901f5e523f0a434bca4106e1ff7136deb451f982b0bb1a7b13716"
+      "sha256": "e1d49c569ae09b2ede16e2d83820a3809b35eb6c44c13ba9b5330598d6b8f43c"
     },
     {
-      "bytes": 334,
+      "bytes": 382,
       "path": "pinshu-write/agents/openai.yaml",
-      "sha256": "219a44d6568078f1c30e6d059a389a6f06c7acdb8f80b466cb7b76858862945d"
+      "sha256": "dc055c57aa243937ba1bd4c3853ca189de78e26e5a987e1d48f2639dbe91e84e"
     },
     {
-      "bytes": 8707,
+      "bytes": 9109,
       "path": "pinshu-write/references/1-topic.md",
-      "sha256": "20ecf915087d9413b40ef19cf4d61b1c17ced5b21839367b80e5d67e6a1fca0a"
+      "sha256": "2bcedd9aad5c79f6f30609bc3772bb4c2b88974db29e522b5af79f62002f1e93"
     },
     {
-      "bytes": 9756,
-      "path": "pinshu-write/references/2-research-and-counter.md",
-      "sha256": "4a62297949a7f9788bfbf5e511cd8b7d38c9585bf478119958b53fad2def8c37"
+      "bytes": 8530,
+      "path": "pinshu-write/references/2-research.md",
+      "sha256": "74aaad1ba7f6e8e09d4a1981e2ef2b7940ab88f49e09ef211f40d198fa2d9fa5"
     },
     {
-      "bytes": 16953,
-      "path": "pinshu-write/references/3-structure.md",
-      "sha256": "e042b7a5c2dcc29feca8af22a77accc697245733cc900d6fbe18bc91790042dc"
-    },
-    {
-      "bytes": 17742,
-      "path": "pinshu-write/references/4-writing.md",
-      "sha256": "4b3241b8ddcc77a665e09d6e7c9d32ea7405b7ac31397cab13fdabb887015100"
-    },
-    {
-      "bytes": 23106,
+      "bytes": 25103,
       "path": "pinshu-write/references/5-review.md",
-      "sha256": "2d5a1a1902f1baaf0121d007b66b3e44de2fc319db490c40adb6f7581e90bbe4"
+      "sha256": "2ed88578801a03e1825fff121a79bf9f4d37df28326bd02fbc04589ea4ef3741"
     },
     {
-      "bytes": 19126,
+      "bytes": 19421,
       "path": "pinshu-write/references/6-deliver.md",
-      "sha256": "5fa9a997af7c189c2c1c1a182f198fefc584b980ce4250493de63f2822b1d0d7"
+      "sha256": "0a277964de248c9a8d2e6c9f118f35940e85f9207f2ac59a306070dea5fdb041"
     },
     {
-      "bytes": 10213,
+      "bytes": 37714,
+      "path": "pinshu-write/references/good-article-standard.md",
+      "sha256": "f90954944f50f141206467fa5e5dc2820beda45c66964798f49fe7bc0b22a9ed"
+    },
+    {
+      "bytes": 6957,
       "path": "pinshu-write/references/models.md",
-      "sha256": "9a633f6f0d7fb80a66b5daa1f9c811e94df868fd2ba47aaf0d20200cb964db15"
+      "sha256": "add18ab7d2701733480c293bf4dd978963c8cb9279b215af2a6f4e96d7667ede"
     },
     {
-      "bytes": 24366,
+      "bytes": 38138,
       "path": "pinshu-write/references/prompts.md",
-      "sha256": "cc9fc57c9de4ca88187e582ac0609d59bce03ed3476db401bd09eb1a2b69df40"
+      "sha256": "18a1c66273e4c359236946f9cbfa2638cdf8857e4b313e207819a5a647d013e5"
     },
     {
-      "bytes": 5956,
+      "bytes": 8477,
       "path": "pinshu-write/references/stops.md",
-      "sha256": "09ea991143c78e025b3325bf263ca702afe3faee0ed53d4935ccd5adc9b1e110"
+      "sha256": "27aec14d3a46a5617ff0bc7c928c040fcfecd702c96a21cdbf97954ab7edc7c5"
     },
     {
-      "bytes": 15136,
+      "bytes": 24421,
       "path": "pinshu-write/references/write.md",
-      "sha256": "45d845371c71b68b84e90a9da0a6d1ceaf55a330dbc6ce9763e8bf2a3891c117"
+      "sha256": "1007e8b376e175b08db21d042bbed075c44789da1c1317fd2b81be3c5db00b5b"
     },
     {
-      "bytes": 44969,
+      "bytes": 47817,
       "path": "pinshu-write/scripts/audit_draft.py",
-      "sha256": "d645bddb615c2b1f0bc705e6b99e4fdf6d1a3f97b18636b15d405062a126b889"
+      "sha256": "fd4b88f05c7163b449db9c282b04ff171babe04c3c078a36a299e84b366bfdcc"
     },
     {
       "bytes": 26735,
@@ -1642,9 +1637,19 @@
       "sha256": "37537d9aaf164f24aad946077eb9d8ab04da32d9ff2175643951af3ce875e8c5"
     },
     {
-      "bytes": 21968,
+      "bytes": 2962,
+      "path": "pinshu-write/scripts/check_fact_notes.py",
+      "sha256": "f13ad60c7d70b07e05ece4ce3a1a3594ffaf4d18f50b285eb893565baf7797fb"
+    },
+    {
+      "bytes": 21948,
       "path": "pinshu-write/scripts/export_article.py",
-      "sha256": "36668fc67e7c6f9c807aaad6346be81a5552e07387a70d9edcf5fd4cca567f40"
+      "sha256": "d9d047b43265a542fb6b9ed3639be4eee276ed6a0bdf11da6f4fc153f3cc777e"
+    },
+    {
+      "bytes": 7925,
+      "path": "pinshu-write/scripts/extract_facts.py",
+      "sha256": "c7602da1fe5777960eeecb870399929f90785cc7791ac00e1ac7ed1cb3db3ba9"
     },
     {
       "bytes": 4135,
@@ -1657,9 +1662,9 @@
       "sha256": "cefe536fd745ee36334910cf127293cfabe822bdd510d215391081755c24169a"
     },
     {
-      "bytes": 8649,
+      "bytes": 9186,
       "path": "pinshu-write/scripts/run_watched.py",
-      "sha256": "242d4a7b34bc782e7537174dfd9fda0984e1b43a98692c7bea3ee43480df16ae"
+      "sha256": "0c4b503243dfc9b41becd100373b07ea483a9765b3744d41b6962f0e9ec24d33"
     },
     {
       "bytes": 13271,
@@ -1667,19 +1672,19 @@
       "sha256": "505e1b8a2746462a5c76794e5b4aed668cf5a293f771d9412218916d907364e9"
     },
     {
-      "bytes": 9992,
+      "bytes": 8101,
       "path": "pinshu-write/templates/config.example.yaml",
-      "sha256": "13d883c1437db90921774fb0edeae46450038065a4d8928a6aaa6129e9c5ee38"
+      "sha256": "7afe3d05865bcb3ec8ec0a3c05f55dfd8be818016b2ce4650a975239b46c4799"
     },
     {
-      "bytes": 1665,
+      "bytes": 1731,
       "path": "pinshu-write/templates/exemplar-index.example.md",
-      "sha256": "b6db61b068d01435651e9280b0615155273f75f8c1e2260d07313b8007dbfe60"
+      "sha256": "b9a43a2c31704beb805b9b1119f9957a6b67058f13dd0e01d12743f279c035e4"
     },
     {
-      "bytes": 35682,
+      "bytes": 38477,
       "path": "pinshu-write/tests/test_audit_draft.py",
-      "sha256": "fe95321a4e7f4279bf96c927768d5a1eb8fb51f5c6e6903626664f062a1e51a7"
+      "sha256": "03127ea41c6261e8cd68e9766b56c06a8342e97e6ece2a914920abd904add4c8"
     },
     {
       "bytes": 23308,
@@ -1687,9 +1692,19 @@
       "sha256": "c763da702735cc5de4caa19cb2559364fe9cfbc4cbd0a982fa23902dff3e0c43"
     },
     {
+      "bytes": 2083,
+      "path": "pinshu-write/tests/test_check_fact_notes.py",
+      "sha256": "fe2dd150151d82ac5dd8a1d482e54ac6e05675055cbc31cf39069447fcd0ecae"
+    },
+    {
       "bytes": 19094,
       "path": "pinshu-write/tests/test_export_article.py",
       "sha256": "4e06d0340a88f243e945fa2c1133faae59000ec000518e5818404776a3b0cfc3"
+    },
+    {
+      "bytes": 4987,
+      "path": "pinshu-write/tests/test_extract_facts.py",
+      "sha256": "c651f3d3b495d620a27ea03bb2d9c89c42f5b0951462bc8f0590a8d089acc93d"
     },
     {
       "bytes": 2476,
@@ -1702,9 +1717,9 @@
       "sha256": "4254e86c62497218409a4edd45106c1e466358af1c7038b6e6d6d00875d42fc2"
     },
     {
-      "bytes": 4503,
+      "bytes": 5411,
       "path": "pinshu-write/tests/test_run_watched.py",
-      "sha256": "d1a4bf9d29dbd4b6ed1e9a4cead126717ff18f6190723e30300392f924d2d391"
+      "sha256": "4f795202699769b42f38a629b0a3867d770f8c37d058f9e98b9937a123287e56"
     },
     {
       "bytes": 2251,
@@ -1712,9 +1727,9 @@
       "sha256": "b9bde1a6bea07c4e49947a45c4d4f0df54b822cd09f960c85747f29a05b7f2cb"
     },
     {
-      "bytes": 12066,
+      "bytes": 16259,
       "path": "pinshu-write/tests/test_seed_discovery_route.py",
-      "sha256": "59141c0c81c4123e7bebd042216de464a04c9ec8add43d709c5d3f24f844b400"
+      "sha256": "33af4059942cf7b73acb1bd6c439460cb0004f7795a60c51b1762fb75e0599f1"
     },
     {
       "bytes": 8511,
@@ -1734,7 +1749,7 @@
     {
       "bytes": 13124,
       "path": "scripts/validate_release.py",
-      "sha256": "dc93140aabe25af7e9024988c86802567ef21d55d384d5a000171be0cc14c150"
+      "sha256": "230ef88bee796f3af325027e365fc0409af670aa06a63693de9a273b6818ee37"
     },
     {
       "bytes": 52417,

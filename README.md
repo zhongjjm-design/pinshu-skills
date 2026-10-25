@@ -50,17 +50,19 @@ curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/
 
 > 使用pinshu-course-capture，把这门课程整理成知识资产，先推荐用途、审核方式与最终资产，确认后执行。
 
-## 本次更新版本（2026-10-19）
+## 当前公开版本（2026-10-25）
 
 | Skill | 公开版本 |
 |---|---|
-| `pinshu-write` | 3.3.0 |
+| `pinshu-write` | 4.0.0 |
 | `pinshu-visual-system` | 0.4.0 |
 | `pinshu-wechat-layout` | 0.4.0-rc.2 |
 | `pinshu-video-core` | 0.2.0 |
 | `pinshu-business-graphics` | 0.1.5 |
 | `pinshu-infographic` | 0.1.5 |
 | `pinshu-transcript` | 0.2.0 |
+
+本次只更新 `pinshu-write`；没有新增 Skill，其他 Skill 内容不变。4.0 照真稿测出的问题修改，修改后尚未跑过真稿验证。
 
 ## 使用前准备
 
@@ -193,7 +195,7 @@ Historical pilots in this repository document the origin of rules and lessons fr
 
 ### Language and runtime-path contract
 
-Most Skill operating instructions are maintained in Chinese; pinshu-write 3.3 keeps its source's English workflow rules and Chinese writing/review prompts. The default homepage starts with Chinese installation and usage; the following section is the English guide. Both entries use the same scripts, state contracts and tests. Learner-facing output follows `output_language` in the production manifest: a short BCP-47 tag such as `en`, `en-US`, or `zh-Hans`, or the selector `match-user` or `match-source`. Old manifests that omit the field behave as `match-user`; when the user's language is unavailable, use the source language. Stable IDs, frontmatter keys, enum values, and other program fields remain English.
+Most Skill operating instructions are maintained in Chinese; pinshu-write 4.0 keeps its source's English workflow rules and Chinese writing/review prompts, and includes a sanitized public good-article standard. The default homepage starts with Chinese installation and usage; the following section is the English guide. Both entries use the same scripts, state contracts and tests. Learner-facing output follows `output_language` in the production manifest: a short BCP-47 tag such as `en`, `en-US`, or `zh-Hans`, or the selector `match-user` or `match-source`. Old manifests that omit the field behave as `match-user`; when the user's language is unavailable, use the source language. Stable IDs, frontmatter keys, enum values, and other program fields remain English.
 
 When a course-capture manifest or state file exists, every Skill uses its path templates through `course_pipeline.py paths`; no Skill translates or invents a parallel directory tree. For a new course without a manifest, create and confirm the manifest or an explicit path map before writing.
 

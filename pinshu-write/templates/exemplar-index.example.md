@@ -1,6 +1,6 @@
 # Exemplar index (example)
 
-The writers' main input (`references/4-writing.md`, "Exemplars"). Point the configuration's `exemplar_index` at your copy of this file. One row per article. Article texts stay where they already live in your library; this index only points at them, so there is never a second copy to drift.
+The writers' main input (`references/write.md`, "The writer's brief", item 4). Use the article types of your good-article standard. Point the configuration's `exemplar_index` at your copy of this file. One row per article. Article texts stay where they already live in your library; this index only points at them, so there is never a second copy to drift.
 
 Only rows marked `approved` are used: the author read the article and wants writers to learn from it. `candidate` rows wait for the author. Exemplars are good articles by other mature writers; the author's own drafts join only once the author approves them as representative of a settled style.
 

@@ -50,17 +50,19 @@ curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/
 
 > 使用pinshu-course-capture，把这门课程整理成知识资产，先推荐用途、审核方式与最终资产，确认后执行。
 
-## 本次更新版本（2026-10-19）
+## 当前公开版本（2026-10-25）
 
 | Skill | 公开版本 |
 |---|---|
-| `pinshu-write` | 3.3.0 |
+| `pinshu-write` | 4.0.0 |
 | `pinshu-visual-system` | 0.4.0 |
 | `pinshu-wechat-layout` | 0.4.0-rc.2 |
 | `pinshu-video-core` | 0.2.0 |
 | `pinshu-business-graphics` | 0.1.5 |
 | `pinshu-infographic` | 0.1.5 |
 | `pinshu-transcript` | 0.2.0 |
+
+本次只更新 `pinshu-write`；没有新增 Skill，其他 Skill 内容不变。4.0 照真稿测出的问题修改，修改后尚未跑过真稿验证。
 
 ## 使用前准备
 
