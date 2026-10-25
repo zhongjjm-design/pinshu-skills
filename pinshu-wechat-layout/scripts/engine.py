@@ -164,7 +164,7 @@ def build(input_path, meta_path, layout_path, output_path):
     page = shell.replace('@@CONFIG@@', config).replace('@@RENDERER@@', chapter_js + (ENGINE / 'reading-base.js').read_text(encoding='utf-8') + '\n' + (ENGINE / 'renderer.js').read_text(encoding='utf-8'))
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(page, encoding='utf-8')
-    record = dict(template_set='seven-layout-review', version='0.4.0-rc.2', reading_base='1.10.0',
+    record = dict(template_set='seven-layout-review', version='0.4.0-rc.3', reading_base='1.10.0',
                   templates=['松绿双线','青灰手记','暖纸杂志','橙线手记','蓝白专题','首席品牌官经典版','数字分栏'],
                   default_template='青灰手记', template_selection_status='pending-per-article',
                   article_specific_acceptance=False, wechat_phone_tested=False,

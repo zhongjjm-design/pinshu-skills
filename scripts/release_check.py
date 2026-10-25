@@ -22,6 +22,9 @@ PRIVATE_PATHS = (
 # Public documentation may discuss generic courses; these markers identify local-only
 # workspace conventions rather than subject matter.
 PRIVATE_MARKERS = ("MyAI" + "Clone", "00_shared" + "_config", "Hermes " + "workspace")
+# This exact audit-rule file names a workspace marker in its detection pattern.
+# Only marker words are exempt: personal paths and the independent secret scan remain active.
+MARKER_RULE_FILES = {"pinshu-visual-system/scripts/audit_public_bundle.py"}
 
 
 def files() -> list[Path]:
@@ -71,7 +74,7 @@ def static_checks(failures: list[str]) -> tuple[int, int]:
             continue
         if any(pattern.search(text) for pattern in PRIVATE_PATHS):
             failures.append(f"private absolute path: {rel}")
-        if any(marker in text for marker in PRIVATE_MARKERS):
+        if rel not in MARKER_RULE_FILES and any(marker in text for marker in PRIVATE_MARKERS):
             failures.append(f"private workspace marker: {rel}")
     if not failures:
         print(f"PASS static compile/JSON/privacy scan ({python_count} Python, {json_count} JSON)")

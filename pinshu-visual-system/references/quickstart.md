@@ -16,6 +16,8 @@ python3 scripts/visual_compiler.py \
   --output-dir ./work/draft-review
 ```
 
+Source prose is scene context. Visible wording is limited to the plan’s visible_labels (the supplied --title and --exact-text); omit both for picture-only output. Editable labels belong in their separate text layer.
+
 The output directory must be new. Read prompt-final.txt and submit it to the runtime's image tool. The CLI does not call an image API. Supply --character-profile with your own approved local JSON to add an identity; use --candidate-test only for a single explicitly requested candidate experiment.
 
 For editable text, compose the complete native SVG/PPTX and read [editable rendering](editable-rendering.md). Render and export together with an actual installed font:
@@ -47,7 +49,7 @@ Run meaningful local checks:
 python3 -m unittest discover -s tests -v
 ```
 
-The shared package has a separate VERSION (0.4.0) from its internal ancestor. Existing private installations must not be replaced with it; the repository installer deliberately refuses that collision. On a clean colleague machine, the repository installer adds the visual Skill with both visual companions and the other suite packages. Restart the client afterward and verify it can discover the Skill and access an image backend.
+The shared package has a separate VERSION (1.0.0-rc.2) from its internal ancestor. Existing private installations must not be replaced with it; the repository installer deliberately refuses that collision. On a clean colleague machine, the repository installer adds the visual Skill with both visual companions and the other suite packages. Restart the client afterward and verify it can discover the Skill and access an image backend.
 
 ## Explicit cultural-poster test
 

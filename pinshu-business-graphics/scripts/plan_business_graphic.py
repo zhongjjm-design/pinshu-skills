@@ -16,7 +16,10 @@ CORE = ROOT.parent / "pinshu-visual-system"
 if not (CORE / ".public-bundle").is_file():
     raise SystemExit("HARD_STOP: Install the public pinshu-visual-system beside this package; do not use a private core")
 try:
-    core_version = tuple(int(part) for part in (CORE / "VERSION").read_text().strip().split("."))
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:[-+][0-9A-Za-z.-]+)?", (CORE / "VERSION").read_text().strip())
+    if not match:
+        raise ValueError
+    core_version = tuple(int(part) for part in match.groups())
 except (OSError, ValueError):
     raise SystemExit("HARD_STOP: The public core has no valid VERSION; reinstall the complete visual set") from None
 if core_version < (0, 2, 4):
@@ -153,8 +156,8 @@ def compile_business(brief_path: Path) -> tuple[dict, str]:
         "Show a true loop only with a supported return path. Proposed metaphors are design interpretations, not facts. No invented data, pseudo-sources or generic technology decoration."
     ])
     return {
-        "schema_version": "public-visual-plan-v1", "version": "0.1.5", "status": "candidate-plan",
-        "workflow": {"kind": "pinshu-business-graphics", "version": "0.1.5"},
+        "schema_version": "public-visual-plan-v1", "version": "0.1.6", "status": "candidate-plan",
+        "workflow": {"kind": "pinshu-business-graphics", "version": "0.1.6"},
         "source": {"path": str(source_path), "sha256": hashlib.sha256(source.encode()).hexdigest(),
                    "file_sha256": digest(source_path)},
         "registry_sha256": digest(CORE / "references/system-registry.json"),

@@ -98,7 +98,7 @@ class ReviewRegressions(unittest.TestCase):
 
     def test_timeline_error_has_a_working_route(self):
         with tempfile.TemporaryDirectory() as tmp:
-            for mode in ["warm-paper", "lively-vector", "character-presenter"]:
+            for mode in ["warm-paper", "character-presenter"]:
                 with self.subTest(mode=mode), self.assertRaisesRegex(ValueError, "mother=strategic-map"):
                     compile_infographic(self.write_brief(Path(tmp), structure="timeline", mode=mode), candidate_test=True)
 

@@ -66,7 +66,7 @@ jobs:
           command -v pdftotext
           command -v pdfinfo
           python3 -m unittest discover -s pinshu-md2pdf/tests -v
-      - name: Pinshu Write 3.3 regression
+      - name: Pinshu Write 4.0 regression
         run: python3 -B -m pytest -p no:cacheprovider -q pinshu-write/tests
       - name: Public visual-system regression
         run: |

@@ -55,14 +55,14 @@ curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/
 | Skill | 公开版本 |
 |---|---|
 | `pinshu-write` | 4.0.0 |
-| `pinshu-visual-system` | 0.4.0 |
-| `pinshu-wechat-layout` | 0.4.0-rc.2 |
+| `pinshu-visual-system` | 1.0.0-rc.2 |
+| `pinshu-wechat-layout` | 0.4.0-rc.3 |
 | `pinshu-video-core` | 0.2.0 |
-| `pinshu-business-graphics` | 0.1.5 |
-| `pinshu-infographic` | 0.1.5 |
+| `pinshu-business-graphics` | 0.1.6 |
+| `pinshu-infographic` | 0.1.6 |
 | `pinshu-transcript` | 0.2.0 |
 
-本次只更新 `pinshu-write`；没有新增 Skill，其他 Skill 内容不变。4.0 照真稿测出的问题修改，修改后尚未跑过真稿验证。
+本次发布 `pinshu-visual-system` 1.0.0-rc.2，并把 `pinshu-wechat-layout` 的三张公开章首图净化后升到0.4.0-rc.3。视觉候选含25种内置模式和6个外部交接入口；跨Agent出图稳定性与用户审美仍需逐次验收。
 
 ## 使用前准备
 
@@ -138,9 +138,9 @@ This is a sharing trial for one image at a time with an Agent and actual human r
 
 | Package | Version | Best use |
 |---|---|---|
-| [pinshu-visual-system](pinshu-visual-system/README.md) | 0.4.0 | Choose among twelve scoped visual modes, plan a platform composition, render and prepare a reviewed candidate |
-| [pinshu-infographic](pinshu-infographic/README.md) | 0.1.5 | Explain knowledge through source-anchored processes, comparison, hierarchy, components and real loops |
-| [pinshu-business-graphics](pinshu-business-graphics/README.md) | 0.1.5 | Express a business argument with one of seven distinct visual method families |
+| [pinshu-visual-system](pinshu-visual-system/README.md) | 1.0.0-rc.2 | Choose among 25 scoped visual modes and six external handoffs, plan a platform composition, render and prepare a reviewed candidate |
+| [pinshu-infographic](pinshu-infographic/README.md) | 0.1.6 | Explain knowledge through source-anchored processes, comparison, hierarchy, components and real loops |
+| [pinshu-business-graphics](pinshu-business-graphics/README.md) | 0.1.6 | Express a business argument with one of seven distinct visual method families |
 
 All three use eleven platform presets. Work without a fixed character or supply your own approved references to a supported core mode. Planning uses Python 3; generation needs an image-capable agent; raster export uses ImageMagick 7. The companions require the public core 0.2.4 or later beside them, installed together by the repository installer. Precision charts need an editable chart tool and separate data review. Native SVG delivery requires an installed CJK font; PPTX delivery additionally uses LibreOffice and Poppler, with a render receipt and actual re-render pixel verification.
 
@@ -150,7 +150,7 @@ Tell your Agent:
 
 For a knowledge diagram, name pinshu-infographic instead. For a commercial mechanism, strategic relationship or typographic argument, name pinshu-business-graphics. The linked READMEs contain actual new examples and their evidence records.
 
-The core also has two experimental cultural-poster method cards. These are candidate research references outside the twelve-mode roster. Material-craft has two theme tests, with the origami sample awaiting cultural interpretation and layout-variation review; colorfield-landscape still needs an actual test. Neither enters automatic or batch routing. This is a maintained sharing edition with human review and repeatability limits clearly marked. The installer protects existing private/local installations of all three visual Skills from replacement. See the [visual repair notes](pinshu-visual-system/references/release-notes-0.2.4.md) for engineering changes and remaining acceptance limits.
+The core also has two experimental cultural-poster method cards. These are candidate research references outside the 25-mode roster. Material-craft has two theme tests, with the origami sample awaiting cultural interpretation and layout-variation review; colorfield-landscape still needs an actual test. Neither enters automatic or batch routing. This is a maintained sharing edition with human review and repeatability limits clearly marked. The installer protects existing private/local installations of all three visual Skills from replacement. See the core README and compatibility notes for the current engineering and acceptance boundaries.
 
 ### Brand-film teardown videos
 

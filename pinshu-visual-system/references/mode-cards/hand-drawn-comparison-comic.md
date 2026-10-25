@@ -1,23 +1,15 @@
-# Hand-drawn Comparison Comic
+# 淡彩
 
-ID: `hand-drawn-comparison-comic`. Public status: `available-scoped`.
+## 表现语言
+轻薄设色配合有节奏的手绘线条，用具体动作表现差别。
 
-## Intent
+## 适用内容
+两种做法、前后变化或单一场景；不是每页都必须对半分。
 
-Make two situations, before/after or two stages readable through actions.
+## 内容到构图
+先读完整原文，确定主体、动作、对象和读者所得；一张图表达一个主要关系。按当前平台重组横竖构图，留出手机可读的空白。人物、动物、物件和空间按内容选择，配色按本篇主题和整体外观决定。
 
-## Visual grammar
+## 文字与验收
+短字服务于图意。多层精确文字使用可编辑文字层；逐项对照原文，不为了排版添加步骤、阈值或数据。实际看全图、手机缩略和裁切，核动作、接触关系与文字。技术通过、用户接受和真实平台效果分别记录。
 
-Warm white paper, relaxed dark hand lines, muted blue/sage/wood and sparse yellow. Two comparable scenes, one visible relationship, short labels and large whitespace.
-
-## Prompt skeleton
-
-Create a {platform} image for {claim}. Use this visual grammar: Warm white paper, relaxed dark hand lines, muted blue/sage/wood and sparse yellow. Two comparable scenes, one visible relationship, short labels and large whitespace. Express only the source-supported scene or relationship. Preserve exact names and labels. Reserve whitespace for readable text.
-
-## Avoid
-
-More than two main scenes; complex loops; chibi faces; random robot/lightbulb decoration; multiple crossing arrows.
-
-## Acceptance
-
-Inspect the rendered image at full size and thumbnail size. Check source meaning, exact text, single focal point, natural object/action relationships and platform crop. A registered mode does not establish acceptance of an individual image. Candidate modes require explicit single-image testing; frozen candidates remain blocked.
+平台、信息结构与角色资格读取注册表；此卡不携带任何参考图片、人物身份、客户原文或私有提示词。

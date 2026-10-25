@@ -1,5 +1,15 @@
 # Changelog
 
+## Visual System 1.0.0-rc.2 and WeChat Layout 0.4.0-rc.3 - 2026-10-25
+
+- Expand the public visual core from twelve directions to 25 bundled visual modes with Chinese short names, six explicit external handoffs, seven held routes, and preserved frozen/retired boundaries.
+- Update `pinshu-infographic` and `pinshu-business-graphics` to 0.1.6 so they accept semantic prerelease core versions; remove the retired `lively-vector` route from the infographic companion instead of bypassing the core registry.
+- Add source-bound prompt compilation, pre-generation prompt continuity checks, character authorization hashes, exact-text routing, atomic plan output, and explicit separation between mechanical readiness, image generation, visual review, and human acceptance.
+- Add cleaned public examples, 39 self-contained release tests, and optional 81-test article integration coverage with declared dependency-based skips.
+- Remove a hidden machine-specific plugin pointer, make unsupported Python fail the doctor command, and audit all hidden and extensionless text members in release candidates.
+- Clean seven distributed PNGs without changing dimensions or pixels; bump the WeChat layout preview to 0.4.0-rc.3 for its three cleaned chapter assets.
+- Keep WorkBuddy and ZCode compatibility claims bounded: the latest text contract is not yet re-rendered in WorkBuddy, ZCode's ordinary request did not complete, and technical tests do not establish cross-agent aesthetic stability.
+
 ## pinshu-write 4.0.0 - 2026-10-25
 
 - 写稿流程更新为十步、三道闸门：先向作者问清问题，完整找料后再想透；同一写手从沟通写到修改，专家、核查官、读者和主编按各自材料独立审稿，事实复核和修改后复检保留。

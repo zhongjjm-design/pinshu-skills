@@ -1,0 +1,15 @@
+{
+  "tool": "image_gen.imagegen",
+  "actual_model": null,
+  "image": "picture-only-1.0.png",
+  "sha256": "7e5cb056c0af33db9e3435bc374ac0cf6eca3f3101f0741a51a1567432e1542b",
+  "source": "picture-only.source.md",
+  "source_scope": "original fictional scene of two craft workers folding shared continuous paper",
+  "visible_text_spec": [],
+  "observed_text": [],
+  "observed_people": 2,
+  "technical_export": "1600x900 contain",
+  "agent_review": "two people and shared connected paper visible; painterly illustration; no production captions seen",
+  "human_acceptance": false,
+  "scope": "one Codex native image; no WorkBuddy verification of latest text boundary"
+}

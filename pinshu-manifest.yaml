@@ -48,7 +48,7 @@ skills:
     origin: original
     distribution: bundled-sanitized
     present_in_repository: true
-    version: 0.4.0
+    version: 1.0.0-rc.2
     status: public-preview
     depends_on: []
     runtime_dependencies: [python3, imagemagick-7, image-capable-agent]
@@ -72,7 +72,7 @@ skills:
     origin: original
     distribution: bundled-sanitized
     present_in_repository: true
-    version: 0.1.5
+    version: 0.1.6
     status: public-preview
     depends_on: [pinshu-visual-system]
     minimum_core_version: 0.2.4
@@ -81,7 +81,7 @@ skills:
     origin: original
     distribution: bundled-sanitized
     present_in_repository: true
-    version: 0.1.5
+    version: 0.1.6
     status: public-preview
     depends_on: [pinshu-visual-system]
     minimum_core_version: 0.2.4
@@ -106,7 +106,7 @@ skills:
     origin: original
     distribution: bundled
     present_in_repository: true
-    version: 0.4.0-rc.2
+    version: 0.4.0-rc.3
     status: public-preview
     depends_on: []
     optional_companions: [pinshu-visual-system]

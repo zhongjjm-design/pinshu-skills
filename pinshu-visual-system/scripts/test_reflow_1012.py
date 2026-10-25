@@ -191,6 +191,8 @@ class RejectedCaptureTests(unittest.TestCase):
 
 
 class FailureReceiptTests(unittest.TestCase):
+    @unittest.skipUnless((SKILLS / 'pinshu-write/scripts/export_article.py').is_file(),
+                         'SKIP: optional public pinshu-write exporter absent; maintainer integration only')
     def test_failure_names_last_good_step_and_how_to_resume(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

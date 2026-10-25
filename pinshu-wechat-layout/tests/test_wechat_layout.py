@@ -69,7 +69,7 @@ class WeChatLayoutReleaseTests(unittest.TestCase):
         return handoff_path, article, article_bytes
 
     def test_package_version_and_six_authorized_chapter_images(self):
-        self.assertEqual((ROOT / "VERSION").read_text().strip(), "0.4.0-rc.2")
+        self.assertEqual((ROOT / "VERSION").read_text().strip(), "0.4.0-rc.3")
         self.assertEqual(
             [p.name for p in sorted((ROOT / "assets" / "chapter").glob("*.png"))],
             [f"{n:02}.png" for n in range(1, 7)],
@@ -77,7 +77,7 @@ class WeChatLayoutReleaseTests(unittest.TestCase):
 
     def test_public_preview_has_no_internal_or_ranked_template_label(self):
         shell = (ROOT / "assets" / "preview.html").read_text()
-        self.assertIn("公开试用版 v0.4.0-rc.2", shell)
+        self.assertIn("公开试用版 v0.4.0-rc.3", shell)
         self.assertIn("七款同级可选", shell)
         for forbidden in ("内部试用", "已认可方向", "候选版式", "参考版式"):
             self.assertNotIn(forbidden, shell)

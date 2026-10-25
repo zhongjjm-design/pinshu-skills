@@ -15,6 +15,11 @@ if SPEC is None or SPEC.loader is None:
 VALIDATOR = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(VALIDATOR)
 
+CHECKER_PATH = VALIDATOR_PATH.with_name("release_check.py")
+CHECKER_SPEC = importlib.util.spec_from_file_location("pinshu_manifest_checker", CHECKER_PATH)
+CHECKER = importlib.util.module_from_spec(CHECKER_SPEC)
+CHECKER_SPEC.loader.exec_module(CHECKER)
+
 
 class ReleaseValidatorNegativeControls(unittest.TestCase):
     def run_scan(self, root: Path) -> list[str]:
@@ -83,6 +88,39 @@ class ReleaseValidatorNegativeControls(unittest.TestCase):
             self.assertTrue(
                 any("sensitive filename" in item for item in self.run_scan(root))
             )
+
+    def test_audit_marker_exception_is_exact_and_keeps_real_path_checks(self):
+        with tempfile.TemporaryDirectory(prefix="pinshu-release-rules-") as tmp:
+            root = Path(tmp)
+            rule = root / "pinshu-visual-system/scripts/audit_public_bundle.py"
+            rule.parent.mkdir(parents=True)
+            marker = "MyAI" + "Clone"
+            rule.write_text("PATTERN = " + repr(marker), encoding="utf-8")
+            with mock.patch.object(CHECKER, "ROOT", root):
+                failures = []
+                CHECKER.static_checks(failures)
+                self.assertEqual(failures, [])
+                rule.write_text("PATH = " + repr("/" + "Users/private/data/file"), encoding="utf-8")
+                CHECKER.static_checks(failures)
+                self.assertTrue(any("private absolute path" in x for x in failures))
+
+    def test_audit_marker_exception_does_not_apply_to_other_files(self):
+        with tempfile.TemporaryDirectory(prefix="pinshu-release-rules-") as tmp:
+            root = Path(tmp)
+            (root / "audit_public_bundle.py").write_text(
+                "PATTERN = " + repr("MyAI" + "Clone"), encoding="utf-8")
+            with mock.patch.object(CHECKER, "ROOT", root):
+                failures = []
+                CHECKER.static_checks(failures)
+                self.assertTrue(any("private workspace marker" in x for x in failures))
+
+    def test_audit_marker_exception_keeps_independent_secret_scan(self):
+        with tempfile.TemporaryDirectory(prefix="pinshu-release-rules-") as tmp:
+            root = Path(tmp)
+            rule = root / "pinshu-visual-system/scripts/audit_public_bundle.py"
+            rule.parent.mkdir(parents=True)
+            rule.write_text("TOKEN = " + repr("ghp_" + "A" * 36), encoding="utf-8")
+            self.assertTrue(any("credential-like token" in x for x in self.run_scan(root)))
 
 
 if __name__ == "__main__":

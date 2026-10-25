@@ -55,14 +55,14 @@ curl -fsSL https://raw.githubusercontent.com/zhongjjm-design/pinshu-skills/main/
 | Skill | 公开版本 |
 |---|---|
 | `pinshu-write` | 4.0.0 |
-| `pinshu-visual-system` | 0.4.0 |
-| `pinshu-wechat-layout` | 0.4.0-rc.2 |
+| `pinshu-visual-system` | 1.0.0-rc.2 |
+| `pinshu-wechat-layout` | 0.4.0-rc.3 |
 | `pinshu-video-core` | 0.2.0 |
-| `pinshu-business-graphics` | 0.1.5 |
-| `pinshu-infographic` | 0.1.5 |
+| `pinshu-business-graphics` | 0.1.6 |
+| `pinshu-infographic` | 0.1.6 |
 | `pinshu-transcript` | 0.2.0 |
 
-本次只更新 `pinshu-write`；没有新增 Skill，其他 Skill 内容不变。4.0 照真稿测出的问题修改，修改后尚未跑过真稿验证。
+本次发布 `pinshu-visual-system` 1.0.0-rc.2，并把 `pinshu-wechat-layout` 的三张公开章首图净化后升到0.4.0-rc.3。视觉候选含25种内置模式和6个外部交接入口；跨Agent出图稳定性与用户审美仍需逐次验收。
 
 ## 使用前准备
 

@@ -1,4 +1,4 @@
-# Pinshu Business Graphics - public preview 0.1.5
+# Pinshu Business Graphics - public preview 0.1.6
 
 Seven visual method families for business arguments: typographic metaphor, strategic map, structural section, editorial collage, engineering blueprint narrative, Chinese modernism and data journalism.
 

@@ -1,6 +1,6 @@
 {
-  "version": "0.4.0",
-  "distribution": "public-preview",
+  "version": "1.0.0-rc.2",
+  "distribution": "public-release-candidate",
   "owner": "Aidan (Pinshu)",
   "identity_assets_included": false,
   "structures": [
@@ -45,7 +45,11 @@
       "mode_card": "references/mode-cards/warm-studio-illustration.md",
       "blocked_platforms": [],
       "character_policy": "optional",
-      "max_units": 5
+      "max_units": 5,
+      "short_name": "暖智",
+      "uses": "人物互动、工作与生活场景；颜色随时段与题材变化。",
+      "grammar": "细线组织真实动作，透亮的绘画色层表现空间与光线。",
+      "lifecycle": "available-for-selection; review every output"
     },
     {
       "id": "warm-paper",
@@ -63,24 +67,11 @@
       "mode_card": "references/mode-cards/warm-paper.md",
       "blocked_platforms": [],
       "character_policy": "none-only",
-      "max_units": 7
-    },
-    {
-      "id": "lively-vector",
-      "name": "Lively Vector Explainer",
-      "status": "candidate",
-      "function": "explainer",
-      "supported_structures": [
-        "process",
-        "comparison",
-        "hierarchy",
-        "components",
-        "true-loop"
-      ],
-      "mode_card": "references/mode-cards/lively-vector.md",
-      "blocked_platforms": [],
-      "character_policy": "optional",
-      "max_units": 5
+      "max_units": 7,
+      "short_name": "暖纸",
+      "uses": "步骤、比较和组成关系；保留原文顺序与必要标签。",
+      "grammar": "用纸面层级、简洁轮廓与轻质感说明关系。",
+      "lifecycle": "available-for-selection; review every output"
     },
     {
       "id": "character-presenter",
@@ -98,20 +89,30 @@
       "mode_card": "references/mode-cards/character-presenter.md",
       "blocked_platforms": [],
       "character_policy": "required",
-      "max_units": 5
+      "max_units": 5,
+      "short_name": "角色讲解",
+      "uses": "需要角色讲解的知识图；先验证身份参考和画法组合。",
+      "grammar": "用户提供的已授权角色向读者展示具体对象或关系。",
+      "lifecycle": "available-for-selection; review every output"
     },
     {
       "id": "clear-portrait-doodle-collage",
       "name": "Clear Portrait Doodle Collage",
-      "status": "candidate",
+      "status": "available-scoped",
       "function": "portrait",
       "supported_structures": [
-        "single-claim"
+        "single-claim",
+        "comparison",
+        "components"
       ],
       "mode_card": "references/mode-cards/clear-portrait-doodle-collage.md",
       "blocked_platforms": [],
       "character_policy": "optional",
-      "max_units": 5
+      "max_units": 5,
+      "short_name": "涂鸦拼贴",
+      "uses": "人物、动物、器物或场景都可成为主体；涂鸦应解释动作或判断。",
+      "grammar": "清楚的主体剪贴与轻笔涂鸦共同组织画面，保留呼吸空间。",
+      "lifecycle": "available-for-selection; review every output"
     },
     {
       "id": "archive-tabletop-editorial",
@@ -126,7 +127,11 @@
       "mode_card": "references/mode-cards/archive-tabletop-editorial.md",
       "blocked_platforms": [],
       "character_policy": "optional",
-      "max_units": 7
+      "max_units": 7,
+      "short_name": "实物编辑",
+      "uses": "有具体物件与操作的文章；不依靠无意义的文件堆表现专业。",
+      "grammar": "以真实物件、局部动作和编辑式空间组织可辨认的关系。",
+      "lifecycle": "available-for-selection; review every output"
     },
     {
       "id": "airy-architectural-watercolor",
@@ -139,34 +144,30 @@
       "mode_card": "references/mode-cards/airy-architectural-watercolor.md",
       "blocked_platforms": [],
       "character_policy": "optional",
-      "max_units": 5
+      "max_units": 5,
+      "short_name": "清透水彩",
+      "uses": "建筑、街巷、店铺与空间体验；不把无关主题改成建筑题材。",
+      "grammar": "透明水彩与疏密线条表现可辨认的空间、光线和尺度。",
+      "lifecycle": "available-for-selection; review every output"
     },
     {
-      "id": "cinematic-ink-narrative",
-      "name": "Cinematic Ink Narrative",
-      "status": "candidate",
-      "function": "atmosphere",
-      "supported_structures": [
-        "single-claim",
-        "timeline"
-      ],
-      "mode_card": "references/mode-cards/cinematic-ink-narrative.md",
-      "blocked_platforms": [],
-      "character_policy": "optional",
-      "max_units": 5
-    },
-    {
-      "id": "handwritten-documentary-card",
-      "name": "Handwritten Documentary Card",
-      "status": "candidate-frozen",
-      "function": "documentary",
+      "id": "literary-crayon-editorial",
+      "name": "Literary Crayon Editorial",
+      "status": "available-scoped",
+      "function": "thesis",
       "supported_structures": [
         "single-claim"
       ],
-      "mode_card": "references/mode-cards/handwritten-documentary-card.md",
-      "blocked_platforms": [],
+      "mode_card": "references/mode-cards/literary-crayon-editorial.md",
+      "blocked_platforms": [
+        "wechat-article"
+      ],
       "character_policy": "optional",
-      "max_units": 5
+      "max_units": 5,
+      "short_name": "蜡笔",
+      "uses": "少字情绪场景或章节引入；复杂信息另用清楚的图形语法。",
+      "grammar": "蜡笔颗粒、松动轮廓与色块留白形成轻柔叙事。",
+      "lifecycle": "available-for-selection; review every output"
     },
     {
       "id": "hand-drawn-comparison-comic",
@@ -181,7 +182,22 @@
       "mode_card": "references/mode-cards/hand-drawn-comparison-comic.md",
       "blocked_platforms": [],
       "character_policy": "optional",
-      "max_units": 5
+      "max_units": 2,
+      "short_name": "淡彩",
+      "uses": "两种做法、前后变化或单一场景；不是每页都必须对半分。",
+      "grammar": "轻薄设色配合有节奏的手绘线条，用具体动作表现差别。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-cover-primary",
+        "wechat-cover-square",
+        "wechat-article",
+        "wechat-moments",
+        "wechat-sticker",
+        "xiaohongshu",
+        "x-post",
+        "ppt-16x9",
+        "livestream-16x9"
+      ]
     },
     {
       "id": "notebook-knowledge-explainer",
@@ -196,24 +212,378 @@
       "mode_card": "references/mode-cards/notebook-knowledge-explainer.md",
       "blocked_platforms": [],
       "character_policy": "optional",
-      "max_units": 5
+      "max_units": 5,
+      "short_name": "手帐",
+      "uses": "解释、检查表与简短路线；正文横图比竖向知识墙更轻巧。",
+      "grammar": "手帐式笔记、轻标记和具体小插画共同形成信息层级。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu",
+        "wechat-moments",
+        "x-post",
+        "ppt-16x9",
+        "livestream-16x9"
+      ]
     },
     {
-      "id": "literary-crayon-editorial",
-      "name": "Literary Crayon Editorial",
+      "id": "soft-volume-editorial",
+      "name": "柔和体积",
       "status": "available-scoped",
-      "function": "thesis",
+      "function": "scene",
       "supported_structures": [
-        "single-claim"
+        "single-claim",
+        "components"
       ],
-      "mode_card": "references/mode-cards/literary-crayon-editorial.md",
-      "blocked_platforms": [
+      "mode_card": "references/mode-cards/soft-volume-editorial.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "柔和体积",
+      "uses": "人物、动物、器物和空间；少字场景，不以厚重塑料质感代替体积。",
+      "grammar": "柔和明暗塑造圆润体块，主体边缘松软但对象关系清楚。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
         "wechat-article",
-        "wechat-cover-primary",
-        "wechat-cover-square"
+        "xiaohongshu",
+        "wechat-moments"
+      ]
+    },
+    {
+      "id": "two-color-risograph",
+      "name": "孔版",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
       ],
-      "character_policy": "optional",
-      "max_units": 5
+      "mode_card": "references/mode-cards/two-color-risograph.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "孔版",
+      "uses": "轮廓清楚的动作、物件与观点；色对按内容选，不固定红绿。",
+      "grammar": "有限主色、细网点和轻微套印感构成印刷语言。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu",
+        "wechat-moments"
+      ]
+    },
+    {
+      "id": "oil-pastel-scene",
+      "name": "油画棒",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/oil-pastel-scene.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "油画棒",
+      "uses": "生活动作与情绪叙事；焦点清楚，文字保持克制。",
+      "grammar": "油画棒的密实色层、颗粒和擦痕表现具体场景。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu",
+        "wechat-moments"
+      ]
+    },
+    {
+      "id": "pale-lacquer-decorative",
+      "name": "漆画",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/pale-lacquer-decorative.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "漆画",
+      "uses": "治愈、文化与生活主题；光泽服务主体，不遮蔽含义。",
+      "grammar": "轻亮漆面般的平整层次与细微装饰光泽表现柔和场景。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu",
+        "wechat-moments"
+      ]
+    },
+    {
+      "id": "paper-scene-collage",
+      "name": "纸景",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/paper-scene-collage.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "纸景",
+      "uses": "人物互动、产品关系或空间情境；纸片层次有主次。",
+      "grammar": "切纸的边缘、叠层和投影组织可读的场景空间。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu",
+        "wechat-moments"
+      ]
+    },
+    {
+      "id": "light-relief-poetic",
+      "name": "浮雕",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/light-relief-poetic.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "浮雕",
+      "uses": "短句、情绪与少字场景；材质不能替代具体含义。",
+      "grammar": "浅浮雕般的起伏与侧向柔光表现简洁物象。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu",
+        "wechat-moments"
+      ]
+    },
+    {
+      "id": "stitched-textile-collage",
+      "name": "布艺",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/stitched-textile-collage.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "布艺",
+      "uses": "人与人、动物、物件或商业关系；不是重复印花或固定旅拍题材。",
+      "grammar": "布片轮廓、织物方向、层叠与细针迹建立材料一致性。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu"
+      ]
+    },
+    {
+      "id": "graphite-accent-editorial",
+      "name": "石墨",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/graphite-accent-editorial.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "石墨",
+      "uses": "观察、选择与人物物件场景；强调色落在含义关键处。",
+      "grammar": "石墨层次与少量局部色强调清楚的动作或判断。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu"
+      ]
+    },
+    {
+      "id": "fine-line-etching-editorial",
+      "name": "蚀刻",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/fine-line-etching-editorial.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "蚀刻",
+      "uses": "观察、文化和具体生活动作；手机尺度避免排线结成黑块。",
+      "grammar": "细密排线组织体积与明暗，保留轮廓与空白的节奏。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu"
+      ]
+    },
+    {
+      "id": "vintage-painted-editorial",
+      "name": "复古插画",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/vintage-painted-editorial.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "复古插画",
+      "uses": "步行、消费、地方文化与故事场景；不套古旧品牌标识。",
+      "grammar": "平面绘画形体、概括明暗与有秩序的设色形成编辑叙事。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu"
+      ]
+    },
+    {
+      "id": "pixelated-scene-editorial",
+      "name": "像素",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/pixelated-scene-editorial.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "像素",
+      "uses": "有行动关系的轻巧场景；手机显示仍须辨认主体。",
+      "grammar": "统一像素尺度和有限明暗层级构成场景，而非照片滤镜。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article"
+      ]
+    },
+    {
+      "id": "cut-paper-print-editorial",
+      "name": "剪纸",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/cut-paper-print-editorial.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "剪纸",
+      "uses": "清楚的动作和物件关系；碎片和装饰不压过焦点。",
+      "grammar": "利落剪切轮廓、负空间与印刷色块共同形成图形。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu"
+      ]
+    },
+    {
+      "id": "chalk-scene-explainer",
+      "name": "粉笔",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/chalk-scene-explainer.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "粉笔",
+      "uses": "讲解与简短比较；浅底或深底按内容选择，不固定黑板。",
+      "grammar": "粉笔般的松动边缘、轻颗粒与清楚图形解释具体动作。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu",
+        "wechat-cover-primary"
+      ]
+    },
+    {
+      "id": "pop-halftone-narrative",
+      "name": "波普",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/pop-halftone-narrative.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "波普",
+      "uses": "消费、选择、对话与动作；字重和色彩对比按阅读尺度收敛。",
+      "grammar": "网点、鲜明形体与适量色块形成叙事节奏。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu",
+        "wechat-cover-primary"
+      ]
+    },
+    {
+      "id": "folded-paper-editorial",
+      "name": "折纸",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/folded-paper-editorial.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "折纸",
+      "uses": "动作与物件关系；结构应可信，避免纸艺变塑料玩具。",
+      "grammar": "折痕、纸面转折与单一光照建立纸构物象。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu"
+      ]
+    },
+    {
+      "id": "handcrafted-puppet-narrative",
+      "name": "木偶",
+      "status": "available-scoped",
+      "function": "scene",
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ],
+      "mode_card": "references/mode-cards/handcrafted-puppet-narrative.md",
+      "blocked_platforms": [],
+      "character_policy": "none-only",
+      "max_units": 3,
+      "short_name": "木偶",
+      "uses": "家庭、陪伴与故事；动作来自本篇，不固定为某类人物。",
+      "grammar": "木、布与可辨关节的手作偶塑造连续动作和情绪。",
+      "lifecycle": "available-for-selection; review every output",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu"
+      ]
     }
   ],
   "method_candidates": [
@@ -237,5 +607,263 @@
       ],
       "automatic_routing": false
     }
+  ],
+  "aliases": {
+    "暖智": "warm-studio-illustration",
+    "暖智工作室插画": "warm-studio-illustration",
+    "暖智工作室": "warm-studio-illustration",
+    "暖纸手绘讲解": "warm-paper",
+    "暖纸": "warm-paper",
+    "pinshu-presenter": "character-presenter",
+    "角色讲解": "character-presenter",
+    "清透涂鸦": "clear-portrait-doodle-collage",
+    "涂鸦拼贴": "clear-portrait-doodle-collage",
+    "清透涂鸦拼贴": "clear-portrait-doodle-collage",
+    "涂鸦": "clear-portrait-doodle-collage",
+    "档案桌面编辑": "archive-tabletop-editorial",
+    "档案桌面": "archive-tabletop-editorial",
+    "实物编辑": "archive-tabletop-editorial",
+    "清透建筑水彩叙事": "airy-architectural-watercolor",
+    "清透建筑水彩": "airy-architectural-watercolor",
+    "清透水彩": "airy-architectural-watercolor",
+    "文学编辑蜡笔": "literary-crayon-editorial",
+    "蜡笔": "literary-crayon-editorial",
+    "淡彩手绘": "hand-drawn-comparison-comic",
+    "亲手绘对照漫画": "hand-drawn-comparison-comic",
+    "淡彩": "hand-drawn-comparison-comic",
+    "手帐知识图解": "notebook-knowledge-explainer",
+    "手帐": "notebook-knowledge-explainer",
+    "手帐式知识图解": "notebook-knowledge-explainer",
+    "柔和体积": "soft-volume-editorial",
+    "体积": "soft-volume-editorial",
+    "双色孔版印刷": "two-color-risograph",
+    "双色孔版": "two-color-risograph",
+    "孔版": "two-color-risograph",
+    "油画棒场景": "oil-pastel-scene",
+    "油画棒": "oil-pastel-scene",
+    "浅色漆画": "pale-lacquer-decorative",
+    "浅色漆画装饰": "pale-lacquer-decorative",
+    "漆画": "pale-lacquer-decorative",
+    "纸景拼贴": "paper-scene-collage",
+    "纸景材料": "paper-scene-collage",
+    "纸景": "paper-scene-collage",
+    "流光浮雕": "light-relief-poetic",
+    "浮雕": "light-relief-poetic",
+    "布艺拼贴": "stitched-textile-collage",
+    "纺织贴布": "stitched-textile-collage",
+    "布艺": "stitched-textile-collage",
+    "石墨点色": "graphite-accent-editorial",
+    "石墨局部点色": "graphite-accent-editorial",
+    "石墨": "graphite-accent-editorial",
+    "黑白细线蚀刻": "fine-line-etching-editorial",
+    "细线蚀刻": "fine-line-etching-editorial",
+    "蚀刻场景": "fine-line-etching-editorial",
+    "蚀刻": "fine-line-etching-editorial",
+    "复古编辑插画": "vintage-painted-editorial",
+    "复古杂志插画": "vintage-painted-editorial",
+    "复古插画": "vintage-painted-editorial",
+    "像素感场景": "pixelated-scene-editorial",
+    "像素场景": "pixelated-scene-editorial",
+    "像素": "pixelated-scene-editorial",
+    "几何剪纸印刷": "cut-paper-print-editorial",
+    "平面剪纸印刷": "cut-paper-print-editorial",
+    "剪纸": "cut-paper-print-editorial",
+    "粉笔场景图解": "chalk-scene-explainer",
+    "粉笔图解": "chalk-scene-explainer",
+    "粉笔场景": "chalk-scene-explainer",
+    "粉笔": "chalk-scene-explainer",
+    "波普网点叙事": "pop-halftone-narrative",
+    "波普叙事": "pop-halftone-narrative",
+    "波普网点": "pop-halftone-narrative",
+    "波普": "pop-halftone-narrative",
+    "折纸构成": "folded-paper-editorial",
+    "折纸物件": "folded-paper-editorial",
+    "纸折叙事": "folded-paper-editorial",
+    "折纸": "folded-paper-editorial",
+    "木偶布景叙事": "handcrafted-puppet-narrative",
+    "手作木偶": "handcrafted-puppet-narrative",
+    "木偶场景": "handcrafted-puppet-narrative",
+    "木偶": "handcrafted-puppet-narrative",
+    "编辑卡": "guizang-editorial-card",
+    "瑞士卡": "guizang-swiss-card",
+    "橙线": "orange-line-illustration",
+    "怪诞": "gimi-quirky-sketch-none",
+    "物件小剧场": "heytea-object-doodle",
+    "真实物件涂鸦": "heytea-object-doodle",
+    "实物涂鸦": "heytea-object-doodle",
+    "蓝绿编辑叙事": "gimi-product-proposal-none",
+    "产品方案": "gimi-product-proposal-none",
+    "物件编辑": "gimi-product-proposal-none"
+  },
+  "external_integrations": [
+    {
+      "id": "guizang-editorial-card",
+      "short_name": "编辑卡",
+      "external_skill": "guizang-social-card-skill",
+      "external_style": "editorial",
+      "rights_status": "AGPL-3.0",
+      "commercial_use": "遵守 AGPL-3.0 与外部 Skill 原始条款；本系统不复制或改写其源码",
+      "ip_policy": "layout-only",
+      "allowed_platforms": [
+        "xiaohongshu",
+        "x-post",
+        "wechat-moments"
+      ],
+      "kind": "external-layout-integration",
+      "dependency_required": true,
+      "bundled": false,
+      "requires_source_image": false,
+      "allowed_characters": [
+        "none"
+      ],
+      "supported_structures": [
+        "single-claim",
+        "process",
+        "comparison",
+        "hierarchy",
+        "components",
+        "timeline"
+      ]
+    },
+    {
+      "id": "guizang-swiss-card",
+      "short_name": "瑞士卡",
+      "external_skill": "guizang-social-card-skill",
+      "external_style": "swiss",
+      "rights_status": "AGPL-3.0",
+      "commercial_use": "遵守 AGPL-3.0 与外部 Skill 原始条款；本系统不复制或改写其源码",
+      "ip_policy": "layout-only",
+      "allowed_platforms": [
+        "xiaohongshu",
+        "x-post",
+        "wechat-moments"
+      ],
+      "kind": "external-layout-integration",
+      "dependency_required": true,
+      "bundled": false,
+      "requires_source_image": false,
+      "allowed_characters": [
+        "none"
+      ],
+      "supported_structures": [
+        "single-claim",
+        "process",
+        "comparison",
+        "hierarchy",
+        "components",
+        "timeline"
+      ]
+    },
+    {
+      "id": "orange-line-illustration",
+      "short_name": "橙线",
+      "external_skill": "orange-line-illustration",
+      "external_style": "orange-line-style-only",
+      "rights_status": "dual-license",
+      "commercial_use": "免费公开文章可用；闭源产品、付费课件、客户交付、专有营销材料须另购商业授权",
+      "ip_policy": "只调用画风，不把默认角色小橙并入 Pinshu 角色库",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu"
+      ],
+      "kind": "external-style-integration",
+      "dependency_required": true,
+      "bundled": false,
+      "requires_source_image": false,
+      "allowed_characters": [
+        "none"
+      ],
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ]
+    },
+    {
+      "id": "gimi-quirky-sketch-none",
+      "short_name": "怪诞",
+      "external_skill": "gimi-illustration",
+      "external_style": "quirky-sketch",
+      "rights_status": "workflow-MIT-character-restricted",
+      "commercial_use": "工作流按 MIT；商业账号固定 IP=none，未经书面授权禁止调用 Gimi 角色",
+      "ip_policy": "IP=none-only",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu"
+      ],
+      "kind": "external-style-integration",
+      "dependency_required": true,
+      "bundled": false,
+      "requires_source_image": false,
+      "allowed_characters": [
+        "none"
+      ],
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ]
+    },
+    {
+      "id": "heytea-object-doodle",
+      "short_name": "实物涂鸦",
+      "external_skill": "heytea-style",
+      "external_style": "object-and-micro-worker",
+      "rights_status": "MIT-code-examples-CC-BY-third-party-study-excluded",
+      "commercial_use": "遵守上游LICENSE及素材逐件授权；本地案例只作画法参考，不作可发布素材包",
+      "ip_policy": "IP=none-only",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu"
+      ],
+      "kind": "external-style-integration",
+      "dependency_required": true,
+      "bundled": false,
+      "requires_source_image": true,
+      "allowed_characters": [
+        "none"
+      ],
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ]
+    },
+    {
+      "id": "gimi-product-proposal-none",
+      "short_name": "物件编辑",
+      "external_skill": "gimi-illustration",
+      "external_style": "product-proposal",
+      "rights_status": "workflow-MIT-character-restricted",
+      "commercial_use": "遵守上游LICENSE及素材逐件授权；本地案例只作画法参考，不作可发布素材包",
+      "ip_policy": "IP=none-only",
+      "allowed_platforms": [
+        "wechat-article",
+        "xiaohongshu"
+      ],
+      "kind": "external-style-integration",
+      "dependency_required": true,
+      "bundled": false,
+      "requires_source_image": false,
+      "allowed_characters": [
+        "none"
+      ],
+      "supported_structures": [
+        "single-claim",
+        "components"
+      ]
+    }
+  ],
+  "held_routes": [
+    "shell-mosaic-editorial",
+    "gestural-ink-editorial",
+    "patterned-bookcloth-editorial",
+    "gimi-warm-storybook-none",
+    "ian-xhs-carousel",
+    "zine-paper-editorial",
+    "mono-color-editorial"
+  ],
+  "retired_routes": [
+    "cinematic-ink-narrative",
+    "miniature-diorama-explainer",
+    "lively-vector",
+    "handwritten-documentary-card"
   ]
 }

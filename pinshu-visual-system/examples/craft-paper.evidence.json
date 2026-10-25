@@ -11,7 +11,7 @@
   "generated_original_sha256": "dd5a68f15fc08a097a5c82c42be78b50b80a8fdfe68265a332fffc4cd352c9c7",
   "generated_original_retained_locally": true,
   "public_image": "craft-paper.png",
-  "public_image_sha256": "b439bf2159019558d833a4af5dab82af493a4d11b149548b7a38385e9e36f0eb",
+  "public_image_sha256": "d6ab811765920ae0e4eb7c8e5c39a70bda8c036e8cd9e0aafbd76c897cc999e8",
   "workflow": {
     "kind": "pinshu-visual-method-test",
     "version": "0.2.0"

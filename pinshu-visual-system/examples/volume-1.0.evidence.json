@@ -1,0 +1,16 @@
+{
+  "kind": "new public candidate validation image, not a private accepted sample",
+  "source_file": "craft-fold.source.md",
+  "source_sha256": "d2bdc02c83af0fa5bcb0d93427a93bb7d58754f16579b0e9fa001168de3d982f",
+  "image_file": "volume-1.0.png",
+  "image_sha256": "381ed119e77aaa9f150c37503a95e44223e1a60e5df0fc2a088d5cab2017a820",
+  "mode": "soft-volume-editorial",
+  "platform": "xiaohongshu",
+  "actual_tool": "image_gen.imagegen",
+  "actual_model": "not reported by runtime",
+  "geometry": "1080x1440",
+  "pixel_difference_ae": 0,
+  "metadata_check": "PASS",
+  "human_accepted": false,
+  "scope": "Current Codex output only; not ZCode/WorkBuddy/Hermes image rendering"
+}

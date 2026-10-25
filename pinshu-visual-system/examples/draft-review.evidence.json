@@ -3,7 +3,7 @@
   "source": "brief.md",
   "compiled_prompt": "draft-review.compiled-prompt.txt",
   "image": "draft-review.png",
-  "image_sha256": "b4c759f3abe6b90aa680d80bd32ef4496d94a95edb3aa8589564f4f00dc65d70",
+  "image_sha256": "dfbba44305f75f8d2c74640d78cb95ef9e7f05c312a80dbc87035452aec6bd96",
   "mode": "notebook-knowledge-explainer",
   "structure": "process",
   "platform": "wechat-article",

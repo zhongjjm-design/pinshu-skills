@@ -23,7 +23,7 @@ class PublicVisualTests(unittest.TestCase):
         import re
         version=(ROOT/'VERSION').read_text().strip()
         self.assertEqual(version,json.loads((ROOT/'references/system-registry.json').read_text())['version'])
-        declared=re.search(r'公开候选版本：\*\*([^*]+)\*\*',(ROOT/'SKILL.md').read_text())
+        declared=re.search(r'版本：([^，]+)',(ROOT/'SKILL.md').read_text())
         self.assertIsNotNone(declared)
         self.assertEqual(version,declared.group(1))
         quickstart=re.search(r'The shared package has a separate VERSION \(([^)]+)\)',(ROOT/'references/quickstart.md').read_text())
@@ -51,16 +51,16 @@ class PublicVisualTests(unittest.TestCase):
 
     def test_every_registered_card_and_platform_is_portable(self):
         registry, profiles = load_configs()
-        self.assertEqual(len(registry["modes"]), 12)
+        self.assertEqual(len(registry["modes"]), 25)
         self.assertEqual(len(profiles), 11)
         self.assertEqual(len(registry["layouts"]), 18)
         for mode in registry["modes"]:
             self.assertTrue((ROOT / mode["mode_card"]).is_file())
 
-    def test_candidates_require_explicit_test(self):
-        with self.assertRaisesRegex(ValueError, "candidate-test"):
-            self.plan(mode_id="lively-vector")
-        self.assertEqual(self.plan(mode_id="lively-vector", candidate_test=True)["mode_status"], "candidate")
+    def test_frozen_route_is_not_restored_by_test_flag(self):
+        for flag in [False,True]:
+            with self.assertRaisesRegex(ValueError, "frozen or retired"):
+                self.plan(mode_id="lively-vector",candidate_test=flag)
 
     def test_method_candidates_are_separate_and_explicit(self):
         args = dict(content="Original paper craft concept.", platform="xiaohongshu",
@@ -129,7 +129,7 @@ class PublicVisualTests(unittest.TestCase):
             asset = root / "identity.png"
             asset.write_bytes(b"fixture identity")
             profile = root / "character.json"
-            data = {"id": "team-editor", "status": "approved", "identity_asset": "identity.png",
+            data = {"id": "team-editor", "status": "approved", "identity_asset": "identity.png", "identity_sha256": hashlib.sha256(asset.read_bytes()).hexdigest(), "approval_quote": "Test fixture authorization only",
                     "tested_modes": ["character-presenter"], "dominant_hand": "right", "constraints": ["Keep the supplied face."]}
             profile.write_text(json.dumps(data))
             plan = self.plan(mode_id="character-presenter", character_profile=profile)

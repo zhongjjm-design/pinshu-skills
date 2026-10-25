@@ -71,9 +71,8 @@ class CompanionTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "infographic mode"):
                 compile_infographic(path)
             path = self.brief(root, "pinshu-infographic", mode="lively-vector")
-            with self.assertRaisesRegex(ValueError, "candidate-test"):
+            with self.assertRaisesRegex(ValueError, "infographic mode"):
                 compile_infographic(path)
-            self.assertEqual(compile_infographic(path, candidate_test=True)[0]["mode_status"], "candidate")
 
     def test_missing_character_and_editable_exact_labels(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -204,6 +203,11 @@ class CompanionTests(unittest.TestCase):
                 result = subprocess.run([sys.executable, "-B", str(scripts / script), "--help"], capture_output=True, text=True)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("upgrade the complete visual set", result.stderr)
+
+    def test_release_candidate_core_version_is_accepted(self):
+        for package, script in [("pinshu-infographic", "plan_infographic.py"), ("pinshu-business-graphics", "plan_business_graphic.py")]:
+            result = subprocess.run([sys.executable, "-B", str(ROOT / package / "scripts" / script), "--help"], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_method_review_cannot_omit_cultural_source_fit(self):
         with tempfile.TemporaryDirectory() as tmp:

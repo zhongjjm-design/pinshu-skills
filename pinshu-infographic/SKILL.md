@@ -15,7 +15,7 @@ description: "用于来源忠实的中文信息图、文章配图、文档讲解
 
 # 品叔信息图
 
-公开版本：0.1.5（沿用本机 3.6 的通用信息逻辑与密度规则，不包含私有人物资产）
+公开版本：0.1.6（沿用本机 3.6 的通用信息逻辑与密度规则，不包含私有人物资产）
 
 视觉方向与最终取舍：Aidan（品叔）
 
@@ -36,7 +36,6 @@ Skill 架构与实现：Codex
 5. 从总控注册表读取并完整加载所选模式的 `mode_card`。
 6. 根据所选模式读取对应风格文件：
    - `warm-paper` → `pinshu-visual-system/references/mode-cards/warm-paper.md`
-   - `lively-vector` → `pinshu-visual-system/references/mode-cards/lively-vector.md`
    - `character-presenter` → `pinshu-visual-system/references/mode-cards/character-presenter.md`
 
 旧名称 `pinshu-presenter` 仅作为 `character-presenter` 的模式别名，不提供任何人物身份。需要人物时，必须由使用者显式提供其自有授权参考，缺少参考时停止特定身份生图，或由使用者改选无人物方案。
@@ -61,16 +60,14 @@ Skill 架构与实现：Codex
 | 模式 | 适用 | 核心特征 |
 |---|---|---|
 | `warm-paper` | 文章、知识库、课程讲义、温暖的人文或方法论内容 | 浅暖纸、深海军蓝手写字、陶土橙强调、克制胶带与手绘线 |
-| `lively-vector` | 流程、架构、对比、分层、产品机制和课程图解 | 暖白底、低饱和牛仔蓝、鼠尾草绿、陶土橙、几何叠压与流动曲线 |
 | `character-presenter` | 使用者自有授权角色讲知识、课程、公众号重点图、直播/PPT | 角色身份由显式配置锁定；信息板承担逻辑，人物承担信任与亲和力；公开包不附人物图，也不宣称任意角色组合已验证 |
 
-本 Skill 只使用这三种模式；每种能否进自动生产，以 `pinshu-visual-system` 注册表的状态为准（注册表标为候选时只做测试，不进自动生产）。候选视觉模式统一在 `pinshu-visual-system` 中孵化，通过参考拆解、样张测试和用户确认后，才能进入本 Skill。
+本 Skill 只使用这两种模式；每种能否进自动生产，以 `pinshu-visual-system` 注册表的状态为准。候选视觉模式统一在 `pinshu-visual-system` 中孵化，通过参考拆解、样张测试和用户确认后，才能进入本 Skill。
 
 平台边界：
 
 - `warm-paper` 保留给横版文章与知识结构图，不再作为朋友圈 3:4 默认模式；
-- 朋友圈的情绪和生活内容可在总控候选池测试 `handwritten-documentary-card`，但该方向当前人工评价仅为及格，不是默认模式，本 Skill 不把它伪装成信息图；
-- `lively-vector` 用于 PPT 层级图时必须使用一个主几何体与编辑式标题，拒绝标准台阶、圆柱、四等分卡片和底部胶囊总结。
+- 朋友圈的情绪和生活内容不由信息图入口硬套画法；返回视觉总控按当前注册表选择正常模式；
 
 模式卡是视觉语法的单一事实来源；本 Skill 的风格文件只补充信息图生图细节，不得另写冲突色板或构图规则。
 

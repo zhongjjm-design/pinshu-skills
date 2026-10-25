@@ -256,7 +256,7 @@ def run(handoff_path: Path, out: Path) -> Path:
         layout_path.write_text(json.dumps(layout, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     render_preview(source_html, out / "fields.json", layout_path, preview)
     report = {
-        "status": "trial", "version": "0.4.0-rc.2",
+        "status": "trial", "version": "0.4.0-rc.3",
         "templates": ["松绿双线", "青灰手记", "暖纸杂志", "橙线手记", "蓝白专题", "首席品牌官经典版", "数字分栏"],
         "default_template": "青灰手记", "template_selection_status": "pending-per-article", "source_md": str(source),
         "source_sha256": sha(source), "image_manifest": str(manifest_path),

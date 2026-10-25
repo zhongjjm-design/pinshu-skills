@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import tempfile
 from pathlib import Path
 from visual_contracts import check_exact_text, text_delivery
 
@@ -21,6 +22,24 @@ def load_configs() -> tuple[dict, dict]:
     return registry, {item["id"]: item for item in profiles["profiles"]}
 
 
+def image_text_contract(labels: list[str], editable: bool) -> tuple[dict, str]:
+    """Keep source prose and production directions separate from drawable copy."""
+    labels = list(dict.fromkeys(labels))
+    raster = [] if editable else labels
+    policy = {"raster_labels": raster, "composite_labels": labels if editable else [],
+              "source_is_caption": False, "production_notes_are_visible": False}
+    if raster:
+        target = "Draw only these exact visible strings: " + json.dumps(raster, ensure_ascii=False)
+    else:
+        target = "Create a picture-only illustration: an entirely unlettered image, with no caption or text panel."
+    if editable and labels:
+        target += " Reserve quiet space for the separate editable text layer: " + json.dumps(labels, ensure_ascii=False)
+    return policy, ("IMAGE TEXT CONTRACT (rendering instructions, not artwork copy):\n" + target
+                    + "\nSource prose supplies scene meaning, not a caption. Production notes, mode-card headings, "
+                      "contract keys and provenance statements stay outside the artwork. "
+                      "Only the explicit visible strings above are artwork copy; otherwise use visual action alone.")
+
+
 def compile_plan(content: str, platform: str, mode_id: str, structure: str,
                  layout: str = "auto", title: str = "", candidate_test: bool = False,
                  character_profile: Path | None = None, exact_text: list[str] | None = None,
@@ -29,6 +48,11 @@ def compile_plan(content: str, platform: str, mode_id: str, structure: str,
     if not content.strip():
         raise ValueError("Source content is empty")
     registry, profiles = load_configs()
+    mode_id = registry.get("aliases", {}).get(mode_id, mode_id)
+    if mode_id in registry.get("held_routes", []):
+        raise ValueError("This direction is on hold and excluded from normal selection")
+    if mode_id in registry.get("retired_routes", []):
+        raise ValueError("This direction is frozen or retired")
     modes = {item["id"]: item for item in registry["modes"]}
     if platform not in profiles or mode_id not in modes:
         raise ValueError("Unknown platform or mode")
@@ -37,16 +61,18 @@ def compile_plan(content: str, platform: str, mode_id: str, structure: str,
     mode = modes[mode_id]
     if structure not in mode["supported_structures"]:
         raise ValueError("The selected mode cannot carry this information structure")
+    if mode.get("allowed_platforms") and platform not in mode["allowed_platforms"]:
+        raise ValueError("The selected mode is not available for this platform")
     if platform in mode["blocked_platforms"]:
         raise ValueError("The selected mode is blocked on this platform")
     if mode["status"] == "candidate-frozen":
         raise ValueError("This candidate is frozen and cannot be generated")
     if mode["status"] == "candidate" and not candidate_test:
         raise ValueError("Candidate modes require --candidate-test for a single image")
-    if not 1 <= units <= mode["max_units"]:
-        raise ValueError("Information density exceeds the mode limit; split the content")
     if mode_id == "hand-drawn-comparison-comic" and units > 2:
         raise ValueError("Comparison comics are limited to two main scenes")
+    if not 1 <= units <= mode["max_units"]:
+        raise ValueError("Information density exceeds the mode limit; split the content")
     defaults = {"single-claim": "focus-hero", "comparison": "split-compare",
                 "process": "linear-steps", "hierarchy": "layered-steps",
                 "components": "asymmetric-bento", "true-loop": "linear-steps",
@@ -78,6 +104,10 @@ def compile_plan(content: str, platform: str, mode_id: str, structure: str,
         asset = asset.resolve()
         if not asset.is_file():
             raise ValueError("Character identity asset is missing")
+        if character.get("identity_sha256") != digest(asset):
+            raise ValueError("Character identity hash missing or changed; obtain current user approval")
+        if not character.get("approval_quote"):
+            raise ValueError("Character requires the current user's actual approval quote")
         if mode_id not in character.get("tested_modes", []):
             raise ValueError("This character/mode combination has not been approved")
         constraints = character.get("constraints")
@@ -85,7 +115,7 @@ def compile_plan(content: str, platform: str, mode_id: str, structure: str,
             raise ValueError("Character constraints must be a nonempty list of text rules")
         if character.get("dominant_hand") not in {"left", "right"}:
             raise ValueError("Declare the character's anatomical dominant hand")
-        identity = {"path": str(asset), "sha256": digest(asset)}
+        identity = {"path": str(asset), "sha256": digest(asset), "profile_sha256": digest(profile_path), "approval_quote": character["approval_quote"], "approval_scope": "user-supplied declaration; executing agent must verify actual user authorization"}
         rules = ("Load the actual identity image; it overrides pose and style references. "
                  + " ".join(constraints) + " Use the anatomical " + character["dominant_hand"]
                  + " hand for writing, tools and primary actions. Do not infer hands from screen position.")
@@ -98,19 +128,23 @@ def compile_plan(content: str, platform: str, mode_id: str, structure: str,
     editable_text = delivery["text_route"] == "editable-text-layer"
     card = ROOT / mode["mode_card"]
     text_route = "editable-text-layer" if editable_text else "short-text-with-visual-qa"
+    image_policy, text_contract = image_text_contract(delivery["visible_labels"], editable_text)
     prompt = "\n\n".join([
-        "Source material (use only supported facts):\n" + content,
+        text_contract,
+        "SCENE SOURCE (context only; translate the meaning into visual action):\n" + content,
         "Visual title:\n" + title,
         f"Visual contract: character={character_id}; structure={structure}; layout={layout}; mode={mode_id}; platform={platform}; units={units}.",
         ("For a true loop, draw a directed sequence with a visible return path from the last step to the first. The source must support that feedback relationship; a hub-and-spoke diagram is not a loop."
          if structure == "true-loop" else "Preserve the selected information relationship; do not add causal arrows unsupported by the source."),
+        "Preserve the participants, actions and physical connections that carry the source meaning. Simplify incidental props rather than dropping those relationships. Render with the complete selected medium grammar; a plain photo is not a substitute for a specified painting or illustration.",
         "Complete mode grammar:\n" + card.read_text(),
         "Character requirements:\n" + rules,
         "Platform requirements:\n" + profiles[platform]["layout_rule"],
         "Exact visible labels (preserve their original language):\n" + "\n".join(exact),
         ("Generate an illustration/background without text. Compose the exact labels in a separate editable layer; do not erase or paint over generated lettering."
          if editable_text else "Inspect every visible name, number and character against the source."),
-        "One focal point and one main relationship. Never invent facts, personal experiences, brands, data or evidence."
+        "One focal point and one main relationship. Never invent facts, personal experiences, brands, data or evidence.",
+        text_contract
     ])
     return {
         "schema_version": "public-visual-plan-v1", "version": registry["version"],
@@ -124,7 +158,7 @@ def compile_plan(content: str, platform: str, mode_id: str, structure: str,
                         "structure": structure, "layout": layout, "mode": mode_id, "platform": platform,
                         "density": "slide" if platform in {"ppt-16x9", "livestream-16x9"} else "social", "units": units},
         "platform_profile": profiles[platform], "identity_reference": identity,
-        **delivery, "exact_text_evidence": text_evidence, "prompt": prompt,
+        **delivery, "image_text_policy": image_policy, "exact_text_evidence": text_evidence, "prompt": prompt,
         "rendering": {"provider": "agent-runtime", "actual_model": None, "channel": None,
                       "instruction": "Use the available image tool; record the actual returned model/channel without guessing."},
         "required_checks": ["source-faithfulness", "visible-text", "mode-and-composition", "identity-and-actions", "thumbnail-and-crop"],
@@ -158,14 +192,19 @@ def compile_method_candidate(content: str, platform: str, method_id: str, struct
     plan["method_card_sha256"] = digest(card)
     plan["workflow"] = {"kind": "pinshu-visual-method-test", "version": registry["version"]}
     plan["required_checks"] += ["method-grammar", "cultural-source-fit"]
+    policy, text_contract = image_text_contract([title] if title.strip() else [], plan["text_route"] == "editable-text-layer")
+    plan["image_text_policy"] = policy
+    plan["visible_labels"] = [title] if title.strip() else []
     plan["prompt"] = "\n\n".join([
-        "Original source / design brief:\n" + content,
+        text_contract,
+        "SCENE SOURCE (context only; translate the meaning into visual action):\n" + content,
         "Candidate cultural-poster method:\n" + card.read_text(),
         "Title (only when requested):\n" + title,
         "Use the dedicated vertical reading path. Keep a character-free scene; generic small craft workers are not a branded identity.",
         "Platform requirements:\n" + plan["platform_profile"]["layout_rule"],
         "Preserve the stated source limits. No invented event date, venue, named craft master, heritage certification or sponsor. "
-        "This is a single method test, not an approved default or a claim of historical authenticity."
+        "This is a single method test, not an approved default or a claim of historical authenticity.",
+        text_contract
     ])
     return plan
 
@@ -199,10 +238,15 @@ def main() -> int:
                                 args.title, args.candidate_test, args.character_profile,
                                 args.exact_text, args.units, args.content_file,
                                 json.loads(args.approved_text_file.read_text()) if args.approved_text_file else None)
-        args.output_dir.mkdir(parents=True, exist_ok=False)
-        (args.output_dir / "source-content.txt").write_text(content, encoding="utf-8")
-        (args.output_dir / "prompt-final.txt").write_text(plan["prompt"], encoding="utf-8")
-        (args.output_dir / "route-plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        if args.output_dir.exists():
+            raise ValueError("Output already exists; retain it and choose a new directory")
+        args.output_dir.parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix=".visual-plan-", dir=args.output_dir.parent) as staging:
+            stage = Path(staging)
+            (stage / "source-content.txt").write_text(content, encoding="utf-8")
+            (stage / "prompt-final.txt").write_text(plan["prompt"], encoding="utf-8")
+            (stage / "route-plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            stage.rename(args.output_dir)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         parser.exit(1, f"HARD_STOP: {exc}\n")
     print("PLAN READY: rendering and visual acceptance remain pending")

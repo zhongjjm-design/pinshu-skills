@@ -12,11 +12,11 @@
 
 A visual plan records intent and constraints. The agent supplies editorial judgment and actual image inspection. The scripts check declared contracts and file properties; they cannot determine aesthetic or semantic truth.
 
-The special 3D mechanism-diorama method is reference-only in this public preview: use 3-5 physical modules and one actual relationship for mechanisms. It is not a default brand style. No public execution adapter for that method is bundled.
+Retired experimental directions are excluded from normal selection; historical notes do not grant execution permission.
 
 
 ## 公众号整篇：封面（2026-10-12）
 
 封面由本 Skill 设计。写稿只交标题和金句候选，不交封面方向。先把标题里的“主体—动作—对象”说清，选择一个具象场景，用低成本单张样稿验证图意；图意成立后再扩展为 2 到 3 个模式方向的真实候选，避免先批量做风格再发现画错含义。不用别人的视频画面、截图或图片当封面；证据截图只放正文。
 
-封面负责让读者看懂对象与吸引点，正文图负责解释论证、步骤或证据，两者不套同一张信息海报。按手机实际图槽控制复杂度：一个主动作、一个核心关系，关键信息必须在图槽内可读；需要点开高清才懂的不算通过。整篇截图与排版见 `article-asset-handoff.md` 和 `ready-folder-contract.md`。
+封面负责让读者看懂对象与吸引点，正文图负责解释论证、步骤或证据，两者不套同一张信息海报。按手机实际图槽控制复杂度：一个主动作、一个核心关系，关键信息必须在图槽内可读；需要点开高清才懂的不算通过。整篇截图与排版见 主入口指定的整篇素材交接和定稿待发约定。

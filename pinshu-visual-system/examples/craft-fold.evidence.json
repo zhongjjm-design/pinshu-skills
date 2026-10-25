@@ -11,7 +11,7 @@
   "generated_original_sha256": "93711ff453c86f9deaff48f3d9912284a059f1eed6f6dbe210abeac63769a537",
   "generated_original_retained_locally": true,
   "public_image": "craft-fold.png",
-  "public_image_sha256": "399dec7376fc4c24567245e50e85c5b62a2ca525dca25df0f808304e606a800a",
+  "public_image_sha256": "7026711f2e05af929637290577e82c793c4e40ebead35d2ce6add57de4ecd3e1",
   "workflow": {
     "kind": "pinshu-visual-method-test",
     "version": "0.2.0"

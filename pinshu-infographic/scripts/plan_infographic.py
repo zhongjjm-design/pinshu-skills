@@ -6,13 +6,17 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
 import sys
 
 CORE = Path(__file__).resolve().parents[2] / "pinshu-visual-system"
 if not (CORE / ".public-bundle").is_file():
     raise SystemExit("HARD_STOP: Install the public pinshu-visual-system companion in the same parent directory; do not use a private core")
 try:
-    core_version = tuple(int(part) for part in (CORE / "VERSION").read_text().strip().split("."))
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)(?:[-+][0-9A-Za-z.-]+)?", (CORE / "VERSION").read_text().strip())
+    if not match:
+        raise ValueError
+    core_version = tuple(int(part) for part in match.groups())
 except (OSError, ValueError):
     raise SystemExit("HARD_STOP: The public core has no valid VERSION; reinstall the complete visual set") from None
 if core_version < (0, 2, 4):
@@ -21,7 +25,7 @@ sys.path.insert(0, str(CORE / "scripts"))
 from visual_compiler import compile_plan
 from visual_contracts import anchor, check_relations, check_units, read_source, save_plan, check_brief_fields, check_exact_text, text_delivery
 
-MODES = {"warm-paper", "lively-vector", "character-presenter"}
+MODES = {"warm-paper", "character-presenter"}
 
 
 def compile_infographic(brief_path: Path, *, candidate_test: bool = False,
@@ -59,7 +63,7 @@ def compile_infographic(brief_path: Path, *, candidate_test: bool = False,
     if delivery["text_route"] == "editable-text-layer":
         plan["prompt"] += "\nGenerate only a text-free supporting illustration. All final titles, unit labels and arrow verbs belong in the editable source, not in the bitmap."
     plan["visual_card"]["density"] = density
-    plan["workflow"] = {"kind": "pinshu-infographic", "version": "0.1.5"}
+    plan["workflow"] = {"kind": "pinshu-infographic", "version": "0.1.6"}
     plan["structured_content"] = {"claim": claim, "units": units, "relations": relations,
                                   "wording_review": "pending", "semantic_source_review": "pending"}
     plan["required_checks"] += ["information-relationships", "density-and-reading", "text-delivery"]
